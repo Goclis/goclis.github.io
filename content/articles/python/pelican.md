@@ -116,6 +116,8 @@ THEME = "/home/user/pelican-themes/theme-folder"
 
 __配置文件__
 
+在移植的时候需要注意主题的路径需要修改
+
 pelicanconf.py
 ```
 # -*- coding: utf-8 -*-
