@@ -3,7 +3,7 @@
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="https://www.facebook.com/2008/fbml">
 <head>
-    <title>unicode - Logging</title>
+    <title>如何验证一个数字证书的有效性 - Logging</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,10 +11,10 @@
     
 
     <!-- Open Graph tags -->
-            <meta property="og:type" content="website"/>
-            <meta property="og:title" content="Logging"/>
-            <meta property="og:url" content=""/>
-            <meta property="og:description" content="Logging"/>
+            <meta property="og:type" content="article"/>
+            <meta property="og:title" content="如何验证一个数字证书的有效性"/>
+            <meta property="og:url" content="/articles/how-to-validate-certificate.html"/>
+            <meta property="og:description" content="首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。 好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧 对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。 既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。 用密码学表示一下大概就是 // 设生成的中间数字证书为 MB，最终发放的为B 则B = MB || E(HASH(MB)) // 这里E是用CA的私钥加密， || 表示拼接 接下来 ..."/>
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
@@ -59,7 +59,7 @@ Logging            </a>
                         <li >
                             <a href="/category/python.html">Python</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="/category/security.html">Security</a>
                         </li>
                         <li >
@@ -78,28 +78,64 @@ Logging            </a>
     <div class="row">
         <div class="col-sm-9">
 
-            <article>
-                <h2><a href="/articles/python-encoding.html">Python编码。。。。</a></h2>
-                <div class="summary"><p>= = 记下来提醒自己写爬虫的时候注意。。。。</p>
-<p>直接举遇到的坑吧。。爬教务处的时候这样一个字段。。。</p>
-<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="mi">16</span><span class="err">周</span><span class="p">]</span> <span class="err">周二</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span><span class="p">,</span><span class="err">周四</span><span class="p">(</span><span class="err">双</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span>
-</pre></div>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/articles/how-to-validate-certificate.html"
+                       rel="bookmark"
+                       title="Permalink to 如何验证一个数字证书的有效性">
+                        如何验证一个数字证书的有效性
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-06-21T15:43:00"> 2014-06-21 15:43:00</time>
+    </span>
 
 
-<p>要把它切成。。</p>
-<div class="highlight"><pre><span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
-<span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">4</span><span class="err">，</span><span class="mi">3</span><span class="err">，</span><span class="mi">4</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
-</pre></div>
 
-
-<p>额。。内容是什么意思就不说了。。大概就是需要使用python的slice来获取，如下</p>
-<div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;周四(双3-4)教二-403&quot;</span>
-<span class="c"># 获取3</span>
-<span class="n">l</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">):</span> <span class="n">s</span><span class="o">.</span><span class="n">find ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/articles/python-encoding.html">more ...</a>
+<span class="label label-default">Tags</span>
+	<a href="/tag/security.html">security</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 </div>
-            </article>
-            <hr/>
+                <p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
+<p>好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧</p>
+<p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
+<p>既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
+<p>用密码学表示一下大概就是</p>
+<div class="highlight"><pre><span class="c1">// 设生成的中间数字证书为 MB，最终发放的为B</span>
+<span class="err">则</span><span class="no">B</span> <span class="o">=</span> <span class="no">MB</span> <span class="o">||</span> <span class="no">E</span><span class="p">(</span><span class="no">HASH</span><span class="p">(</span><span class="no">MB</span><span class="p">))</span>  <span class="c1">// 这里E是用CA的私钥加密， || 表示拼接</span>
+</pre></div>
+
+
+<p>接下来，看看是如何验证的。往下我们称MB为<strong>内部证书</strong>，B为证书。</p>
+<ol>
+<li>
+<p>从获取到的证书B开始，根据签发该证书的CA的信息，顺着层次树往上找，直到找到根证书，这样就可以构成一条<strong>证书链</strong>。</p>
+</li>
+<li>
+<p>从证书链的顶端，往下验证。提醒一点，按照我们的假设，这条证书链上的证书在我们的PC上都是有的。首先是根证书，根证书是自签名的，拿出它的公钥，对发证书时顺带的那个加了密的消息摘要进行解密，再对内部证书使用证书中定义的摘要算法进行处理，将产生的结果进行比较，匹配则往下。</p>
+</li>
+<li>
+<p>从根证书下来后就不再是自签名了，所以需要使用上层的公钥对发证书时顺带的消息摘要进行解密，然后同样地，对内部证书摘要，比较结果，匹配则往下。</p>
+</li>
+<li>
+<p>直至最后一个证书，如果摘要都匹配，说明这个证书是有效的，没被人篡改。</p>
+</li>
+</ol>
+<p><img alt="流程图" src="/images/certificate_chain_20140621155213.png" /></p>
+<p>当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
 
         </div>
         <div class="col-sm-3 well well-sm" id="sidebar">

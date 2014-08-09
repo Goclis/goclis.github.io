@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
+<head>
+    <title>Elementary OS - Logging</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <!-- Open Graph tags -->
+            <meta property="og:type" content="article"/>
+            <meta property="og:title" content="Elementary OS"/>
+            <meta property="og:url" content="/articles/elementary-os-tips.html"/>
+            <meta property="og:description" content="记录一下对Elementary OS的每一步配置，持续更新。 系统安装 省略。。 源的修改 去网上查查相应的源，修改 /etc/apt/source.list 记得备份一下 cp /etc/apt/source.list /etc/apt/source.list.bak 163的源 deb http://mirrors.163.com/ubuntu/ precise main restricted deb-src http://mirrors.163.com/ubuntu/ precise main restricted deb http://mirrors.163.com/ubuntu/ precise-updates main ..."/>
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+    <style type="text/css">
+        .err {
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Logging            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/category/computer-setting.html">Computer setting</a>
+                        </li>
+                        <li >
+                            <a href="/category/cs.html">Cs</a>
+                        </li>
+                        <li >
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="/category/security.html">Security</a>
+                        </li>
+                        <li >
+                            <a href="/category/software-engineer.html">Software engineer</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/articles/elementary-os-tips.html"
+                       rel="bookmark"
+                       title="Permalink to Elementary OS">
+                        Elementary OS
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-04-24T00:00:00"> 2014-04-24 00:00:00</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/linux.html">linux</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>记录一下对Elementary OS的每一步配置，持续更新。</p>
+<h3>系统安装</h3>
+<p>省略。。</p>
+<h3>源的修改</h3>
+<p>去网上查查相应的源，修改</p>
+<div class="highlight"><pre><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">source</span><span class="p">.</span><span class="n">list</span>
+</pre></div>
+
+
+<p>记得备份一下</p>
+<div class="highlight"><pre><span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">source</span><span class="p">.</span><span class="n">list</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">source</span><span class="p">.</span><span class="n">list</span><span class="p">.</span><span class="n">bak</span>
+</pre></div>
+
+
+<p>163的源</p>
+<div class="highlight"><pre><span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">main</span> <span class="kp">restricted</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">main</span> <span class="kp">restricted</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">main</span> <span class="kp">restricted</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">main</span> <span class="kp">restricted</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">universe</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">universe</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">universe</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">universe</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">multiverse</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">multiverse</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">multiverse</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">multiverse</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-backports</span> <span class="kp">main</span> <span class="kp">restricted</span> <span class="kp">universe</span> <span class="kp">multiverse</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-backports</span> <span class="kp">main</span> <span class="kp">restricted</span> <span class="kp">universe</span> <span class="kp">multiverse</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-security</span> <span class="kp">main</span> <span class="kp">restricted</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-security</span> <span class="kp">main</span> <span class="kp">restricted</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-security</span> <span class="kp">universe</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-security</span> <span class="kp">universe</span>
+<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-security</span> <span class="kp">multiverse</span>
+<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-security</span> <span class="kp">multiverse</span>
+<span class="k">deb</span> <span class="s">http://extras.ubuntu.com/ubuntu</span> <span class="kp">precise</span> <span class="kp">main</span>
+<span class="k">deb-src</span> <span class="s">http://extras.ubuntu.com/ubuntu</span> <span class="kp">precise</span> <span class="kp">main</span>
+</pre></div>
+
+
+<h3>语言支持</h3>
+<p>因为选择的是英文安装，并没有中文模块</p>
+<p>System Settings -&gt; Language Support 里面可以安装，选择 Chinese (Simplified)，
+安装完后选择 Keyboard-Input-Helper 为 ibus</p>
+<p>这里得启动ibus才能使用中文输入法，这里顺便讲讲设置ibus为开机启动</p>
+<p>首先找到ibus-daemon的路径</p>
+<div class="highlight"><pre><span class="n">which</span> <span class="n">ibus</span><span class="o">-</span><span class="n">daemon</span> <span class="err">#</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">ibus</span><span class="o">-</span><span class="n">daemon</span>
+</pre></div>
+
+
+<p>然后在 System Settings -&gt; Startup Applications 里添加一项， 路径为 /usr/bin/ibus-daemon 即可</p>
+<p>接着要对ibus进行下配置（preference），添加一项中文输入法，设置下字体和大小，再共享到全局就好了</p>
+<h3>安装Chrome</h3>
+<p>Chrome占了Web开发狗生活的一大部分。。</p>
+<p>去官网或者自己以前留下的.deb包</p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">-</span><span class="n">i</span> <span class="o">****</span><span class="p">.</span><span class="n">deb</span>
+</pre></div>
+
+
+<p>ok</p>
+<h4>插件</h4>
+<p>其他插件基本都会被同步，主要是配置下GAE就好了</p>
+<p>拿到GAE的安装包（之前用的就可以），然后放到home目录下就好了，假设路径为</p>
+<div class="highlight"><pre><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">gae</span><span class="o">/</span>
+</pre></div>
+
+
+<p>同ibus一样设置开机启动，不过命令改为</p>
+<div class="highlight"><pre><span class="n">python</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">gae</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">proxy</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+
+
+<h4>chrome app</h4>
+<div class="highlight"><pre><span class="n">google</span><span class="o">-</span><span class="n">chrome</span><span class="o">-</span><span class="n">stable</span> <span class="o">--</span><span class="n">app</span><span class="o">=</span><span class="n">http</span><span class="o">:</span><span class="c1">//stackedit.io</span>
+</pre></div>
+
+
+<h3>Sublime Text 2</h3>
+<p><strong>源安装</strong></p>
+<div class="highlight"><pre><span class="n">add</span><span class="o">-</span><span class="n">apt</span><span class="o">-</span><span class="n">repository</span> <span class="n">ppa</span><span class="o">:</span><span class="n">webupd8team</span><span class="o">/</span><span class="n">sublime</span><span class="o">-</span><span class="n">text</span><span class="o">-</span><span class="mi">2</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">sublime</span><span class="o">-</span><span class="n">text</span>
+</pre></div>
+
+
+<p><strong>包安装</strong></p>
+<p>在官网下载解压包后，解压并移到/opt目录下</p>
+<div class="highlight"><pre>tar -xf sublime.tar.bz2 <span class="c"># 不一定是这个名字。。</span>
+mv sublime/ /opt <span class="c"># 名字也不一定</span>
+sudo ln -s /opt/sublime/sublime_text /usr/bin/sublime <span class="c"># 建立硬链以便在terminal中使用</span>
+</pre></div>
+
+
+<p>现在在Terminal中打sublime已经可以启动了，为了下一步添加到Dock上，得先在/usr/share/applications下创一个.desktop</p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">sublime</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">applications</span><span class="o">/</span><span class="n">sublime</span><span class="p">.</span><span class="n">desktop</span>
+</pre></div>
+
+
+<p>输入以下内容，注意自行替换Icon的目录，即图标</p>
+<div class="highlight"><pre><span class="k">[Desktop Entry]</span>
+<span class="na">Version</span><span class="o">=</span><span class="s">1.0</span>
+<span class="na">Name</span><span class="o">=</span><span class="s">Sublime Text 2</span>
+<span class="na">GenericName</span><span class="o">=</span><span class="s">Text Editor</span>
+
+<span class="na">Exec</span><span class="o">=</span><span class="s">sublime</span>
+<span class="na">Terminal</span><span class="o">=</span><span class="s">false</span>
+<span class="na">Icon</span><span class="o">=</span><span class="s">/opt/Sublime/Icon/48×48/sublime_text.png</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">Application</span>
+<span class="na">Categories</span><span class="o">=</span><span class="s">TextEditor;IDE;Development</span>
+<span class="na">X-Ayatana-Desktop-Shortcuts</span><span class="o">=</span><span class="s">NewWindow</span>
+
+<span class="k">[NewWindow Shortcut Group]</span>
+<span class="na">Name</span><span class="o">=</span><span class="s">New Window</span>
+<span class="na">Exec</span><span class="o">=</span><span class="s">sublime -n</span>
+<span class="na">TargetEnvironment</span><span class="o">=</span><span class="s">Unity</span>
+</pre></div>
+
+
+<p>现在就可以在Applications里看到Sublime了。。<br />
+接下来创建<strong>右键启动</strong>，即选择文件点击右键时可选择使用Sublime来打开，具体如下：</p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">sublime</span> <span class="o">~/</span><span class="p">.</span><span class="n">local</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">applications</span><span class="o">/</span><span class="n">mimeapps</span><span class="p">.</span><span class="n">list</span>
+</pre></div>
+
+
+<p>在最后一行加上</p>
+<div class="highlight"><pre><span class="n">text</span><span class="o">/</span><span class="n">plain</span><span class="o">=</span><span class="n">sublime</span><span class="p">.</span><span class="n">desktop</span>
+</pre></div>
+
+
+<p>在终端中</p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">sublime</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">applications</span><span class="o">/</span><span class="n">defaults</span><span class="p">.</span><span class="n">list</span>
+</pre></div>
+
+
+<p>将原先的默认编辑器(比如gedit.desktop)全部替换为sublime.desktop即可  </p>
+<p>至于<strong>添加到dock</strong>上，直接从applications上拖到dock上添加即可(对Elementary可行)</p>
+<p><strong>配置Sublime</strong></p>
+<p>在Sublime中按Ctrl+`调出console，输入以下代码后回车</p>
+<div class="highlight"><pre><span class="n">import</span> <span class="n">urllib2</span><span class="p">,</span><span class="n">os</span><span class="p">;</span><span class="n">pf</span><span class="o">=</span><span class="err">&#39;</span><span class="n">Package</span> <span class="n">Control</span><span class="p">.</span><span class="n">sublime</span><span class="o">-</span><span class="n">package</span><span class="err">&#39;</span><span class="p">;</span><span class="n">ipp</span><span class="o">=</span><span class="n">sublime</span><span class="p">.</span><span class="n">installed_packages_path</span><span class="p">();</span><span class="n">os</span><span class="p">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ipp</span><span class="p">)</span> <span class="k">if</span> <span class="n">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ipp</span><span class="p">)</span> <span class="k">else</span> <span class="n">None</span><span class="p">;</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">ipp</span><span class="p">,</span><span class="n">pf</span><span class="p">),</span><span class="err">&#39;</span><span class="n">wb</span><span class="err">&#39;</span><span class="p">).</span><span class="n">write</span><span class="p">(</span><span class="n">urllib2</span><span class="p">.</span><span class="n">urlopen</span><span class="p">(</span><span class="err">&#39;</span><span class="n">http</span><span class="o">:</span><span class="c1">//sublime.wbond.net/&#39;+pf.replace(&#39; &#39;,&#39;%20&#39;)).read())</span>
+</pre></div>
+
+
+<p>重启Sublime Text 2，如果在Perferences-&gt;package settings中看到package control这一项，则安装成功，按下Ctrl+Shift+P调出命令面板，输入install 调出 Install Package 选项并回车，然后在列表中选中要安装的插件  </p>
+<p><strong>一些插件：</strong>  </p>
+<ul>
+<li>HTMLBeautify  </li>
+<li><a href="https://github.com/xgenvn/InputHelper">InputHelper</a>（为了输入中文。。。自行打开~/.config/sublime-text-2/Packages/InputHelper/Default(Linux).sublime-keymap修改快捷键）  </li>
+</ul>
+<p><strong>个人的配置：</strong>
+打开Preference-&gt;Key Bindings - User，在[]里添加以下内容</p>
+<div class="highlight"><pre><span class="p">{</span> <span class="s">&quot;keys&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s">&quot;ctrl+2&quot;</span><span class="p">],</span> <span class="s">&quot;command&quot;</span><span class="o">:</span> <span class="s">&quot;move_to&quot;</span><span class="p">,</span> <span class="s">&quot;args&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s">&quot;to&quot;</span><span class="o">:</span> <span class="s">&quot;eol&quot;</span><span class="p">,</span> <span class="s">&quot;extend&quot;</span><span class="o">:</span> <span class="nb">false</span><span class="p">}</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>即使用ctrl+2来使光标移到本行末尾  </p>
+<p>Preference-&gt;Settings-Default里</p>
+<div class="highlight"><pre><span class="s">&quot;translate_tabs_to_spaces&quot;</span><span class="o">:</span> <span class="nb">true</span><span class="p">,</span> <span class="c1">// 把这项设置了</span>
+</pre></div>
+
+
+<p><strong>Problems</strong></p>
+<p>= =# inputhelper弹不出来。。</p>
+<p>手动使用shift+ctrl+p调用后发现</p>
+<div class="highlight"><pre><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">File</span> <span class="s">&quot;./sublime_plugin.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">362</span><span class="p">,</span> <span class="n">in</span> <span class="n">run_</span>
+  <span class="n">File</span> <span class="s">&quot;./inputhelper.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">22</span><span class="p">,</span> <span class="n">in</span> <span class="n">run</span>
+  <span class="n">File</span> <span class="s">&quot;.\subprocess.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">633</span><span class="p">,</span> <span class="n">in</span> <span class="n">__init__</span>
+  <span class="n">File</span> <span class="s">&quot;.\subprocess.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1139</span><span class="p">,</span> <span class="n">in</span> <span class="n">_execute_child</span>
+<span class="nl">OSError:</span> <span class="p">[</span><span class="n">Errno</span> <span class="mi">13</span><span class="p">]</span> <span class="n">Permission</span> <span class="n">denied</span>
+</pre></div>
+
+
+<p>大概就是权限不够吧。。</p>
+<p>然后就自己跑到InputHelper的安装目录（~/.config/sublime text 2/Packages/InputHelper/</p>
+<p>真正被调用的是这个目录下lib里的linux_text_input_gui.py</p>
+<div class="highlight"><pre><span class="n">python</span> <span class="n">linux_text_input_gui</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+
+
+<p>OK，确实弹出来了。。</p>
+<p>这里我大概猜测是调用了subprocess.py的进程没有权限执行linux_text_input_gui.py，所以改它的权限吧</p>
+<div class="highlight"><pre><span class="n">chmod</span> <span class="mi">777</span> <span class="n">linux_text_input_gui</span><span class="p">.</span><span class="n">py</span>  <span class="err">#</span> <span class="err">不知道多少好。就给全部了。。</span><span class="mi">755</span> <span class="n">is</span> <span class="n">enough</span>
+</pre></div>
+
+
+<p>然后再到shift+ctrl+p里执行，成功弹出！！快捷键也OK～～～</p>
+<h3>Dropbox</h3>
+<p>.deb安装</p>
+<h3>Mysql</h3>
+<p>不想折腾就在Software Center里装吧。。<br />
+不过正规地还是从官网下载源码，编译安装，不过麻烦。。<br />
+0.0 竟然没提示设置密码。。。。按下面的法子破。。</p>
+<div class="highlight"><pre><span class="n">mysqladmin</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span> <span class="n">password</span>
+<span class="n">New</span> <span class="n">password</span><span class="o">:</span>
+<span class="n">Confirm</span> <span class="n">new</span> <span class="n">password</span><span class="o">:</span> 
+</pre></div>
+
+
+<p>OK，密码已设置完毕，用它登录就好了
+= =#编码实在没折腾出来。。。打算用phpmyadmin来修改了。。。</p>
+<h3>Nginx+phpmyadmin</h3>
+<p>网上找来的<a href="http://hi.baidu.com/sudoer/item/479347788e7364376e29f6f8">教程</a>，很不错，可用。。  </p>
+<p><strong>安装nginx</strong></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">add</span><span class="o">-</span><span class="n">apt</span><span class="o">-</span><span class="n">repository</span> <span class="n">ppa</span><span class="o">:</span><span class="n">nginx</span><span class="o">/</span><span class="n">stable</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nginx</span>
+</pre></div>
+
+
+<p><strong>安装php</strong></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">php5</span><span class="o">-</span><span class="n">cli</span> <span class="n">php5</span><span class="o">-</span><span class="n">cgi</span> <span class="n">php5</span><span class="o">-</span><span class="n">fpm</span> <span class="n">php5</span><span class="o">-</span><span class="n">mcrypt</span> <span class="n">php5</span><span class="o">-</span><span class="n">mysql</span>
+</pre></div>
+
+
+<p><strong>配置Nginx</strong></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">sublime</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">available</span><span class="o">/</span><span class="k">default</span>
+</pre></div>
+
+
+<p>进行如下修改</p>
+<div class="highlight"><pre><span class="n">server</span> <span class="p">{</span>
+    <span class="n">listen</span> <span class="mi">80</span> <span class="n">default_server</span><span class="p">;</span>
+    <span class="n">listen</span> <span class="p">[</span><span class="o">::</span><span class="p">]</span><span class="o">:</span><span class="mi">80</span> <span class="n">default_server</span> <span class="n">ipv6only</span><span class="o">=</span><span class="n">on</span><span class="p">;</span>
+
+    <span class="n">root</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="p">;</span>
+    <span class="n">index</span> <span class="n">index</span><span class="p">.</span><span class="n">html</span> <span class="n">index</span><span class="p">.</span><span class="n">htm</span> <span class="n">index</span><span class="p">.</span><span class="n">php</span> <span class="n">index</span><span class="p">;</span>
+
+    <span class="err">#</span> <span class="n">Make</span> <span class="n">site</span> <span class="n">accessible</span> <span class="n">from</span> <span class="n">http</span><span class="o">:</span><span class="c1">//localhost/</span>
+    <span class="n">server_name</span> <span class="n">localhost</span><span class="p">;</span>
+
+    <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
+        <span class="err">#</span> <span class="n">First</span> <span class="n">attempt</span> <span class="n">to</span> <span class="n">serve</span> <span class="n">request</span> <span class="n">as</span> <span class="n">file</span><span class="p">,</span> <span class="n">then</span>
+        <span class="err">#</span> <span class="n">as</span> <span class="n">directory</span><span class="p">,</span> <span class="n">then</span> <span class="n">fall</span> <span class="n">back</span> <span class="n">to</span> <span class="n">displaying</span> <span class="n">a</span> <span class="mf">404.</span>
+        <span class="n">try_files</span> <span class="err">$</span><span class="n">uri</span> <span class="err">$</span><span class="n">uri</span><span class="o">/</span> <span class="o">=</span><span class="mi">404</span><span class="p">;</span>
+        <span class="err">#</span> <span class="n">Uncomment</span> <span class="n">to</span> <span class="n">enable</span> <span class="n">naxsi</span> <span class="n">on</span> <span class="n">this</span> <span class="n">location</span>
+        <span class="err">#</span> <span class="n">include</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">naxsi</span><span class="p">.</span><span class="n">rules</span>
+    <span class="p">}</span>
+
+    <span class="err">#</span> <span class="n">Only</span> <span class="k">for</span> <span class="n">nginx</span><span class="o">-</span><span class="n">naxsi</span> <span class="n">used</span> <span class="n">with</span> <span class="n">nginx</span><span class="o">-</span><span class="n">naxsi</span><span class="o">-</span><span class="n">ui</span> <span class="o">:</span> <span class="n">process</span> <span class="n">denied</span> <span class="n">requests</span>
+    <span class="err">#</span><span class="n">location</span> <span class="o">/</span><span class="n">RequestDenied</span> <span class="p">{</span>
+    <span class="err">#</span>   <span class="n">proxy_pass</span> <span class="n">http</span><span class="o">:</span><span class="c1">//127.0.0.1:8080;    </span>
+    <span class="err">#</span><span class="p">}</span>
+
+    <span class="err">#</span><span class="n">error_page</span> <span class="mi">404</span> <span class="o">/</span><span class="mf">404.</span><span class="n">html</span><span class="p">;</span>
+
+    <span class="err">#</span> <span class="n">redirect</span> <span class="n">server</span> <span class="n">error</span> <span class="n">pages</span> <span class="n">to</span> <span class="n">the</span> <span class="k">static</span> <span class="n">page</span> <span class="o">/</span><span class="mi">50</span><span class="n">x</span><span class="p">.</span><span class="n">html</span>
+    <span class="err">#</span>
+    <span class="err">#</span><span class="n">error_page</span> <span class="mi">500</span> <span class="mi">502</span> <span class="mi">503</span> <span class="mi">504</span> <span class="o">/</span><span class="mi">50</span><span class="n">x</span><span class="p">.</span><span class="n">html</span><span class="p">;</span>
+    <span class="err">#</span><span class="n">location</span> <span class="o">=</span> <span class="o">/</span><span class="mi">50</span><span class="n">x</span><span class="p">.</span><span class="n">html</span> <span class="p">{</span>
+    <span class="err">#</span>   <span class="n">root</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">html</span><span class="p">;</span>
+    <span class="err">#</span><span class="p">}</span>
+
+    <span class="err">#</span> <span class="n">pass</span> <span class="n">the</span> <span class="n">PHP</span> <span class="n">scripts</span> <span class="n">to</span> <span class="n">FastCGI</span> <span class="n">server</span> <span class="n">listening</span> <span class="n">on</span> <span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">9000</span>
+    <span class="err">#</span>
+    <span class="n">location</span> <span class="o">~</span> <span class="err">\</span><span class="p">.</span><span class="n">php</span><span class="err">$</span> <span class="p">{</span>
+        <span class="n">fastcgi_split_path_info</span> <span class="o">^</span><span class="p">(.</span><span class="o">+</span><span class="err">\</span><span class="p">.</span><span class="n">php</span><span class="p">)(</span><span class="o">/</span><span class="p">.</span><span class="o">+</span><span class="p">)</span><span class="err">$</span><span class="p">;</span>
+    <span class="err">#</span>   <span class="err">#</span> <span class="n">NOTE</span><span class="o">:</span> <span class="n">You</span> <span class="n">should</span> <span class="n">have</span> <span class="s">&quot;cgi.fix_pathinfo = 0;&quot;</span> <span class="n">in</span> <span class="n">php</span><span class="p">.</span><span class="n">ini</span>
+    <span class="err">#</span>
+    <span class="err">#</span>   <span class="err">#</span> <span class="n">With</span> <span class="n">php5</span><span class="o">-</span><span class="n">cgi</span> <span class="n">alone</span><span class="o">:</span>
+        <span class="n">fastcgi_pass</span> <span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">9000</span><span class="p">;</span>
+    <span class="err">#</span>   <span class="err">#</span> <span class="n">With</span> <span class="n">php5</span><span class="o">-</span><span class="n">fpm</span><span class="o">:</span>
+    <span class="err">#</span>   <span class="n">fastcgi_pass</span> <span class="n">unix</span><span class="o">:/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">php5</span><span class="o">-</span><span class="n">fpm</span><span class="p">.</span><span class="n">sock</span><span class="p">;</span>
+        <span class="n">fastcgi_index</span> <span class="n">index</span><span class="p">.</span><span class="n">php</span><span class="p">;</span>
+        <span class="n">include</span> <span class="n">fastcgi_params</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="err">#</span> <span class="n">deny</span> <span class="n">access</span> <span class="n">to</span> <span class="p">.</span><span class="n">htaccess</span> <span class="n">files</span><span class="p">,</span> <span class="k">if</span> <span class="n">Apache</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">document</span> <span class="n">root</span>
+    <span class="err">#</span> <span class="n">concurs</span> <span class="n">with</span> <span class="n">nginx</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">one</span>
+    <span class="err">#</span>
+    <span class="err">#</span><span class="n">location</span> <span class="o">~</span> <span class="o">/</span><span class="err">\</span><span class="p">.</span><span class="n">ht</span> <span class="p">{</span>
+    <span class="err">#</span>   <span class="n">deny</span> <span class="n">all</span><span class="p">;</span>
+    <span class="err">#</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>修改完后nginx就会将/var/www目录(可能需要手动创建)下的文件进行相应的处理了，当然有相应规则，比如</p>
+<div class="highlight"><pre><span class="n">location</span> <span class="o">~</span> <span class="err">\</span><span class="p">.</span><span class="n">php</span><span class="err">$</span> <span class="p">{</span>
+    <span class="err">#</span> <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>这段就是处理.php脚本的  </p>
+<p><strong>安装phpmyadmin</strong></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">phpmyadmin</span>
+</pre></div>
+
+
+<p>安装完后执行</p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">phpmyadmin</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">phpmyadmin</span>
+</pre></div>
+
+
+<p>注意，phpmyadmin后面没有"/"<br />
+然后在浏览器中输入http://localhost/phpmyadmin即可</p>
+<h3>安装python pip</h3>
+<p><a href="http://www.pip-installer.org/en/latest/installing.html">安装指南</a></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">pip</span>
+</pre></div>
+
+
+<h3>管理启动项</h3>
+<p>使用update-rc.d关掉服务器类型的软件的启动项</p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="p">.</span><span class="n">d</span> <span class="o">-</span><span class="n">f</span> <span class="n">nginx</span> <span class="n">remove</span>
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="p">.</span><span class="n">d</span> <span class="o">-</span><span class="n">f</span> <span class="n">apache2</span> <span class="n">remove</span>
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="p">.</span><span class="n">d</span> <span class="o">-</span><span class="n">f</span> <span class="n">php</span><span class="o">-</span><span class="n">fpm5</span> <span class="n">remove</span>
+</pre></div>
+
+
+<p>另外有个gui界面的bum，不知道怎么用。。。。  </p>
+<h3>安装System monitor &amp; System load Indicator</h3>
+<p>软件中心就有，后者可以加到系统启动</p>
+<h3>安装Node.js</h3>
+<p>下载源码包</p>
+<div class="highlight"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">xzvf</span> <span class="n">node</span><span class="o">-</span><span class="n">v0</span><span class="mf">.10.26</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<span class="n">cd</span> <span class="n">node</span><span class="o">-</span><span class="n">v0</span><span class="mf">.10.26</span>
+<span class="n">sudo</span> <span class="n">make</span>  <span class="err">#</span> <span class="err">前提安装了</span><span class="n">g</span><span class="o">++</span>
+<span class="n">sudo</span> <span class="n">make</span> <span class="n">install</span> 
+</pre></div>
+
+
+<h3>安装新立得</h3>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">synaptic</span>
+</pre></div>
+
+
+<h3>安装git</h3>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span>
+
+<span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="n">global</span> <span class="n">user</span><span class="p">.</span><span class="n">name</span> <span class="s">&quot;Goclis Yao&quot;</span>
+<span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="n">global</span> <span class="n">user</span><span class="p">.</span><span class="n">email</span> <span class="s">&quot;goclisyyh@gmail.com&quot;</span>
+</pre></div>
+
+
+<h3>安装atom-text-editor</h3>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">add</span><span class="o">-</span><span class="n">apt</span><span class="o">-</span><span class="n">repository</span> <span class="n">ppa</span><span class="o">:</span><span class="n">webupd8team</span><span class="o">/</span><span class="n">atom</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">atom</span>
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3 well well-sm" id="sidebar">
+
+<aside>
+    <section>
+        <ul class="list-group list-group-flush">
+                <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+                  <ul class="list-group" id="social">
+                    <li class="list-group-item"><a href="https://github.com/Goclis/"><i
+                            class="fa fa-github-square fa-lg"></i> Github
+                    </a></li>
+                  </ul>
+                </li>
+
+
+
+                <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                    <ul class="list-group" id="tags">
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/python.html">
+                                python
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/os.html">
+                                os
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-2">
+                            <a href="/tag/pelican.html">
+                                pelican
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/spider.html">
+                                spider
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/linux.html">
+                                linux
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/security.html">
+                                security
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/xpath.html">
+                                xpath
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/software-test.html">
+                                software test
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/cs.html">
+                                cs
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/unicode.html">
+                                unicode
+                            </a>
+                        </li>
+                    </ul>
+                </li>    
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+
+        </ul>
+    </section>
+
+</aside>        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2014 Goclis Yao
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="//code.jquery.com/jquery.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+</body>
+</html>

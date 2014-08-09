@@ -79,7 +79,7 @@ Logging            </a>
         <div class="col-sm-9">
 
             <article>
-                <h2><a href="/os-experiment-note.html">操作系统课设笔记</a></h2>
+                <h2><a href="/articles/os-experiment-note.html">操作系统课设笔记</a></h2>
                 <div class="summary"><p>因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。</p>
 <p>这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而 OS 上的坑又不是那么容易解决的，总之以下操作不带有普遍性。</p>
 <p>课设平台：</p>
@@ -95,12 +95,12 @@ Logging            </a>
 <span class="n">cd</span> <span class="n">linux</span><span class="o">-</span><span class="mf">2.6.21</span>
 <span class="n">make</span> <span class="n">mrproper</span>  <span class="err">#</span> <span class="err">清楚掉之前编译产生的垃圾</span>
 <span class="n">make</span> <span class="n">oldconfig</span>  <span class="err">#</span> <span class="err">如果自己有配置文件的话，直接</span> <span class="n">copy</span> <span class="err">进来命名为 ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/os-experiment-note.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/articles/os-experiment-note.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联</a></h2>
+                <h2><a href="/articles/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联</a></h2>
                 <div class="summary"><p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话</p>
 <blockquote>
 <p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
@@ -119,12 +119,12 @@ Logging            </a>
 <p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
 <h3>Update at 2014-05-26</h3>
 <p>因为动态加载和动态链接在操作系统的实现上已经模糊了 ...</p>
-                    <a class="btn btn-default btn-xs" href="/dynamic-load-and-virtual-memory-page-schedule-relation.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/articles/dynamic-load-and-virtual-memory-page-schedule-relation.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别</a></h2>
+                <h2><a href="/articles/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别</a></h2>
                 <div class="summary"><p>大致的理解如下，不一定正确，确认后会更新：</p>
 <p>按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
 <ul>
@@ -141,7 +141,7 @@ Logging            </a>
 <p>动态链接的实现是依赖于存根（stub）的，目标模块中在使用需要动态链接的模块的地方使用存根来代替，存根能够指出如何装入以及装入后的程序在内存的哪。</p>
 <p>动态链接的好处在于多个程序使用到了一个相同的模块时，不需要将该模块都像常规步骤或者动态加载那样合并到目标模块中，而是在执行时再动态链接，这样在内存中就只用存在一份该模块的代码了，即实现了共享库。</p>
 <h3>Update at 2014-05-26 ...</h3>
-                    <a class="btn btn-default btn-xs" href="/difference-between-dynamic-link-and-dynamic-load.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/articles/difference-between-dynamic-link-and-dynamic-load.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -180,8 +180,8 @@ Logging            </a>
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
-                            <a href="/tag/security.html">
-                                security
+                            <a href="/tag/spider.html">
+                                spider
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
@@ -190,13 +190,8 @@ Logging            </a>
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
-                            <a href="/tag/unicode.html">
-                                unicode
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/cs.html">
-                                cs
+                            <a href="/tag/security.html">
+                                security
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
@@ -205,13 +200,18 @@ Logging            </a>
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
-                            <a href="/tag/spider.html">
-                                spider
+                            <a href="/tag/software-test.html">
+                                software test
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
-                            <a href="/tag/software-test.html">
-                                software test
+                            <a href="/tag/cs.html">
+                                cs
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/unicode.html">
+                                unicode
                             </a>
                         </li>
                     </ul>
