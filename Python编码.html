@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
+<head>
+    <title>Python编码。。。。 - Logging</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <!-- Open Graph tags -->
+            <meta property="og:type" content="article"/>
+            <meta property="og:title" content="Python编码。。。。"/>
+            <meta property="og:url" content="/Python编码.html"/>
+            <meta property="og:description" content="= = 记下来提醒自己写爬虫的时候注意。。。。 直接举遇到的坑吧。。爬教务处的时候这样一个字段。。。 [1-16周] 周二(1-2)教二-403,周四(双3-4)教二-403 要把它切成。。 1，16，2，1，2，教二-403 1，16，4，3，4，教二-403 额。。内容是什么意思就不说了。。大概就是需要使用python的slice来获取，如下 s = "周四(双3-4)教二-403" # 获取3 l = s[s.find('双')+len('双'): s.find ..."/>
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+    <style type="text/css">
+        .err {
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Logging            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="/category/study.html">Study</a>
+                        </li>
+                        <li >
+                            <a href="/category/systems.html">Systems</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/Python编码.html"
+                       rel="bookmark"
+                       title="Permalink to Python编码。。。。">
+                        Python编码。。。。
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-02-06T00:00:00"> 2014-02-06 00:00:00</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/python.html">python</a>
+        /
+	<a href="/tag/unicode.html">unicode</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>= = 记下来提醒自己写爬虫的时候注意。。。。</p>
+<p>直接举遇到的坑吧。。爬教务处的时候这样一个字段。。。</p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="mi">16</span><span class="err">周</span><span class="p">]</span> <span class="err">周二</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span><span class="p">,</span><span class="err">周四</span><span class="p">(</span><span class="err">双</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span>
+</pre></div>
+
+
+<p>要把它切成。。</p>
+<div class="highlight"><pre><span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
+<span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">4</span><span class="err">，</span><span class="mi">3</span><span class="err">，</span><span class="mi">4</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
+</pre></div>
+
+
+<p>额。。内容是什么意思就不说了。。大概就是需要使用python的slice来获取，如下</p>
+<div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;周四(双3-4)教二-403&quot;</span>
+<span class="c"># 获取3</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">):</span> <span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">)]</span>
+</pre></div>
+
+
+<p>看起来是行得通的。。但是并不一定。。<br />
+问题就在于字符串s和slice中使用的'双'的编码不同时就会出错。。  </p>
+<p>因为使用requests.get获取到的response的text是Unicode编码的（不是很确定），而我们的硬编码中的字符串是utf-8编码的，这就导致slice的并非我们所要的<br />
+额。。可以先看看这有什么区别</p>
+<div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;周四(双3-4)教二-403&quot;</span> 
+<span class="n">print</span> <span class="err">&#39;</span><span class="o">%</span><span class="n">r</span><span class="err">&#39;</span> <span class="o">%</span> <span class="n">s</span> 
+<span class="cp"># &#39;\xe5\x91\xa8\xe5\x9b\x9b(\xe5\x8f\x8c3-4)\xe6\x95\x99\xe4\xba\x8c-403&#39; utf-8编码</span>
+
+<span class="n">us</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="err">&#39;</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span><span class="err">&#39;</span><span class="p">)</span> <span class="err">#</span> <span class="err">将字符串</span><span class="n">s</span><span class="err">按</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span><span class="err">解码成</span><span class="n">ASCII</span><span class="err">，</span><span class="n">python</span><span class="err">中会变成</span><span class="n">unicode</span>
+<span class="n">print</span> <span class="err">&#39;</span><span class="o">%</span><span class="n">r</span><span class="err">&#39;</span> <span class="o">%</span> <span class="n">us</span> 
+<span class="cp"># u&#39;\u5468\u56db(\u53cc3-4)\u6559\u4e8c-403&#39; unicode编码</span>
+
+<span class="cp"># 比较下不同</span>
+<span class="n">print</span> <span class="s">&quot;utf8:&quot;</span><span class="p">,</span> <span class="n">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="s">&quot;unicode:&quot;</span><span class="p">,</span> <span class="n">len</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>
+<span class="cp"># utf8: 24 unicode: 14</span>
+
+<span class="n">print</span> <span class="s">&quot;utf8:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">:</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">)]</span>
+<span class="cp"># utf8: 3</span>
+
+<span class="n">print</span> <span class="s">&quot;unicode&quot;</span><span class="p">,</span> <span class="n">us</span><span class="p">[</span><span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">:</span> <span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">)]</span>
+<span class="cp"># UnicodeDecodeError: &#39;ascii&#39; codec can&#39;t decode byte 0xe5 in position 0: ordinal not in range(128)</span>
+</pre></div>
+
+
+<p>额。。看上面的代码已经能感受到不同了吧。。如果两种编码混合的话就可能会导致结果不是想要的<br />
+先来解决一下UnicodeDecodeError这个问题，添加如下代码</p>
+<div class="highlight"><pre><span class="n">import</span> <span class="n">sys</span>
+<span class="n">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>
+<span class="n">sys</span><span class="p">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="err">&#39;</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span><span class="err">&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>然后再运行</p>
+<div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;unicode:&quot;</span><span class="p">,</span> <span class="n">us</span><span class="p">[</span><span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">:</span> <span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">)]</span>
+<span class="cp"># unicode: </span>
+</pre></div>
+
+
+<p>后面那个slice的结果是""</p>
+<p>原因呢，就是之前讲的'双'的编码和us字符串的编码不同了，所以将其decode成unicode就可以得到想要的结果了</p>
+<div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;unicode:&quot;</span><span class="p">,</span> <span class="n">us</span><span class="p">[</span><span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="err">&#39;</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span><span class="err">&#39;</span><span class="p">))</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="sc">&#39;双&#39;</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="err">&#39;</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span><span class="err">&#39;</span><span class="p">))</span><span class="o">:</span> <span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">)]</span>
+<span class="cp"># unicode: 3</span>
+
+<span class="cp"># 简单点的。。。</span>
+<span class="n">print</span> <span class="s">&quot;unicode:&quot;</span><span class="p">,</span> <span class="n">us</span><span class="p">[</span><span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="n">u</span><span class="sc">&#39;双&#39;</span><span class="p">)</span><span class="o">:</span> <span class="n">us</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">)]</span>
+</pre></div>
+
+
+<p>好了。。得到想要的结果了。。</p>
+<p>建议：<br />
+1. 自己硬编码的字符串最好前面都加上u以确保其是unicode编码
+2. 确定一下自己使用的库(urllib2，requests)获取到的页面的文本是什么编码的。。最好都转成unicode来处理。</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3 well well-sm" id="sidebar">
+
+<aside>
+    <section>
+        <ul class="list-group list-group-flush">
+                <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+                  <ul class="list-group" id="social">
+                    <li class="list-group-item"><a href="https://github.com/Goclis/"><i
+                            class="fa fa-github-square fa-lg"></i> Github
+                    </a></li>
+                  </ul>
+                </li>
+
+
+
+                <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                    <ul class="list-group" id="tags">
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/os.html">
+                                os
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/python.html">
+                                python
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-2">
+                            <a href="/tag/blog.html">
+                                blog
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/linux.html">
+                                linux
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/unicode.html">
+                                unicode
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/pelican.html">
+                                pelican
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/xpath.html">
+                                xpath
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/security.html">
+                                security
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/spider.html">
+                                spider
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/software-test.html">
+                                software test
+                            </a>
+                        </li>
+                    </ul>
+                </li>    
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+
+        </ul>
+    </section>
+
+</aside>        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2014 Goclis Yao
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="//code.jquery.com/jquery.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+</body>
+</html>

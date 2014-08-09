@@ -3,7 +3,7 @@
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="https://www.facebook.com/2008/fbml">
 <head>
-    <title>Logging</title>
+    <title>Study - Logging</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -50,7 +50,7 @@ Logging            </a>
                         <li >
                             <a href="/category/python.html">Python</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="/category/study.html">Study</a>
                         </li>
                         <li >
@@ -108,36 +108,6 @@ Logging            </a>
             </article>
             <hr/>
             <article>
-                <h2><a href="/pelican.html">Pelican简要配置</a></h2>
-                <div class="summary"><p>最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了<a href="https://trello.com">trello</a>里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用<a href="http://docs.getpelican.com/en/3.3.0/getting_started.html#installing-pelican">pelican</a>吧，以后有空再买个域名挂上去。</p>
-<h3>博客初始化</h3>
-<p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
-<p><strong>Install</strong></p>
-<div class="highlight"><pre><span class="n">pip</span> <span class="n">install</span> <span class="n">pelican</span>
-
-<span class="n">pip</span> <span class="n">install</span> <span class="n">markdown</span>
-</pre></div>
-
-
-<p><strong>Quick-Start</strong></p>
-<p>自己新建一个文件夹，然后</p>
-<div class="highlight"><pre><span class="n">pelican</span><span class="o">-</span><span class="n">quickstart</span>
-</pre></div>
-
-
-<p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧</p>
-<p><strong>Usage</strong></p>
-<p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作。</p>
-<div class="highlight"><pre><span class="n">make</span> <span class="n">html</span> <span class="err">#</span> <span class="err">将</span><span class="n">content</span><span class="err">中的</span><span class="n">markdown</span> <span class="p">(</span><span class="n">or</span> <span class="n">others</span><span class="p">)</span> <span class="err">生成为</span><span class="n">html</span>
-
-<span class="n">make</span> <span class="n">regenerate</span>
-
-<span class="n">make</span> <span class="n">serve ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/pelican.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
                 <h2><a href="/动态载入和虚拟内存的按需调页的关联.html">动态载入和虚拟内存的按需调页的关联</a></h2>
                 <div class="summary"><p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话</p>
 <blockquote>
@@ -184,30 +154,6 @@ Logging            </a>
             </article>
             <hr/>
             <article>
-                <h2><a href="/Elementary OS.html">Elementary OS</a></h2>
-                <div class="summary"><p>记录一下对Elementary OS的每一步配置，持续更新。</p>
-<h3>系统安装</h3>
-<p>省略。。</p>
-<h3>源的修改</h3>
-<p>去网上查查相应的源，修改</p>
-<div class="highlight"><pre><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">source</span><span class="p">.</span><span class="n">list</span>
-</pre></div>
-
-
-<p>记得备份一下</p>
-<div class="highlight"><pre><span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">source</span><span class="p">.</span><span class="n">list</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">source</span><span class="p">.</span><span class="n">list</span><span class="p">.</span><span class="n">bak</span>
-</pre></div>
-
-
-<p>163的源</p>
-<div class="highlight"><pre><span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">main</span> <span class="kp">restricted</span>
-<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">main</span> <span class="kp">restricted</span>
-<span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">main ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/Elementary OS.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
                 <h2><a href="/关于黑盒测试的感想.html">黑盒测试感想</a></h2>
                 <div class="summary"><p>最近在准备软件测试的最终答辩，主题是黑盒测试，便去了解了一下。</p>
 <p>下面先直接贴三段论，What, Why, How</p>
@@ -237,96 +183,6 @@ Logging            </a>
 <p>贴完了，讲讲感想吧。其实觉得黑盒测试在日常的开发中不知不觉就用到了。比如说，我和某个人一起开发某个网站，而且我们开发的模块之间有相互调用的关系。这种情况下，我新完成了一个模块，他那边如果需要使用，该怎么保证这个模块是有效的？</p>
 <p>可能会有人说，让他测啊。好吧 ...</p>
                     <a class="btn btn-default btn-xs" href="/关于黑盒测试的感想.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/Python编码.html">Python编码。。。。</a></h2>
-                <div class="summary"><p>= = 记下来提醒自己写爬虫的时候注意。。。。</p>
-<p>直接举遇到的坑吧。。爬教务处的时候这样一个字段。。。</p>
-<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="mi">16</span><span class="err">周</span><span class="p">]</span> <span class="err">周二</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span><span class="p">,</span><span class="err">周四</span><span class="p">(</span><span class="err">双</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span>
-</pre></div>
-
-
-<p>要把它切成。。</p>
-<div class="highlight"><pre><span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
-<span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">4</span><span class="err">，</span><span class="mi">3</span><span class="err">，</span><span class="mi">4</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
-</pre></div>
-
-
-<p>额。。内容是什么意思就不说了。。大概就是需要使用python的slice来获取，如下</p>
-<div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;周四(双3-4)教二-403&quot;</span>
-<span class="c"># 获取3</span>
-<span class="n">l</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">):</span> <span class="n">s</span><span class="o">.</span><span class="n">find ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/Python编码.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/重装之路.html">重装之路</a></h2>
-                <div class="summary"><h3>背景</h3>
-<p>今天手贱把引导玩坏了。。<br />
-虽然用WinPE重写了MBR成功进入了Win7，但搞了好久都无法引导进Linux。。。
-于是决定把系统重装清理一番。。<br />
-（虽然把引导弄好了，但是还是决定先把Win7给重装一番）</p>
-<h3>准备工作</h3>
-<h5>备份文件</h5>
-<p>这个不用说了，如果头脑发热重装后发现重要的东西都没备份，那就。。。<br />
-我的是双系统，虽然现在只重装Windows，但还是都一起备份了，备份内容大致如下：  </p>
-<p>Linux的home目录，暂时只有这个，因为不是服务器，而且自己也没再机子上做很多的配置，所以不在意那些各种目录下的配置文件了，另外还有数据库的备份，使用sql语句导出就好了<br />
-Windows主要备份的是驱动以及一些临时到上面办公产生的文档，下载的软件之类的  </p>
-<p><strong>--Update--</strong><br />
-突然想到了Linux还有一系列的配置文件需要备份。。比如说mysql的my.cnf文件，nginx的default最好也备份一下，以后直接拿来用  </p>
-<p>Ok， 备份完毕，开始干活</p>
-<h3>Windows的安装</h3>
-<p>首先，烧个U盘启动盘。。在Linux下用dd命令试了一发。。但是失败了。。所以默默地滚回Windows使用Ultraiso进行烧录，轻松惬意<br />
-插上U盘，重启进入安装界面，我的电脑只用在开机的时候狂按ESC就可以选择U盘启动进入安装界面了<br />
-有些电脑可能需要按F2，DEL之类的进入BIOS进行修改，不得不说，这ESC真的很方便  </p>
-<p>这次安装只给Windows划了80G左右，觉得够系统安装以及一些日常软件使用了 ...</p>
-                    <a class="btn btn-default btn-xs" href="/重装之路.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/pelican源码解读.html">Pelican源码解读</a></h2>
-                <div class="summary"><p>今天想要用peclian自己搭一个博客，装完之后发现是定制好的，虽然有主题可以更换，但是还是想自己定制一番，于是想改它的template，但模板中有着一系列的变量不知道具体是如何定义的，就想着回头往上层看看，结果发现没那么容易。。。最后。。因为自己最近也想找一份Python的源码来看看别人是如何写的，就决定把Pelican的源码自己看看吧，能看多少算多少，在这里做个记录。</p>
-<h3>1. make html</h3>
-<p>看了看文档知道 <a href="http://docs.getpelican.com/en/3.3.0/">Pelican</a> 是通过这个命令来将content目录下的.md之类的文件转换成了相应的html的，所以便打算从此入手。 <br />
-make是一个linux系统自带的命令（也有可能不是。。个人没深入理解），自己上网找了一些资料发现，当调用make xxx时会从当前目录中查找Makefile文件，并从中找其感兴趣的东西。 <br />
-使用Pelican的pelican-quickstart生成的工程中是有一个MakeFile文件的，部分如下：   </p>
-<div class="highlight"><pre><span class="nv">PY</span><span class="o">=</span>python
-<span class="nv">PELICAN</span><span class="o">=</span>pelican
-<span class="nv">PELICANOPTS</span><span class="o">=</span>
-
-<span class="nv">BASEDIR</span><span class="o">=</span><span class="k">$(</span>CURDIR<span class="k">)</span>
-<span class="nv">INPUTDIR</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/content
-<span class="nv">OUTPUTDIR</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/output
-<span class="nv">CONFFILE</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/pelicanconf.py
-<span class="nv">PUBLISHCONF</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/publishconf ...</pre></div>
-                    <a class="btn btn-default btn-xs" href="/pelican源码解读.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="/Python with Xpath爬虫.html">Python with Xpath获取全校考试安排</a></h2>
-                <div class="summary"><p>= =#又到考试周。。去年就想写个爬全校考试安排的。。可是当年还不会。。现在知道了东西就写一个来用吧。。不长不短。。记下来当<strong>笔记</strong>。。。  </p>
-<p>虽然现在对整个流程有了点了解。。但写起来还是比较蛋疼。。因为既然是学习，就得不断尝试点新的。。这次就体验了一把<a href="http://www.w3schools.com/xpath/">xpath</a>的方便，确实很赞！  </p>
-<p>不过过程还是有点苦逼。。虽然xpath之前看过。。但是没用基本就忘完了。。现在即使写了出来还是不怎么理解其中的一些具体细节。。有空再补了。。  </p>
-<p>好，开始正文。。  </p>
-<h2>Python中的lxml</h2>
-<p>首先要用xpath就得装上Python相应的模块吧，也就是<a href="http://lxml.de/parsing.html">lxml</a></p>
-<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxlst1</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">lxml</span>
-</pre></div>
-
-
-<p>STO上找到的。。能用，OK～</p>
-<h2>请看代码。。。。</h2>
-<p>接下来就不好分了。。直接上代码。。看注释吧。。</p>
-<div class="highlight"><pre><span class="c">#encoding: UTF-8 </span>
-
-<span class="kn">import ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/Python with Xpath爬虫.html">more ...</a>
                 </div>
             </article>
             <hr/>

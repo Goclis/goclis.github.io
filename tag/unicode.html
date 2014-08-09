@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
+<head>
+    <title>unicode - Logging</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <!-- Open Graph tags -->
+            <meta property="og:type" content="website"/>
+            <meta property="og:title" content="Logging"/>
+            <meta property="og:url" content=""/>
+            <meta property="og:description" content="Logging"/>
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+    <style type="text/css">
+        .err {
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Logging            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="/category/study.html">Study</a>
+                        </li>
+                        <li >
+                            <a href="/category/systems.html">Systems</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+            <article>
+                <h2><a href="/Python编码.html">Python编码。。。。</a></h2>
+                <div class="summary"><p>= = 记下来提醒自己写爬虫的时候注意。。。。</p>
+<p>直接举遇到的坑吧。。爬教务处的时候这样一个字段。。。</p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="mi">16</span><span class="err">周</span><span class="p">]</span> <span class="err">周二</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span><span class="p">,</span><span class="err">周四</span><span class="p">(</span><span class="err">双</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span>
+</pre></div>
+
+
+<p>要把它切成。。</p>
+<div class="highlight"><pre><span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
+<span class="mi">1</span><span class="err">，</span><span class="mi">16</span><span class="err">，</span><span class="mi">4</span><span class="err">，</span><span class="mi">3</span><span class="err">，</span><span class="mi">4</span><span class="err">，教二</span><span class="o">-</span><span class="mi">403</span>
+</pre></div>
+
+
+<p>额。。内容是什么意思就不说了。。大概就是需要使用python的slice来获取，如下</p>
+<div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;周四(双3-4)教二-403&quot;</span>
+<span class="c"># 获取3</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">):</span> <span class="n">s</span><span class="o">.</span><span class="n">find ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="/Python编码.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
+        </div>
+        <div class="col-sm-3 well well-sm" id="sidebar">
+
+<aside>
+    <section>
+        <ul class="list-group list-group-flush">
+                <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+                  <ul class="list-group" id="social">
+                    <li class="list-group-item"><a href="https://github.com/Goclis/"><i
+                            class="fa fa-github-square fa-lg"></i> Github
+                    </a></li>
+                  </ul>
+                </li>
+
+
+
+                <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                    <ul class="list-group" id="tags">
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/os.html">
+                                os
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/python.html">
+                                python
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-2">
+                            <a href="/tag/blog.html">
+                                blog
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/linux.html">
+                                linux
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/unicode.html">
+                                unicode
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/pelican.html">
+                                pelican
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/xpath.html">
+                                xpath
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/security.html">
+                                security
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/spider.html">
+                                spider
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/software-test.html">
+                                software test
+                            </a>
+                        </li>
+                    </ul>
+                </li>    
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+
+        </ul>
+    </section>
+
+</aside>        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2014 Goclis Yao
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="//code.jquery.com/jquery.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+</body>
+</html>

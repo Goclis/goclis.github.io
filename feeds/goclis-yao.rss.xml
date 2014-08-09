@@ -1,0 +1,1570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>/</link><description></description><atom:link href="/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 30 Jul 2014 17:22:00 +0800</lastBuildDate><item><title>操作系统课设笔记</title><link>/os-experiment-note.html</link><description>&lt;p&gt;因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。&lt;/p&gt;
+&lt;p&gt;这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而 OS 上的坑又不是那么容易解决的，总之以下操作不带有普遍性。&lt;/p&gt;
+&lt;p&gt;课设平台：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;fedora 7&lt;/li&gt;
+&lt;li&gt;linux-2.6.21 source code&lt;/li&gt;
+&lt;li&gt;i386 ?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;实验1 编译内核&lt;/h3&gt;
+&lt;p&gt;纯粹照着书搞。。&lt;/p&gt;
+&lt;p&gt;以下操作假设在 home 目录下，并且用户为 root&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;zxf&lt;/span&gt; &lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.6.21&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.6.21&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;mrproper&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;清楚掉之前编译产生的垃圾&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;oldconfig&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;如果自己有配置文件的话，直接&lt;/span&gt; &lt;span class="n"&gt;copy&lt;/span&gt; &lt;span class="err"&gt;进来命名为&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="err"&gt;即可&lt;/span&gt;
+&lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;Makefile&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;修改&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;EXTARVERSION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;为&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;EXTRAVERSION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;.7&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;custom&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;version&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这样的话你生成的内核版本号就为 2.6.21.7-custom-version （前面有几个参数是指定 2,6,2 的，这里没给出）&lt;/p&gt;
+&lt;p&gt;继续&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;modules_install&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这样的话新的内核就已经更新到了 /boot 下，并且 grub 的配置文件 (/etc/grub.conf) 也已经被更新了。&lt;/p&gt;
+&lt;p&gt;有兴趣研究的同学可以继续去查看 terminal 给出的那个 sh 命令之后的那个文件，进而会跟到另外一个文件里面，我只是粗略看了下没有深究，就不多说了。&lt;/p&gt;
+&lt;p&gt;最后一步 reboot，就可以看到在 grub 的选项中看到你的内核了（.7-custom-version 结尾的那个）。&lt;/p&gt;
+&lt;h3&gt;实验2 系统调用&lt;/h3&gt;
+&lt;p&gt;这里只是添加一个最简单的系统调用，无参数，无实际操作！&lt;/p&gt;
+&lt;p&gt;加复杂的系统调用的时候可能会遇到各种坑，在做往后几个实验的时候再去解决吧。&lt;/p&gt;
+&lt;p&gt;假设要添加的系统调用名为 goclis，则内核对应的实现函数名一般为 sys_goclis，现在开始实现。&lt;/p&gt;
+&lt;p&gt;目录和用户假设同实验1&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.6.21&lt;/span&gt;
+&lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;arch&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;i386&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;syscall_table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;S&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;往系统调用表的末尾添加要新增的系统调用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;sys_tee&lt;/span&gt;       &lt;span class="cm"&gt;/* 315 */&lt;/span&gt;
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;sys_vmsplice&lt;/span&gt;
+&lt;span class="cp"&gt;# 省略几个。。&lt;/span&gt;
+
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;sys_goclis&lt;/span&gt;    &lt;span class="cm"&gt;/* 320 */&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;320 指的是我要为它分配的系统调用号，继续&lt;/p&gt;
+&lt;p&gt;添加头文件 goclis.h&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;正如我所说，这个系统调用非常简单，所以。。头文件除了宏保护就是空。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// goclis.h&lt;/span&gt;
+
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="n"&gt;ifndef&lt;/span&gt; &lt;span class="no"&gt;_LINUX_GOCLIS_H&lt;/span&gt;
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="n"&gt;define&lt;/span&gt; &lt;span class="no"&gt;_LINUX_GOCLIS_H&lt;/span&gt;
+
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="n"&gt;endif&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;添加实现文件 goclis.c&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在里面要加入我们指定的系统调用的实现&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// goclis.c&lt;/span&gt;
+
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="k"&gt;include&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linkage&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="k"&gt;include&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="k"&gt;int&lt;/span&gt; &lt;span class="n"&gt;sys_goclis&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mh"&gt;320&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  &lt;span class="c1"&gt;// 这个是随意的&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;就是这么简单的系统调用，继续，为该系统调用添加支持&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Makefile&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sched&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;exec_domain&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; \
+        &lt;span class="p"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这行加入&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;sched&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这样才能保证 goclis.c 在内核编译的时候是可见的。&lt;/p&gt;
+&lt;p&gt;但其实这个调用的实现也不一定要写在 goclis.c 中，完全可以放在一个已经存在的 .c 中即可，只要保证这个 .c 对应的 .o 能被内核编译。&lt;/p&gt;
+&lt;p&gt;接着为这个系统调用定义系统调用，我们之前那个 320 只是个注释呀&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;asm&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;i386&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;unistd&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;是 i386 不是 ia64，因为我们是 32 位的系统。&lt;/p&gt;
+&lt;p&gt;修改&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
+
+&lt;span class="c"&gt;#ifdef __KERNEL__&lt;/span&gt;
+
+&lt;span class="c"&gt;#define NR_syscalls         320&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;为&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
+&lt;span class="c"&gt;#define __NR_goclis         320&lt;/span&gt;
+
+&lt;span class="c"&gt;#ifdef __KERNEL__&lt;/span&gt;
+
+&lt;span class="c"&gt;#define NR_syscalls         321&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;很显然吧，用 __NR_goclis 来命名我们的系统调用，然后把它定义为 320，这样就真的 320 了。。&lt;/p&gt;
+&lt;p&gt;最后，还得把你的这个系统调用加入到统一的系统调用头文件中。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;syscalls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;加入头文件&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#include &amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;加入声明&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;sys_goclis&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;OK，重新编译内核然后 reboot，就 ok 了！&lt;/p&gt;
+&lt;p&gt;关于编译内核，因为之前已经编译过产生了很多的 .o 了，节省时间的话，直接 make 就可以接着编译了，否则重头编译超级浪费时间。。&lt;/p&gt;
+&lt;p&gt;重启后测试下我们的系统调用是否生效，注意得重启为我们创的这个内核！&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// test.c&lt;/span&gt;
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="k"&gt;include&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;syscall&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="k"&gt;include&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;unistd&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ret&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;syscall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;320&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;%d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ret&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mh"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;编译后运行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;gcc&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;320&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ok~，打印出 320 了。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 30 Jul 2014 17:22:00 +0800</pubDate><guid>tag:,2014-07-30:os-experiment-note.html</guid><category>os</category></item><item><title>如何验证一个数字证书的有效性</title><link>/how-to-validate-certificate.html</link><description>&lt;p&gt;首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。&lt;/p&gt;
+&lt;p&gt;好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧&lt;/p&gt;
+&lt;p&gt;对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。&lt;/p&gt;
+&lt;p&gt;既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。&lt;/p&gt;
+&lt;p&gt;用密码学表示一下大概就是&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 设生成的中间数字证书为 MB，最终发放的为B&lt;/span&gt;
+&lt;span class="err"&gt;则&lt;/span&gt;&lt;span class="no"&gt;B&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;MB&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="no"&gt;E&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;HASH&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;MB&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;// 这里E是用CA的私钥加密， || 表示拼接&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;接下来，看看是如何验证的。往下我们称MB为&lt;strong&gt;内部证书&lt;/strong&gt;，B为证书。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;从获取到的证书B开始，根据签发该证书的CA的信息，顺着层次树往上找，直到找到根证书，这样就可以构成一条&lt;strong&gt;证书链&lt;/strong&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;从证书链的顶端，往下验证。提醒一点，按照我们的假设，这条证书链上的证书在我们的PC上都是有的。首先是根证书，根证书是自签名的，拿出它的公钥，对发证书时顺带的那个加了密的消息摘要进行解密，再对内部证书使用证书中定义的摘要算法进行处理，将产生的结果进行比较，匹配则往下。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;从根证书下来后就不再是自签名了，所以需要使用上层的公钥对发证书时顺带的消息摘要进行解密，然后同样地，对内部证书摘要，比较结果，匹配则往下。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;直至最后一个证书，如果摘要都匹配，说明这个证书是有效的，没被人篡改。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;![/images/certificate_chain_20140621155213.png][流程图]&lt;/p&gt;
+&lt;p&gt;当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 21 Jun 2014 15:43:00 +0800</pubDate><guid>tag:,2014-06-21:how-to-validate-certificate.html</guid><category>security</category></item><item><title>Pelican简要配置</title><link>/pelican.html</link><description>&lt;p&gt;最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了&lt;a href="https://trello.com"&gt;trello&lt;/a&gt;里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用&lt;a href="http://docs.getpelican.com/en/3.3.0/getting_started.html#installing-pelican"&gt;pelican&lt;/a&gt;吧，以后有空再买个域名挂上去。&lt;/p&gt;
+&lt;h3&gt;博客初始化&lt;/h3&gt;
+&lt;p&gt;总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Install&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;pelican&lt;/span&gt;
+
+&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;markdown&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Quick-Start&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;自己新建一个文件夹，然后&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pelican&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;quickstart&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Usage&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;将&lt;/span&gt;&lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="err"&gt;中的&lt;/span&gt;&lt;span class="n"&gt;markdown&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;or&lt;/span&gt; &lt;span class="n"&gt;others&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="err"&gt;生成为&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;regenerate&lt;/span&gt;
+
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt;
+
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;devserver&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;make一般涉及到一些生成的操作，pelican自带了一个&lt;strong&gt;develop_server.sh&lt;/strong&gt;以供开发的时候调试&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;develop_server&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt; &lt;span class="n"&gt;start&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//localhost:8000&lt;/span&gt;
+
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;develop_server&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt; &lt;span class="n"&gt;stop&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;博客配置&lt;/h3&gt;
+&lt;p&gt;pelican支持了不少的特性，比如RSS之类的，但是其实我暂时都用不着，所以我得根据需求定制一些，接下来慢慢看文档慢慢折腾，先在开头记录我个人主要在意的几点东西，有个向导。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主题，暂时喜欢bootstrap的风格&lt;/li&gt;
+&lt;li&gt;静态文件的良好关联，如文章中使用到的图片之类的&lt;/li&gt;
+&lt;li&gt;content文件夹的层次结构，强迫症不喜欢文件夹太乱。。&lt;/li&gt;
+&lt;li&gt;暂时注释掉一些不用的功能（RSS之类）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来一个个处理吧。&lt;/p&gt;
+&lt;p&gt;pelican的content目录结构&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;articles&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;blog&lt;/span&gt;&lt;span class="err"&gt;或者其他按日期排序的文本&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;article1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;md&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;article2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;md&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;pages&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;一些不经常变动的页面，比如&lt;/span&gt;&lt;span class="n"&gt;about&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="n"&gt;contact&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;about&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;md&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;contact&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;md&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;images&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;图片（静态文件）&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="err"&gt;——&lt;/span&gt; &lt;span class="n"&gt;pdfs&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;文本（静态文件）&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;articles and pages&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pelican considers “articles” to be chronological content, such as posts on a blog, and thus associated with a date.&lt;/p&gt;
+&lt;p&gt;The idea behind “pages” is that they are usually not temporal in nature and are used for content that does not change very often (e.g., “About” or “Contact” pages).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;总之，articles下放各种文章就对了。。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;file metadata&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;pelican会从你的文件的开头获取一些关于这个文件的信息，比如标题、日期等，下面以markdown为例。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;# your file xxx.md&lt;/span&gt;
+
+&lt;span class="nl"&gt;Title:&lt;/span&gt; &lt;span class="n"&gt;My&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;标题&lt;/span&gt;
+&lt;span class="nl"&gt;Date:&lt;/span&gt; &lt;span class="mi"&gt;2014&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;       &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;时间&lt;/span&gt;
+&lt;span class="nl"&gt;Category:&lt;/span&gt; &lt;span class="n"&gt;Python&lt;/span&gt;            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;类别&lt;/span&gt;
+&lt;span class="nl"&gt;Tags:&lt;/span&gt; &lt;span class="n"&gt;pelican&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;publishing&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;分类标志&lt;/span&gt;
+&lt;span class="nl"&gt;Slug:&lt;/span&gt; &lt;span class="n"&gt;my&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;super&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;         &lt;span class="err"&gt;#&lt;/span&gt; 
+&lt;span class="nl"&gt;Author:&lt;/span&gt; &lt;span class="n"&gt;Goclis&lt;/span&gt; &lt;span class="n"&gt;Yao&lt;/span&gt;          &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;作者&lt;/span&gt;
+&lt;span class="nl"&gt;Summary:&lt;/span&gt; &lt;span class="n"&gt;Somethings&lt;/span&gt;         &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;概要&lt;/span&gt;
+
+&lt;span class="err"&gt;正文&lt;/span&gt;&lt;span class="n"&gt;here&lt;/span&gt;&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;注意，除了标题以外，其他的属性如果没有指定的话，pelican会自动指定，比如说Category会基于该文件的当前目录，Date会基于该文件的mtime等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;static folders&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;静态文件路径（典型的是突破）是静态博客必须要指定好的一个东西。&lt;/p&gt;
+&lt;p&gt;pelican默认会在生成文章时拷贝content目录中的images文件夹到output的文件夹中。&lt;/p&gt;
+&lt;p&gt;如果你想要自己手动添加一个新的文件夹（比如pdfs）让其在生成文章时被拷贝到output中，可以在pelicanconf.py中添加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;STATIC_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;images&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;pdfs&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;这意味着这两个文件夹都会被&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="err"&gt;过去&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;theme settings&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;pelican的默认主题不是很好看。。所以得研究研究怎么换了。。&lt;/p&gt;
+&lt;p&gt;这有一些&lt;a href="https://github.com/getpelican/pelican-themes"&gt;主题&lt;/a&gt;，所以打算基于这些修改了。。&lt;/p&gt;
+&lt;p&gt;更换主题很容易，直接在配置文件里修改主题路径即可&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/home/user/pelican-themes/theme-folder&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;配置文件&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在移植的时候需要注意主题的路径需要修改&lt;/p&gt;
+&lt;p&gt;pelicanconf.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="o"&gt;-*-&lt;/span&gt; &lt;span class="nx"&gt;coding&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;utf&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt; &lt;span class="o"&gt;-*-&lt;/span&gt;
+&lt;span class="nb"&gt;from&lt;/span&gt; &lt;span class="nx"&gt;__future__&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nx"&gt;unicode_literals&lt;/span&gt;
+
+&lt;span class="n"&gt;AUTHOR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Goclis Yao&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SITENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Logging&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SITEURL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;TIMEZONE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Asia/Shanghai&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;DATE_FORMATS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;zh_CN&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;%Y-%m-%d %H:%M:%S&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_DATE_FORMAT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;%Y-%m-%d %H:%M:%S&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_DATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nx"&gt;use&lt;/span&gt; &lt;span class="nx"&gt;filesystem&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;s mtime&lt;/span&gt;
+&lt;span class="s1"&gt;# LOCALE = (&amp;#39;&lt;/span&gt;&lt;span class="nx"&gt;zh_CN.utf8&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;,)&lt;/span&gt;
+&lt;span class="s1"&gt;DEFAULT_LANG = u&amp;#39;&lt;/span&gt;&lt;span class="nx"&gt;zh_CN&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
+&lt;span class="s1"&gt;FILENAME_METADATA = &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="nx"&gt;P&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;slug&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="nx"&gt;.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
+
+&lt;span class="s1"&gt;# Feed generation is usually not desired when developing&lt;/span&gt;
+&lt;span class="s1"&gt;FEED_ALL_ATOM = None&lt;/span&gt;
+&lt;span class="s1"&gt;CATEGORY_FEED_ATOM = None&lt;/span&gt;
+&lt;span class="s1"&gt;TRANSLATION_FEED_ATOM = None&lt;/span&gt;
+
+&lt;span class="s1"&gt;# Blogroll&lt;/span&gt;
+&lt;span class="s1"&gt;LINKS =  ((&amp;#39;&lt;/span&gt;&lt;span class="nx"&gt;Pelican&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="nx"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//getpelican.com/&amp;#39;),&lt;/span&gt;
+          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Python.org&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;http://python.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Jinja2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;http://jinja.pocoo.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nx"&gt;Social&lt;/span&gt; &lt;span class="nx"&gt;widget&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Github&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;https://github.com/Goclis/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+
+&lt;span class="n"&gt;DEFAULT_PAGINATION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
+
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="nx"&gt;Uncomment&lt;/span&gt; &lt;span class="nx"&gt;following&lt;/span&gt; &lt;span class="nb"&gt;line&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nx"&gt;you&lt;/span&gt; &lt;span class="nx"&gt;want&lt;/span&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="na"&gt;-relative&lt;/span&gt; &lt;span class="nx"&gt;URLs&lt;/span&gt; &lt;span class="nx"&gt;when&lt;/span&gt; &lt;span class="nx"&gt;developing&lt;/span&gt;
+&lt;span class="vi"&gt;#RELATIVE_URLS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
+
+&lt;span class="n"&gt;STATIC_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;images&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pdfs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;src&amp;#39;&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;  # images and pdf files
+
+THEME = &amp;quot;/home/goclis/SHARE/Blog/themes/pelican-bootstrap3&amp;quot;
+# THEME = &amp;quot;/home/goclis/niu-x2-sidebar&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;结合nginx&lt;/h3&gt;
+&lt;p&gt;修改nginx.conf，添加server如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="o"&gt;:/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Goclis&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Desktop&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;VMSHARE&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Blog&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Instead&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;handling&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;just&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;rewrite&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+            &lt;span class="n"&gt;rewrite&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Serve&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;exists&lt;/span&gt;
+            &lt;span class="n"&gt;gzip_static&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Try&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;clean&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;
+            &lt;span class="n"&gt;try_files&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;htm&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;404&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;favicon&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="n"&gt;never&lt;/span&gt; &lt;span class="n"&gt;changes&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;so&lt;/span&gt; &lt;span class="n"&gt;don&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;let&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;expire&lt;/span&gt;
+            &lt;span class="n"&gt;expires&lt;/span&gt; &lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;^~&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;theme&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;very&lt;/span&gt; &lt;span class="n"&gt;rarely&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;ever&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;change&lt;/span&gt;
+            &lt;span class="n"&gt;expires&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;不同情况适当更换root路径。&lt;/p&gt;
+&lt;p&gt;重启后访问 localhost 即可。&lt;/p&gt;
+&lt;h3&gt;Some bugs&lt;/h3&gt;
+&lt;p&gt;基本都解决了，但是有一些中文的原因导致的不兼容，比如说代码高亮。&lt;/p&gt;
+&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sun, 25 May 2014 20:30:00 +0800</pubDate><guid>tag:,2014-05-25:pelican.html</guid><category>pelican</category><category>blog</category></item><item><title>动态载入和虚拟内存的按需调页的关联</title><link>/%E5%8A%A8%E6%80%81%E8%BD%BD%E5%85%A5%E5%92%8C%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E7%9A%84%E6%8C%89%E9%9C%80%E8%B0%83%E9%A1%B5%E7%9A%84%E5%85%B3%E8%81%94.html</link><description>&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那么，额外工作指的是？&lt;/p&gt;
+&lt;p&gt;在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。&lt;/p&gt;
+&lt;p&gt;以下为个人理解，理解基于&lt;strong&gt;动态载入不需要操作系统提供特别支持&lt;/strong&gt;这一事实。&lt;/p&gt;
+&lt;p&gt;动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的&lt;strong&gt;编码&lt;/strong&gt;就是所谓的额外开销。比如下面这段代码（我不确定是否正确）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// so_obj是一个变量标识是否导入了某个.so&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;so_obj&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="no"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// load it here&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~&lt;/p&gt;
+&lt;h3&gt;Update at 2014-05-26&lt;/h3&gt;
+&lt;p&gt;因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解是正确的。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sun, 25 May 2014 17:20:00 +0800</pubDate><guid>tag:,2014-05-25:动态载入和虚拟内存的按需调页的关联.html</guid><category>os</category></item><item><title>动态链接和动态载入的区别</title><link>/%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%92%8C%E5%8A%A8%E6%80%81%E8%BD%BD%E5%85%A5%E7%9A%84%E5%8C%BA%E5%88%AB.html</link><description>&lt;p&gt;大致的理解如下，不一定正确，确认后会更新：&lt;/p&gt;
+&lt;p&gt;按照一般的步骤，用户程序在执行前会经历以下几个步骤：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;编译汇编&lt;/li&gt;
+&lt;li&gt;链接（将编译出来的模块和其他引用了的模块合并）&lt;/li&gt;
+&lt;li&gt;加载（从硬盘加载到内存中）&lt;/li&gt;
+&lt;li&gt;执行（在内存中执行）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;动态加载和动态链接是打破以上所描述的常规行为的。&lt;/p&gt;
+&lt;h3&gt;动态加载&lt;/h3&gt;
+&lt;p&gt;硬盘上存储了一个已经生成好的目标模块，但是这个目标模块是由许多子程序组成的。每时每刻，不一定所有的子程序都需要在内存中，所以，在使用到相应子程序时再把其加载到内存中来使用，这要求用户在编写程序时合理地编写子程序，不需要操作系统提供特别的支持。&lt;/p&gt;
+&lt;h3&gt;动态链接&lt;/h3&gt;
+&lt;p&gt;它与动态加载的概念相似，但是，它不是将加载延迟到了执行时，而是将链接延迟到执行时。主要的问题就在于理解这句话。对于动态链接，磁盘上存储着的目标模块中包含着一部分它并未链接的模块（但是它迟早要用，所以动态链接嘛~）。而使用动态加载技术时，你动态加载的模块是经过链接之后的，也就是该模块已经结合了所有它会用到的模块，只是在你程序的不同地方使用了，所以在不同的地方动态加载需要的代码。&lt;/p&gt;
+&lt;p&gt;动态链接的实现是依赖于存根（stub）的，目标模块中在使用需要动态链接的模块的地方使用存根来代替，存根能够指出如何装入以及装入后的程序在内存的哪。&lt;/p&gt;
+&lt;p&gt;动态链接的好处在于多个程序使用到了一个相同的模块时，不需要将该模块都像常规步骤或者动态加载那样合并到目标模块中，而是在执行时再动态链接，这样在内存中就只用存在一份该模块的代码了，即实现了共享库。&lt;/p&gt;
+&lt;h3&gt;Update at 2014-05-26&lt;/h3&gt;
+&lt;p&gt;问了老师之后，再自己查了查wiki之后有了更深的理解。&lt;/p&gt;
+&lt;p&gt;首先，上面的理解依旧是正确的，只是不那么准确，看看wiki的吧&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;动态加载&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Dynamic loading is a mechanism by which a computer program can, at run time, load a library (or other binary) into memory, retrieve the addresses of functions and variables contained in the library, execute those functions or access those variables, and unload the library from memory. Unlike static linking and loadtime linking, this mechanism allows a computer program to start up in the absence of these libraries, to discover available libraries, and to potentially gain additional functionality. &lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;大致的意思就是说动态加载是在运行时把一个library或者二进制文件调入内存，取出其中的functions或者variables来使用。&lt;/p&gt;
+&lt;p&gt;再看看动态链接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;动态链接&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In computing, a dynamic linker is the part of an operating system (OS) that loads (copies from persistent storage to RAM) and links (fills jump tables and relocates pointers) the shared libraries needed by an executable at run time, that is, when it is executed. The specific operating system and executable format determine how the dynamic linker functions and how it is implemented. Linking is often referred to as a process that is performed at compile time of the executable while a dynamic linker is in actuality a special loader that loads external shared libraries into a running process and then binds those shared libraries dynamically to the running process. This is also called dynamic or late linking. The specifics of how a dynamic linker functions is operating-system dependent. &lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;看上去比起动态加载貌似只多了一个共享吧？&lt;/p&gt;
+&lt;p&gt;实际上，动态链接做的不止是动态加载，还有链接的工作。回想我们在一开始说的那个常规步骤就可以明白了。&lt;/p&gt;
+&lt;p&gt;其实，这两个概念在现在操作系统的实现上已经混合了，没有纯粹的&lt;strong&gt;动态加载&lt;/strong&gt;了，都是基于动态链接做的了，比如windows的dll和linux的.so都是如此。&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;&lt;a href="http://en.wikipedia.org/wiki/Dynamic_loading"&gt;Dynamic Loading&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;&lt;a href="http://en.wikipedia.org/wiki/Dynamic_linker"&gt;Dynamic Linker&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 21 May 2014 15:32:00 +0800</pubDate><guid>tag:,2014-05-21:动态链接和动态载入的区别.html</guid><category>os</category></item><item><title>Elementary OS</title><link>/Elementary%20OS.html</link><description>&lt;p&gt;记录一下对Elementary OS的每一步配置，持续更新。&lt;/p&gt;
+&lt;h3&gt;系统安装&lt;/h3&gt;
+&lt;p&gt;省略。。&lt;/p&gt;
+&lt;h3&gt;源的修改&lt;/h3&gt;
+&lt;p&gt;去网上查查相应的源，修改&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;记得备份一下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bak&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;163的源&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-backports&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-backports&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://extras.ubuntu.com/ubuntu&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://extras.ubuntu.com/ubuntu&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;语言支持&lt;/h3&gt;
+&lt;p&gt;因为选择的是英文安装，并没有中文模块&lt;/p&gt;
+&lt;p&gt;System Settings -&amp;gt; Language Support 里面可以安装，选择 Chinese (Simplified)，
+安装完后选择 Keyboard-Input-Helper 为 ibus&lt;/p&gt;
+&lt;p&gt;这里得启动ibus才能使用中文输入法，这里顺便讲讲设置ibus为开机启动&lt;/p&gt;
+&lt;p&gt;首先找到ibus-daemon的路径&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;which&lt;/span&gt; &lt;span class="n"&gt;ibus&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;daemon&lt;/span&gt; &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;ibus&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;daemon&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后在 System Settings -&amp;gt; Startup Applications 里添加一项， 路径为 /usr/bin/ibus-daemon 即可&lt;/p&gt;
+&lt;p&gt;接着要对ibus进行下配置（preference），添加一项中文输入法，设置下字体和大小，再共享到全局就好了&lt;/p&gt;
+&lt;h3&gt;安装Chrome&lt;/h3&gt;
+&lt;p&gt;Chrome占了Web开发狗生活的一大部分。。&lt;/p&gt;
+&lt;p&gt;去官网或者自己以前留下的.deb包&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dpkg&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;****&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deb&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ok&lt;/p&gt;
+&lt;h4&gt;插件&lt;/h4&gt;
+&lt;p&gt;其他插件基本都会被同步，主要是配置下GAE就好了&lt;/p&gt;
+&lt;p&gt;拿到GAE的安装包（之前用的就可以），然后放到home目录下就好了，假设路径为&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;gae&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;同ibus一样设置开机启动，不过命令改为&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;gae&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proxy&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;chrome app&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;google&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;chrome&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stable&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//stackedit.io&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Sublime Text 2&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;源安装&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;repository&lt;/span&gt; &lt;span class="n"&gt;ppa&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;webupd8team&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;包安装&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在官网下载解压包后，解压并移到/opt目录下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;tar -xf sublime.tar.bz2 &lt;span class="c"&gt;# 不一定是这个名字。。&lt;/span&gt;
+mv sublime/ /opt &lt;span class="c"&gt;# 名字也不一定&lt;/span&gt;
+sudo ln -s /opt/sublime/sublime_text /usr/bin/sublime &lt;span class="c"&gt;# 建立硬链以便在terminal中使用&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;现在在Terminal中打sublime已经可以启动了，为了下一步添加到Dock上，得先在/usr/share/applications下创一个.desktop&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;applications&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;desktop&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;输入以下内容，注意自行替换Icon的目录，即图标&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[Desktop Entry]&lt;/span&gt;
+&lt;span class="na"&gt;Version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;1.0&lt;/span&gt;
+&lt;span class="na"&gt;Name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Sublime Text 2&lt;/span&gt;
+&lt;span class="na"&gt;GenericName&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Text Editor&lt;/span&gt;
+
+&lt;span class="na"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;sublime&lt;/span&gt;
+&lt;span class="na"&gt;Terminal&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;false&lt;/span&gt;
+&lt;span class="na"&gt;Icon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/opt/Sublime/Icon/48×48/sublime_text.png&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Application&lt;/span&gt;
+&lt;span class="na"&gt;Categories&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TextEditor;IDE;Development&lt;/span&gt;
+&lt;span class="na"&gt;X-Ayatana-Desktop-Shortcuts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;NewWindow&lt;/span&gt;
+
+&lt;span class="k"&gt;[NewWindow Shortcut Group]&lt;/span&gt;
+&lt;span class="na"&gt;Name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;New Window&lt;/span&gt;
+&lt;span class="na"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;sublime -n&lt;/span&gt;
+&lt;span class="na"&gt;TargetEnvironment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Unity&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;现在就可以在Applications里看到Sublime了。。&lt;br /&gt;
+接下来创建&lt;strong&gt;右键启动&lt;/strong&gt;，即选择文件点击右键时可选择使用Sublime来打开，具体如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;applications&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mimeapps&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在最后一行加上&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;plain&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;desktop&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在终端中&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;applications&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;defaults&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;将原先的默认编辑器(比如gedit.desktop)全部替换为sublime.desktop即可  &lt;/p&gt;
+&lt;p&gt;至于&lt;strong&gt;添加到dock&lt;/strong&gt;上，直接从applications上拖到dock上添加即可(对Elementary可行)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;配置Sublime&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在Sublime中按Ctrl+`调出console，输入以下代码后回车&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="n"&gt;urllib2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;pf&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;Package&lt;/span&gt; &lt;span class="n"&gt;Control&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;package&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;installed_packages_path&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;makedirs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;None&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;pf&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;wb&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;urllib2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urlopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//sublime.wbond.net/&amp;#39;+pf.replace(&amp;#39; &amp;#39;,&amp;#39;%20&amp;#39;)).read())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;重启Sublime Text 2，如果在Perferences-&amp;gt;package settings中看到package control这一项，则安装成功，按下Ctrl+Shift+P调出命令面板，输入install 调出 Install Package 选项并回车，然后在列表中选中要安装的插件  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;一些插件：&lt;/strong&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTMLBeautify  &lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/xgenvn/InputHelper"&gt;InputHelper&lt;/a&gt;（为了输入中文。。。自行打开~/.config/sublime-text-2/Packages/InputHelper/Default(Linux).sublime-keymap修改快捷键）  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;个人的配置：&lt;/strong&gt;
+打开Preference-&amp;gt;Key Bindings - User，在[]里添加以下内容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;keys&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ctrl+2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;command&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;move_to&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;args&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;to&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;eol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;extend&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;false&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;即使用ctrl+2来使光标移到本行末尾  &lt;/p&gt;
+&lt;p&gt;Preference-&amp;gt;Settings-Default里&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="s"&gt;&amp;quot;translate_tabs_to_spaces&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;// 把这项设置了&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Problems&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;= =# inputhelper弹不出来。。&lt;/p&gt;
+&lt;p&gt;手动使用shift+ctrl+p调用后发现&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;Traceback&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;most&lt;/span&gt; &lt;span class="n"&gt;recent&lt;/span&gt; &lt;span class="n"&gt;call&lt;/span&gt; &lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;./sublime_plugin.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;362&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;run_&lt;/span&gt;
+  &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;./inputhelper.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;run&lt;/span&gt;
+  &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;.\subprocess.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;633&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;__init__&lt;/span&gt;
+  &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;.\subprocess.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;1139&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;_execute_child&lt;/span&gt;
+&lt;span class="nl"&gt;OSError:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Errno&lt;/span&gt; &lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;Permission&lt;/span&gt; &lt;span class="n"&gt;denied&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;大概就是权限不够吧。。&lt;/p&gt;
+&lt;p&gt;然后就自己跑到InputHelper的安装目录（~/.config/sublime text 2/Packages/InputHelper/&lt;/p&gt;
+&lt;p&gt;真正被调用的是这个目录下lib里的linux_text_input_gui.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;linux_text_input_gui&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;OK，确实弹出来了。。&lt;/p&gt;
+&lt;p&gt;这里我大概猜测是调用了subprocess.py的进程没有权限执行linux_text_input_gui.py，所以改它的权限吧&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;chmod&lt;/span&gt; &lt;span class="mi"&gt;777&lt;/span&gt; &lt;span class="n"&gt;linux_text_input_gui&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;不知道多少好。就给全部了。。&lt;/span&gt;&lt;span class="mi"&gt;755&lt;/span&gt; &lt;span class="n"&gt;is&lt;/span&gt; &lt;span class="n"&gt;enough&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后再到shift+ctrl+p里执行，成功弹出！！快捷键也OK～～～&lt;/p&gt;
+&lt;h3&gt;Dropbox&lt;/h3&gt;
+&lt;p&gt;.deb安装&lt;/p&gt;
+&lt;h3&gt;Mysql&lt;/h3&gt;
+&lt;p&gt;不想折腾就在Software Center里装吧。。&lt;br /&gt;
+不过正规地还是从官网下载源码，编译安装，不过麻烦。。&lt;br /&gt;
+0.0 竟然没提示设置密码。。。。按下面的法子破。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mysqladmin&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;u&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;
+&lt;span class="n"&gt;New&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="n"&gt;Confirm&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;OK，密码已设置完毕，用它登录就好了
+= =#编码实在没折腾出来。。。打算用phpmyadmin来修改了。。。&lt;/p&gt;
+&lt;h3&gt;Nginx+phpmyadmin&lt;/h3&gt;
+&lt;p&gt;网上找来的&lt;a href="http://hi.baidu.com/sudoer/item/479347788e7364376e29f6f8"&gt;教程&lt;/a&gt;，很不错，可用。。  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;安装nginx&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;repository&lt;/span&gt; &lt;span class="n"&gt;ppa&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;stable&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;安装php&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cli&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cgi&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mcrypt&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mysql&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;配置Nginx&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;default&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;进行如下修改&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt; &lt;span class="n"&gt;default_server&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;80&lt;/span&gt; &lt;span class="n"&gt;default_server&lt;/span&gt; &lt;span class="n"&gt;ipv6only&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;www&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;index&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;htm&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Make&lt;/span&gt; &lt;span class="n"&gt;site&lt;/span&gt; &lt;span class="n"&gt;accessible&lt;/span&gt; &lt;span class="n"&gt;from&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//localhost/&lt;/span&gt;
+    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;First&lt;/span&gt; &lt;span class="n"&gt;attempt&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt; &lt;span class="n"&gt;as&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;as&lt;/span&gt; &lt;span class="n"&gt;directory&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt; &lt;span class="n"&gt;fall&lt;/span&gt; &lt;span class="n"&gt;back&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;displaying&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="mf"&gt;404.&lt;/span&gt;
+        &lt;span class="n"&gt;try_files&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;404&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Uncomment&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;enable&lt;/span&gt; &lt;span class="n"&gt;naxsi&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt; &lt;span class="n"&gt;location&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;naxsi&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rules&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Only&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;naxsi&lt;/span&gt; &lt;span class="n"&gt;used&lt;/span&gt; &lt;span class="n"&gt;with&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;naxsi&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ui&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;process&lt;/span&gt; &lt;span class="n"&gt;denied&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;RequestDenied&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;proxy_pass&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//127.0.0.1:8080;    &lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;error_page&lt;/span&gt; &lt;span class="mi"&gt;404&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mf"&gt;404.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;redirect&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt; &lt;span class="n"&gt;pages&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="n"&gt;page&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;error_page&lt;/span&gt; &lt;span class="mi"&gt;500&lt;/span&gt; &lt;span class="mi"&gt;502&lt;/span&gt; &lt;span class="mi"&gt;503&lt;/span&gt; &lt;span class="mi"&gt;504&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;pass&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;PHP&lt;/span&gt; &lt;span class="n"&gt;scripts&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;FastCGI&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="n"&gt;listening&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt; &lt;span class="mf"&gt;127.0.0.1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;9000&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;fastcgi_split_path_info&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="p"&gt;(.&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;NOTE&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;You&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;have&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;cgi.fix_pathinfo = 0;&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ini&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;With&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cgi&lt;/span&gt; &lt;span class="n"&gt;alone&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;fastcgi_pass&lt;/span&gt; &lt;span class="mf"&gt;127.0.0.1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;9000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;With&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;fastcgi_pass&lt;/span&gt; &lt;span class="n"&gt;unix&lt;/span&gt;&lt;span class="o"&gt;:/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;fastcgi_index&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;include&lt;/span&gt; &lt;span class="n"&gt;fastcgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;deny&lt;/span&gt; &lt;span class="n"&gt;access&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;htaccess&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;Apache&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;document&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;concurs&lt;/span&gt; &lt;span class="n"&gt;with&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;one&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ht&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;deny&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;修改完后nginx就会将/var/www目录(可能需要手动创建)下的文件进行相应的处理了，当然有相应规则，比如&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这段就是处理.php脚本的  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;安装phpmyadmin&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;phpmyadmin&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;安装完后执行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;phpmyadmin&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;www&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;phpmyadmin&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;注意，phpmyadmin后面没有"/"&lt;br /&gt;
+然后在浏览器中输入http://localhost/phpmyadmin即可&lt;/p&gt;
+&lt;h3&gt;安装python pip&lt;/h3&gt;
+&lt;p&gt;&lt;a href="http://www.pip-installer.org/en/latest/installing.html"&gt;安装指南&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;管理启动项&lt;/h3&gt;
+&lt;p&gt;使用update-rc.d关掉服务器类型的软件的启动项&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;apache2&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm5&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外有个gui界面的bum，不知道怎么用。。。。  &lt;/p&gt;
+&lt;h3&gt;安装System monitor &amp;amp; System load Indicator&lt;/h3&gt;
+&lt;p&gt;软件中心就有，后者可以加到系统启动&lt;/p&gt;
+&lt;h3&gt;安装Node.js&lt;/h3&gt;
+&lt;p&gt;下载源码包&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;xzvf&lt;/span&gt; &lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;v0&lt;/span&gt;&lt;span class="mf"&gt;.10.26&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;v0&lt;/span&gt;&lt;span class="mf"&gt;.10.26&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt;  &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;前提安装了&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;安装新立得&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;synaptic&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;安装git&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;
+
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;global&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Goclis Yao&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;global&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;goclisyyh@gmail.com&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;安装atom-text-editor&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;repository&lt;/span&gt; &lt;span class="n"&gt;ppa&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;webupd8team&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;atom&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;atom&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Thu, 24 Apr 2014 00:00:00 +0800</pubDate><guid>tag:,2014-04-24:Elementary OS.html</guid><category>linux</category></item><item><title>黑盒测试感想</title><link>/%E5%85%B3%E4%BA%8E%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95%E7%9A%84%E6%84%9F%E6%83%B3.html</link><description>&lt;p&gt;最近在准备软件测试的最终答辩，主题是黑盒测试，便去了解了一下。&lt;/p&gt;
+&lt;p&gt;下面先直接贴三段论，What, Why, How&lt;/p&gt;
+&lt;h3&gt;黑盒测试的概念&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;黑盒测试也称功能测试，它是通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，在程序接口进行测试，它只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当地接收输入数据而产生正确的输出信息。黑盒测试着眼于程序外部结构，不考虑内部逻辑结构，主要针对软件界面和软件功能进行测试。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;黑盒测试的优势&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;比较简单，不需要了解程序内部代码及实现&lt;/li&gt;
+&lt;li&gt;与软件内部实现无关&lt;/li&gt;
+&lt;li&gt;从用户角度出发，能很容易知道用户会用到哪些功能，会遇到哪些问题&lt;/li&gt;
+&lt;li&gt;基于软件开发文档，所以也能知道软件实现了文档中的哪些功能&lt;/li&gt;
+&lt;li&gt;在做软件测试自动化时较为方便&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;黑盒测试方法&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;等价类划分法&lt;/li&gt;
+&lt;li&gt;边界值分析法&lt;/li&gt;
+&lt;li&gt;错误推测法&lt;/li&gt;
+&lt;li&gt;因果图法&lt;/li&gt;
+&lt;li&gt;判定表驱动法&lt;/li&gt;
+&lt;li&gt;功能图法&lt;/li&gt;
+&lt;li&gt;more...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;p&gt;贴完了，讲讲感想吧。其实觉得黑盒测试在日常的开发中不知不觉就用到了。比如说，我和某个人一起开发某个网站，而且我们开发的模块之间有相互调用的关系。这种情况下，我新完成了一个模块，他那边如果需要使用，该怎么保证这个模块是有效的？&lt;/p&gt;
+&lt;p&gt;可能会有人说，让他测啊。好吧，现在是两个人开发，如果多个人呢？所以需要个叫测试师的职业嘛，一人测试，造福多人。我们在自己的开发中其实也要充当这么个职业，自己写了个模块，自己测吧，通过了再告诉别人说，这模块搞定了，能用，妥妥的。&lt;/p&gt;
+&lt;p&gt;那么，我们一般怎么测试的？给个输入，看看结果对不对啊，这是最直接的想法了，出了错再进去看看代码哪步出错了。而这个直接的想法也差不多就是黑盒测试的想法，当然，黑盒测试只会告诉你，你错了。&lt;/p&gt;
+&lt;p&gt;黑盒测试大致就是由用户提供输入，将输入传入要测试的程序，得到输出，再由用户检查这个输出是否是所预期的，从而判断待测程序是否是满足要求的。所以，整个过程中，待测程序就是个黑盒。而黑盒测试中的&lt;strong&gt;等价类划分法&lt;/strong&gt;和&lt;strong&gt;边界值分析法&lt;/strong&gt;更是直接到不行的想法。&lt;/p&gt;
+&lt;p&gt;先说等价类划分法吧。很明显，站在一个程序的角度上，它接受的输入基本上来说是&lt;strong&gt;一切皆有可能&lt;/strong&gt;，这也意味着，输入是无法穷举的，所以我们如果能在这么多输入中找几个代表出来，然后假设它们是能代表所有的输入的，那么，我们不就只用处理它们几个了么？这就是等价类划分法。&lt;/p&gt;
+&lt;h3&gt;补充概念&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;有效等价类：是指对于程序的规格说明来说是合理的，有意义的输入数据构成的集合.利用有效等价类可检验程序是否实现了规格说明中所规定的功能和性能。&lt;/p&gt;
+&lt;p&gt;无效等价类：与有效等价类的定义恰巧相反。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;划分等价类的规则&lt;/h3&gt;
+&lt;h4&gt;如果输入条件规定了取值范围，可定义一个有效等价类和两个无效等价类&lt;/h4&gt;
+&lt;p&gt;比如，如果输入值是学生成绩，范围是0-100，那么就有以下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;有效等价类：&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="n"&gt;Grade&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;
+
+&lt;span class="err"&gt;无效等价类：&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Grade&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Grade&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;如果规定了输入数据的个数，可定义一个有效等价类和两个无效等价类&lt;/h4&gt;
+&lt;p&gt;比如，如果一个学生每学期只能选修1~3门课，那么就有以下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;有效等价类：&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="err"&gt;选修&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="err"&gt;门课&lt;/span&gt;
+
+&lt;span class="err"&gt;无效等价类：&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="err"&gt;不选&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="err"&gt;选修超过&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="err"&gt;门&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;balabala&lt;/h4&gt;
+&lt;p&gt;I am endline&lt;/p&gt;
+&lt;p&gt;接着讲讲边界值分析法。个人感觉这也是个很直接的想法，听到边界，我们果断会想到数组下标这个家伙，也导致了我们在写关于它的代码的时候，往往会停下来看看，因为这边界很容易出错，而且错还挺致命。这就是边界带给我们的经验教训。&lt;/p&gt;
+&lt;p&gt;所以，在黑盒测试的时候，除了需要划分等价类，从各个等价类中抽取出一个代表来参与测试以外，还需要测试每一个等价类的边界，因为边界是很危险的。&lt;/p&gt;
+&lt;h4&gt;To be continued&lt;/h4&gt;
+&lt;p&gt;除此之外还有许多的黑盒测试方法，感觉未来有空要看看。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Mon, 14 Apr 2014 00:00:00 +0800</pubDate><guid>tag:,2014-04-14:关于黑盒测试的感想.html</guid><category>software test</category></item><item><title>Python编码。。。。</title><link>/Python%E7%BC%96%E7%A0%81.html</link><description>&lt;p&gt;= = 记下来提醒自己写爬虫的时候注意。。。。&lt;/p&gt;
+&lt;p&gt;直接举遇到的坑吧。。爬教务处的时候这样一个字段。。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="err"&gt;周&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="err"&gt;周二&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;教二&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;403&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;周四&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;双&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;教二&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;403&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;要把它切成。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="err"&gt;，教二&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;403&lt;/span&gt;
+&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="err"&gt;，教二&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;403&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;额。。内容是什么意思就不说了。。大概就是需要使用python的slice来获取，如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;周四(双3-4)教二-403&amp;quot;&lt;/span&gt;
+&lt;span class="c"&gt;# 获取3&lt;/span&gt;
+&lt;span class="n"&gt;l&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;看起来是行得通的。。但是并不一定。。&lt;br /&gt;
+问题就在于字符串s和slice中使用的'双'的编码不同时就会出错。。  &lt;/p&gt;
+&lt;p&gt;因为使用requests.get获取到的response的text是Unicode编码的（不是很确定），而我们的硬编码中的字符串是utf-8编码的，这就导致slice的并非我们所要的&lt;br /&gt;
+额。。可以先看看这有什么区别&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;周四(双3-4)教二-403&amp;quot;&lt;/span&gt; 
+&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; 
+&lt;span class="cp"&gt;# &amp;#39;\xe5\x91\xa8\xe5\x9b\x9b(\xe5\x8f\x8c3-4)\xe6\x95\x99\xe4\xba\x8c-403&amp;#39; utf-8编码&lt;/span&gt;
+
+&lt;span class="n"&gt;us&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;utf&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="err"&gt;将字符串&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="err"&gt;按&lt;/span&gt;&lt;span class="n"&gt;utf&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="err"&gt;解码成&lt;/span&gt;&lt;span class="n"&gt;ASCII&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="err"&gt;中会变成&lt;/span&gt;&lt;span class="n"&gt;unicode&lt;/span&gt;
+&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt; 
+&lt;span class="cp"&gt;# u&amp;#39;\u5468\u56db(\u53cc3-4)\u6559\u4e8c-403&amp;#39; unicode编码&lt;/span&gt;
+
+&lt;span class="cp"&gt;# 比较下不同&lt;/span&gt;
+&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;utf8:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;unicode:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="cp"&gt;# utf8: 24 unicode: 14&lt;/span&gt;
+
+&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;utf8:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="cp"&gt;# utf8: 3&lt;/span&gt;
+
+&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;unicode&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="cp"&gt;# UnicodeDecodeError: &amp;#39;ascii&amp;#39; codec can&amp;#39;t decode byte 0xe5 in position 0: ordinal not in range(128)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;额。。看上面的代码已经能感受到不同了吧。。如果两种编码混合的话就可能会导致结果不是想要的&lt;br /&gt;
+先来解决一下UnicodeDecodeError这个问题，添加如下代码&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;
+&lt;span class="n"&gt;reload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefaultencoding&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;utf&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后再运行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;unicode:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="cp"&gt;# unicode: &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;后面那个slice的结果是""&lt;/p&gt;
+&lt;p&gt;原因呢，就是之前讲的'双'的编码和us字符串的编码不同了，所以将其decode成unicode就可以得到想要的结果了&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;unicode:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;utf&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;utf&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="cp"&gt;# unicode: 3&lt;/span&gt;
+
+&lt;span class="cp"&gt;# 简单点的。。。&lt;/span&gt;
+&lt;span class="n"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;unicode:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;u&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;u&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;双&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;好了。。得到想要的结果了。。&lt;/p&gt;
+&lt;p&gt;建议：&lt;br /&gt;
+1. 自己硬编码的字符串最好前面都加上u以确保其是unicode编码
+2. 确定一下自己使用的库(urllib2，requests)获取到的页面的文本是什么编码的。。最好都转成unicode来处理。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Thu, 06 Feb 2014 00:00:00 +0800</pubDate><guid>tag:,2014-02-06:Python编码.html</guid><category>python</category><category>unicode</category></item><item><title>重装之路</title><link>/%E9%87%8D%E8%A3%85%E4%B9%8B%E8%B7%AF.html</link><description>&lt;h3&gt;背景&lt;/h3&gt;
+&lt;p&gt;今天手贱把引导玩坏了。。&lt;br /&gt;
+虽然用WinPE重写了MBR成功进入了Win7，但搞了好久都无法引导进Linux。。。
+于是决定把系统重装清理一番。。&lt;br /&gt;
+（虽然把引导弄好了，但是还是决定先把Win7给重装一番）&lt;/p&gt;
+&lt;h3&gt;准备工作&lt;/h3&gt;
+&lt;h5&gt;备份文件&lt;/h5&gt;
+&lt;p&gt;这个不用说了，如果头脑发热重装后发现重要的东西都没备份，那就。。。&lt;br /&gt;
+我的是双系统，虽然现在只重装Windows，但还是都一起备份了，备份内容大致如下：  &lt;/p&gt;
+&lt;p&gt;Linux的home目录，暂时只有这个，因为不是服务器，而且自己也没再机子上做很多的配置，所以不在意那些各种目录下的配置文件了，另外还有数据库的备份，使用sql语句导出就好了&lt;br /&gt;
+Windows主要备份的是驱动以及一些临时到上面办公产生的文档，下载的软件之类的  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;--Update--&lt;/strong&gt;&lt;br /&gt;
+突然想到了Linux还有一系列的配置文件需要备份。。比如说mysql的my.cnf文件，nginx的default最好也备份一下，以后直接拿来用  &lt;/p&gt;
+&lt;p&gt;Ok， 备份完毕，开始干活&lt;/p&gt;
+&lt;h3&gt;Windows的安装&lt;/h3&gt;
+&lt;p&gt;首先，烧个U盘启动盘。。在Linux下用dd命令试了一发。。但是失败了。。所以默默地滚回Windows使用Ultraiso进行烧录，轻松惬意&lt;br /&gt;
+插上U盘，重启进入安装界面，我的电脑只用在开机的时候狂按ESC就可以选择U盘启动进入安装界面了&lt;br /&gt;
+有些电脑可能需要按F2，DEL之类的进入BIOS进行修改，不得不说，这ESC真的很方便  &lt;/p&gt;
+&lt;p&gt;这次安装只给Windows划了80G左右，觉得够系统安装以及一些日常软件使用了，毕竟不是主系统，自己也不是啥升级控。。。&lt;br /&gt;
+至于分区，没分，就一个C盘（还一个D盘是之前的E盘，因为上面还有些数据懒得处理，以后会在重装Linux时把它合并到Linux系统下），没分的原因是因为感觉没啥必要，知乎上也有个关于系统是否要分区的文章，不过不了解也不知道是否正确，再做一回跟风汪。。&lt;br /&gt;
+接下来，就按步骤安装就行了。。。&lt;/p&gt;
+&lt;p&gt;装完了，先激活一发吧。。穷孩子只能盗版了T T&lt;br /&gt;
+激活完后开始安装一些基础的软件，至于软件哪来。。&lt;br /&gt;
+个人是建议自己日常中收集一些装机必备的软件的，比如驱动精灵，文本编辑器（Sublime），压缩工具，还有一些不大不小但是又挺有用的软件&lt;br /&gt;
+往移动硬盘里建个文件夹，丢里面，也不会太占内容，没移动硬盘的话在机子硬盘上划一块，烧完U盘后再把它们拷进去  &lt;/p&gt;
+&lt;p&gt;开始装软件（突然发现个问题。。。系统没自带USB3.0的驱动，还好破机子有2.0的接口，否则移动硬盘还没法开了）。。。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ps: Win7刚安装完成后，在安装软件（绝大部分）时会弹出个框问你是否，这是在Vista引入的一个为了安全起见的机制，防止某些软件偷偷地在背后做些坏事，但是对我这种不懂得区分安全与否的人比较鸡肋，还会妨碍在系统盘进行的操作（比如不以管理员模式打开解压缩软件无法解压到C盘），所以先关掉它了。。在控制面板找找应该有（- -#我懒得找所以随便点开个软件触发它，然后在框框里面会有设置，跳过去改了就行了）&lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;-【好压】&lt;br /&gt;
+先装个解压缩软件是为了把Sublime解压开来记录。。  &lt;/p&gt;
+&lt;p&gt;-【搜狗输入法】&lt;br /&gt;
+不解释  &lt;/p&gt;
+&lt;p&gt;-【驱动精灵】&lt;br /&gt;
+恢复之前备份的驱动，直接驱动管理里面还原就好了。。然后重启电脑吧。。&lt;br /&gt;
+果然又一次失败了。。。就没直接从备份里还原成功过！！！次噢！！！&lt;br /&gt;
+= =# 先恢复网卡驱动吧，然后再去下吧。。。&lt;br /&gt;
+把备份的驱动文件解压了，然后打开设备管理器（计算机-属性），点开网络适配器，如果其中没有无线网卡的话，从&lt;strong&gt;其他设备&lt;/strong&gt;中找，然后右键-更新驱动软件程序，手动选择本机的驱动程序，然后定位到解压出来的驱动文件里无线网卡的那个文件夹，然后下一步即可安装驱动&lt;br /&gt;
+Ok了，下驱动吧。。。实在不明白为什么备份的驱动无法恢复。。。&lt;br /&gt;
+&lt;strong&gt;怒下驱动中。。。。。。。。。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;-【Chrome+Sougou】&lt;br /&gt;
+= =# 没浏览器不幸福&lt;br /&gt;
+Sougou只是为了它的兼容模式。。。。  &lt;/p&gt;
+&lt;p&gt;-【Ultraiso】&lt;br /&gt;
+烧启动盘用&lt;/p&gt;
+&lt;p&gt;-【Linux Reader】&lt;br /&gt;
+Windows下访问linux文件&lt;/p&gt;
+&lt;p&gt;-【开发环境】&lt;br /&gt;
+JDK&lt;br /&gt;
+需要配置&lt;a href="http://blog.csdn.net/tianshuai1111/article/details/7367700"&gt;Java环境&lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;Python2.7&lt;br /&gt;
+直接安装即可  &lt;/p&gt;
+&lt;p&gt;-【MacType】&lt;br /&gt;
+美化字体（个人感觉不错，因为习惯了Linux的字体）&lt;/p&gt;
+&lt;p&gt;-【Adobe Flash Player】&lt;/p&gt;
+&lt;p&gt;-【QQ Intl】&lt;/p&gt;
+&lt;p&gt;-【有道词典(FULL)】&lt;/p&gt;
+&lt;p&gt;-【Putty+FileZilla】&lt;br /&gt;
+服务器开发必备&lt;/p&gt;
+&lt;p&gt;-【Dropbox】&lt;br /&gt;
+上传一些比较小但是重要的文档和代码&lt;/p&gt;
+&lt;p&gt;-【MdCharm】&lt;br /&gt;
+一款markdown编辑器，可视化&lt;/p&gt;
+&lt;p&gt;差不多都搞定了。。。最后把Linux的引导修复回来就好了，使用LiveCD的方法见Notebook中的Goclis-Linux.md  &lt;/p&gt;
+&lt;h3&gt;Linux的安装。。。&lt;/h3&gt;
+&lt;p&gt;Linux虽然安装软件配置开发环境相对Windows来说很方便，但是还是有少配置由于不熟悉的原因并不是特别的好进行，所以打算借着这次机会一并记录下来，现在先列出一些要装的软件，以备更换成Elementary OS时安装&lt;br /&gt;
+&lt;strong&gt;软件列表：&lt;/strong&gt;&lt;br /&gt;
+【必备浏览器】Google Chrome &amp;amp; Firefox&lt;br /&gt;
+【文本编辑器】Sublime Text 2 &amp;amp; MdCharm&lt;br /&gt;
+【IDE】Eclipse &amp;amp; Codeblocks&lt;br /&gt;
+【服务器工具】Filezilla &amp;amp; Putty &amp;amp; Remote&lt;br /&gt;
+【磁盘管理】Disks（Ubuntu13.04是预装的，不确定Elementary有没有预装）&lt;br /&gt;
+【BT下载】Transmission（兼容学校PT站）&lt;br /&gt;
+【开发环境】Python &amp;amp; Java &amp;amp; MySQL &amp;amp; Nginx&lt;br /&gt;
+【电源管理】Bumblebee  &lt;/p&gt;
+&lt;p&gt;大概就上面这些，准备开始安装。。先规划下分区。。因为仍旧不是特别明确各个分区的作用，决定如下进行：&lt;br /&gt;
+/&lt;br /&gt;
+/home&lt;br /&gt;
+swap  &lt;/p&gt;
+&lt;p&gt;OK，开始！！！  &lt;/p&gt;
+&lt;p&gt;= =# 装完了。。。蛋疼才真正的开始。。。&lt;br /&gt;
+因为没注意现在装的是64bit的系统，直接把32位的.deb包拿来安装。。结果导致apt-get直接被搞得乱七八糟。。没办法，使用apt-get install -f修复吧。。才发现更新源没有换。。慢的一米。。受不了终止了上网试着手动更换源。。。  &lt;/p&gt;
+&lt;h5&gt;更换软件源&lt;/h5&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo cp /etc/apt/source.list /etc/apt/source.list.bak &lt;span class="c"&gt;# 备份原先的软件源&lt;/span&gt;
+sudo scratch-text-editor /etc/apt/source.list &lt;span class="c"&gt;# 使用文本编辑器打开(Elementary OS预装Scratch)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;把文本替换成下面的文本(163 ubuntu 12.04的源)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-updates&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-backports&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-backports&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://mirrors.163.com/ubuntu/&lt;/span&gt; &lt;span class="kp"&gt;precise-security&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://extras.ubuntu.com/ubuntu&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt;
+&lt;span class="k"&gt;deb-src&lt;/span&gt; &lt;span class="s"&gt;http://extras.ubuntu.com/ubuntu&lt;/span&gt; &lt;span class="kp"&gt;precise&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;保存后更新源&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get update
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;更多的源可以上网查。。。&lt;a href="http://my.oschina.net/rockbaby/blog/14711"&gt;更新源的参考资料&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;= =# 搞定源了。。把apt先修复后继续装东西。。为了写文本先装个&lt;a href="http://www.sublimetext.com/2"&gt;Sublime&lt;/a&gt;，出于移植性考虑。。这次下的是解压包，而不是直接使用.deb包，安装也查了一定的&lt;a href="http://www.sublimetext.com/2"&gt;资料&lt;/a&gt;，如下：&lt;/p&gt;
+&lt;h5&gt;安装配置Sublime Text 2&lt;/h5&gt;
+&lt;p&gt;在官网下载解压包后，解压并移到/opt目录下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;tar -xf sublime.tar.bz2 &lt;span class="c"&gt;# 不一定是这个名字。。&lt;/span&gt;
+mv sublime/ /opt &lt;span class="c"&gt;# 名字也不一定&lt;/span&gt;
+sudo ln -s /opt/sublime/sublime_text /usr/bin/sublime &lt;span class="c"&gt;# 建立硬链以便在terminal中使用&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;现在在Terminal中打sublime已经可以启动了，为了下一步添加到Dock上，得先在/usr/share/applications下创一个.desktop&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;applications&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;desktop&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;输入以下内容，注意自行替换Icon的目录，即图标&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[Desktop Entry]&lt;/span&gt;
+&lt;span class="na"&gt;Version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;1.0&lt;/span&gt;
+&lt;span class="na"&gt;Name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Sublime Text 2&lt;/span&gt;
+&lt;span class="na"&gt;GenericName&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Text Editor&lt;/span&gt;
+
+&lt;span class="na"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;sublime&lt;/span&gt;
+&lt;span class="na"&gt;Terminal&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;false&lt;/span&gt;
+&lt;span class="na"&gt;Icon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/opt/Sublime/Icon/48×48/sublime_text.png&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Application&lt;/span&gt;
+&lt;span class="na"&gt;Categories&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;TextEditor;IDE;Development&lt;/span&gt;
+&lt;span class="na"&gt;X-Ayatana-Desktop-Shortcuts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;NewWindow&lt;/span&gt;
+
+&lt;span class="k"&gt;[NewWindow Shortcut Group]&lt;/span&gt;
+&lt;span class="na"&gt;Name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;New Window&lt;/span&gt;
+&lt;span class="na"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;sublime -n&lt;/span&gt;
+&lt;span class="na"&gt;TargetEnvironment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Unity&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;现在就可以在Applications里看到Sublime了。。&lt;br /&gt;
+接下来创建&lt;strong&gt;右键启动&lt;/strong&gt;，即选择文件点击右键时可选择使用Sublime来打开，具体如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;applications&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mimeapps&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在最后一行加上&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;plain&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;desktop&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在终端中&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;applications&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;defaults&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;将原先的默认编辑器(比如gedit.desktop)全部替换为sublime.desktop即可  &lt;/p&gt;
+&lt;p&gt;至于&lt;strong&gt;添加到dock&lt;/strong&gt;上，直接从applications上拖到dock上添加即可(对Elementary可行)&lt;/p&gt;
+&lt;p&gt;最后配置一下Sublime的Package Control&lt;br /&gt;
+在Sublime中按Ctrl+`调出console，输入以下代码后回车&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="n"&gt;urllib2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;pf&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;Package&lt;/span&gt; &lt;span class="n"&gt;Control&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;package&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sublime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;installed_packages_path&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;makedirs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;None&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ipp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;pf&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;wb&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;urllib2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urlopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//sublime.wbond.net/&amp;#39;+pf.replace(&amp;#39; &amp;#39;,&amp;#39;%20&amp;#39;)).read())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;重启Sublime Text 2，如果在Perferences-&amp;gt;package settings中看到package control这一项，则安装成功，按下Ctrl+Shift+P调出命令面板，输入install 调出 Install Package 选项并回车，然后在列表中选中要安装的插件&lt;br /&gt;
+&lt;strong&gt;一些插件：&lt;/strong&gt;&lt;br /&gt;
+HTMLBeautify&lt;br /&gt;
+&lt;a href="https://github.com/xgenvn/InputHelper"&gt;InputHelper&lt;/a&gt;（为了输入中文。。。自行打开~/.config/sublime-text-2/Packages/Users/Default(Linux).sublime-keymap修改快捷键）  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;个人的配置：&lt;/strong&gt;
+打开Preference-&amp;gt;Key Bindings - User，在[]里添加以下内容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;keys&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ctrl+2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;command&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;move_to&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;args&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;to&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;eol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;extend&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;false&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;即使用ctrl+2来使光标移到本行末尾  &lt;/p&gt;
+&lt;p&gt;搞定编辑器后继续装一些软件吧  &lt;/p&gt;
+&lt;h5&gt;Chrome&lt;/h5&gt;
+&lt;p&gt;直接在官网下.deb包，然后使用sudo dpki -i xxx.deb安装即可，注意下64位的包，即&lt;strong&gt;amd64&lt;/strong&gt;  &lt;/p&gt;
+&lt;h5&gt;Haroopad&lt;/h5&gt;
+&lt;p&gt;一款markdown的编辑器，还不错，安装同chrome  &lt;/p&gt;
+&lt;h5&gt;Dropbox&lt;/h5&gt;
+&lt;p&gt;同Chrome安装  &lt;/p&gt;
+&lt;h5&gt;安装JDK&lt;/h5&gt;
+&lt;p&gt;0.0 不确定是不是这个。。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;openjdk&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;jdk&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;安装Bumblebee&lt;/h5&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;repository&lt;/span&gt; &lt;span class="n"&gt;ppa&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;bumblebee&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;stable&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;bumblebee&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;nvidia&lt;/span&gt; &lt;span class="n"&gt;primus&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;reboot&lt;/span&gt;
+
+&lt;span class="n"&gt;lspci&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;VGA&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;如果显示如下则成功了。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;02.0&lt;/span&gt; &lt;span class="n"&gt;VGA&lt;/span&gt; &lt;span class="n"&gt;compatible&lt;/span&gt; &lt;span class="n"&gt;controller&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Intel&lt;/span&gt; &lt;span class="n"&gt;Corporation&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="n"&gt;nd&lt;/span&gt; &lt;span class="n"&gt;Generation&lt;/span&gt; &lt;span class="n"&gt;Core&lt;/span&gt; &lt;span class="n"&gt;Processor&lt;/span&gt; &lt;span class="n"&gt;Family&lt;/span&gt; &lt;span class="n"&gt;Integrated&lt;/span&gt; &lt;span class="n"&gt;Graphics&lt;/span&gt; &lt;span class="n"&gt;Controller&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rev&lt;/span&gt; &lt;span class="mi"&gt;09&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;01&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;00.0&lt;/span&gt; &lt;span class="n"&gt;VGA&lt;/span&gt; &lt;span class="n"&gt;compatible&lt;/span&gt; &lt;span class="n"&gt;controller&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;NVIDIA&lt;/span&gt; &lt;span class="n"&gt;Corporation&lt;/span&gt; &lt;span class="n"&gt;Device&lt;/span&gt; &lt;span class="mi"&gt;1058&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rev&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ff表示已经关闭  &lt;/p&gt;
+&lt;h5&gt;安装Virtualbox&lt;/h5&gt;
+&lt;p&gt;Software Center里搜索Install就行了。。。&lt;/p&gt;
+&lt;h5&gt;安装Firefox&lt;/h5&gt;
+&lt;p&gt;Software Center里搜索Install就行了。。。&lt;br /&gt;
+主要还是要装一些&lt;strong&gt;插件(Add-ons)&lt;/strong&gt;开发使用，如下：&lt;br /&gt;
+Httpfox&lt;br /&gt;
+Firebug&lt;br /&gt;
+XPather&lt;br /&gt;
+Firecookie&lt;br /&gt;
+Vimium  &lt;/p&gt;
+&lt;h5&gt;安装Android开发环境&lt;/h5&gt;
+&lt;p&gt;从&lt;a href="http://developer.android.com/sdk/index.html#download"&gt;Google官网&lt;/a&gt;直接下的集成包，里面包含Eclipse和SDK&lt;br /&gt;
+下载后解压即可使用，打开新建一个项目时发现下面的问题&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;error&lt;/span&gt; &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="n"&gt;loading&lt;/span&gt; &lt;span class="n"&gt;shared&lt;/span&gt; &lt;span class="n"&gt;libraries&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;libz&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt;&lt;span class="mf"&gt;.1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;cannot&lt;/span&gt; &lt;span class="n"&gt;open&lt;/span&gt; &lt;span class="n"&gt;shared&lt;/span&gt; &lt;span class="n"&gt;object&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;No&lt;/span&gt; &lt;span class="n"&gt;such&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="n"&gt;or&lt;/span&gt; &lt;span class="n"&gt;directory&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上网搜索解决方案。。是因为系统是64位的原因，&lt;a href="http://askubuntu.com/questions/147400/problems-with-eclipse-and-android-sdk"&gt;解决方案&lt;/a&gt;如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;ia32&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;libs&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Ok，解决问题。。由于是.zip包，所以得自己建desktop了。。参照sublime.desktop的建立&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;mv&lt;/span&gt; &lt;span class="n"&gt;adt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;bundle&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x86_64&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;20131030&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;with&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt; &lt;span class="n"&gt;android&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;with&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt; &lt;span class="n"&gt;android&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;applications&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;desktop&lt;/span&gt;
+&lt;span class="cp"&gt;#Content&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Desktop&lt;/span&gt; &lt;span class="n"&gt;Entry&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;Version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt;
+&lt;span class="n"&gt;Name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Eclipse&lt;/span&gt;
+&lt;span class="n"&gt;GenericName&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;IDE&lt;/span&gt;
+
+&lt;span class="n"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt;
+&lt;span class="n"&gt;Terminal&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;false&lt;/span&gt;
+&lt;span class="n"&gt;Icon&lt;/span&gt;&lt;span class="o"&gt;=/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;with&lt;/span&gt; &lt;span class="n"&gt;android&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;icon&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpm&lt;/span&gt;
+&lt;span class="n"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Application&lt;/span&gt;
+&lt;span class="n"&gt;Categories&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;TextEditor&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;IDE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;Development&lt;/span&gt;
+&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Ayatana&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Desktop&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Shortcuts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;NewWindow&lt;/span&gt;
+
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;NewWindow&lt;/span&gt; &lt;span class="n"&gt;Shortcut&lt;/span&gt; &lt;span class="n"&gt;Group&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;Name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;New&lt;/span&gt; &lt;span class="n"&gt;Window&lt;/span&gt;
+&lt;span class="n"&gt;Exec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;eclipse&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;
+&lt;span class="n"&gt;TargetEnvironment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Unity&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这样就可以在Applications里看到Eclipse了。。打开后要在Preference里&lt;strong&gt;修改SDK的目录&lt;/strong&gt;&lt;/p&gt;
+&lt;h5&gt;安装fcitx&lt;/h5&gt;
+&lt;p&gt;= =# 一直都用的ibus，但是确实很多地方不如人意。。。也尝试过很多次更换成fcitx，但是都失败了。。这次再来一发试试。。。&lt;br /&gt;
+按&lt;a href="http://ningyubuaa.sinaapp.com/2012/10/23/ubuntu-12-04-%E5%AE%89%E8%A3%85fcitx%E8%BE%93%E5%85%A5%E6%B3%95/"&gt;教程&lt;/a&gt;来。。。  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;fcitx&lt;/span&gt;
+&lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="err"&gt;#调出输入法管理器选择界面，选择&lt;/span&gt;&lt;span class="n"&gt;fcitx&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;注销后再登录即可，接下来配置fcitx，在Terminal输入&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;fcitx&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;configtool&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;首先修改置顶的输入法，在Input Method Configuration这一栏，将pinyin置顶&lt;br /&gt;
+其次修改些基本配置，在Global Config-&amp;gt;Hotkey里面将第三栏Htokey of Swtiching Chinese and English Mode改为L_SHIFT，即左shift切换中英文&lt;br /&gt;
+还有Global Config-&amp;gt;Program里面将Default Input Method Mode修改为Active好像就可以让fcitx自启动第一个输入法了。。。&lt;br /&gt;
+然后点击Apply注销再登录后即可生效。。。&lt;br /&gt;
+其他配置自己改吧。。  &lt;/p&gt;
+&lt;p&gt;竟然安装成功了。。。&lt;/p&gt;
+&lt;h5&gt;Filezilla &amp;amp; Putty &amp;amp; Remote &amp;amp; Transmission &amp;amp; Disk Utility&lt;/h5&gt;
+&lt;p&gt;Software Center就有。。&lt;/p&gt;
+&lt;h5&gt;Mysql&lt;/h5&gt;
+&lt;p&gt;不想折腾就在Software Center里装吧。。&lt;br /&gt;
+不过正规地还是从官网下载源码，编译安装，不过麻烦。。&lt;br /&gt;
+0.0 竟然没提示设置密码。。。。按下面的法子破。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mysqladmin&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;u&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;
+&lt;span class="n"&gt;New&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="n"&gt;Confirm&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;OK，密码已设置完毕，用它登录就好了
+= =#编码实在没折腾出来。。。打算用phpmyadmin来修改了。。。&lt;/p&gt;
+&lt;h5&gt;Nginx+phpmyadmin&lt;/h5&gt;
+&lt;p&gt;网上找来的&lt;a href="http://hi.baidu.com/sudoer/item/479347788e7364376e29f6f8"&gt;教程&lt;/a&gt;，很不错，可用。。  &lt;/p&gt;
+&lt;p&gt;安装nginx&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;repository&lt;/span&gt; &lt;span class="n"&gt;ppa&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;stable&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;安装php&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cli&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cgi&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mcrypt&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mysql&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;配置Nginx&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sublime&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;default&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;进行如下修改&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt; &lt;span class="n"&gt;default_server&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;80&lt;/span&gt; &lt;span class="n"&gt;default_server&lt;/span&gt; &lt;span class="n"&gt;ipv6only&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;www&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;index&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;htm&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Make&lt;/span&gt; &lt;span class="n"&gt;site&lt;/span&gt; &lt;span class="n"&gt;accessible&lt;/span&gt; &lt;span class="n"&gt;from&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//localhost/&lt;/span&gt;
+    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;First&lt;/span&gt; &lt;span class="n"&gt;attempt&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt; &lt;span class="n"&gt;as&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;as&lt;/span&gt; &lt;span class="n"&gt;directory&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt; &lt;span class="n"&gt;fall&lt;/span&gt; &lt;span class="n"&gt;back&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;displaying&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="mf"&gt;404.&lt;/span&gt;
+        &lt;span class="n"&gt;try_files&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;404&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Uncomment&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;enable&lt;/span&gt; &lt;span class="n"&gt;naxsi&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt; &lt;span class="n"&gt;location&lt;/span&gt;
+        &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;naxsi&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rules&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Only&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;naxsi&lt;/span&gt; &lt;span class="n"&gt;used&lt;/span&gt; &lt;span class="n"&gt;with&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;naxsi&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ui&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;process&lt;/span&gt; &lt;span class="n"&gt;denied&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;RequestDenied&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;proxy_pass&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//127.0.0.1:8080;    &lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;error_page&lt;/span&gt; &lt;span class="mi"&gt;404&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mf"&gt;404.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;redirect&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt; &lt;span class="n"&gt;pages&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="n"&gt;page&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;error_page&lt;/span&gt; &lt;span class="mi"&gt;500&lt;/span&gt; &lt;span class="mi"&gt;502&lt;/span&gt; &lt;span class="mi"&gt;503&lt;/span&gt; &lt;span class="mi"&gt;504&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;pass&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;PHP&lt;/span&gt; &lt;span class="n"&gt;scripts&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;FastCGI&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="n"&gt;listening&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt; &lt;span class="mf"&gt;127.0.0.1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;9000&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;fastcgi_split_path_info&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="p"&gt;(.&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;NOTE&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;You&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;have&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;cgi.fix_pathinfo = 0;&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ini&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;With&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cgi&lt;/span&gt; &lt;span class="n"&gt;alone&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;fastcgi_pass&lt;/span&gt; &lt;span class="mf"&gt;127.0.0.1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;9000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;With&lt;/span&gt; &lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;fastcgi_pass&lt;/span&gt; &lt;span class="n"&gt;unix&lt;/span&gt;&lt;span class="o"&gt;:/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;php5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;fastcgi_index&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;include&lt;/span&gt; &lt;span class="n"&gt;fastcgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;deny&lt;/span&gt; &lt;span class="n"&gt;access&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;htaccess&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;Apache&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;document&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;concurs&lt;/span&gt; &lt;span class="n"&gt;with&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;one&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ht&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;   &lt;span class="n"&gt;deny&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;修改完后nginx就会将/var/www目录(可能需要手动创建)下的文件进行相应的处理了，当然有相应规则，比如&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这段就是处理.php脚本的  &lt;/p&gt;
+&lt;p&gt;安装phpmyadmin&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;phpmyadmin&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;安装完后执行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;phpmyadmin&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;www&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;phpmyadmin&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;注意，phpmyadmin后面没有"/"&lt;br /&gt;
+然后在浏览器中输入http://localhost/phpmyadmin即可&lt;/p&gt;
+&lt;h5&gt;安装python pip&lt;/h5&gt;
+&lt;p&gt;&lt;a href="http://www.pip-installer.org/en/latest/installing.html"&gt;安装指南&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;管理启动项&lt;/h5&gt;
+&lt;p&gt;使用update-rc.d关掉服务器类型的软件的启动项&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;nginx&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;apache2&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;php&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;fpm5&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外有个gui界面的bum，不知道怎么用。。。。  &lt;/p&gt;
+&lt;p&gt;基本搞定了～～有啥以后再加～&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 14 Dec 2013 00:00:00 +0800</pubDate><guid>tag:,2013-12-14:重装之路.html</guid></item><item><title>Pelican源码解读</title><link>/pelican%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB.html</link><description>&lt;p&gt;今天想要用peclian自己搭一个博客，装完之后发现是定制好的，虽然有主题可以更换，但是还是想自己定制一番，于是想改它的template，但模板中有着一系列的变量不知道具体是如何定义的，就想着回头往上层看看，结果发现没那么容易。。。最后。。因为自己最近也想找一份Python的源码来看看别人是如何写的，就决定把Pelican的源码自己看看吧，能看多少算多少，在这里做个记录。&lt;/p&gt;
+&lt;h3&gt;1. make html&lt;/h3&gt;
+&lt;p&gt;看了看文档知道 &lt;a href="http://docs.getpelican.com/en/3.3.0/"&gt;Pelican&lt;/a&gt; 是通过这个命令来将content目录下的.md之类的文件转换成了相应的html的，所以便打算从此入手。 &lt;br /&gt;
+make是一个linux系统自带的命令（也有可能不是。。个人没深入理解），自己上网找了一些资料发现，当调用make xxx时会从当前目录中查找Makefile文件，并从中找其感兴趣的东西。 &lt;br /&gt;
+使用Pelican的pelican-quickstart生成的工程中是有一个MakeFile文件的，部分如下：   &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;PY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;python
+&lt;span class="nv"&gt;PELICAN&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pelican
+&lt;span class="nv"&gt;PELICANOPTS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+
+&lt;span class="nv"&gt;BASEDIR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;CURDIR&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;INPUTDIR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;BASEDIR&lt;span class="k"&gt;)&lt;/span&gt;/content
+&lt;span class="nv"&gt;OUTPUTDIR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;BASEDIR&lt;span class="k"&gt;)&lt;/span&gt;/output
+&lt;span class="nv"&gt;CONFFILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;BASEDIR&lt;span class="k"&gt;)&lt;/span&gt;/pelicanconf.py
+&lt;span class="nv"&gt;PUBLISHCONF&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;BASEDIR&lt;span class="k"&gt;)&lt;/span&gt;/publishconf.py
+
+&lt;span class="nv"&gt;FTP_HOST&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;localhost
+&lt;span class="nv"&gt;FTP_USER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;anonymous
+&lt;span class="nv"&gt;FTP_TARGET_DIR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/
+
+&lt;span class="nv"&gt;SSH_HOST&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;localhost
+&lt;span class="nv"&gt;SSH_PORT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;22
+&lt;span class="nv"&gt;SSH_USER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;root
+&lt;span class="nv"&gt;SSH_TARGET_DIR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/var/www
+
+&lt;span class="nv"&gt;S3_BUCKET&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;my_s3_bucket
+
+&lt;span class="nv"&gt;CLOUDFILES_USERNAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;my_rackspace_username
+&lt;span class="nv"&gt;CLOUDFILES_API_KEY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;my_rackspace_api_key
+&lt;span class="nv"&gt;CLOUDFILES_CONTAINER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;my_cloudfiles_container
+
+&lt;span class="nv"&gt;DROPBOX_DIR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;~/Dropbox/Public/
+
+&lt;span class="nv"&gt;DEBUG&lt;/span&gt; &lt;span class="o"&gt;?=&lt;/span&gt; 0
+&lt;span class="cp"&gt;ifeq ($(DEBUG), 1)&lt;/span&gt;
+    PELICANOPTS +&lt;span class="o"&gt;=&lt;/span&gt; -D
+&lt;span class="cp"&gt;endif&lt;/span&gt;
+
+&lt;span class="nf"&gt;help&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;Makefile for a pelican Web site                                        &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;                                                                       &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;Usage:                                                                 &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make html                        (re)generate the web site          &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make clean                       remove the generated files         &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make regenerate                  regenerate files upon modification &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make publish                     generate using production settings &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make serve [PORT=8000]           serve site at http://localhost:8000&amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make devserver [PORT=8000]       start/restart develop_server.sh    &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make stopserver                  stop local server                  &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make ssh_upload                  upload the web site via SSH        &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make rsync_upload                upload the web site via rsync+ssh  &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make dropbox_upload              upload the web site via Dropbox    &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make ftp_upload                  upload the web site via FTP        &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make s3_upload                   upload the web site via S3         &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make cf_upload                   upload the web site via Cloud Files&amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;   make github                      upload the web site via gh-pages   &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;                                                                       &amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;Set the DEBUG variable to 1 to enable debugging, e.g. make DEBUG=1 html&amp;#39;&lt;/span&gt;
+    @echo &lt;span class="s1"&gt;&amp;#39;                                                                       &amp;#39;&lt;/span&gt;
+
+&lt;span class="nf"&gt;html&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;$(&lt;/span&gt;PELICAN&lt;span class="k"&gt;)&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;INPUTDIR&lt;span class="k"&gt;)&lt;/span&gt; -o &lt;span class="k"&gt;$(&lt;/span&gt;OUTPUTDIR&lt;span class="k"&gt;)&lt;/span&gt; -s &lt;span class="k"&gt;$(&lt;/span&gt;CONFFILE&lt;span class="k"&gt;)&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;PELICANOPTS&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;其中有一个html: ...，那个便是使用&lt;strong&gt;make html&lt;/strong&gt;时make这个命令会从这个Makefile文件中执行的命令，$(xxx)是一系列的变量，在文件的开头有定义，在这里其对应的命令就是：  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;pelican ./content -o ./output -s ./pelicanconf.py &lt;span class="c"&gt;# 最后一个参数为空&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;所以，归根结底还是调用了pelican这个命令，那么我们接下来就要找这个命令到底是做啥的了  &lt;/p&gt;
+&lt;h3&gt;2. pelican ....&lt;/h3&gt;
+&lt;p&gt;很明显，pelican既然作为一个命令，说明其已经被加入到了&lt;strong&gt;$PATH&lt;/strong&gt;中，一般就是在bin目录下了，找一找，发现了它，打开来看看：  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/home/goclis/Program/Python/pelican/pelican/bin/python&lt;/span&gt;
+&lt;span class="c"&gt;# EASY-INSTALL-ENTRY-SCRIPT: &amp;#39;pelican==3.3&amp;#39;,&amp;#39;console_scripts&amp;#39;,&amp;#39;pelican&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;__requires__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;pelican==3.3&amp;#39;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pkg_resources&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;load_entry_point&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;load_entry_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;pelican==3.3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;console_scripts&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;pelican&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)()&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;噗。。还是不知道调用了哪个.py文件，上网查了查，这是python程序的一种入口方式，具体的调用了哪个文件是在python的site-packages中有文件定义的，找了找site-packages中pelican-3.3-py2.7egg-info这个文件夹（名字不一定是这个，但是认准那个&lt;strong&gt;egg&lt;/strong&gt;）的&lt;strong&gt;entry_points.txt&lt;/strong&gt;，打开来看看。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[console_scripts]&lt;/span&gt;
+&lt;span class="na"&gt;pelican&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;pelican:main&lt;/span&gt;
+&lt;span class="na"&gt;pelican-import&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;pelican.tools.pelican_import:main&lt;/span&gt;
+&lt;span class="na"&gt;pelican-quickstart&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;pelican.tools.pelican_quickstart:main&lt;/span&gt;
+&lt;span class="na"&gt;pelican-themes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;pelican.tools.pelican_themes:main&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这下可以看到了，pelican=pelican:main，所以可以知道pelican这个命令实际是调用了pelican文件夹中main.py，pelican文件夹在哪呢？同样地，它也在site-packages文件夹中，很容易找到，但是找不到main.py？！但是看到一个__init__.py这个文件，里面有个main函数，没错。。就是它。。  &lt;/p&gt;
+&lt;p&gt;好了，这下总算找到了入口。。继续读源码吧。。。  &lt;/p&gt;
+&lt;h3&gt;3. args...&lt;/h3&gt;
+&lt;p&gt;= =# 第一行就读不懂了。。。贴下代码。。&lt;strong&gt;顺序不是这样，只是为了方便讲解&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parse_arguments&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;parse_arguments&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;parser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;argparse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ArgumentParser&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;quot;&amp;quot;A tool to generate a&lt;/span&gt;
+&lt;span class="s"&gt;    static blog, with restructured text input files.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;formatter_class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;argparse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ArgumentDefaultsHelpFormatter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dest&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;path&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nargs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;?&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Path where to find the content files.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;-t&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;--theme-path&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dest&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;theme&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Path where to find the theme templates. If not specified, it &amp;#39;&lt;/span&gt;
+             &lt;span class="s"&gt;&amp;#39;will use the default one included with pelican.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse_args&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这里涉及到了argparse这个python库，做啥用的？查。。&lt;a href="http://docs.python.org/2/library/argparse.html"&gt;python文档&lt;/a&gt;
+查询后可以发现是对sys.args进行处理的一个库，简单来说就是用来对命令带的参数进行处理的。回忆之前 &lt;strong&gt;make html&lt;/strong&gt; 那句命令：  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;pelican ./content -o ./output -s ./pelicanconf.py &lt;span class="c"&gt;# 最后一个参数为空&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这里调用的那个parse_arguments函数就是定义相应的命令并返回一个处理这些的Object，也就是返回的那个parser.parse_args()，具体的还是参考标准库吧。。&lt;/p&gt;
+&lt;h3&gt;4. Continue...&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;verbosity&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 初始化版本&lt;/span&gt;
+    &lt;span class="c"&gt;# 创建Pelican对象以及读取配置&lt;/span&gt;
+    &lt;span class="c"&gt;#（默认从pelicanconf.py中读取配置，不指定则从settings中的DEBUG_CONF获得）&lt;/span&gt;
+    &lt;span class="n"&gt;pelican&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_instance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;5. TJ...&lt;/h3&gt;
+&lt;p&gt;不怎么看的下去了。。因为pelican中加了一些我暂时不需要的功能，比如github upload, feed, rss之类的，使得看起来特别的累。 &lt;br /&gt;
+不过自己还是将整体的架构给看了个大概，感觉还是得先提升自己的水平再考虑去找份好点的源码来继续进阶，否则只是一系列的无用功。&lt;br /&gt;
+现在只能先凑合改改theme（使用的是&lt;strong&gt;simple-bootstrap&lt;/strong&gt;）的template来定义一下页面了，要添加功能时再具体去研究研究吧，比如评论添加的功能，这个往后加吧。&lt;br /&gt;
+最近实在是太忙太烦，自己的身体状况也很糟糕，只能如此了。&lt;br /&gt;
+虽然不是很完美的收场，但总归有点收获～&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Fri, 15 Nov 2013 00:00:00 +0800</pubDate><guid>tag:,2013-11-15:pelican源码解读.html</guid><category>python</category><category>blog</category></item><item><title>Python with Xpath获取全校考试安排</title><link>/Python%20with%20Xpath%E7%88%AC%E8%99%AB.html</link><description>&lt;p&gt;= =#又到考试周。。去年就想写个爬全校考试安排的。。可是当年还不会。。现在知道了东西就写一个来用吧。。不长不短。。记下来当&lt;strong&gt;笔记&lt;/strong&gt;。。。  &lt;/p&gt;
+&lt;p&gt;虽然现在对整个流程有了点了解。。但写起来还是比较蛋疼。。因为既然是学习，就得不断尝试点新的。。这次就体验了一把&lt;a href="http://www.w3schools.com/xpath/"&gt;xpath&lt;/a&gt;的方便，确实很赞！  &lt;/p&gt;
+&lt;p&gt;不过过程还是有点苦逼。。虽然xpath之前看过。。但是没用基本就忘完了。。现在即使写了出来还是不怎么理解其中的一些具体细节。。有空再补了。。  &lt;/p&gt;
+&lt;p&gt;好，开始正文。。  &lt;/p&gt;
+&lt;h2&gt;Python中的lxml&lt;/h2&gt;
+&lt;p&gt;首先要用xpath就得装上Python相应的模块吧，也就是&lt;a href="http://lxml.de/parsing.html"&gt;lxml&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;libxml2&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;libxlst1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;lxml&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;STO上找到的。。能用，OK～&lt;/p&gt;
+&lt;h2&gt;请看代码。。。。&lt;/h2&gt;
+&lt;p&gt;接下来就不好分了。。直接上代码。。看注释吧。。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#encoding: UTF-8 &lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;urllib&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nn"&gt;urllib2&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nn"&gt;MySQLdb&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;lxml&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;
+
+&lt;span class="nb"&gt;reload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefaultencoding&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c"&gt;# 从网站上拿到包含各个院系考试安排链接的那个页面，把这些链接解析出来，直接用正则了。。&lt;/span&gt;
+&lt;span class="n"&gt;url1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://xk.urp.seu.edu.cn/jw_service/service/runAcademyClassDepartmentQueryAction.action&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;urllib2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urlopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;ptrn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;r&amp;#39;runDetailClassDepartmentQueryAction.action.*?&amp;quot;&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;urls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;http://xk.urp.seu.edu.cn/jw_service/service/&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;u&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt; \
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;u&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ptrn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+
+&lt;span class="c"&gt;# 连接数据库，对应表是goclis.exams，表的结构就保留了考试安排页的那个表头（除了序号改成ID以外）&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MySQLdb&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;localhost&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;goclis&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;passwd&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;qqqqqq&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;goclis&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;charset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;utf8&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  
+&lt;span class="n"&gt;cursor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; 
+
+&lt;span class="c"&gt;# 针对各个链接开始获取，这个pattern是为了获取考试安排页中每一门科目。。看看源码就很容易发现。。&lt;/span&gt;
+&lt;span class="n"&gt;ptrn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;r&amp;quot;&amp;quot;&amp;quot;&amp;lt;tr height=&amp;quot;30&amp;quot; onMouseOver=this.style.backgroundColor=&amp;#39;#bbbbbb&amp;#39; &lt;/span&gt;
+&lt;span class="s"&gt;        onMouseOut=this.style.backgroundColor=&amp;#39;&amp;#39;&amp;gt;.*?&amp;lt;/tr&amp;gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;exam_source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;urllib2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urlopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; \
+                    &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; \
+                    &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\r&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;amp;nbsp;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 获取源文件并处理格式&lt;/span&gt;
+    &lt;span class="n"&gt;exams&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ptrn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;exam_source&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 通过正则拿到所有的&amp;lt;tr&amp;gt;...&amp;lt;/tr&amp;gt;，也就是一门门的考试&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;exams&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTML&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 使用lxml.html.etree.HTML将拿到的字符串解析成XML树&lt;/span&gt;
+        &lt;span class="n"&gt;tds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;//td&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 获取其中所有的td项，为了下一步拿值&lt;/span&gt;
+        &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="c"&gt;# 暂存各个td的值。。&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;td&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;tds&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;vl&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;td&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;./text()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 拿td的值&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vl&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+                &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vl&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;amp;nbsp;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+            &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="c"&gt;# 插入数据库&lt;/span&gt;
+        &lt;span class="n"&gt;sql&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;INSERT INTO exams (term, campus, exam_name, teacher, time, location, duration, note) &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s"&gt;                VALUES (&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;)&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; \
+                &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+        &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sql&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;commit&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="c"&gt;# 0.0 以防插入不回去。。&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;OK~搞定了。。数据怎么用就自己看着办吧。。  &lt;/p&gt;
+&lt;p&gt;这种简单的爬虫真的不难～尤其是在这些牛掰的脚本语言以及一系列的类库的辅助下～博客里现在也没有关于爬虫的文章。。这篇就当抛砖引玉吧～&lt;/p&gt;
+&lt;h3&gt;在结尾附上一些xpath的使用&lt;/h3&gt;
+&lt;p&gt;随便给个html。。xml也可以的&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;tr&lt;/span&gt; &lt;span class="na"&gt;onmouseover=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;xxx&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;td&amp;gt;&lt;/span&gt;A&lt;span class="nt"&gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;td&amp;gt;&lt;/span&gt;B&lt;span class="nt"&gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;tr&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;td&amp;gt;&lt;/span&gt;A&lt;span class="nt"&gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;tr&lt;/span&gt; &lt;span class="na"&gt;onmouseover=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;xxx&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;下面是几种情况及代码  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;通过lxml的etree把html变成Tree&lt;/strong&gt;  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;lxml&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;
+&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;xxx&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="c"&gt;# 获取到的html网页的源码&lt;/span&gt;
+
+&lt;span class="n"&gt;tree&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTML&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 即可&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;根据属性获取节点&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;//tr[@*]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 获取所有带属性(任意)的tr节点&lt;/span&gt;
+
+&lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;/tr[@*]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 获取所有带属性(任意)的子tr节点&lt;/span&gt;
+
+&lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;//tr[@onmouseover]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 获取所有带onmouseover属性的tr节点&lt;/span&gt;
+
+&lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;//tr[@onmouseover=&amp;#39;xxx&amp;#39;]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# 获取所有onmouseover属性值为xxx的tr节点&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;获取第一个td文本为A的tr节点&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;//tr/td[1][contains(text(), &amp;#39;A&amp;#39;]/parent::*&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="err"&gt;这里用了&lt;/span&gt;&lt;span class="n"&gt;contains&lt;/span&gt;&lt;span class="err"&gt;来实现&lt;/span&gt;
+
+&lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;//td[text()=&amp;#39;A&amp;#39;]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;注意区分//和/的不同&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Thu, 03 Jan 2013 00:00:00 +0800</pubDate><guid>tag:,2013-01-03:Python with Xpath爬虫.html</guid><category>python</category><category>spider</category><category>xpath</category></item></channel></rss>
