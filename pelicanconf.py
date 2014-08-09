@@ -40,7 +40,8 @@ THEME = "/home/goclis/SHARE/Blog/themes/pelican-bootstrap3"
 # THEME = "/home/goclis/niu-x2-sidebar"
 
 
-ARTICLE_SAVE_AS = 'articles/{slug}.html'
-ARTICLE_URL = 'articles/{slug}.html'
+# 指定生成的存放目录
+ARTICLE_SAVE_AS = 'articles/{slug}.html'   
+ARTICLE_URL = 'articles/{slug}.html'  
 ARTICLE_LANG_SAVE_AS = 'articles/{slug}.html'
 ARTICLE_LANG_URL = 'articles/{slug}.html'
