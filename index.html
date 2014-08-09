@@ -48,13 +48,22 @@ Logging            </a>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
+                            <a href="/category/computer-setting.html">Computer setting</a>
+                        </li>
+                        <li >
+                            <a href="/category/cs.html">Cs</a>
+                        </li>
+                        <li >
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
                             <a href="/category/python.html">Python</a>
                         </li>
                         <li >
-                            <a href="/category/study.html">Study</a>
+                            <a href="/category/security.html">Security</a>
                         </li>
                         <li >
-                            <a href="/category/systems.html">Systems</a>
+                            <a href="/category/software-engineer.html">Software engineer</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -69,6 +78,30 @@ Logging            </a>
     <div class="row">
         <div class="col-sm-9">
 
+            <article>
+                <h2><a href="/mov-with-memory.html">mov 指令与内存</a></h2>
+                <div class="summary"><p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码</p>
+<div class="highlight"><pre><span class="n">movl</span> <span class="mi">12</span><span class="p">(</span><span class="o">%</span><span class="n">ebp</span><span class="p">),</span> <span class="o">%</span><span class="n">eax</span>
+<span class="n">imull</span> <span class="mi">8</span><span class="p">(</span><span class="o">%</span><span class="n">ebp</span><span class="p">)</span>
+<span class="n">movl</span> <span class="o">%</span><span class="n">eax</span><span class="p">,</span> <span class="p">(</span><span class="o">%</span><span class="n">esp</span><span class="p">)</span>
+<span class="n">movl</span> <span class="o">%</span><span class="n">edx</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="o">%</span><span class="n">esp</span><span class="p">)</span>
+</pre></div>
+
+
+<p>代码的作用就是将两个数的乘积存回栈顶。</p>
+<p>代码没有问题，让我疑惑的是书上这两句话</p>
+<blockquote>
+<p>存储两个寄存器的位置对小端机器来说是对的——寄存器 %edx 中的高位存在相对于 %eax 的低位偏移量为 4 的地方。
+栈是向低地址方向增长的，也就是说低位在栈顶。</p>
+</blockquote>
+<p>在考虑这两句话的时候，突然发现自己对 mov 的操作并不是特别的清楚，就去查了查，大致搞明白了一些。</p>
+<h2>mov 指令</h2>
+<p>我们知道 mov 在 IA32 中有基础的三类操作，即 b，w，l。</p>
+<p>而 mov 在使用时大致如下 ...</p>
+                    <a class="btn btn-default btn-xs" href="/mov-with-memory.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
             <article>
                 <h2><a href="/os-experiment-note.html">操作系统课设笔记</a></h2>
                 <div class="summary"><p>因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。</p>
@@ -108,7 +141,7 @@ Logging            </a>
             </article>
             <hr/>
             <article>
-                <h2><a href="/pelican.html">Pelican简要配置</a></h2>
+                <h2><a href="/pelican-with-blog.html">Pelican简要配置</a></h2>
                 <div class="summary"><p>最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了<a href="https://trello.com">trello</a>里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用<a href="http://docs.getpelican.com/en/3.3.0/getting_started.html#installing-pelican">pelican</a>吧，以后有空再买个域名挂上去。</p>
 <h3>博客初始化</h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
@@ -133,12 +166,12 @@ Logging            </a>
 <span class="n">make</span> <span class="n">regenerate</span>
 
 <span class="n">make</span> <span class="n">serve ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/pelican.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/pelican-with-blog.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/动态载入和虚拟内存的按需调页的关联.html">动态载入和虚拟内存的按需调页的关联</a></h2>
+                <h2><a href="/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联</a></h2>
                 <div class="summary"><p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话</p>
 <blockquote>
 <p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
@@ -157,12 +190,12 @@ Logging            </a>
 <p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
 <h3>Update at 2014-05-26</h3>
 <p>因为动态加载和动态链接在操作系统的实现上已经模糊了 ...</p>
-                    <a class="btn btn-default btn-xs" href="/动态载入和虚拟内存的按需调页的关联.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/dynamic-load-and-virtual-memory-page-schedule-relation.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/动态链接和动态载入的区别.html">动态链接和动态载入的区别</a></h2>
+                <h2><a href="/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别</a></h2>
                 <div class="summary"><p>大致的理解如下，不一定正确，确认后会更新：</p>
 <p>按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
 <ul>
@@ -179,12 +212,12 @@ Logging            </a>
 <p>动态链接的实现是依赖于存根（stub）的，目标模块中在使用需要动态链接的模块的地方使用存根来代替，存根能够指出如何装入以及装入后的程序在内存的哪。</p>
 <p>动态链接的好处在于多个程序使用到了一个相同的模块时，不需要将该模块都像常规步骤或者动态加载那样合并到目标模块中，而是在执行时再动态链接，这样在内存中就只用存在一份该模块的代码了，即实现了共享库。</p>
 <h3>Update at 2014-05-26 ...</h3>
-                    <a class="btn btn-default btn-xs" href="/动态链接和动态载入的区别.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/difference-between-dynamic-link-and-dynamic-load.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/Elementary OS.html">Elementary OS</a></h2>
+                <h2><a href="/elementary-os-tips.html">Elementary OS</a></h2>
                 <div class="summary"><p>记录一下对Elementary OS的每一步配置，持续更新。</p>
 <h3>系统安装</h3>
 <p>省略。。</p>
@@ -203,12 +236,12 @@ Logging            </a>
 <div class="highlight"><pre><span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">main</span> <span class="kp">restricted</span>
 <span class="k">deb-src</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise</span> <span class="kp">main</span> <span class="kp">restricted</span>
 <span class="k">deb</span> <span class="s">http://mirrors.163.com/ubuntu/</span> <span class="kp">precise-updates</span> <span class="kp">main ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/Elementary OS.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/elementary-os-tips.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/关于黑盒测试的感想.html">黑盒测试感想</a></h2>
+                <h2><a href="/black-box-testing-thought.html">黑盒测试感想</a></h2>
                 <div class="summary"><p>最近在准备软件测试的最终答辩，主题是黑盒测试，便去了解了一下。</p>
 <p>下面先直接贴三段论，What, Why, How</p>
 <h3>黑盒测试的概念</h3>
@@ -236,12 +269,12 @@ Logging            </a>
 <hr />
 <p>贴完了，讲讲感想吧。其实觉得黑盒测试在日常的开发中不知不觉就用到了。比如说，我和某个人一起开发某个网站，而且我们开发的模块之间有相互调用的关系。这种情况下，我新完成了一个模块，他那边如果需要使用，该怎么保证这个模块是有效的？</p>
 <p>可能会有人说，让他测啊。好吧 ...</p>
-                    <a class="btn btn-default btn-xs" href="/关于黑盒测试的感想.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/black-box-testing-thought.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/Python编码.html">Python编码。。。。</a></h2>
+                <h2><a href="/python-encoding.html">Python编码。。。。</a></h2>
                 <div class="summary"><p>= = 记下来提醒自己写爬虫的时候注意。。。。</p>
 <p>直接举遇到的坑吧。。爬教务处的时候这样一个字段。。。</p>
 <div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="mi">16</span><span class="err">周</span><span class="p">]</span> <span class="err">周二</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span><span class="p">,</span><span class="err">周四</span><span class="p">(</span><span class="err">双</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="err">教二</span><span class="o">-</span><span class="mi">403</span>
@@ -258,12 +291,12 @@ Logging            </a>
 <div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;周四(双3-4)教二-403&quot;</span>
 <span class="c"># 获取3</span>
 <span class="n">l</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="s">&#39;双&#39;</span><span class="p">):</span> <span class="n">s</span><span class="o">.</span><span class="n">find ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/Python编码.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/python-encoding.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/重装之路.html">重装之路</a></h2>
+                <h2><a href="/the-way-to-reinstall-system.html">重装之路</a></h2>
                 <div class="summary"><h3>背景</h3>
 <p>今天手贱把引导玩坏了。。<br />
 虽然用WinPE重写了MBR成功进入了Win7，但搞了好久都无法引导进Linux。。。
@@ -283,12 +316,12 @@ Windows主要备份的是驱动以及一些临时到上面办公产生的文档�
 插上U盘，重启进入安装界面，我的电脑只用在开机的时候狂按ESC就可以选择U盘启动进入安装界面了<br />
 有些电脑可能需要按F2，DEL之类的进入BIOS进行修改，不得不说，这ESC真的很方便  </p>
 <p>这次安装只给Windows划了80G左右，觉得够系统安装以及一些日常软件使用了 ...</p>
-                    <a class="btn btn-default btn-xs" href="/重装之路.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/the-way-to-reinstall-system.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/pelican源码解读.html">Pelican源码解读</a></h2>
+                <h2><a href="/pelican-source-reading.html">Pelican源码解读</a></h2>
                 <div class="summary"><p>今天想要用peclian自己搭一个博客，装完之后发现是定制好的，虽然有主题可以更换，但是还是想自己定制一番，于是想改它的template，但模板中有着一系列的变量不知道具体是如何定义的，就想着回头往上层看看，结果发现没那么容易。。。最后。。因为自己最近也想找一份Python的源码来看看别人是如何写的，就决定把Pelican的源码自己看看吧，能看多少算多少，在这里做个记录。</p>
 <h3>1. make html</h3>
 <p>看了看文档知道 <a href="http://docs.getpelican.com/en/3.3.0/">Pelican</a> 是通过这个命令来将content目录下的.md之类的文件转换成了相应的html的，所以便打算从此入手。 <br />
@@ -303,12 +336,12 @@ make是一个linux系统自带的命令（也有可能不是。。个人没深�
 <span class="nv">OUTPUTDIR</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/output
 <span class="nv">CONFFILE</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/pelicanconf.py
 <span class="nv">PUBLISHCONF</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/publishconf ...</pre></div>
-                    <a class="btn btn-default btn-xs" href="/pelican源码解读.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/pelican-source-reading.html">more ...</a>
                 </div>
             </article>
             <hr/>
             <article>
-                <h2><a href="/Python with Xpath爬虫.html">Python with Xpath获取全校考试安排</a></h2>
+                <h2><a href="/python-with-xpath-get-exam-schedule.html">Python with Xpath获取全校考试安排</a></h2>
                 <div class="summary"><p>= =#又到考试周。。去年就想写个爬全校考试安排的。。可是当年还不会。。现在知道了东西就写一个来用吧。。不长不短。。记下来当<strong>笔记</strong>。。。  </p>
 <p>虽然现在对整个流程有了点了解。。但写起来还是比较蛋疼。。因为既然是学习，就得不断尝试点新的。。这次就体验了一把<a href="http://www.w3schools.com/xpath/">xpath</a>的方便，确实很赞！  </p>
 <p>不过过程还是有点苦逼。。虽然xpath之前看过。。但是没用基本就忘完了。。现在即使写了出来还是不怎么理解其中的一些具体细节。。有空再补了。。  </p>
@@ -326,7 +359,7 @@ make是一个linux系统自带的命令（也有可能不是。。个人没深�
 <div class="highlight"><pre><span class="c">#encoding: UTF-8 </span>
 
 <span class="kn">import ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/Python with Xpath爬虫.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/python-with-xpath-get-exam-schedule.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -350,18 +383,23 @@ make是一个linux系统自带的命令（也有可能不是。。个人没深�
                 <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                     <ul class="list-group" id="tags">
                         <li class="list-group-item tag-1">
-                            <a href="/tag/os.html">
-                                os
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-1">
                             <a href="/tag/python.html">
                                 python
                             </a>
                         </li>
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/os.html">
+                                os
+                            </a>
+                        </li>
                         <li class="list-group-item tag-2">
-                            <a href="/tag/blog.html">
-                                blog
+                            <a href="/tag/pelican.html">
+                                pelican
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/security.html">
+                                security
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
@@ -375,18 +413,13 @@ make是一个linux系统自带的命令（也有可能不是。。个人没深�
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
-                            <a href="/tag/pelican.html">
-                                pelican
+                            <a href="/tag/cs.html">
+                                cs
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
                             <a href="/tag/xpath.html">
                                 xpath
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/security.html">
-                                security
                             </a>
                         </li>
                         <li class="list-group-item tag-4">

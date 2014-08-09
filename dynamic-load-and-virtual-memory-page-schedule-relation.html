@@ -3,7 +3,7 @@
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="https://www.facebook.com/2008/fbml">
 <head>
-    <title>security - Logging</title>
+    <title>动态载入和虚拟内存的按需调页的关联 - Logging</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,10 +11,10 @@
     
 
     <!-- Open Graph tags -->
-            <meta property="og:type" content="website"/>
-            <meta property="og:title" content="Logging"/>
-            <meta property="og:url" content=""/>
-            <meta property="og:description" content="Logging"/>
+            <meta property="og:type" content="article"/>
+            <meta property="og:title" content="动态载入和虚拟内存的按需调页的关联"/>
+            <meta property="og:url" content="/dynamic-load-and-virtual-memory-page-schedule-relation.html"/>
+            <meta property="og:description" content="《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话 动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。 那么，额外工作指的是？ 在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于动态载入不需要操作系统提供特别支持这一事实。 动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的编码就是所谓的额外开销。比如下面这段代码（我不确定是否正确） // so_obj是一个变量标识是否导入了某个.so if (so_obj == NULL) { // load it here } 而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~ Update at 2014-05-26 因为动态加载和动态链接在操作系统的实现上已经模糊了 ..."/>
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
@@ -53,7 +53,7 @@ Logging            </a>
                         <li >
                             <a href="/category/cs.html">Cs</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="/category/os.html">Os</a>
                         </li>
                         <li >
@@ -78,23 +78,55 @@ Logging            </a>
     <div class="row">
         <div class="col-sm-9">
 
-            <article>
-                <h2><a href="/how-to-validate-certificate.html">如何验证一个数字证书的有效性</a></h2>
-                <div class="summary"><p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
-<p>好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧</p>
-<p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
-<p>既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
-<p>用密码学表示一下大概就是</p>
-<div class="highlight"><pre><span class="c1">// 设生成的中间数字证书为 MB，最终发放的为B</span>
-<span class="err">则</span><span class="no">B</span> <span class="o">=</span> <span class="no">MB</span> <span class="o">||</span> <span class="no">E</span><span class="p">(</span><span class="no">HASH</span><span class="p">(</span><span class="no">MB</span><span class="p">))</span>  <span class="c1">// 这里E是用CA的私钥加密， || 表示拼接</span>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/dynamic-load-and-virtual-memory-page-schedule-relation.html"
+                       rel="bookmark"
+                       title="Permalink to 动态载入和虚拟内存的按需调页的关联">
+                        动态载入和虚拟内存的按需调页的关联
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-05-25T17:20:00"> 2014-05-25 17:20:00</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/os.html">os</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话</p>
+<blockquote>
+<p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
+</blockquote>
+<p>那么，额外工作指的是？</p>
+<p>在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。</p>
+<p>以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
+<p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）</p>
+<div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="no">NULL</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// load it here</span>
+<span class="p">}</span>
 </pre></div>
 
 
-<p>接下来 ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-validate-certificate.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
+<p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
+<h3>Update at 2014-05-26</h3>
+<p>因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解是正确的。</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
 
         </div>
         <div class="col-sm-3 well well-sm" id="sidebar">

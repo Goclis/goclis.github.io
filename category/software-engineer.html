@@ -3,7 +3,7 @@
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="https://www.facebook.com/2008/fbml">
 <head>
-    <title>security - Logging</title>
+    <title>Software Engineer - Logging</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -62,7 +62,7 @@ Logging            </a>
                         <li >
                             <a href="/category/security.html">Security</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="/category/software-engineer.html">Software engineer</a>
                         </li>
             </ul>
@@ -79,19 +79,35 @@ Logging            </a>
         <div class="col-sm-9">
 
             <article>
-                <h2><a href="/how-to-validate-certificate.html">如何验证一个数字证书的有效性</a></h2>
-                <div class="summary"><p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
-<p>好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧</p>
-<p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
-<p>既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
-<p>用密码学表示一下大概就是</p>
-<div class="highlight"><pre><span class="c1">// 设生成的中间数字证书为 MB，最终发放的为B</span>
-<span class="err">则</span><span class="no">B</span> <span class="o">=</span> <span class="no">MB</span> <span class="o">||</span> <span class="no">E</span><span class="p">(</span><span class="no">HASH</span><span class="p">(</span><span class="no">MB</span><span class="p">))</span>  <span class="c1">// 这里E是用CA的私钥加密， || 表示拼接</span>
-</pre></div>
-
-
-<p>接下来 ...</p>
-                    <a class="btn btn-default btn-xs" href="/how-to-validate-certificate.html">more ...</a>
+                <h2><a href="/black-box-testing-thought.html">黑盒测试感想</a></h2>
+                <div class="summary"><p>最近在准备软件测试的最终答辩，主题是黑盒测试，便去了解了一下。</p>
+<p>下面先直接贴三段论，What, Why, How</p>
+<h3>黑盒测试的概念</h3>
+<blockquote>
+<p>黑盒测试也称功能测试，它是通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，在程序接口进行测试，它只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当地接收输入数据而产生正确的输出信息。黑盒测试着眼于程序外部结构，不考虑内部逻辑结构，主要针对软件界面和软件功能进行测试。</p>
+</blockquote>
+<h3>黑盒测试的优势</h3>
+<ul>
+<li>比较简单，不需要了解程序内部代码及实现</li>
+<li>与软件内部实现无关</li>
+<li>从用户角度出发，能很容易知道用户会用到哪些功能，会遇到哪些问题</li>
+<li>基于软件开发文档，所以也能知道软件实现了文档中的哪些功能</li>
+<li>在做软件测试自动化时较为方便</li>
+</ul>
+<h3>黑盒测试方法</h3>
+<ul>
+<li>等价类划分法</li>
+<li>边界值分析法</li>
+<li>错误推测法</li>
+<li>因果图法</li>
+<li>判定表驱动法</li>
+<li>功能图法</li>
+<li>more...</li>
+</ul>
+<hr />
+<p>贴完了，讲讲感想吧。其实觉得黑盒测试在日常的开发中不知不觉就用到了。比如说，我和某个人一起开发某个网站，而且我们开发的模块之间有相互调用的关系。这种情况下，我新完成了一个模块，他那边如果需要使用，该怎么保证这个模块是有效的？</p>
+<p>可能会有人说，让他测啊。好吧 ...</p>
+                    <a class="btn btn-default btn-xs" href="/black-box-testing-thought.html">more ...</a>
                 </div>
             </article>
             <hr/>

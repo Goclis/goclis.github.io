@@ -48,13 +48,22 @@ Logging            </a>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                         <li >
+                            <a href="/category/computer-setting.html">Computer setting</a>
+                        </li>
+                        <li >
+                            <a href="/category/cs.html">Cs</a>
+                        </li>
+                        <li >
+                            <a href="/category/os.html">Os</a>
+                        </li>
+                        <li >
                             <a href="/category/python.html">Python</a>
                         </li>
                         <li >
-                            <a href="/category/study.html">Study</a>
+                            <a href="/category/security.html">Security</a>
                         </li>
                         <li >
-                            <a href="/category/systems.html">Systems</a>
+                            <a href="/category/software-engineer.html">Software engineer</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -70,7 +79,7 @@ Logging            </a>
         <div class="col-sm-9">
 
             <article>
-                <h2><a href="/pelican.html">Pelican简要配置</a></h2>
+                <h2><a href="/pelican-with-blog.html">Pelican简要配置</a></h2>
                 <div class="summary"><p>最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了<a href="https://trello.com">trello</a>里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用<a href="http://docs.getpelican.com/en/3.3.0/getting_started.html#installing-pelican">pelican</a>吧，以后有空再买个域名挂上去。</p>
 <h3>博客初始化</h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
@@ -95,7 +104,27 @@ Logging            </a>
 <span class="n">make</span> <span class="n">regenerate</span>
 
 <span class="n">make</span> <span class="n">serve ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/pelican.html">more ...</a>
+                    <a class="btn btn-default btn-xs" href="/pelican-with-blog.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="/pelican-source-reading.html">Pelican源码解读</a></h2>
+                <div class="summary"><p>今天想要用peclian自己搭一个博客，装完之后发现是定制好的，虽然有主题可以更换，但是还是想自己定制一番，于是想改它的template，但模板中有着一系列的变量不知道具体是如何定义的，就想着回头往上层看看，结果发现没那么容易。。。最后。。因为自己最近也想找一份Python的源码来看看别人是如何写的，就决定把Pelican的源码自己看看吧，能看多少算多少，在这里做个记录。</p>
+<h3>1. make html</h3>
+<p>看了看文档知道 <a href="http://docs.getpelican.com/en/3.3.0/">Pelican</a> 是通过这个命令来将content目录下的.md之类的文件转换成了相应的html的，所以便打算从此入手。 <br />
+make是一个linux系统自带的命令（也有可能不是。。个人没深入理解），自己上网找了一些资料发现，当调用make xxx时会从当前目录中查找Makefile文件，并从中找其感兴趣的东西。 <br />
+使用Pelican的pelican-quickstart生成的工程中是有一个MakeFile文件的，部分如下：   </p>
+<div class="highlight"><pre><span class="nv">PY</span><span class="o">=</span>python
+<span class="nv">PELICAN</span><span class="o">=</span>pelican
+<span class="nv">PELICANOPTS</span><span class="o">=</span>
+
+<span class="nv">BASEDIR</span><span class="o">=</span><span class="k">$(</span>CURDIR<span class="k">)</span>
+<span class="nv">INPUTDIR</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/content
+<span class="nv">OUTPUTDIR</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/output
+<span class="nv">CONFFILE</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/pelicanconf.py
+<span class="nv">PUBLISHCONF</span><span class="o">=</span><span class="k">$(</span>BASEDIR<span class="k">)</span>/publishconf ...</pre></div>
+                    <a class="btn btn-default btn-xs" href="/pelican-source-reading.html">more ...</a>
                 </div>
             </article>
             <hr/>
@@ -119,18 +148,23 @@ Logging            </a>
                 <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                     <ul class="list-group" id="tags">
                         <li class="list-group-item tag-1">
-                            <a href="/tag/os.html">
-                                os
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-1">
                             <a href="/tag/python.html">
                                 python
                             </a>
                         </li>
+                        <li class="list-group-item tag-1">
+                            <a href="/tag/os.html">
+                                os
+                            </a>
+                        </li>
                         <li class="list-group-item tag-2">
-                            <a href="/tag/blog.html">
-                                blog
+                            <a href="/tag/pelican.html">
+                                pelican
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="/tag/security.html">
+                                security
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
@@ -144,18 +178,13 @@ Logging            </a>
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
-                            <a href="/tag/pelican.html">
-                                pelican
+                            <a href="/tag/cs.html">
+                                cs
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
                             <a href="/tag/xpath.html">
                                 xpath
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/security.html">
-                                security
                             </a>
                         </li>
                         <li class="list-group-item tag-4">
