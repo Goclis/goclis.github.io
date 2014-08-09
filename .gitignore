@@ -56,3 +56,5 @@ docs/_build/
 # blog file
 output
 *.pid
+
+cache/

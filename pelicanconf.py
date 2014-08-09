@@ -38,3 +38,9 @@ STATIC_PATHS = ['images', 'pdfs', 'src']  # images and pdf files
 
 THEME = "/home/goclis/SHARE/Blog/themes/pelican-bootstrap3"
 # THEME = "/home/goclis/niu-x2-sidebar"
+
+
+ARTICLE_SAVE_AS = 'articles/{slug}.html'
+ARTICLE_URL = 'articles/{slug}.html'
+ARTICLE_LANG_SAVE_AS = 'articles/{slug}.html'
+ARTICLE_LANG_URL = 'articles/{slug}.html'
