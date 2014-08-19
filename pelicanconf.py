@@ -36,7 +36,7 @@ DEFAULT_PAGINATION = False
 
 STATIC_PATHS = ['images', 'pdfs', 'src']  # images and pdf files
 
-THEME = "/home/goclis/SHARE/Blog/themes/pelican-bootstrap3"
+THEME = "/home/goclis/SHARE/Blog/themes/pelican-elegant-1.3"
 # THEME = "/home/goclis/niu-x2-sidebar"
 
 
