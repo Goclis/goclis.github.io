@@ -1,266 +1,102 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:og="http://ogp.me/ns#"
-      xmlns:fb="https://www.facebook.com/2008/fbml">
-<head>
-    <title>OS - Logging</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
 
-    <!-- Open Graph tags -->
-            <meta property="og:type" content="website"/>
-            <meta property="og:title" content="Logging"/>
-            <meta property="og:url" content=""/>
-            <meta property="og:description" content="Logging"/>
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-
-
-
-    <style type="text/css">
-        .err {
-
-        }
-    </style>
-</head>
-<body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-brand">
-Logging            </a>
+        <title>Logging
+</title>
+        <link href="http://cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+    </head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/"><span class=site-name>Logging</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li ><a href="">Home</a></li>
+                            <li ><a href="/categories.html">Categories</a></li>
+                            <li ><a href="/tags.html">Tags</a></li>
+                            <li ><a href="/archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="/category/computer-setting.html">Computer setting</a>
-                        </li>
-                        <li >
-                            <a href="/category/cs.html">Cs</a>
-                        </li>
-                        <li class="active">
-                            <a href="/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="/category/security.html">Security</a>
-                        </li>
-                        <li >
-                            <a href="/category/software-engineer.html">Software engineer</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<div class="row-fluid">
+
+    <div class="row-fluid">
+
     </div>
-</div> <!-- /.navbar -->
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-
-            <article>
-                <h1><a href="/articles/os-experiment-note.html">操作系统课设笔记</a></h1>
-                <div class="summary"><p>因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。</p>
-<p>这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而 OS 上的坑又不是那么容易解决的，总之以下操作不带有普遍性。</p>
-<p>课设平台：</p>
-<ul>
-<li>fedora 7</li>
-<li>linux-2.6.21 source code</li>
-<li>i386 ?</li>
-</ul>
-<h3>实验1 编译内核</h3>
-<p>纯粹照着书搞。。</p>
-<p>以下操作假设在 home 目录下，并且用户为 root</p>
-<div class="highlight"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">zxf</span> <span class="n">linux</span><span class="o">-</span><span class="mf">2.6.21</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
-<span class="n">cd</span> <span class="n">linux</span><span class="o">-</span><span class="mf">2.6.21</span>
-<span class="n">make</span> <span class="n">mrproper</span>  <span class="err">#</span> <span class="err">清楚掉之前编译产生的垃圾</span>
-<span class="n">make</span> <span class="n">oldconfig</span>  <span class="err">#</span> <span class="err">如果自己有配置文件的话，直接</span> <span class="n">copy</span> <span class="err">进来命名为 ...</span></pre></div>
-                    <a class="btn btn-default btn-xs" href="/articles/os-experiment-note.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h1><a href="/articles/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联</a></h1>
-                <div class="summary"><p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话</p>
-<blockquote>
-<p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
-</blockquote>
-<p>那么，额外工作指的是？</p>
-<p>在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。</p>
-<p>以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
-<p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）</p>
-<div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="no">NULL</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// load it here</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
-<h3>Update at 2014-05-26</h3>
-<p>因为动态加载和动态链接在操作系统的实现上已经模糊了 ...</p>
-                    <a class="btn btn-default btn-xs" href="/articles/dynamic-load-and-virtual-memory-page-schedule-relation.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h1><a href="/articles/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别</a></h1>
-                <div class="summary"><p>大致的理解如下，不一定正确，确认后会更新：</p>
-<p>按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
-<ul>
-<li>编译汇编</li>
-<li>链接（将编译出来的模块和其他引用了的模块合并）</li>
-<li>加载（从硬盘加载到内存中）</li>
-<li>执行（在内存中执行）</li>
-</ul>
-<p>动态加载和动态链接是打破以上所描述的常规行为的。</p>
-<h3>动态加载</h3>
-<p>硬盘上存储了一个已经生成好的目标模块，但是这个目标模块是由许多子程序组成的。每时每刻，不一定所有的子程序都需要在内存中，所以，在使用到相应子程序时再把其加载到内存中来使用，这要求用户在编写程序时合理地编写子程序，不需要操作系统提供特别的支持。</p>
-<h3>动态链接</h3>
-<p>它与动态加载的概念相似，但是，它不是将加载延迟到了执行时，而是将链接延迟到执行时。主要的问题就在于理解这句话。对于动态链接，磁盘上存储着的目标模块中包含着一部分它并未链接的模块（但是它迟早要用，所以动态链接嘛~）。而使用动态加载技术时，你动态加载的模块是经过链接之后的，也就是该模块已经结合了所有它会用到的模块，只是在你程序的不同地方使用了，所以在不同的地方动态加载需要的代码。</p>
-<p>动态链接的实现是依赖于存根（stub）的，目标模块中在使用需要动态链接的模块的地方使用存根来代替，存根能够指出如何装入以及装入后的程序在内存的哪。</p>
-<p>动态链接的好处在于多个程序使用到了一个相同的模块时，不需要将该模块都像常规步骤或者动态加载那样合并到目标模块中，而是在执行时再动态链接，这样在内存中就只用存在一份该模块的代码了，即实现了共享库。</p>
-<h3>Update at 2014-05-26 ...</h3>
-                    <a class="btn btn-default btn-xs" href="/articles/difference-between-dynamic-link-and-dynamic-load.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-
-        </div>
-        <div class="col-sm-3 well well-sm" id="sidebar">
-
-<aside>
-    <section>
-        <ul class="list-group list-group-flush">
-                <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-                  <ul class="list-group" id="social">
-                    <li class="list-group-item"><a href="https://github.com/Goclis/"><i
-                            class="fa fa-github-square fa-lg"></i> Github
-                    </a></li>
-                  </ul>
+    <div class="row-fluid">
+        <div class="span12">
+            <header>
+            <h1 id="recent-posts">Recent Posts <a id="allposts" href="/archives.html">all posts</a></h1>
+            </header>
+            <ul class="list-all-articles">
+                <li>
+                <a href="/articles/os-experiment-note.html">操作系统课设笔记  </a> 
+                <time pubdate="pubdate" datetime="2014-07-30T17:22:00">2014-07-30 17:22:00</time>
                 </li>
-
-
-
-                <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                    <ul class="list-group" id="tags">
-                        <li class="list-group-item tag-1">
-                            <a href="/tag/python.html">
-                                python
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-1">
-                            <a href="/tag/os.html">
-                                os
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-2">
-                            <a href="/tag/pelican.html">
-                                pelican
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/cs.html">
-                                cs
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/linux.html">
-                                linux
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/security.html">
-                                security
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/spider.html">
-                                spider
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/xpath.html">
-                                xpath
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/software-test.html">
-                                software test
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/unicode.html">
-                                unicode
-                            </a>
-                        </li>
-                    </ul>
-                </li>    
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://python.org/" target="_blank">
-                Python.org
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://jinja.pocoo.org/" target="_blank">
-                Jinja2
-            </a>
-        </li>
-      </ul>
-    </li>
-
-        </ul>
-    </section>
-
-</aside>        </div>
+            </ul>
+            <ul class="list-all-articles">
+                <li>
+                <a href="/articles/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联  </a> 
+                <time pubdate="pubdate" datetime="2014-05-25T17:20:00">2014-05-25 17:20:00</time>
+                </li>
+            </ul>
+            <ul class="list-all-articles">
+                <li>
+                <a href="/articles/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别  </a> 
+                <time pubdate="pubdate" datetime="2014-05-21T15:32:00">2014-05-21 15:32:00</time>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+    </div>
 <footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2014 Goclis Yao
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="//code.jquery.com/jquery.js"></script>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
-
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
-
-</body>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
+    </ul>
+</div>
+</footer>        <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+    </body>
 </html>

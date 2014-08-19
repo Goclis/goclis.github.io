@@ -1,228 +1,119 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:og="http://ogp.me/ns#"
-      xmlns:fb="https://www.facebook.com/2008/fbml">
-<head>
-    <title>Archives - Logging</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
 
-    <!-- Open Graph tags -->
-            <meta property="og:type" content="website"/>
-            <meta property="og:title" content="Logging"/>
-            <meta property="og:url" content=""/>
-            <meta property="og:description" content="Logging"/>
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-
-
-
-    <style type="text/css">
-        .err {
-
-        }
-    </style>
-</head>
-<body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-brand">
-Logging            </a>
+        <title>All Posts · Logging
+</title>
+        <link href="http://cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+    </head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/"><span class=site-name>Logging</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li ><a href="">Home</a></li>
+                            <li ><a href="/categories.html">Categories</a></li>
+                            <li ><a href="/tags.html">Tags</a></li>
+                            <li  class="active"><a href="/archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="/category/computer-setting.html">Computer setting</a>
-                        </li>
-                        <li >
-                            <a href="/category/cs.html">Cs</a>
-                        </li>
-                        <li >
-                            <a href="/category/os.html">Os</a>
-                        </li>
-                        <li >
-                            <a href="/category/python.html">Python</a>
-                        </li>
-                        <li >
-                            <a href="/category/security.html">Security</a>
-                        </li>
-                        <li >
-                            <a href="/category/software-engineer.html">Software engineer</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-
-    <section id="content">
-        <h1>Archives for Logging</h1>
-
-        <dl>
-                <dt>2014-08-08 16:00:00</dt>
-                <dd><a href='/articles/mov-with-memory.html'>mov 指令与内存</a></dd>
-                <dt>2014-07-30 17:22:00</dt>
-                <dd><a href='/articles/os-experiment-note.html'>操作系统课设笔记</a></dd>
-                <dt>2014-06-21 15:43:00</dt>
-                <dd><a href='/articles/how-to-validate-certificate.html'>如何验证一个数字证书的有效性</a></dd>
-                <dt>2014-05-25 20:30:00</dt>
-                <dd><a href='/articles/pelican-with-blog.html'>Pelican简要配置</a></dd>
-                <dt>2014-05-25 17:20:00</dt>
-                <dd><a href='/articles/dynamic-load-and-virtual-memory-page-schedule-relation.html'>动态载入和虚拟内存的按需调页的关联</a></dd>
-                <dt>2014-05-21 15:32:00</dt>
-                <dd><a href='/articles/difference-between-dynamic-link-and-dynamic-load.html'>动态链接和动态载入的区别</a></dd>
-                <dt>2014-04-24 00:00:00</dt>
-                <dd><a href='/articles/elementary-os-tips.html'>Elementary OS</a></dd>
-                <dt>2014-04-14 00:00:00</dt>
-                <dd><a href='/articles/black-box-testing-thought.html'>黑盒测试感想</a></dd>
-                <dt>2014-02-06 00:00:00</dt>
-                <dd><a href='/articles/python-encoding.html'>Python编码。。。。</a></dd>
-                <dt>2013-12-14 00:00:00</dt>
-                <dd><a href='/articles/the-way-to-reinstall-system.html'>重装之路</a></dd>
-                <dt>2013-11-15 00:00:00</dt>
-                <dd><a href='/articles/pelican-source-reading.html'>Pelican源码解读</a></dd>
-                <dt>2013-01-03 00:00:00</dt>
-                <dd><a href='/articles/python-with-xpath-get-exam-schedule.html'>Python with Xpath获取全校考试安排</a></dd>
-        </dl>
-    </section>
-        </div>
-        <div class="col-sm-3 well well-sm" id="sidebar">
-
-<aside>
-    <section>
-        <ul class="list-group list-group-flush">
-                <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-                  <ul class="list-group" id="social">
-                    <li class="list-group-item"><a href="https://github.com/Goclis/"><i
-                            class="fa fa-github-square fa-lg"></i> Github
-                    </a></li>
-                  </ul>
-                </li>
-
-
-
-                <li class="list-group-item"><a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                    <ul class="list-group" id="tags">
-                        <li class="list-group-item tag-1">
-                            <a href="/tag/python.html">
-                                python
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-1">
-                            <a href="/tag/os.html">
-                                os
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-2">
-                            <a href="/tag/pelican.html">
-                                pelican
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/cs.html">
-                                cs
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/linux.html">
-                                linux
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/security.html">
-                                security
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/spider.html">
-                                spider
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/xpath.html">
-                                xpath
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/software-test.html">
-                                software test
-                            </a>
-                        </li>
-                        <li class="list-group-item tag-4">
-                            <a href="/tag/unicode.html">
-                                unicode
-                            </a>
-                        </li>
-                    </ul>
-                </li>    
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://python.org/" target="_blank">
-                Python.org
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://jinja.pocoo.org/" target="_blank">
-                Jinja2
-            </a>
-        </li>
-      </ul>
-    </li>
-
+<div class="row-fluid">
+    <header class="page_header span10 offset2">
+    <h1><a href="/archives.html">All Posts</a></h1>
+    </header>
+</div>
+<div class="row-fluid">
+    <div class="span8 offset2">
+        <ul class="list-all-articles">
+            <li><a href="/articles/mov-with-memory.html">mov 指令与内存  </a>
+            <time pubdate="pubdate" datetime="2014-08-08T16:00:00">2014-08-08 16:00:00</time>
+            </li>
+            <li><a href="/articles/os-experiment-note.html">操作系统课设笔记  </a>
+            <time pubdate="pubdate" datetime="2014-07-30T17:22:00">2014-07-30 17:22:00</time>
+            </li>
+            <li><a href="/articles/how-to-validate-certificate.html">如何验证一个数字证书的有效性  </a>
+            <time pubdate="pubdate" datetime="2014-06-21T15:43:00">2014-06-21 15:43:00</time>
+            </li>
+            <li><a href="/articles/pelican-with-blog.html">Pelican简要配置  </a>
+            <time pubdate="pubdate" datetime="2014-05-25T20:30:00">2014-05-25 20:30:00</time>
+            </li>
+            <li><a href="/articles/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联  </a>
+            <time pubdate="pubdate" datetime="2014-05-25T17:20:00">2014-05-25 17:20:00</time>
+            </li>
+            <li><a href="/articles/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别  </a>
+            <time pubdate="pubdate" datetime="2014-05-21T15:32:00">2014-05-21 15:32:00</time>
+            </li>
+            <li><a href="/articles/elementary-os-tips.html">Elementary OS  </a>
+            <time pubdate="pubdate" datetime="2014-04-24T00:00:00">2014-04-24 00:00:00</time>
+            </li>
+            <li><a href="/articles/black-box-testing-thought.html">黑盒测试感想  </a>
+            <time pubdate="pubdate" datetime="2014-04-14T00:00:00">2014-04-14 00:00:00</time>
+            </li>
+            <li><a href="/articles/python-encoding.html">Python编码。。。。  </a>
+            <time pubdate="pubdate" datetime="2014-02-06T00:00:00">2014-02-06 00:00:00</time>
+            </li>
+            <li><a href="/articles/the-way-to-reinstall-system.html">重装之路  </a>
+            <time pubdate="pubdate" datetime="2013-12-14T00:00:00">2013-12-14 00:00:00</time>
+            </li>
+            <li><a href="/articles/pelican-source-reading.html">Pelican源码解读  </a>
+            <time pubdate="pubdate" datetime="2013-11-15T00:00:00">2013-11-15 00:00:00</time>
+            </li>
+            <li><a href="/articles/python-with-xpath-get-exam-schedule.html">Python with Xpath获取全校考试安排  </a>
+            <time pubdate="pubdate" datetime="2013-01-03T00:00:00">2013-01-03 00:00:00</time>
+            </li>
         </ul>
-    </section>
-
-</aside>        </div>
     </div>
 </div>
+
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+    </div>
 <footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2014 Goclis Yao
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="//code.jquery.com/jquery.js"></script>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
-
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
-
-</body>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
+    </ul>
+</div>
+</footer>        <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+    </body>
 </html>
