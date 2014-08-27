@@ -49,7 +49,7 @@
                     <a class="brand" href="{{ SITEURL }}/"><span class=site-name>{{ SITENAME }}</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li {% if page_name == "index" %} class="active"{% endif %}><a href="{{ SITEURL }}">Home</a></li>
+                            <li {% if page_name == "index" %} class="active"{% endif %}><a href="{{ SITEURL }}/">Home</a></li>
                             {% if DISPLAY_PAGES_ON_MENU %}
                             {% for page in pages %}
                             <li {% if output_file == page.url %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
