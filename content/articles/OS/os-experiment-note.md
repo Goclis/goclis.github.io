@@ -1,4 +1,4 @@
-Title: 操作系统课设笔记  
+﻿Title: 操作系统课设笔记  
 Slug: os-experiment-note  
 Date: 2014-07-30 17:22  
 Tags: os  
@@ -7,24 +7,25 @@ Author: Goclis Yao
 
 因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。
 
-这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而 OS 上的坑又不是那么容易解决的，总之以下操作不带有普遍性。
+这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。
 
 课设平台：
 
  - fedora 7
  - linux-2.6.21 source code
- - i386 ?
+ - i386
 
 ###实验1 编译内核
 纯粹照着书搞。。
 
-以下操作假设在 home 目录下，并且用户为 root
+#### 实验过程
+以下操作假设用户为root，目录自行决定。
 ```
-tar -zxf linux-2.6.21.tar.gz
-cd linux-2.6.21
-make mrproper  # 清楚掉之前编译产生的垃圾
-make oldconfig  # 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可
-vim Makefile
+% tar -zxvf linux-2.6.21.tar.gz
+% cd linux-2.6.21
+% make mrproper  # 清楚掉之前编译产生的垃圾
+% make oldconfig  # 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可
+% vim Makefile
 ```
 修改
 ```
@@ -34,35 +35,28 @@ EXTARVERSION =
 ```
 EXTRAVERSION = .7-custom-version
 ```
-这样的话你生成的内核版本号就为 2.6.21.7-custom-version （前面有几个参数是指定 2,6,2 的，这里没给出）
-
-继续
-
+这样的话你生成的内核版本号就为2.6.21.7-custom-version（前面有几个参数是指定 2,6,21 的，这里没给出），继续
 ```
-make all
-make modules_install
-make install
+% make all
+% make modules_install
+% make install
 ```
-这样的话新的内核就已经更新到了 /boot 下，并且 grub 的配置文件 (/etc/grub.conf) 也已经被更新了。
+这样的话新的内核就已经更新到了/boot下，并且 grub 的配置文件 (/etc/grub.conf) 也已经被更新了。
 
-有兴趣研究的同学可以继续去查看 terminal 给出的那个 sh 命令之后的那个文件，进而会跟到另外一个文件里面，我只是粗略看了下没有深究，就不多说了。
+有兴趣研究的同学可以继续去查看terminal给出的那个 sh 命令之后的那个文件，进而会跟到另外一个文件里面，我只是粗略看了下没有深究，就不多说了。
 
-最后一步 reboot，就可以看到在 grub 的选项中看到你的内核了（.7-custom-version 结尾的那个）。
+最后一步reboot，就可以看到在grub的选项中看到你的内核了（.7-custom-version结尾的那个）。
 
 
 
 ###实验2 系统调用
-这里只是添加一个最简单的系统调用，无参数，无实际操作！
+这里只是添加一个最简单的系统调用，无参数，无实际操作！加复杂的系统调用的时候可能会遇到各种坑，在做往后几个实验的时候再去解决吧。
 
-加复杂的系统调用的时候可能会遇到各种坑，在做往后几个实验的时候再去解决吧。
-
-假设要添加的系统调用名为 goclis，则内核对应的实现函数名一般为 sys_goclis，现在开始实现。
-
-目录和用户假设同实验1
-
+#### 实验过程
+假设要添加的系统调用名为goclis，则内核对应的实现函数名一般为sys_goclis，现在开始实现。目录和用户假设同实验1。
 ```
-cd linux-2.6.21
-vim arch/i386/kernel/syscall_table.S
+% cd linux-2.6.21
+% vim arch/i386/kernel/syscall_table.S
 ```
 往系统调用表的末尾添加要新增的系统调用
 ```
@@ -72,11 +66,9 @@ vim arch/i386/kernel/syscall_table.S
 
 .long sys_goclis    /* 320 */
 ```
-320 指的是我要为它分配的系统调用号，继续
-
-添加头文件 goclis.h
+添加头文件goclis.h（这里其实非必要）。
 ```
-vim include/linux/goclis.h
+% vim include/linux/goclis.h
 ```
 正如我所说，这个系统调用非常简单，所以。。头文件除了宏保护就是空。。
 ```
@@ -87,12 +79,10 @@ vim include/linux/goclis.h
 
 #endif
 ```
-添加实现文件 goclis.c
+添加实现文件goclis.c，在里面要加入我们指定的系统调用的实现，宏`asmlinkage`表示该函数的参数通过栈传递。
 ```
-vim kernel/goclis.c
-```
-在里面要加入我们指定的系统调用的实现
-```
+% vim kernel/goclis.c
+
 // goclis.c
 
 #include <linux/linkage.h>
@@ -103,7 +93,7 @@ asmlinkage int sys_goclis()
     return 320;  // 这个是随意的
 }
 ```
-就是这么简单的系统调用，继续，为该系统调用添加支持
+就是这么简单的系统调用，继续，为该系统调用添加支持。
 ```
 vim kernel/Makefile
 ```
@@ -112,20 +102,17 @@ vim kernel/Makefile
 obj-y = sched.o fork.o exec_domain.o \
         ...
 ```
-这行加入
+这行加入goclis.o
 ```
 obj-y = goclis.o sched.o ...
 ```
-这样才能保证 goclis.c 在内核编译的时候是可见的。
+这样才能保证goclis.c在内核编译链接的时候是可见的。但其实这个调用的实现也不一定要写在goclis.c中，完全可以放在一个已经存在的.c中即可，只要保证这个.c对应的.o能被编译链接。
 
-但其实这个调用的实现也不一定要写在 goclis.c 中，完全可以放在一个已经存在的 .c 中即可，只要保证这个 .c 对应的 .o 能被内核编译。
-
-接着为这个系统调用定义系统调用，我们之前那个 320 只是个注释呀
-
+接着为这个系统调用定义系统调用，我们之前那个320只是个注释呀。
 ```
-vim include/asm-i386/unistd.h
+% vim include/asm-i386/unistd.h
 ```
-是 i386 不是 ia64，因为我们是 32 位的系统。
+是i386不是ia64，因为我们是32位的系统。
 
 修改
 ```
@@ -147,9 +134,8 @@ vim include/asm-i386/unistd.h
 很显然吧，用 __NR_goclis 来命名我们的系统调用，然后把它定义为 320，这样就真的 320 了。。
 
 最后，还得把你的这个系统调用加入到统一的系统调用头文件中。
-
 ```
-vim include/linux/syscalls.h
+% vim include/linux/syscalls.h
 ```
 加入头文件
 ```
@@ -160,9 +146,9 @@ vim include/linux/syscalls.h
 asmlinkage int sys_goclis();
 ```
 
-OK，重新编译内核然后 reboot，就 ok 了！
+OK，重新编译内核然后reboot，就ok了！
 
-关于编译内核，因为之前已经编译过产生了很多的 .o 了，节省时间的话，直接 make 就可以接着编译了，否则重头编译超级浪费时间。。
+关于编译内核，因为之前已经编译过产生了很多的.o 了，节省时间的话，直接make就可以接着编译了，否则重头编译超级浪费时间。。
 
 重启后测试下我们的系统调用是否生效，注意得重启为我们创的这个内核！
 
@@ -180,9 +166,414 @@ int main()
 ```
 编译后运行
 ```
-gcc test.c
-./a.out
+% gcc test.c
+% ./a.out
 
-> 320
+320
 ```
 ok~，打印出 320 了。
+
+###实验3 进程隐藏
+实验的本质目的应该是修改一系列与/proc目录相关的方法，从而实现“隐藏”的要求。
+
+#### 思路分析：
+ls /proc及ps aux引起的系统调用层次如下
+```
+% ls /proc (or ps aux)
+=> proc_root_readdir
+    => proc_readdir
+    => proc_pid_readdir
+        => proc_base_fill_cache
+        => proc_pid_fill_cache
+```
+其中，proc_base_fill_cache和proc_pid_fill_cache会将进程标识写入用户缓冲区中。因此，实验的关键就在于要过滤掉那些隐藏的进程，不让它们调用这些方法，这个通过修改其上层的方法proc_pid_readdir可以做到。
+
+其他的功能的实现方式其实类似于 ls /proc 隐藏进程的实现：大致就是用户通过系统调用，修改了相应的 task_struct 内部的值，然后修改 proc 文件系统的一些方法，使得它们根据 task_struct 中的值的不同，产生不同的行为即可。
+
+现在来大致分析下实验需要实现什么：
+
+1. 添加两个系统调用：asmlinkage int sys_hide(pid_t pid, int on)和asmlinkage int sys_hide_user_process(uid_t uid, char *binname)。
+2. 修改task_struct的结构，添加支持隐藏的信息。
+3. 修改proc文件系统的一些方法：如proc_pid_readdir方法。
+4. 修改proc文件系统的某些模块：这个其实可以替换成自己实现一个模块，但是修改系统现成的可以省挺多事的。往模块中加入一些全局变量来实现自己的功能，如hidden_flag。
+
+####实验过程
+添加系统调用，过程类似于实验2。
+
+修改系统调用表
+```
+% vim arch/i386/kernel/syscall_table.S
+// syscall_table.S
+.long sys_hide
+.long sys_hide_user_processes
+```
+增加系统调用实现
+```
+% vim kernel/hide.c
+// hide.c
+#include <linux/linkage.h>
+#include <linux/sched.h>
+#include <asm/current.h>
+
+/*
+ * set the attribute hide of task with pid, 
+ * according to the value of on.
+ * 
+ * if on value is invalid (except for 1 and 0), return 0 to indicate.
+ * if current user is not root, return 1 to indicate.
+ * if pid is not exist, return 2 to indicate.
+ * return 3 to indicate success.
+ */
+asmlinkage int sys_hide(pid_t pid, int on)
+{
+    if (current->uid != 0) {
+        return 1; // current user is not root
+    }
+
+    struct task_struct *p;
+    p = find_task_by_pid(pid);
+    if (!pid) {
+        return 2; // pid is invalid
+    }
+
+    if (on == 1 || on == 0) {
+        p->hide = on;
+        return 3; // success
+    } else {
+        return 0; // on is invalid
+    }
+}
+
+% vim kernel/hide_user_processes.c
+// hide_user_processes.c
+#include <linux/linkage.h>
+#include <linux/sched.h>
+#include <asm/current.h>
+
+/*
+ * hide processes with uid, accroing to binname, hide one or all.
+ * 
+ * hide all processes when binname is NULL, otherwise, hide the process
+ * which binary name is equal to binname.
+ *
+ * if current user is not root, return 0 to indicate.
+ * return 1 to indicate success.
+ */
+asmlinkage int sys_hide_user_processes(uid_t uid, char *binname)
+{
+    if (current->uid != 0) {
+        return 0;
+    }
+
+    struct task_struct *p;
+    if (binname == NULL) {
+        for_each_process(p) {
+            if (p->uid == uid) {
+                p->hide = 1;
+            }
+        }
+    } else {
+        for_each_process(p) {
+            if (p->uid == uid && strcmp(binname, p->comm) == 0) {
+                p->hide = 1;
+            }
+        }
+    }
+
+    return 1;
+}
+```
+这里简要描述下实现，都很简单，实现的开始都检查了当前的进程的uid是否为0，即是否为root，因为这些系统调用只能root用户使用。
+
+接着，hide.c通过方法查找到对应pid的task_struct指针，修改其内部的hide的值，这个hide是为了实验添加的，后面讲。
+
+而hide_user_processes.c则通过for_each_process遍历所有的task_struct，将符合条件的修改hide进行隐藏。这里使用到的p->comm代表的是该task_struct的二进制映像名称。
+
+继续完善系统调用的添加，修改kernel/Makefile，unistd.h，syscalls.h。
+```
+% vim kernel/Makefile
+// Makefile
+obj-y = hide.o hide_user_processes.o goclis.o ...
+
+% vim include/asm-i386/unistd.h
+// unistd.h
+#define __NR_hide                                  321
+#define __NR_hide_user_processes        322
+
+#define NR_syscalls                                 323
+
+% vim include/linux/syscalls.h
+// syscalls.h
+asmlinkage int sys_hide(pid_t pid, int on);
+asmlinkage int sys_hide_user_processes(uid_t uid, char *binname);
+```
+注意，要保持NR_syscalls最大！系统调用添加完毕，下面修改task_struct，添加hide属性。
+```
+% vim include/linux/sched.h
+// sched.h
+...
+struct task_struct {
+    ...
+    
+    int hide; // 1 to hide
+};
+```
+既然为task_struct添加了属性，就得为该属性进行初始化，而它的初始化发生在fork的时候，所以要进行相应修改。
+```
+% vim kernel/fork.c
+// fork.c
+...
+long do_fork(...)
+{
+    ...
+    if (!IS_ERR(p)) {
+        p->hide = 0;
+        ...      
+    }
+    ...
+}
+...
+```
+接下来，实现一下/proc/hidden和/proc/hidden_process的功能，显然，可以通过添加一个模块来实现它，但是，麻烦的是那样我们还得手动加载，不如修改现有模块来的方便，所以，下面通过修改fs/proc/proc_misc.c这个模块来实现功能。
+```
+% vim fs/proc/proc_misc.c
+// proc_misc.c
+...
+#define BUFSIZE 1024
+static char global_buffer[BUFSIZE];
+int hidden_flag = 0; // 1 enable hide function
+struct proc_dir_entry *hidden_file, *hidden_process_file;
+
+static int proc_read_hidden(char *page, char **start, off_t off, int count,
+                            int *cof, void *data)
+{
+    int len;
+    len = sprintf(page, "%d", hidden_flag);
+    return len;
+}
+
+static int proc_write_hidden(struct file *file, const char *buffer,
+                            unsigned long count, void *data)
+{
+    int len;
+    if (count > BUFSIZE - 1) {
+        len = BUFSIZE - 1;
+    } else {
+        len = count;
+    }
+    if (copy_from_user(global_buffer, buffer, len)) {
+        return -EFAULT;
+    }
+    global_buffer[len] = '\0';
+    hidden_flag = global_buffer[0] - '0';
+    return len;
+}
+
+static int proc_read_hidden_process(char *page, char **start, off_t off, int count,
+                                    int *cof, void *data)
+{
+    int len;
+    if (hidden_flag == 0) {
+        // no hide process
+        len = sprintf(page, "No hide process.\n");
+        return len;
+    }
+
+    struct task_struct *p;
+    int increment_length;
+    char process_seq_buf[BUFSIZE];
+    len = 0;
+    for_each_process(p) {
+        if (p->hide == 1) {
+            increment_length = sprintf(process_seq_buf + len, "%d ", p->pid);
+            len += increment_length;
+        }
+    }
+    if (len > 0) {
+        process_seq_buf[--len] = '\0'; // remove the last blank space
+    } else {
+        process_seq_buf[0] = '\0';
+    }
+    len = sprintf(page, "%s", process_seq_buf);
+    return len;
+}
+
+void __init proc_misc_init(void)
+{
+    hidden_file = create_proc_entry("hidden", 0644, NULL);
+    hidden_file->read_proc = proc_read_hidden;
+    hidden_file->write_proc = proc_write_hidden;
+
+    hidden_process_file = create_proc_read_entry("hidden_process",
+                            0444, NULL, proc_read_hidden_process, NULL);
+
+    ...
+}
+...
+```
+简单地解释一下，global_buffer是为了供copy_from_user将用户态的数据拷贝到内核态时使用，而全局变量hidden_flag是/proc/hidden中的内容的备份，用于供其他方法如proc_pid_readdir使用，后面会描述。proc_read_hidden和proc_write_hidden分别为/proc/hidden的读写回调方法，/proc/hidden_process是个只读文件，为其指定读回调方法proc_read_hidden_process，具体参见内核模块的内容。
+
+按照之前的思路分析，接下来该修改一些proc文件系统的方法来实现隐藏的功能，主要是修改以下几个方法：
+
+ - proc_pid_readdir：让其过滤掉隐藏的task_struct，不返回给用户缓冲区。
+ - proc_pid_lookup：让其过滤掉隐藏的task_struct，使得open不能解析类似/proc/pid/xxx的路径名。
+
+```
+% vim fs/proc/base.c
+// base.c
+...
+extern int hidden_flag;
+struct dentry *proc_pid_lookup(struct inode *dir, struct dentry * dentry, struct nameidata *nd)
+{
+    ...
+    rcu_read_lock();
+    task = find_task_by_pid(tgid);
+    if (task) {
+        if (hidden_flag == 1 && task->hide == 1) {
+            goto out;
+        }
+        get_task_struct(task);
+    }
+    rcu_read_unlock();
+    if (!task)
+        goto out;
+
+    result = proc_pid_instantiate(dir, dentry, task, NULL);
+    put_task_struct(task);
+out:
+    return result;
+}
+...
+int proc_pid_readdir(struct file * filp, void * dirent, filldir_t filldir)
+{
+    ...
+    for (task = next_tgid(tgid);
+         task;
+         put_task_struct(task), task = next_tgid(tgid + 1)) {
+        tgid = task->pid;
+        if (hidden_flag == 0 || task->hide != 1) {
+            flip->f_pos = tgid + TGID_OFFSET;
+            if (proc_pid_fill_cache(filp, dirent, filldir, task, tgid) < 0) {
+                put_task_struct(task);
+                goto out;
+            }
+        } else {
+            // task should be hidden
+        }
+    }
+    ...
+}
+```
+基本完成了，下面添加两个基础的程序用于测试。
+```
+% vim hide.c
+#include <sys/syscall.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv)
+{
+    if (argc != 3) {
+        printf("You should offer pid and on\n");
+        return 0;
+    }
+
+    int pid = atoi(argv[1]);
+    int on = atoi(argv[2]);
+    int ret = syscall(321, pid, on);
+    if (ret == -1) {
+        printf("System call error.\n");
+    } else if (ret == 0) {
+        printf("The value of on is invalid.\n");
+    } else if (ret == 1) {
+        printf("Current user is not root.\n");
+    } else if (ret == 2) {
+        printf("The pid is invalid.\n");
+    } else if (ret == 3) {
+        printf("Hide success.\n");
+    }
+    return 0;
+}
+
+% vim hide_all.c
+#include <sys/syscall.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char **argv)
+{
+    if (argc != 3) {
+        printf("You should offer uid and binname.\n");
+        return 0;
+    }
+
+    int uid = atoi(argv[1]);
+    char *binname = argv[2];
+    if (uid == -1) {
+        // hide current user
+        uid = getuid();
+    }
+    if (strcmp(binname, "NULL") == 0) {
+        binname = NULL;
+    }
+    int ret = syscall(322, uid, binname);
+    if (ret == -1) {
+        printf("System call error.\n");
+    } else if (ret == 0) {
+        printf("Current user is not root.\n");
+    } else if (ret == 1) {
+        printf("Hide success.\n");
+    }
+
+    return 0;
+}
+```
+基于这两个程序进行测试
+```
+% cat /proc/hidden  # 0
+% cat /proc/hidden_process # No hide process.
+% gcc -o hide hide.c
+% gcc -o hide_all hide_all.c
+
+% ps aux # all process
+% ./hide 1 1 # hide pid 1
+% ps aux # no hide process because of hidden_flag == 0
+% echo "1" > /proc/hidden
+% ps aux # pid 1 is hided.
+% ls /proc # can not find directory 1
+% cat /proc/hidden_process # 1
+% ./hide 3 1 # hide pid 3
+% ps aux # pid 1 and 3 is hided.
+% cat /proc/hidden_process # 1 3
+% ./hide 1 0 # show pid 1
+% ps aux # pid 3 is hided.
+% cat /proc/hidden_process # 3
+% echo "0" > /proc/hidden
+% ps aux # no hide process because of hidden_flag == 0
+% cat /proc/hidden_process # No hide process.
+
+% echo "1" > /proc/hidden
+% ./hide_all -1 NULL # hide all root processes
+% ps aux
+% cat /proc/hidden_process # 1 2 3 ....
+% ./hide 1 0 # show pid 1
+% ps aux
+% cat /proc/hidden_process # 2 3...
+% ./hide_all -1 init # hide root process with binname 'init'
+% ps aux
+% cat /proc/hidden_process # 1 2 3 ....
+```
+
+### 实验4 实现Shell
+用户态编程，使用lex进行前端的词法分析，然后结合系统调用即可实现。
+
+### 总结
+@_@坑还真不少，再次强调不具有普遍性，相同的步骤走下来，不对，可能根本走不到最后就出bug了。
+
+###Reference
+ - [cd command not working with execvp][1]
+ - [Linux Cross Reference](http://lxr.free-electrons.com/ident?v=2.6.24&i=uid_t)
+
+
+[1]: http://stackoverflow.com/questions/18686114/cd-command-not-working-with-execvp
