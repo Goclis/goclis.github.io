@@ -58,3 +58,5 @@ output
 *.pid
 
 cache/
+
+.DS_store
