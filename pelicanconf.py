@@ -35,7 +35,9 @@ DEFAULT_PAGINATION = False
 #RELATIVE_URLS = True
 
 STATIC_PATHS = ['images', 'pdfs', 'src']  # images and pdf files
+ARTICLE_EXCLUDES = ['unposts']
 
+# 主题
 THEME = "./themes/pelican-elegant-1.3"
 
 # 指定生成的存放目录

@@ -53,10 +53,10 @@ coverage.xml
 docs/_build/
 
 
-# blog file
-output
+# my conf
 *.pid
-
+output/
 cache/
-
+unposts/
 .DS_store
+
