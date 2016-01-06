@@ -36,13 +36,11 @@ DEFAULT_PAGINATION = False
 
 STATIC_PATHS = ['images', 'pdfs', 'src']  # images and pdf files
 
-THEME = "/Users/goclis/Documents/Blog/themes/pelican-elegant-1.3"
-#THEME = "/home/goclis/SHARE/Blog/themes/pelican-elegant-1.3"
-# THEME = "/home/goclis/niu-x2-sidebar"
-
+THEME = "./themes/pelican-elegant-1.3"
 
 # 指定生成的存放目录
-ARTICLE_SAVE_AS = 'articles/{slug}.html'   
-ARTICLE_URL = 'articles/{slug}.html'  
-ARTICLE_LANG_SAVE_AS = 'articles/{slug}.html'
-ARTICLE_LANG_URL = 'articles/{slug}.html'
+ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
+ARTICLE_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
+ARTICLE_LANG_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
+ARTICLE_LANG_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
+

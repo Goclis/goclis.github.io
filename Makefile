@@ -58,8 +58,9 @@ html:
 public_github:
 	cd output;git add .;git commit -m "update";git push origin master
 
+# 只删除掉内容，保留目录及Git信息
 clean:
-	[ ! -d $(OUTPUTDIR) ] || rm -rf $(OUTPUTDIR)
+	[ ! -d $(OUTPUTDIR) ] || rm -rf $(OUTPUTDIR)/*	
 
 regenerate:
 	$(PELICAN) -r $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
