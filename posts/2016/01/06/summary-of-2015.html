@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+<meta name="keywords" content="生活, posts, " />
+        <title>2015小结  · Logging
+</title>
+        <link href="http://cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+    </head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/"><span class=site-name>Logging</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li ><a href="/">Home</a></li>
+                            <li ><a href="/categories.html">Categories</a></li>
+                            <li ><a href="/tags.html">Tags</a></li>
+                            <li ><a href="/archives.html">Archives</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<article>
+<div class="row-fluid">
+    <header class="page_header span10 offset2">
+    <h1><a href="/posts/2016/01/06/summary-of-2015.html"> 2015小结  </a></h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+        <div class="span8 offset2 article-content">
+
+            <p>这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。</p>
+<h3>回顾</h3>
+<p>现在细细回想了一下，对这段时间好像还是有那么点印象的，不过总的说起来也只是一直处于一个不断在学校和”创业“中切换的混沌状态。下面按照时间线大概理一下吧，流水账。</p>
+<p>从”创业“开始说吧，加引号是因为有点伤，下面再说吧。大概来说是从大三下（14年6月）的时候开始的，那时候老师找了我和几个同学谈做一个分布式相关的产品，因为当时合伙的老师中有一个是以后读研的导师，想想觉得边读研边做项目还挺好的，而且许诺的期权及期限都还可以接受，就答应一起做了。</p>
+<p>然后暑假没回家就一直在公司做产品，刚开始的时候还是公司机器还是能够上网的，所以那段时间开发产生的一些问题也能随时弄到为知笔记里，然后晚上回去的时候可以查查资料补充一下，所以那个暑假偶尔还是会发一些东西到博客上。现在想想，主要原因还是因为项目刚开启，还在补充基本知识阶段，比较闲暇，到后面忙了而且公司进行了内外网隔离后就基本没什么时间去多想以及记录笔记了。说多了都是懒啊！！！</p>
+<p>暑假结束大四上开始，没课，就三个课设，操作系统课设暑假就自己抽空搞了，所以挺快的，网络课设拖得挺长但也不麻烦。蛋疼的也就是综合课设，要组队在FPGA板子上做个MIPS指令集的CPU，还要做编辑器、编译器、汇编器等工具来把C代码编译到MIPS的机器码。</p>
+<p>不大想研究硬件部分的，分工的时候选了编译器，结果和汇编器的同学的接口完全对不上（出国比较忙，找学长拿的代码没文档。。），就变成了编译器汇编器一起做了，好在汇编器只要简单地把指令映射到机器码并且链接（只链接BIOS而已，要一起烧到板子上）。分工完后独立开发的过程还是比较顺利的，但是联调的时候就很痛苦了。。不过都是怪自己啊，汇编器做映射的时候没做对，结果导致指令串掉了，调试的时候盯着Xilinx的工具看着一堆32个0、1的时候眼睛瞎掉了才发现。。总的来说，这个课设应该是最有意思的一次。</p>
+<p>课设都做完后就开始忙毕设的事了，毕设题目因为扯上了公司项目，太大太坑，大四下主要就在填这个坑，最后答辩也没有足够的时间，提了提思想就结束了。就这样就耗掉了2015年的上半年，大学就这样结束了，到现在研一上也快结束了，真的是越写越觉得自己这段日子都是混过来的，Coding上没什么实质性的技能提升，惭愧。</p>
+<p>总的来说，这段时间的进步可能都只体现在了看问题的角度上吧。对于一个项目，以前自己可能更多地停留在某一块的实现上，但现在更多的是能够给出一个总体的概要设计。然而，让自己很无奈觉得没有实质提升的地方在于有些部分并亲自去实现过。就线程及网络相关的设计而言，知道该如何去设计队列、多线程来解决同步、网络接收等问题，但都未曾实质写过，这不是小问题，必须亲自实践。</p>
+<h3>“创业”</h3>
+<p>回顾完毕，讲讲创业吧。自开始以来，基本上都是挺认真地在努力干活的，并没有去考虑关于公司运营以及自己的期权这些事，可是最近年底发生了一些事弄的自己不得不去细细想想。</p>
+<p>现在的体会就是：</p>
+<ol>
+<li><strong>没资本，创业基本等同于打工</strong></li>
+<li><strong>口头承诺永远不如一纸文书</strong></li>
+</ol>
+<p>当然，这些都是在具体情况下的，下面慢慢说。</p>
+<p>我刚开始进入公司的时候，因为没有任何的软件著作权以及专利，是不可能技术合伙（没法估值），所以那时候<strong>口头</strong>许诺的是：</p>
+<blockquote>
+<p>2%的期权，3年内交完</p>
+</blockquote>
+<p>那个时候的我并没有股数和占比的概念，只觉得按照当时的公司资产，2%也就是4万块，3年内拿工资还是能够搞定的，而且相信老师的为人，就答应了。说实在的，当时并没有考虑过我加入一个创业公司做产品未来会赚多少钱，只是傻傻地认为这个方向有市场，做得好肯定赚，然后自己心里也想做一款好软件，就加入了，真的是天真啊。</p>
+<p>转折点在15年底，公司说要把期权交完，当时挺懵逼的，4万块，真拿不出来，最后找已经毕业的同学借（真的是感谢，好兄弟！），终于凑出来了。可是又有一个问题，说好的2%变了，因为当时的2%是200万为基，但现在基变成1000万了（这个就不具体说了，后来进了比资金，理由我们都接受，只是难接受），虽然还是交4万，4万股，但占比却变成了0.4%。</p>
+<p>我再怎么迟钝也会想搞明白这件事的影响，所以这个时候才开始回过头来算收益。如果假设上市前股权没法变现，则主要的收益就只能是分红了（因为工资低的不行），最后发现0.4%的占比，要想拿到10万的分红，拿来分红的利润起码是2500万，这意味着公司的销售额以及市值得更高，这似乎并不是几年内能够完成的。而如果不是几年内完成的，那便意味着我花了10年甚至更多才拿到了我毕业入职就能拿到的年薪，从经济上来说，这对个人而言，无疑是创业失败。</p>
+<p>这事商榷到最后还是没啥改变，现实只是公司的发展不错，股权在退出时会按照当时的估值变现返还。这似乎成了唯一的好消息，起码我往后的付出如果让股价升值了，我在离开时还能拿到一比应有的报酬。</p>
+<p>整个过程从个人角度来说，还是开头说的两点问题。没资本，即使许诺更多的期权（平价）我也买不起。没文件，行权期限没有保证。只能说理解，理解老师也没经验给出了3年行权期限这样的承诺，没经验的我们也认为这很合理。</p>
+<p>了解了基本的股权投资也算是好事吧~~</p>
+<p>最后想说：<strong>在做任何一件事的时候，不要只关注你感兴趣的，而要考虑所有关系到你的利益的，逐利并非坏事，这是动力</strong>。就创业而言，不管怎样，只要你还没有经济自由，收入肯定是你要考虑的，给自己一个期望的收入，然后对工资、分红、股权这几部分收益进行好好地权衡，这是必须的。</p>
+<h3>展望</h3>
+<p>写完沉重的话题，来说说未来的展望吧~</p>
+<p>在回顾的时候说到这段时间很少去把所想到的事情都进行实际的动手。其实这段时间还是有看书，并边做验证，但更深入的实验做的少了。原因大概如下：</p>
+<ol>
+<li>可支配的时间少了，深入实验花费的时间相较于看书做验证是高了不少的，时间少了也就没法做那么多实验了。</li>
+<li>懒了。因为创业会让你专注于一些固定事情，当你掌握了处理这些事的基本技能，并且认定这个方向后，你就已经处于舒适区了，自然而然地，人就变懒了。</li>
+</ol>
+<p>所以，在接下来的读研时间里还是让自己更理想一些吧，喜欢什么就去了解什么，想做实验就去做，不要急功近利。等到实在要正式入职进社会工作了，再把时间腾些过去吧。</p>
+<p>博客的话，有些稍微能整理的成果就更新吧，现在这阶段的水平大概也就只能继续写写教程了，但还是要写的。其实这段时间还是有写些东西的，但都只是放到笔记里，回头整理整理放上来吧。还有以前发的文章也得整理下，有些写的实在有点随意。。</p>
+<p>关于公司，这段时间的事情让自己失去了一种创业者的感觉，残留的念头只有把手头工作维护好并继续完善（码农的执着2333）。再多的只能说工作必须好好干了（工资实在是可怜QAQ），别让自己去年的投资（交的期权）打水漂。</p>
+            <aside>
+            <hr/>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/posts/2014/08/21/data-linker-layer-authentication.html" title="Previous: 数据链路层的身份认证">数据链路层的身份认证</a></li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section>
+        <div class="span2" style="float:right;font-size:0.9em;">
+ 
+            <h4>Published</h4>
+            <time pubdate="pubdate" datetime="2016-01-06T00:00:00+08:00">Jan 6, 2016</time>
+ 
+            <h4>Last Updated</h4>
+            <div class="last_updated">2016-01-06 00:00:00+08:00</div>
+            <h4>Category</h4>
+            <a class="category-link" href="/categories.html#posts-ref">posts</a> 
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="/tags.html#生活-ref">生活
+                    <span>1</span>
+</a></li>
+            </ul>
+
+        </div>
+        </section>
+</div>
+</article>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+    </div>
+<footer>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
+    </ul>
+</div>
+</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+    </body>
+</html>

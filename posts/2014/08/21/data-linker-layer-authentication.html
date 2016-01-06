@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+<meta name="keywords" content="pppoe, isp, posts, " />
+        <title>数据链路层的身份认证  · Logging
+</title>
+        <link href="http://cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+    </head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/"><span class=site-name>Logging</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li ><a href="/">Home</a></li>
+                            <li ><a href="/categories.html">Categories</a></li>
+                            <li ><a href="/tags.html">Tags</a></li>
+                            <li ><a href="/archives.html">Archives</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<article>
+<div class="row-fluid">
+    <header class="page_header span10 offset2">
+    <h1><a href="/posts/2014/08/21/data-linker-layer-authentication.html"> 数据链路层的身份认证  </a></h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+        <div class="span8 offset2 article-content">
+
+            <p>标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
+<p>下面列举下我自己平常的一些上网方式：</p>
+<ul>
+<li>宿舍网线拨号</li>
+<li>WIFI + 网页验证</li>
+</ul>
+<p>这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。</p>
+<h3>拨号上网</h3>
+<p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
+<p>以下为个人猜想，错误请指出，谢谢！</p>
+<p>先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：</p>
+<p><img alt="isp-architecture" src="/images/isp-architecture.png" /></p>
+<p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
+<p><strong>1. 插上网线</strong></p>
+<p>插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。</p>
+<p><strong>2. 拨号认证</strong></p>
+<p>这里以PPPoE为例，但协议本身的内容不少，只粗略讲下过程，下面这段内容摘自<a href="http://baike.baidu.com/view/3246.htm#2_2">百度百科</a>：</p>
+<ol>
+<li>在STA和AP之间建立好关联之后，客户端向AC设备发送一个PADI报文，开始PPPOE接入的开始。</li>
+<li>AC向客户端发送PADO报文。</li>
+<li>客户端根据回应，发起PADR请求给AC。</li>
+<li>Ac产生一个session id，通过PADS发给客户端。</li>
+<li>客户端和AC之间进行PPP的LCP协商，建立链路层通信。同时，协商使用PAP、CHAP认证方式。</li>
+<li>AC通过Challenge报文发送给认证客户端，提供一个128bit的Challenge。</li>
+<li>客户端收到Challenge报文后，将密码和Challenge做MD5算法后的Challenge—Password，在Response回应报文中把它发送给AC设备。</li>
+<li>Ac将Challenge、challenge-Password和用户名一起送到RADIUS用户认证服务器，由RADIUS用户认证服务器进行认证。</li>
+<li>RADIUS用户认证服务器根据用户信息判断用户是否合法，然后回应认证成功/失败报文到AC。如果成功，携带协商参数，以及用户的相关业务属性给用户授权。如果认证失败，则流程到此结束。</li>
+<li>AC将认证结果返回给客户端。</li>
+<li>用户进行NCP(如IPCP)协商，通过AC获取到规划的IP地址等参数。</li>
+<li>认证如果成功，AC发起计费开始请求给RADIUS用户认证服务器。</li>
+<li>RADIUS用户认证服务器回应计费开始请求报文。用户上线完毕，开始上网。</li>
+</ol>
+<p>其中，第5步协商的认证方式因协商双方不同而不同，往后的认证过程也因协商的认证方式不同而不同。</p>
+<p>经过上面这个过程，在ISP那边就已经将你的用户名注册上网了，并且，它会为你的机器分配好IP地址，DNS服务器等参数。</p>
+<p>之前，我对认证这块有着一个很大的疑问：ISP是如何确定一个数据帧是否应该转发，即ISP怎么知道这个数据帧是否来自于一个已经通过验证了的主机？</p>
+<p>这个问题并不属于协议内容，协议选择了将这个问题交给ISP去实现，我个人的猜想是通过记录MAC地址。
+在用户认证成功后，ISP会将你的主机的MAC地址记录为可放行的，当一个帧到来的时候，它就会检查该帧的Source MAC Address是否是可放行的，如果是的话，就放行。当然，这就要求和你机器直接相连的那台ISP设备有着区分这个的能力，因为如果经过那台设备，Source MAC Address就会换成它的了。</p>
+<p><strong>3. 上网</strong></p>
+<p>经过1和2两步后，就可以上网了，数据包的分发大致如下：</p>
+<ol>
+<li>上层数据构成IP Packet，传递到链路层。</li>
+<li>链路层加上Header和Trailer，Header里的Source MAC Address是本机的MAC地址，Destination MAC Address为直接相连的那台Switch。</li>
+<li>数据帧到达Switch，Switch检查Source MAC Address是否可放行，不可放行则丢弃帧，否则放行。</li>
+</ol>
+<p>上面这3步基本上就是数据帧通过的过程，而数据帧能否通过，就是是否进行了用户认证的事了，其他的，DNS什么的事都是基于这个基础的。</p>
+<h3>Wifi上网</h3>
+<p>学校的校园wifi的认证则要比拨号认证多一层。</p>
+<p>首先，要连上AP，这个的认证的作用和拨号的用户认证相似，经过了这一层认证后才能保证你的数据帧能被AP转发出去，而学校的server，从校园网的记录上来看，很明显，它保存了你的MAC地址和分配的IP地址的映射。AP具体的认证过程参见802.11。</p>
+<p>其次，在连接上AP后，我们已经可以上内网了，也就意味着，我们的数据包已经可以在内网中转发了，但是，依旧不可以访问外网。我个人的猜想是外网出口的路由那块把出境的数据包给丢弃了，而丢弃的原因，是因为没经过WIFI验证。所以，下一步我们得打开浏览器登陆网址进行WIFI认证。</p>
+<p>而Wifi验证过后，我们的数据包就可以出境访问外网了。所以，这个Wifi验证实际上可能在出口的路由上保存了一组能够出境的IP地址，当数据包到来时，检查它的Source IP，以判断是否放行出境，或者是丢弃。这也就是有一段时间，我们一连上wifi不经过验证就能上网的原因，因为我们被分配到了一个别人已经认证的IP了，而服务器那边还没把这个下线的认证记录给注销掉。</p>
+<h3>对先前问题的解答</h3>
+<p>现在，可以稍微解释下我在<a href="/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>留下的问题了。</p>
+<p>第一个问题这篇文章已经解释的差不多了。</p>
+<p>第二个的话，个人认为，服务器肯定是有一组key-value的映射保存了这些的，而数据包中的信息是足够组成唯一的key的，key由什么组成那就是VPN提供商自己决定的了。</p>
+<h3>参考资料</h3>
+<ul>
+<li><a href="http://baike.baidu.com/view/3246.htm#2_2">PPPoE</a></li>
+<li><a href="http://whatismyipaddress.com/ppp-pppoe">What is PPP and PPPoE?</a></li>
+</ul>
+            <aside>
+            <hr/>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/posts/2014/08/19/pptp-vpn-process.html" title="Previous: PPTP VPN连接过程">PPTP VPN连接过程</a></li>
+ 
+                <li class="next_article"><a href="/posts/2016/01/06/summary-of-2015.html" title="Next: 2015小结">2015小结</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section>
+        <div class="span2" style="float:right;font-size:0.9em;">
+ 
+            <h4>Published</h4>
+            <time pubdate="pubdate" datetime="2014-08-21T16:21:00+08:00">Aug 21, 2014</time>
+            <h4>Category</h4>
+            <a class="category-link" href="/categories.html#posts-ref">posts</a> 
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="/tags.html#isp-ref">isp
+                    <span>1</span>
+</a></li>
+                <li><a href="/tags.html#pppoe-ref">pppoe
+                    <span>1</span>
+</a></li>
+            </ul>
+
+        </div>
+        </section>
+</div>
+</article>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+    </div>
+<footer>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
+    </ul>
+</div>
+</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+    </body>
+</html>
