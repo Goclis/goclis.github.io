@@ -2,32 +2,40 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
 <meta name="keywords" content="os, posts, " />
+
+<meta property="og:title" content="操作系统课设笔记 "/>
+<meta property="og:url" content="/posts/2014/07/30/os-experiment-note.html" />
+<meta property="og:description" content="因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。 这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。 课设平台： fedora 7 linux-2.6.21 source code i386 实验1 编译内核¶ 纯粹照着书搞。。 实验过程¶ 以下操作假设用户为root，目录自行决定。 % tar -zxvf linux-2.6.21.tar.gz % cd linux-2.6.21 % make mrproper # 清楚掉之前编译产生的垃圾 % make oldconfig # 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可 % vim Makefile 修改EXTARVERSION ..." />
+<meta property="og:site_name" content="Logging" />
+<meta property="og:article:author" content="Goclis Yao" />
+<meta property="og:article:published_time" content="2014-07-30T17:22:00+08:00" />
+<meta name="twitter:title" content="操作系统课设笔记 ">
+<meta name="twitter:description" content="因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。 这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。 课设平台： fedora 7 linux-2.6.21 source code i386 实验1 编译内核¶ 纯粹照着书搞。。 实验过程¶ 以下操作假设用户为root，目录自行决定。 % tar -zxvf linux-2.6.21.tar.gz % cd linux-2.6.21 % make mrproper # 清楚掉之前编译产生的垃圾 % make oldconfig # 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可 % vim Makefile 修改EXTARVERSION ...">
+
         <title>操作系统课设笔记  · Logging
 </title>
-        <link href="/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
-        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
-        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/tipuesearch/tipuesearch.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
-        <link href="/feeds/posts.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - posts Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
-                <div class="container">
+                <div class="container-fluid">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -36,10 +44,11 @@
                     <a class="brand" href="/"><span class=site-name>Logging</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li ><a href="/">Home</a></li>
+                            <li ><a href="">Home</a></li>
                             <li ><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
                         </ul>
                     </div>
                 </div>
@@ -51,7 +60,7 @@
                 <div class="span10">
 <article>
 <div class="row-fluid">
-    <header class="page_header span10 offset2">
+    <header class="page-header span10 offset2">
     <h1><a href="/posts/2014/07/30/os-experiment-note.html"> 操作系统课设笔记  </a></h1>
     </header>
 </div>
@@ -84,6 +93,7 @@
     </div>
     <div class="span8 article-content">
 
+            
             
 <p>因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。</p>
 <p>这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。</p>
@@ -592,32 +602,29 @@
 <li><a href="http://stackoverflow.com/questions/18686114/cd-command-not-working-with-execvp">cd command not working with execvp</a></li>
 <li><a href="http://lxr.free-electrons.com/ident?v=2.6.24&amp;i=uid_t">Linux Cross Reference</a></li>
 </ul>
-            <aside>
+            
+            
             <hr/>
-            <nav>
-            <ul class="articles_timeline">
- 
-                <li class="previous_article">« <a href="/posts/2014/06/21/how-to-validate-certificate.html" title="Previous: 如何验证一个数字证书">如何验证一个数字证书</a></li>
- 
-                <li class="next_article"><a href="/posts/2014/08/08/mov-with-memory.html" title="Next: mov指令与内存">mov指令与内存</a> »</li>
-            </ul>
-            </nav>
-            </aside>
         </div>
         <section>
         <div class="span2" style="float:right;font-size:0.9em;">
- 
             <h4>Published</h4>
             <time pubdate="pubdate" datetime="2014-07-30T17:22:00+08:00">Jul 30, 2014</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#posts-ref">posts</a> 
+            <a class="category-link" href="/categories.html#posts-ref">posts</a>
             <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article"> 
+            <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags.html#os-ref">os
                     <span>3</span>
 </a></li>
             </ul>
-
+<h4>Contact me</h4>
+    <a href="https://github.com/Goclis/" title="My Github Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-github sidebar-social-links"></i></a>
+    <a href="https://twitter.com/Goclis" title="My Twitter Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-twitter sidebar-social-links"></i></a>
+    <a href="mailto:goclisyyh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-envelope sidebar-social-links"></i></a>
         </div>
         </section>
 </div>
@@ -626,6 +633,7 @@
                 <div class="span1"></div>
             </div>
         </div>
+        <div id="push"></div>
     </div>
 <footer>
 <div id="footer">
@@ -634,14 +642,18 @@
     </ul>
 </div>
 </footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
-            $("table").addClass("table"); // Added by Goclis
+            // Added by Goclis for rerendering table to bootstrap style
+            $("table").addClass("table");
         </script>
 
+    
     </body>
+    <!-- Theme: Elegant built for Pelican
+    License : http://oncrashreboot.com/pelican-elegant -->
 </html>

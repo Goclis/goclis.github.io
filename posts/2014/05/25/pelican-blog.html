@@ -2,32 +2,40 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
 <meta name="keywords" content="pelican, python, posts, " />
+
+<meta property="og:title" content="Pelican简要配置教程 "/>
+<meta property="og:url" content="/posts/2014/05/25/pelican-blog.html" />
+<meta property="og:description" content="最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。 博客初始化¶ 总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。 Install pip install pelican pip install markdown Quick-Start 自己新建一个文件夹，然后： pelican-quickstart 按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。 Usage 在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作： make html # 将content中的markdown (or others) 生成为html make regenerate make serve make devserver make一般涉及到一些生成的操作，pelican自带了一个develop_server.sh以供开发的时候调试： ./develop_server.sh ..." />
+<meta property="og:site_name" content="Logging" />
+<meta property="og:article:author" content="Goclis Yao" />
+<meta property="og:article:published_time" content="2014-05-25T20:30:00+08:00" />
+<meta name="twitter:title" content="Pelican简要配置教程 ">
+<meta name="twitter:description" content="最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。 博客初始化¶ 总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。 Install pip install pelican pip install markdown Quick-Start 自己新建一个文件夹，然后： pelican-quickstart 按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。 Usage 在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作： make html # 将content中的markdown (or others) 生成为html make regenerate make serve make devserver make一般涉及到一些生成的操作，pelican自带了一个develop_server.sh以供开发的时候调试： ./develop_server.sh ...">
+
         <title>Pelican简要配置教程  · Logging
 </title>
-        <link href="/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
-        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
-        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/tipuesearch/tipuesearch.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
-        <link href="/feeds/posts.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - posts Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
-                <div class="container">
+                <div class="container-fluid">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -36,10 +44,11 @@
                     <a class="brand" href="/"><span class=site-name>Logging</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li ><a href="/">Home</a></li>
+                            <li ><a href="">Home</a></li>
                             <li ><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
                         </ul>
                     </div>
                 </div>
@@ -51,7 +60,7 @@
                 <div class="span10">
 <article>
 <div class="row-fluid">
-    <header class="page_header span10 offset2">
+    <header class="page-header span10 offset2">
     <h1><a href="/posts/2014/05/25/pelican-blog.html"> Pelican简要配置教程  </a></h1>
     </header>
 </div>
@@ -59,6 +68,7 @@
 <div class="row-fluid">
         <div class="span8 offset2 article-content">
 
+            
             <p>最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。</p>
 <h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
@@ -240,27 +250,18 @@ Summary: Somethings         # 概要
 <h3 id="some-bugs">Some bugs<a class="headerlink" href="#some-bugs" title="Permanent link">&para;</a></h3>
 <p>基本都解决了，但是有一些中文的原因导致的不兼容，比如说代码高亮。</p>
 <p>代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。</p>
-            <aside>
+            
+            
             <hr/>
-            <nav>
-            <ul class="articles_timeline">
- 
-                <li class="previous_article">« <a href="/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" title="Previous: 动态载入和虚拟内存的按需调页的关联">动态载入和虚拟内存的按需调页的关联</a></li>
- 
-                <li class="next_article"><a href="/posts/2014/06/21/how-to-validate-certificate.html" title="Next: 如何验证一个数字证书">如何验证一个数字证书</a> »</li>
-            </ul>
-            </nav>
-            </aside>
         </div>
         <section>
         <div class="span2" style="float:right;font-size:0.9em;">
- 
             <h4>Published</h4>
             <time pubdate="pubdate" datetime="2014-05-25T20:30:00+08:00">May 25, 2014</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#posts-ref">posts</a> 
+            <a class="category-link" href="/categories.html#posts-ref">posts</a>
             <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article"> 
+            <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags.html#pelican-ref">pelican
                     <span>1</span>
 </a></li>
@@ -268,7 +269,13 @@ Summary: Somethings         # 概要
                     <span>1</span>
 </a></li>
             </ul>
-
+<h4>Contact me</h4>
+    <a href="https://github.com/Goclis/" title="My Github Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-github sidebar-social-links"></i></a>
+    <a href="https://twitter.com/Goclis" title="My Twitter Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-twitter sidebar-social-links"></i></a>
+    <a href="mailto:goclisyyh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-envelope sidebar-social-links"></i></a>
         </div>
         </section>
 </div>
@@ -277,6 +284,7 @@ Summary: Somethings         # 概要
                 <div class="span1"></div>
             </div>
         </div>
+        <div id="push"></div>
     </div>
 <footer>
 <div id="footer">
@@ -285,14 +293,18 @@ Summary: Somethings         # 概要
     </ul>
 </div>
 </footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
-            $("table").addClass("table"); // Added by Goclis
+            // Added by Goclis for rerendering table to bootstrap style
+            $("table").addClass("table");
         </script>
 
+    
     </body>
+    <!-- Theme: Elegant built for Pelican
+    License : http://oncrashreboot.com/pelican-elegant -->
 </html>

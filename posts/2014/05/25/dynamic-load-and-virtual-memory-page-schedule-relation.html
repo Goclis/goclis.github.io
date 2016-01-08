@@ -2,32 +2,40 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
 <meta name="keywords" content="os, posts, " />
+
+<meta property="og:title" content="动态载入和虚拟内存的按需调页的关联 "/>
+<meta property="og:url" content="/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" />
+<meta property="og:description" content="《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话： 动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。 那么，额外工作指的是？在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于动态载入不需要操作系统提供特别支持这一事实。 动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的编码就是所谓的额外开销。比如下面这段代码（我不确定是否正确） // so_obj是一个变量标识是否导入了某个.so if (so_obj == NULL) { // load it here } 而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~ Update at 2014-05-26¶ 因为动态加载和动态链接在操作系统的实现上已经模糊了 ..." />
+<meta property="og:site_name" content="Logging" />
+<meta property="og:article:author" content="Goclis Yao" />
+<meta property="og:article:published_time" content="2014-05-25T17:20:00+08:00" />
+<meta name="twitter:title" content="动态载入和虚拟内存的按需调页的关联 ">
+<meta name="twitter:description" content="《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话： 动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。 那么，额外工作指的是？在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于动态载入不需要操作系统提供特别支持这一事实。 动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的编码就是所谓的额外开销。比如下面这段代码（我不确定是否正确） // so_obj是一个变量标识是否导入了某个.so if (so_obj == NULL) { // load it here } 而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~ Update at 2014-05-26¶ 因为动态加载和动态链接在操作系统的实现上已经模糊了 ...">
+
         <title>动态载入和虚拟内存的按需调页的关联  · Logging
 </title>
-        <link href="/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
-        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
-        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/tipuesearch/tipuesearch.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
-        <link href="/feeds/posts.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - posts Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
-                <div class="container">
+                <div class="container-fluid">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -36,10 +44,11 @@
                     <a class="brand" href="/"><span class=site-name>Logging</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li ><a href="/">Home</a></li>
+                            <li ><a href="">Home</a></li>
                             <li ><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
                         </ul>
                     </div>
                 </div>
@@ -51,7 +60,7 @@
                 <div class="span10">
 <article>
 <div class="row-fluid">
-    <header class="page_header span10 offset2">
+    <header class="page-header span10 offset2">
     <h1><a href="/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html"> 动态载入和虚拟内存的按需调页的关联  </a></h1>
     </header>
 </div>
@@ -59,6 +68,7 @@
 <div class="row-fluid">
         <div class="span8 offset2 article-content">
 
+            
             <p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：</p>
 <blockquote>
 <p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
@@ -76,32 +86,29 @@
 <p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
 <h3 id="update-at-2014-05-26">Update at 2014-05-26<a class="headerlink" href="#update-at-2014-05-26" title="Permanent link">&para;</a></h3>
 <p>因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解基本上是正确的。</p>
-            <aside>
+            
+            
             <hr/>
-            <nav>
-            <ul class="articles_timeline">
- 
-                <li class="previous_article">« <a href="/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html" title="Previous: 动态链接和动态载入的区别">动态链接和动态载入的区别</a></li>
- 
-                <li class="next_article"><a href="/posts/2014/05/25/pelican-blog.html" title="Next: Pelican简要配置教程">Pelican简要配置教程</a> »</li>
-            </ul>
-            </nav>
-            </aside>
         </div>
         <section>
         <div class="span2" style="float:right;font-size:0.9em;">
- 
             <h4>Published</h4>
             <time pubdate="pubdate" datetime="2014-05-25T17:20:00+08:00">May 25, 2014</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#posts-ref">posts</a> 
+            <a class="category-link" href="/categories.html#posts-ref">posts</a>
             <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article"> 
+            <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags.html#os-ref">os
                     <span>3</span>
 </a></li>
             </ul>
-
+<h4>Contact me</h4>
+    <a href="https://github.com/Goclis/" title="My Github Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-github sidebar-social-links"></i></a>
+    <a href="https://twitter.com/Goclis" title="My Twitter Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-twitter sidebar-social-links"></i></a>
+    <a href="mailto:goclisyyh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-envelope sidebar-social-links"></i></a>
         </div>
         </section>
 </div>
@@ -110,6 +117,7 @@
                 <div class="span1"></div>
             </div>
         </div>
+        <div id="push"></div>
     </div>
 <footer>
 <div id="footer">
@@ -118,14 +126,18 @@
     </ul>
 </div>
 </footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
-            $("table").addClass("table"); // Added by Goclis
+            // Added by Goclis for rerendering table to bootstrap style
+            $("table").addClass("table");
         </script>
 
+    
     </body>
+    <!-- Theme: Elegant built for Pelican
+    License : http://oncrashreboot.com/pelican-elegant -->
 </html>
