@@ -99,6 +99,8 @@
             {
                 return (query.length > 0);
             }
+            // Added by Goclis for rerendering table to bootstrap style
+            $("table").addClass("table");
         </script>
         {% endblock script %}
         {% include '_includes/stat_counter.html' %}
