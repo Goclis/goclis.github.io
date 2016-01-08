@@ -20,6 +20,8 @@
         <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
         <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
         <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="/feeds/posts.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - posts Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
@@ -71,7 +73,7 @@ movl %edx, 4(%esp)
 栈是向低地址方向增长的，也就是说低位在栈顶。</p>
 </blockquote>
 <p>在考虑这两句话的时候，突然发现自己对 mov 的操作并不是特别的清楚，就去查了查，大致搞明白了一些。</p>
-<h3>mov指令</h3>
+<h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">&para;</a></h3>
 <p>我们知道mov在IA32中有基础的三类操作，即b, w, l。</p>
 <p>而mov在使用时大致如下：</p>
 <div class="highlight"><pre>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
@@ -129,7 +131,7 @@ movl %edx, 4(%esp)
 </table>
 <p>这里是假设机器为<strong>小端</strong>。可见，占用了4~7的内存地址。</p>
 <p>所以，mov指令实际占用内存地址的情况是与源操作数的字节数有关的，而多出来的地方，是通过开始地址（即指令中的目标操作数）往上加的。</p>
-<h3>回归问题</h3>
+<h3 id="_1">回归问题<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <p>既然知道了mov的行为，再回过头来看看那段代码。</p>
 <p>假设乘积为<code>0x010203040A0B0C0D, %esp=104</code>，小端机器，则该段代码执行后内存应该是如下这样的：</p>
 <table>
@@ -233,6 +235,7 @@ movl %edx, 4(%esp)
             {
                 return (query.length > 0);
             }
+            $("table").addClass("table"); // Added by Goclis
         </script>
 
     </body>
