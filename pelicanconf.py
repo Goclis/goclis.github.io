@@ -8,9 +8,9 @@ SITEURL = ''
 
 TIMEZONE = 'Asia/Shanghai'
 DATE_FORMATS = {
-        'zh_CN': '%Y-%m-%d %H:%M:%S',
+       'zh_CN': '%Y-%m-%d',
 }
-DEFAULT_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+DEFAULT_DATE_FORMAT = '%Y-%m-%d'
 DEFAULT_DATE = 'fs'  # use filesystem's mtime
 DEFAULT_LANG = u'zh_CN'
 FILENAME_METADATA = '(?P<slug>.*)'
@@ -25,13 +25,20 @@ SOCIAL_PROFILE_LABEL = u'Contact me'
 SOCIAL = (('Github', 'https://github.com/Goclis/'),
           ('Twitter', 'https://twitter.com/Goclis'),
           ('Email', 'mailto:goclisyyh@gmail.com'))
-          
+
+PAGE_PATHS = ['pages']
+PAGE_URL = '{slug}.html'
+PAGE_SAVE_AS = '{slug}.html'
+DISPLAY_PAGES_ON_MENU = True
+
+DEFAULT_CATEGORY = u'未分类'
+USE_FOLDER_AS_CATEGORY = False
 
 # Markdown扩展：高亮、表格及代码等、目录
 MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'extra', 'toc(permalink=true)']
 
 # 插件：提取目录
-PLUGIN_PATHS = ['./plugins']
+PLUGIN_PATHS = ['plugins']
 PLUGINS = ['extract_toc']
 
 # 文章生成
