@@ -12,35 +12,27 @@ DATE_FORMATS = {
 }
 DEFAULT_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 DEFAULT_DATE = 'fs'  # use filesystem's mtime
-# LOCALE = ('zh_CN.utf8',)
 DEFAULT_LANG = u'zh_CN'
 FILENAME_METADATA = '(?P<slug>.*)'
+DEFAULT_PAGINATION = False
+THEME = "./themes/pelican-elegant-1.3" # 主题
 
-# Feed generation is usually not desired when developing
-FEED_ALL_ATOM = None
-CATEGORY_FEED_ATOM = None
-TRANSLATION_FEED_ATOM = None
-
-# Blogroll
+# 相关链接及社交信息
 LINKS =  (('Pelican', 'http://getpelican.com/'),
           ('Python.org', 'http://python.org/'),
           ('Jinja2', 'http://jinja.pocoo.org/'),)
-
-# Social widget
 SOCIAL = (('Github', 'https://github.com/Goclis/'),)
 
-DEFAULT_PAGINATION = False
+# Markdown扩展：高亮、表格及代码等、目录
+MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'extra', 'toc(permalink=true)']
 
-# Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+# 插件：提取目录
+PLUGIN_PATHS = ['./plugins']
+PLUGINS = ['extract_toc']
 
-STATIC_PATHS = ['images', 'pdfs', 'src']  # images and pdf files
-ARTICLE_EXCLUDES = ['unposts']
-
-# 主题
-THEME = "./themes/pelican-elegant-1.3"
-
-# 指定生成的存放目录
+# 文章生成
+STATIC_PATHS = ['images', 'pdfs', 'src']  # 静态文件目录
+ARTICLE_EXCLUDES = ['unposts'] # 生成忽略的目录
 ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_LANG_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'

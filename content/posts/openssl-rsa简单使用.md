@@ -5,15 +5,9 @@ Tags: openssl, rsa
 Slug: openssl-rsa-basic-use  
 Authors: Goclis Yao  
 
+[TOC]
 
 最近需要用到RSA的一些功能，出于方便，打算直接用openssl，但是在不同平台上使用openssl所需要做的工作还不一样，干脆就记个笔记整理一下。
-
-### 主要内容
-- Windows下使用VS2013编译openssl
-- Linux下安装openssl库
-- openssl可执行程序的使用
-- RSA相关编程
-- 参考资料
 
 ### Windows下使用VS2013编译openssl源码
 源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。
@@ -110,7 +104,7 @@ RSA结构体在编程中代表RSA的密钥（公钥或私钥），在描述RSA�
 
 __文件__
 
-```
+```cpp
 RSA *createRSAWithFilename(const char *filename, bool isPub)
 {
     BIO *in = NULL;
@@ -145,7 +139,7 @@ __内存__
 
 同样利用BIO，代码类似：
 
-```
+```cpp
 RSA *createRSAWithMemory(void *buffer, int bufLen, bool isPub)
 {
     BIO *in = NULL;
@@ -177,7 +171,7 @@ RSA的使用包括两种基本情况：
 
 __公钥加密 & 私钥解密__
 
-```
+```cpp
 int size = RSA_size(pubRSA);
 unsigned char *encrypted = new char[size];
 // 返回值表示密文的长度，由于Padding，应该等于size
@@ -202,7 +196,7 @@ __私钥签名 & 公钥验签__
 
 代码类似，如下：
 
-```
+```cpp
 int size = RSA_size(pubRSA);
 unsigned char *encrypted = new char[size];
 int ecRet = RSA_private_encrypt(contentLen, content, priRSA, RSA_PKCS1_PADDING);
@@ -224,7 +218,7 @@ if (-1 == dcRet)
 #### 大数操作替换RSA
 __公钥验签__
 
-```
+```cpp
 // 公钥使用(n,e)表示, 验签的内容使用c表示
 BigInteger n(nbuf, nlen);
 BigInteger e(ebuf, elen);
