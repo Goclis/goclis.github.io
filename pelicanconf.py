@@ -15,13 +15,17 @@ DEFAULT_DATE = 'fs'  # use filesystem's mtime
 DEFAULT_LANG = u'zh_CN'
 FILENAME_METADATA = '(?P<slug>.*)'
 DEFAULT_PAGINATION = False
-THEME = "./themes/pelican-elegant-1.3" # 主题
+THEME = "./themes/pelican-elegant" # 主题
 
 # 相关链接及社交信息
 LINKS =  (('Pelican', 'http://getpelican.com/'),
           ('Python.org', 'http://python.org/'),
           ('Jinja2', 'http://jinja.pocoo.org/'),)
-SOCIAL = (('Github', 'https://github.com/Goclis/'),)
+SOCIAL_PROFILE_LABEL = u'Contact me'
+SOCIAL = (('Github', 'https://github.com/Goclis/'),
+          ('Twitter', 'https://twitter.com/Goclis'),
+          ('Email', 'mailto:goclisyyh@gmail.com'))
+          
 
 # Markdown扩展：高亮、表格及代码等、目录
 MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'extra', 'toc(permalink=true)']
