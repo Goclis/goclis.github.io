@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="/" rel="alternate"></link><link href="/feeds/python.atom.xml" rel="self"></link><id>/</id><updated>2016-01-16T13:58:00+08:00</updated><entry><title>Pelican进阶配置</title><link href="/posts/2016/01/16/advanced-pelican-configuration.html" rel="alternate"></link><updated>2016-01-16T13:58:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:,2016-01-16:posts/2016/01/16/advanced-pelican-configuration.html</id><summary type="html">
+&lt;p&gt;上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。&lt;/p&gt;
+&lt;h3 id="markdown"&gt;Markdown扩展&lt;a class="headerlink" href="#markdown" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在&lt;code&gt;pelicanconf.py&lt;/code&gt;中对&lt;code&gt;MD_EXTENSIONS&lt;/code&gt;进行适当的赋值即可，我的配置如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;MD_EXTENSIONS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'codehilite(css_class=highlight)'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'extra'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'toc(permalink=true)'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;总共三项：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;第一个是参考我所引用主题的作者的配置，应该是代码高亮的配置。&lt;/li&gt;
+&lt;li&gt;第二个包含了一系列的小扩展，我主要是为了获得表格及代码块的支持。&lt;/li&gt;
+&lt;li&gt;第三个是为了生成目录，我的主题会提取文章的目录。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见&lt;a href="http://pythonhosted.org/Markdown/extensions/"&gt;Markdown模块官方文档&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="pelican-page"&gt;Pelican page&lt;a class="headerlink" href="#pelican-page" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。&lt;/p&gt;
+&lt;p&gt;page按照直面的翻译也就是&lt;strong&gt;页面&lt;/strong&gt;的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的&lt;code&gt;templates&lt;/code&gt;中拥有&lt;code&gt;article.html&lt;/code&gt;和&lt;code&gt;page.html&lt;/code&gt;，只是文章更倾向于内容，而页面可以很随意，所以一般可以拿来构造导航栏（比如about页面）。&lt;/p&gt;
+&lt;p&gt;页面和文章一样，都是Pelican根据你所编写的内容生成的，内容的格式同样可以是Markdown（或是支持的其他格式），并且也必须放到&lt;code&gt;content&lt;/code&gt;目录下，为了更好分辨，还可以在&lt;code&gt;pelicanconf.py&lt;/code&gt;中指定页面所在的文件夹以及页面生成相关的内容，我的配置如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;PAGE_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'pages'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;PAGE_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'{slug}.html'&lt;/span&gt;
+&lt;span class="n"&gt;PAGE_SAVE_AS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'{slug}.html'&lt;/span&gt;
+&lt;span class="n"&gt;DISPLAY_PAGES_ON_MENU&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt; &lt;span class="c"&gt;# 主题的模板可能会使用的值，一般用于导航栏&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;content&lt;/code&gt;的目录结构如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;|—— content
+|   |—— posts # 文章的目录
+|   |   |—— article1.md
+|   |   |—— article2.md
+|   |—— pages # 一些不经常变动的页面，比如about
+|   |   |—— about.md
+|   |—— images  # 图片（静态文件）
+|   |—— ...
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;我的&lt;code&gt;pages&lt;/code&gt;目录下只有一个&lt;code&gt;about.md&lt;/code&gt;，按照配置，Pelican会为我生成一个&lt;code&gt;about.html&lt;/code&gt;的页面。&lt;/p&gt;
+&lt;h3 id="_1"&gt;按需自定义&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;为了满足自己的需求，你可以任意的修改主题的内容（协议允许的话）或者Pelican的源码，以下为一些我的自己的修改。&lt;/p&gt;
+&lt;h4 id="bootstrap"&gt;设置生成的表格为Bootstrap风格&lt;a class="headerlink" href="#bootstrap" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;默认情况下，Pelican为我生成的HTML中的表格使用的是&lt;code&gt;&amp;lt;table&amp;gt;&amp;lt;/table&amp;gt;&lt;/code&gt;这样的标签，没有增加任何的样式，很难看。&lt;/p&gt;
+&lt;p&gt;在主题是基于Bootstrap的前提下，把表格改为Bootstrap风格就非常容易，只要改为&lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt;即可，两个方法。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(1) 修改生成的内容&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;前面提到过，Pelican的Markdown支持是依赖于Markdown模块的，因而本质上，它是利用了Markdown模块对输入进行了解析，然后对解析得到的结果进行生成。所以，一个简单的办法就是直接把生成的内容当成字符串进行搜索替换，把&lt;code&gt;&amp;lt;table&amp;gt;&lt;/code&gt;替换为&lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt;，这需要修改Pelican的源码，修改&lt;code&gt;reader.py&lt;/code&gt;中的&lt;code&gt;MarkdownReader&lt;/code&gt;的&lt;code&gt;read&lt;/code&gt;方法：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_source_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;source_path&lt;/span&gt;
+&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_md&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;extensions&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extensions&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pelican_open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source_path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_md&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;metadata&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_parse_metadata&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_md&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Meta&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c"&gt;# 增加下面这一行&lt;/span&gt;
+&lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'&amp;lt;table&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'&amp;lt;table class="table"&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这种方法要改源码，迁移的时候有点麻烦。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(2) 改主题&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;目的都是给table标签加上class，可以直接修改主题，插入相应的JS代码即可，未考虑兼容性的问题，我直接在主题的&lt;code&gt;base.html&lt;/code&gt;的末尾增加了如下代码：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;script&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="c1"&gt;// Added by Goclis for rerendering table to bootstrap style&lt;/span&gt;
+    &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"table"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;addClass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"table"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;/script&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id="about"&gt;增加about页面&lt;a class="headerlink" href="#about" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;在&lt;code&gt;pages&lt;/code&gt;文件夹里增加了一个&lt;code&gt;about.md&lt;/code&gt;，但希望在导航栏上增加一个About比较麻烦，对主题的&lt;code&gt;base.html&lt;/code&gt;进行了小小的修改：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"nav-collapse collapse"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;ul&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"nav pull-right top-menu"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;index&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"/"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Home&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;categories&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/categories.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Categories&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;tags&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/tags.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Tags&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;archives&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/archives.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Archives&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+
+        {% if DISPLAY_PAGES_ON_MENU %}
+        {% for p in pages %}
+        {% if p.slug == 'about' %}
+        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;p =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="na"&gt;page&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/{{ p.url }}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;About&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    &lt;span class="nt"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;逻辑主要是下面这部分，通过判断slug，只为&lt;code&gt;about.md&lt;/code&gt;增加导航，其他页面忽略，这需要在&lt;code&gt;about.md&lt;/code&gt;的开头设置&lt;code&gt;Slug: about&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id="_2"&gt;小结&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;总的来说，尽管Pelican是个静态博客，但能够玩出花样的地方还是很多的，&lt;a href="http://docs.getpelican.com/en/latest/faq.html#how-do-i-assign-custom-templates-on-a-per-page-basis"&gt;Pelican FAQ&lt;/a&gt;里有不少可以参考的问题。&lt;/p&gt;</summary><category term="Pelican"></category><category term="Markdown"></category></entry><entry><title>Pelican简要配置教程</title><link href="/posts/2014/05/25/basic-pelican-configuration.html" rel="alternate"></link><updated>2014-05-25T20:30:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:,2014-05-25:posts/2014/05/25/basic-pelican-configuration.html</id><summary type="html">&lt;p&gt;最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。&lt;/p&gt;
+&lt;h3 id="_1"&gt;博客初始化&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Install&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;pip install pelican
+
+pip install markdown
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Quick-Start&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;自己新建一个文件夹，然后：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;pelican-quickstart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Usage&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;make html # 将content中的markdown (or others) 生成为html
+
+make regenerate
+
+make serve
+
+make devserver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;make一般涉及到一些生成的操作，pelican自带了一个&lt;strong&gt;develop_server.sh&lt;/strong&gt;以供开发的时候调试：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;./develop_server.sh start  # http://localhost:8000
+
+./develop_server.sh stop
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3 id="_2"&gt;博客配置&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;pelican支持了不少的特性，比如RSS之类的，但是其实我暂时都用不着，所以我得根据需求定制一些，接下来慢慢看文档慢慢折腾，先在开头记录我个人主要在意的几点东西，有个向导。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主题，暂时喜欢bootstrap的风格&lt;/li&gt;
+&lt;li&gt;静态文件的良好关联，如文章中使用到的图片之类的&lt;/li&gt;
+&lt;li&gt;content文件夹的层次结构，强迫症不喜欢文件夹太乱。。&lt;/li&gt;
+&lt;li&gt;暂时注释掉一些不用的功能（RSS之类）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来一个个处理吧。&lt;/p&gt;
+&lt;p&gt;pelican的content目录结构：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;|—— content
+|   |—— articles  # blog或者其他按日期排序的文本
+|   |   |—— article1.md
+|   |   |—— article2.md
+|   |—— pages  # 一些不经常变动的页面，比如about，contact
+|   |   |—— about.md
+|   |   |—— contact.md
+|   |—— images  # 图片（静态文件）
+|   |—— pdfs  # 文本（静态文件）
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;articles and pages&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pelican considers “articles” to be chronological content, such as posts on a blog, and thus associated with a date.&lt;/p&gt;
+&lt;p&gt;The idea behind “pages” is that they are usually not temporal in nature and are used for content that does not change very often (e.g., “About” or “Contact” pages).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;总之，articles下放各种文章就对了。。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;file metadata&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;pelican会从你的文件的开头获取一些关于这个文件的信息，比如标题、日期等，下面以markdown为例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# your file xxx.md
+
+Title: My first file        # 标题
+Date: 2014-5-25 20:30       # 时间
+Category: Python            # 类别
+Tags: pelican, publishing   # 分类标志
+Slug: my-super-post         # 
+Author: Goclis Yao          # 作者
+Summary: Somethings         # 概要
+
+正文here...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;注意，除了标题以外，其他的属性如果没有指定的话，pelican会自动指定，比如说Category会基于该文件的当前目录，Date会基于该文件的mtime等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;static folders&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;静态文件路径（典型的是突破）是静态博客必须要指定好的一个东西。&lt;/p&gt;
+&lt;p&gt;pelican默认会在生成文章时拷贝content目录中的images文件夹到output的文件夹中。&lt;/p&gt;
+&lt;p&gt;如果你想要自己手动添加一个新的文件夹（比如pdfs）让其在生成文章时被拷贝到output中，可以在pelicanconf.py中添加：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;STATIC_PATHS = [&amp;#39;images&amp;#39;, &amp;#39;pdfs&amp;#39;]  # 这意味着这两个文件夹都会被copy过去
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;theme settings&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;pelican的默认主题不是很好看。。所以得研究研究怎么换了。。&lt;/p&gt;
+&lt;p&gt;这有一些&lt;a href="https://github.com/getpelican/pelican-themes"&gt;主题&lt;/a&gt;，所以打算基于这些修改了。。&lt;/p&gt;
+&lt;p&gt;更换主题很容易，直接在配置文件里修改主题路径即可：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;THEME = &amp;quot;/home/user/pelican-themes/theme-folder&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;配置文件&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在移植的时候需要注意主题的路径需要修改pelicanconf.py：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;__future__&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;unicode_literals&lt;/span&gt;
+
+&lt;span class="n"&gt;AUTHOR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;Goclis Yao&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SITENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;Logging&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SITEURL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;TIMEZONE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Asia/Shanghai&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;DATE_FORMATS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;#39;zh_CN&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s"&gt; %H:%M:%S&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_DATE_FORMAT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s"&gt; %H:%M:%S&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_DATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;  &lt;span class="c"&gt;# use filesystem&amp;#39;s mtime&lt;/span&gt;
+&lt;span class="c"&gt;# LOCALE = (&amp;#39;zh_CN.utf8&amp;#39;,)&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_LANG&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;zh_CN&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;FILENAME_METADATA&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;(?P&amp;lt;slug&amp;gt;.*)&amp;#39;&lt;/span&gt;
+
+&lt;span class="c"&gt;# Feed generation is usually not desired when developing&lt;/span&gt;
+&lt;span class="n"&gt;FEED_ALL_ATOM&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+&lt;span class="n"&gt;CATEGORY_FEED_ATOM&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+&lt;span class="n"&gt;TRANSLATION_FEED_ATOM&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+
+&lt;span class="c"&gt;# Blogroll&lt;/span&gt;
+&lt;span class="n"&gt;LINKS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Pelican&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://getpelican.com/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Python.org&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://python.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Jinja2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://jinja.pocoo.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+
+&lt;span class="c"&gt;# Social widget&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Github&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;https://github.com/Goclis/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+
+&lt;span class="n"&gt;DEFAULT_PAGINATION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+
+&lt;span class="c"&gt;# Uncomment following line if you want document-relative URLs when developing&lt;/span&gt;
+&lt;span class="c"&gt;#RELATIVE_URLS = True&lt;/span&gt;
+
+&lt;span class="n"&gt;STATIC_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;images&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;pdfs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;src&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c"&gt;# images and pdf files&lt;/span&gt;
+
+&lt;span class="n"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/home/goclis/SHARE/Blog/themes/pelican-bootstrap3&amp;quot;&lt;/span&gt;
+&lt;span class="c"&gt;# THEME = &amp;quot;/home/goclis/niu-x2-sidebar&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3 id="nginx"&gt;结合nginx&lt;a class="headerlink" href="#nginx" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;修改nginx.conf，添加server如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="o"&gt;:/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Goclis&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Desktop&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;VMSHARE&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Blog&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Instead&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;handling&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;just&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;rewrite&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+            &lt;span class="n"&gt;rewrite&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Serve&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;if&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;exists&lt;/span&gt;
+            &lt;span class="n"&gt;gzip_static&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Try&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;clean&lt;/span&gt; &lt;span class="k"&gt;url&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;
+            &lt;span class="n"&gt;try_files&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;htm&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;404&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;favicon&lt;/span&gt;&lt;span class="nc"&gt;.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="n"&gt;never&lt;/span&gt; &lt;span class="n"&gt;changes&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;so&lt;/span&gt; &lt;span class="n"&gt;don&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;let&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;expire&lt;/span&gt;
+            &lt;span class="n"&gt;expires&lt;/span&gt; &lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;^~&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;theme&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="k"&gt;content&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;very&lt;/span&gt; &lt;span class="n"&gt;rarely&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;if&lt;/span&gt; &lt;span class="n"&gt;ever&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;change&lt;/span&gt;
+            &lt;span class="n"&gt;expires&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;不同情况适当更换root路径。&lt;/p&gt;
+&lt;p&gt;重启后访问localhost即可。&lt;/p&gt;
+&lt;h3 id="some-bugs"&gt;Some bugs&lt;a class="headerlink" href="#some-bugs" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;基本都解决了，但是有一些中文的原因导致的不兼容，比如说代码高亮。&lt;/p&gt;
+&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</summary><category term="Pelican"></category></entry></feed>
