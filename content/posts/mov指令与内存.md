@@ -1,6 +1,6 @@
 Title: mov指令与内存  
 Date: 2014-08-08 16:00  
-Tags: cs, assembly  
+Tags: 汇编  
 Slug: mov-with-memory  
 Author: Goclis Yao  
 

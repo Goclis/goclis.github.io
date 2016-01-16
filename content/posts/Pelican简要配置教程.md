@@ -1,7 +1,8 @@
 Title: Pelican简要配置教程  
 Date: 2014-5-25 20:30  
-Tags: pelican, python  
-Slug: pelican-blog  
+Category: Python  
+Tags: Pelican  
+Slug: basic-pelican-configuration  
 Author: Goclis Yao  
 
 

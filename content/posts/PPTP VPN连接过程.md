@@ -1,6 +1,6 @@
 Title: PPTP VPN连接过程  
 Date: 2014-08-19 14:41  
-Tags: vpn, pptp  
+Tags: VPN, PPTP  
 Slug: pptp-vpn-process    
 Author: Goclis Yao  
 
