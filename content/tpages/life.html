@@ -87,10 +87,10 @@
     <div class="row-fluid">
         <div class="{{css_class}}">
             <header>
-            <h1 id="recent-posts">Recent Tech Posts <a id="allposts" href="{{ SITEURL }}/archives.html#tech-ref">all posts</a></h1>
+            <h1 id="recent-posts">Recent Life Posts <a id="allposts" href="{{ SITEURL }}/archives.html#life-ref">all posts</a></h1>
             </header>
             <div class="recent-posts">
-                {% for article in articles if article.category in TECH_CATEGORIES %}
+                {% for article in articles if article.category in LIFE_CATEGORIES %}
                 {% from '_includes/_defaults.html' import RECENT_ARTICLES_COUNT with context %}
                 {% if loop.index0 < RECENT_ARTICLES_COUNT %}
                 <article>

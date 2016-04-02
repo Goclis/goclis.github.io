@@ -26,13 +26,26 @@ SOCIAL = (('Github', 'https://github.com/Goclis/'),
           ('Twitter', 'https://twitter.com/Goclis'),
           ('Email', 'mailto:goclisyyh@gmail.com'))
 
+# Page相关设置，主要是为了About页面
 PAGE_PATHS = ['pages']
 PAGE_URL = '{slug}.html'
 PAGE_SAVE_AS = '{slug}.html'
 DISPLAY_PAGES_ON_MENU = True
 
-DEFAULT_CATEGORY = u'未分类'
-USE_FOLDER_AS_CATEGORY = False
+# Category相关
+USE_FOLDER_AS_CATEGORY = True
+
+# 使用Tempalte Page来把文章分类
+TEMPLATE_PAGES = {
+    # 'tpages/tech.html': 'tech.html', 使用index.html替代
+    'tpages/life.html': 'life.html',
+    'tpages/tweet.html': 'tweet.html',
+    'tpages/note.html': 'note.html'
+}
+TECH_CATEGORIES = ['Tech', 'Python']
+NOTE_CATEGORIES = ['Note']
+LIFE_CATEGORIES = ['Life']
+TWEET_CATEGORIES = ['Tweet']
 
 # Markdown扩展：高亮、表格及代码等、目录
 MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'extra', 'toc(permalink=true)']
@@ -42,10 +55,9 @@ PLUGIN_PATHS = ['plugins']
 PLUGINS = ['extract_toc']
 
 # 文章生成
-STATIC_PATHS = ['images', 'pdfs', 'src']  # 静态文件目录
-ARTICLE_EXCLUDES = ['unposts'] # 生成忽略的目录
+STATIC_PATHS = ['images', 'pdfs']  # 静态文件目录
+ARTICLE_EXCLUDES = ['unposts', 'tpages'] # 生成忽略的目录
 ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_LANG_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_LANG_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
-

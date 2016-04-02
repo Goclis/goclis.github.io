@@ -1,6 +1,5 @@
 Title: Pelican进阶配置  
 Date: 2016-01-16 13:58  
-Category: Python  
 Tags: Pelican, Markdown  
 Slug: advanced-pelican-configuration  
 Authors: Goclis Yao  
