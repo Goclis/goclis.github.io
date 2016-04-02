@@ -113,7 +113,7 @@
 &lt;/ol&gt;
 &lt;p&gt;所以，在接下来的读研时间里还是让自己更理想一些吧，喜欢什么就去了解什么，想做实验就去做，不要急功近利。等到实在要正式入职进社会工作了，再把时间腾些过去吧。&lt;/p&gt;
 &lt;p&gt;博客的话，有些稍微能整理的成果就更新吧，现在这阶段的水平大概也就只能继续写写教程了，但还是要写的。其实这段时间还是有写些东西的，但都只是放到笔记里，回头整理整理放上来吧。还有以前发的文章也得整理下，有些写的实在有点随意。。&lt;/p&gt;
-&lt;p&gt;关于公司，这段时间的事情让自己失去了一种创业者的感觉，残留的念头只有把手头工作维护好并继续完善（码农的执着2333）。再多的只能说工作必须好好干了（工资实在是可怜QAQ），别让自己去年的投资（交的期权）打水漂。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 06 Jan 2016 00:00:00 +0800</pubDate><guid>tag:,2016-01-06:posts/2016/01/06/summary-of-2015.html</guid><category>生活</category></item><item><title>Openssl-RSA简单使用</title><link>/posts/2015/09/10/openssl-rsa-basic-use.html</link><description>
+&lt;p&gt;关于公司，这段时间的事情让自己失去了一种创业者的感觉，残留的念头只有把手头工作维护好并继续完善（码农的执着2333）。再多的只能说工作必须好好干了（工资实在是可怜QAQ），别让自己去年的投资（交的期权）打水漂。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 06 Jan 2016 00:00:00 +0800</pubDate><guid>tag:,2016-01-06:posts/2016/01/06/summary-of-2015.html</guid></item><item><title>Openssl-RSA简单使用</title><link>/posts/2015/09/10/openssl-rsa-basic-use.html</link><description>
 &lt;p&gt;最近需要用到RSA的一些功能，出于方便，打算直接用openssl，但是在不同平台上使用openssl所需要做的工作还不一样，干脆就记个笔记整理一下。&lt;/p&gt;
 &lt;h3 id="windowsvs2013openssl"&gt;Windows下使用VS2013编译openssl源码&lt;a class="headerlink" href="#windowsvs2013openssl" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。&lt;/p&gt;

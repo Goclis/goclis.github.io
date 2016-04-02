@@ -27,9 +27,9 @@
         <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
 
+        <link href="/feeds/life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
         <link href="/feeds/python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
-        <link href="/feeds/sheng-huo.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - 生活 Category Atom Feed" />
-        <link href="/feeds/wei-fen-lei.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - 未分类 Category Atom Feed" />
+        <link href="/feeds/tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
@@ -44,7 +44,10 @@
                     <a class="brand" href="/"><span class=site-name>Logging</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li ><a href="/">Home</a></li>
+                            <li ><a href="/tech.html">Tech</a></li>
+                            <li ><a href="/life.html">Life</a></li>
+                            <li ><a href="/tweet.html">Tweet</a></li>
+                            <li ><a href="/note.html">Note</a></li>
                             <li  class="active"><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
@@ -72,6 +75,21 @@
         <div class="accordion" id="accordion2">
             <div class="accordion-group">
                 <div class="accordion-heading">
+                    <a class="accordion-toggle list-of-categories" data-toggle="collapse" data-parent="#accordion2" href="#life-ref">
+                        Life<span>1</span>
+                    </a>
+                </div>
+                <div id="life-ref" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <ul class="list-articles-category">
+ 
+                            <li><time pubdate="pubdate" datetime="2016-01-06T00:00:00+08:00">2016-01-06</time><a href="/posts/2016/01/06/summary-of-2015.html">2015小结  </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
                     <a class="accordion-toggle list-of-categories" data-toggle="collapse" data-parent="#accordion2" href="#python-ref">
                         Python<span>2</span>
                     </a>
@@ -89,26 +107,11 @@
             </div>
             <div class="accordion-group">
                 <div class="accordion-heading">
-                    <a class="accordion-toggle list-of-categories" data-toggle="collapse" data-parent="#accordion2" href="#sheng-huo-ref">
-                        生活<span>1</span>
+                    <a class="accordion-toggle list-of-categories" data-toggle="collapse" data-parent="#accordion2" href="#tech-ref">
+                        Tech<span>8</span>
                     </a>
                 </div>
-                <div id="sheng-huo-ref" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <ul class="list-articles-category">
- 
-                            <li><time pubdate="pubdate" datetime="2016-01-06T00:00:00+08:00">2016-01-06</time><a href="/posts/2016/01/06/summary-of-2015.html">2015小结  </a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle list-of-categories" data-toggle="collapse" data-parent="#accordion2" href="#wei-fen-lei-ref">
-                        未分类<span>8</span>
-                    </a>
-                </div>
-                <div id="wei-fen-lei-ref" class="accordion-body collapse">
+                <div id="tech-ref" class="accordion-body collapse">
                     <div class="accordion-inner">
                         <ul class="list-articles-category">
  
