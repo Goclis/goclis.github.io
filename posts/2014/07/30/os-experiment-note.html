@@ -51,8 +51,7 @@
                             <li ><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
-
-                            <li ><a href="/about.html">About</a></li>
+                            <li><a href="/about.html">About</a></li>
                             <!--<li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>-->
                         </ul>
                     </div>
@@ -85,7 +84,7 @@
 </ul>
 </li>
 <li><a href="#3">实验3 进程隐藏</a><ul>
-<li><a href="#_3">思路分析：</a></li>
+<li><a href="#_3">思路分析</a></li>
 <li><a href="#_4">实验过程</a></li>
 </ul>
 </li>
@@ -227,7 +226,7 @@
 <p>ok~，打印出 320 了。</p>
 <h3 id="3">实验3 进程隐藏<a class="headerlink" href="#3" title="Permanent link">¶</a></h3>
 <p>实验的本质目的应该是修改一系列与/proc目录相关的方法，从而实现“隐藏”的要求。</p>
-<h4 id="_3">思路分析：<a class="headerlink" href="#_3" title="Permanent link">¶</a></h4>
+<h4 id="_3">思路分析<a class="headerlink" href="#_3" title="Permanent link">¶</a></h4>
 <p>ls /proc及ps aux引起的系统调用层次如下：</p>
 <div class="highlight"><pre><span class="c">% ls /proc (or ps aux)</span>
 <span class="p">=</span><span class="o">&gt;</span> <span class="n">proc_root_readdir</span>

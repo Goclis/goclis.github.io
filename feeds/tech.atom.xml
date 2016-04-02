@@ -586,7 +586,7 @@ movl %edx, 4(%esp)
 &lt;p&gt;ok~，打印出 320 了。&lt;/p&gt;
 &lt;h3 id="3"&gt;实验3 进程隐藏&lt;a class="headerlink" href="#3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;实验的本质目的应该是修改一系列与/proc目录相关的方法，从而实现“隐藏”的要求。&lt;/p&gt;
-&lt;h4 id="_3"&gt;思路分析：&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;h4 id="_3"&gt;思路分析&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;ls /proc及ps aux引起的系统调用层次如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% ls /proc (or ps aux)&lt;/span&gt;
 &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proc_root_readdir&lt;/span&gt;
