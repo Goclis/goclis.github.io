@@ -21,7 +21,7 @@
         {% endblock meta_tags_in_head %}
         <title>{% block title %}{{ SITENAME|striptags }}{% endblock title %}</title>
         {% block head_links %}
-        <link href="http://cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="{{ SITEURL }}/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/style.css" media="screen">
         <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/solarizedlight.css" media="screen">
@@ -49,7 +49,9 @@
                     <a class="brand" href="{{ SITEURL }}/"><span class=site-name>{{ SITENAME }}</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li {% if page_name == "index" %} class="active"{% endif %}><a href="{{ SITEURL }}">Home</a></li>
+                            <li {% if page_name == "index" %} class="active"{% endif %}><a href="{{ SITEURL }}/">Tech</a></li>
+                            <li {% if output_file == 'life.html' %} class="active"{% endif %}><a href="{{ SITEURL }}/life.html">Life</a></li>
+                            <li {% if output_file == 'note.html' %} class="active"{% endif %}><a href="{{ SITEURL }}/note.html">Note</a></li>
                             {% if DISPLAY_PAGES_ON_MENU %}
                             {% for page in pages %}
                             <li {% if output_file == page.url %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
@@ -58,7 +60,12 @@
                             <li {% if page_name == "categories" %} class="active"{% endif %}><a href="{{ SITEURL }}/categories.html">Categories</a></li>
                             <li {% if page_name == "tags" %} class="active"{% endif %}><a href="{{ SITEURL }}/tags.html">Tags</a></li>
                             <li {% if page_name == "archives" %} class="active"{% endif %}><a href="{{ SITEURL }}/archives.html">Archives</a></li>
-                            <li><form class="navbar-search" action="{{ SITEURL }}/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            {# About #}
+                            {% if page %}
+                            <li {% if page.slug == 'about' %} class="active"{% endif %}><a href="{{ SITEURL }}/about.html">About</a></li>
+                            {% else %}
+                            <li><a href="{{ SITEURL }}/about.html">About</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -84,6 +91,7 @@
             {
                 return (query.length > 0);
             }
+            $("table").addClass("table"); // Added by Goclis
         </script>
         {% endblock script %}
     </body>

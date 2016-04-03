@@ -15,7 +15,10 @@ DEFAULT_DATE = 'fs'  # use filesystem's mtime
 DEFAULT_LANG = u'zh_CN'
 FILENAME_METADATA = '(?P<slug>.*)'
 DEFAULT_PAGINATION = False
-THEME = "./themes/pelican-elegant" # 主题
+THEME = "./themes/elegant-1.3-based" # 主题
+
+# Jinja2模板引擎的扩展
+JINJA_EXTENSIONS = ['jinja2.ext.do']
 
 # 相关链接及社交信息
 LINKS =  (('Pelican', 'http://getpelican.com/'),
@@ -30,7 +33,7 @@ SOCIAL = (('Github', 'https://github.com/Goclis/'),
 PAGE_PATHS = ['pages']
 PAGE_URL = '{slug}.html'
 PAGE_SAVE_AS = '{slug}.html'
-DISPLAY_PAGES_ON_MENU = True
+DISPLAY_PAGES_ON_MENU = False
 
 # Category相关
 USE_FOLDER_AS_CATEGORY = True
@@ -39,13 +42,11 @@ USE_FOLDER_AS_CATEGORY = True
 TEMPLATE_PAGES = {
     # 'tpages/tech.html': 'tech.html', 使用index.html替代
     'tpages/life.html': 'life.html',
-    'tpages/tweet.html': 'tweet.html',
     'tpages/note.html': 'note.html'
 }
 TECH_CATEGORIES = ['Tech', 'Python']
 NOTE_CATEGORIES = ['Note']
 LIFE_CATEGORIES = ['Life']
-TWEET_CATEGORIES = ['Tweet']
 
 # Markdown扩展：高亮、表格及代码等、目录
 MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'extra', 'toc(permalink=true)']

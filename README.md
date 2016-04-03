@@ -13,7 +13,6 @@ Logging
 |   |   |—— Javascript.md
 |   |—— Life # 生活类
 |   |   |—— 小结.md
-|   |—— Tweet # 琐碎
 |   |—— pages # 自定义页
 |   |—— tpages # 模板页
 |   |—— images  # 静态文件：图片
@@ -27,16 +26,15 @@ Logging
 - Tech：这个目录下放技术类文章，也就是原先供读者看的内容，以Tech作为未分类文章的Category，内部可以自行细分子目录建立更细的Category，如Python；本页将会取代原先的Home；
 - Note：这个目录下放各种笔记，一些小TIPS；
 - Life：这个目录下放些生活相关的东西，比如年度小结、吃喝玩乐等，可以在这里面更新各种浪的内容23333；
-- Tweet：不想在微博或Twitter写的一些小想法都丢到这里面，这个比较特殊，由于内容较少，可以单独为它设计一下页面，直接把内容展示出来，而不用点进去。
 
-这四个目录都需要像原先的`index.html`那样建立相关的`Template Page`，都放在`tpages`目录下，并在`pelicanconf.py`中设置`TEMPLATE_PAGES`的值，同时需要把`tpages`目录从文章中排出（即修改`ARTICLE_EXCLUDES`变量）。
+这三个目录都需要像原先的`index.html`那样建立相关的`Template Page`，都放在`tpages`目录下，并在`pelicanconf.py`中设置`TEMPLATE_PAGES`的值，同时需要把`tpages`目录从文章中排出（即修改`ARTICLE_EXCLUDES`变量）。
 
 显然，这四个页面所显示的文章需要通过`article.category`来区分，但是，一个大类下可能会有子类（如Tech下可能会有Python），为了方便修改，在`pelicanconf.py`中为四个类别分别增加了一个变量，命名为`XXX_CATEGORIES`，然后模板里通过这四个变量来区分文章。
 
 - `pages`目录目前只放About页面；
 - `images`和`pdfs`用于放静态文件，以供文章中使用。
 
-目前每个页面都只会显示10篇最新的内容（Note是笔记，全部都显示），要查看所有的内容，需要到Archive里面查看，由于分了四类，`archives.html`也要修改，分成四类来查看。
+目前每个页面都只会显示10篇最新的内容（Note是笔记，全部都显示），要查看所有的内容，需要到Archive里面查看，由于分了类，`archives.html`也要修改，分成各类来查看。
 
 ### 对源码的修改
 Pelican版本：3.6.3
@@ -75,3 +73,6 @@ class TemplatePagesGenerator(Generator):
 <li {% if tp_slug == 'tech.html' %} class="active"{% endif %}><a href="{{ SITEURL }}/tech.html">Tech</a></li>
 <li {% if tp_slug == 'note.html' %} class="active"{% endif %}><a href="{{ SITEURL }}/note.html">Note</a></li>
 ```
+
+### 文章规则
+文件名、方法名、变量名、路径等使用``包裹，其他的英文均直接写且不加任何的空格。

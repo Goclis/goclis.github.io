@@ -145,7 +145,7 @@ article p a:hover, article ol a:hover, article div.article-content ul:not(.artic
 .article-content {
     text-align:justify;
     max-width:50em;
-    font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+    font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
 }
 
 .article-content p{
@@ -394,4 +394,83 @@ h6:hover > a.headerlink,
 dt:hover > a.headerlink {
     visibility: visible;
     text-decoration:none;
+}
+
+/* Archives */
+ul.list-all-articles {
+    list-style: none;
+    margin: 0;
+}
+ul.list-all-articles li {
+    border-bottom: 1px dotted #000;
+    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, Sans-Serif;
+    font-size: 1.1em;
+    padding: .3em 0;
+    overflow: auto;
+}
+ul.list-all-articles li time {
+    color: #AAA;
+    float: right;
+    font-family: 'PT Sans', 'Helvetica Neue', Arial, Sans-Serif;
+    font-size: .9em;
+}
+div.blog-archives h2 {
+    float: left;
+    position: relative;
+    margin:0;
+}
+div.blog-archives article, div.recent-posts article {
+    border-bottom: 1px dotted #AAA;
+}
+div.blog-archives article, div.recent-posts article {
+    font-size: 1.1em;
+    padding: .3em .2em;
+    position: relative;
+    overflow: auto;
+}
+div.blog-archives article {
+    margin-left: 6em;
+}
+div.blog-archives article.last-entry-of-year {
+    margin-bottom: 1em;
+}
+div.blog-archives time, div.recent-posts time {
+    float: right;
+    text-align: right;
+}
+div.blog-archives time, div.recent-posts time, div.recent-posts section {
+    color: #8F8F8F;
+    font: .9em 'PT Sans', 'Helvetica Neue', Arial, Sans-Serif;
+}
+div.recent-posts section a {
+    color: inherit;
+    padding-left: .3em;
+}
+div.recent-posts section a:hover {
+    border-bottom: 1px dashed;
+    text-decoration: none;
+}
+div.recent-posts time {
+     font-size: inherit;
+}
+div.recent-posts-time {
+    display: inline;
+}
+@media (max-width: 767px) {
+    div.blog-archives h2 {
+        float: none;
+    }
+    div.blog-archives article {
+        margin-left: 0;
+        padding-left: 0;
+    }
+    div.recent-posts time {
+        float: none;
+    }
+    div.recent-posts-time {
+        display: block;
+    }
+    ul.list-articles-category li time {
+        width: 100%;
+    }
 }

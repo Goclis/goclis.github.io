@@ -16,10 +16,14 @@
     <div class="row-fluid">
         <div class="span8 offset2">
             <header>
-            <h1 id="recent-posts">All Notes</h1>
+            <h1 id="recent-posts">Recent Tech Posts <a id="allposts" href="{{ SITEURL }}/archives.html#tech-ref">all posts</a></h1>
             </header>
             <div class="recent-posts">
-                {% for article in articles if article.category in NOTE_CATEGORIES %}
+                {% for article in articles if article.category in TECH_CATEGORIES %}
+                {% if not RECENT_ARTICLES_COUNT %}
+                {% set RECENT_ARTICLES_COUNT = 10 %}
+                {% endif %}
+                {% if loop.index0 < RECENT_ARTICLES_COUNT %}
                 <article>
                     <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }} {%if article.subtitle %} <small> {{ article.subtitle }} </small> {% endif %} </a>
                     <section>
@@ -30,6 +34,7 @@
                     </div>
                     </section>
                 </article>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>

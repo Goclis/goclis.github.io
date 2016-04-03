@@ -1,5 +1,6 @@
 Title: Pelican博客结构改造  
 Date: 2016-04-02 23:43:50  
+Modified: 2016-04-03 15:35:20  
 Tags: Pelican, Jinja2  
 Slug: reconstruction-of-pelican-blog  
 Author: Goclis Yao  
@@ -69,7 +70,7 @@ class TemplatePagesGenerator(Generator):
                  del self.context['tp_slug']
 ```
 
-从源码中可以看到，`writer.write_file`的参数中并没有传入额外的参数，仅仅是`self.context`，我修改了代码把该变量打印了一下，发现并没有可以区分`Template Page`的信息，所以，改动也很简单，我自己加了一个表示`slug`的`tp_slug`变量到`context`中，这样就可以简单区分了，模板中的导航项实现如下：
+从源码中可以看到，`writer.write_file`的参数中并没有传入额外的参数，仅仅是`self.context`，我修改了代码把该变量打印了一下，发现并没有可以区分Template Page的信息，所以，改动也很简单，我自己加了一个表示slug的`tp_slug`变量到context中，这样就可以简单区分了，模板中的导航项实现如下：
 
 ```html
 <li {% if tp_slug == 'note.html' %} class="active"{% endif %}><a href="{{ SITEURL }}/note.html">Note</a></li>
@@ -153,6 +154,11 @@ NOTE_CATEGORIES = ['Note']
 LIFE_CATEGORIES = ['Life']
 TWEET_CATEGORIES = ['Tweet']
 ```
+
+### 2016-04-03更新
+发现了一个可以替换`tp_slug`的变量`output_file`。
+
+考虑再三，出于保证文章的顺序性，还是决定把琐碎部分的内容移除出，以避免它占用文章的时间线，未来可能考虑以一种非`article`的方式加入。
 
 ### 参考资料
 - http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block
