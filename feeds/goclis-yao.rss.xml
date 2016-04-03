@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>/</link><description></description><atom:link href="/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 02 Apr 2016 23:43:50 +0800</lastBuildDate><item><title>Pelican博客结构改造</title><link>/posts/2016/04/02/reconstruction-of-pelican-blog.html</link><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>/</link><description></description><atom:link href="/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 03 Apr 2016 15:35:20 +0800</lastBuildDate><item><title>Pelican博客结构改造</title><link>/posts/2016/04/02/reconstruction-of-pelican-blog.html</link><description>
 &lt;p&gt;最近想要在博客里写一些生活相关的东西（也就是吃喝玩乐啦），同时还希望能够比较清晰地区分开技术文章和生活文章，所以这两天就在折腾着博客内容的改造，不得不提一下，这个折腾过程中看代码的感觉真的是让我找回了一丝大二时的感觉，很爽！&lt;/p&gt;
 &lt;p&gt;这篇文章把一些我在改造过程中遇到的问题以及解决思路记录下来。&lt;/p&gt;
 &lt;h3 id="template-page"&gt;使用Template Page划分内容&lt;a class="headerlink" href="#template-page" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
@@ -121,7 +121,7 @@
 &lt;h3 id="_1"&gt;参考资料&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block&lt;/li&gt;
-&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 02 Apr 2016 23:43:50 +0800</pubDate><guid>tag:,2016-04-02:posts/2016/04/02/reconstruction-of-pelican-blog.html</guid><category>Pelican</category><category>Jinja2</category></item><item><title>Pelican进阶配置</title><link>/posts/2016/01/16/advanced-pelican-configuration.html</link><description>
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sun, 03 Apr 2016 15:35:20 +0800</pubDate><guid>tag:,2016-04-02:posts/2016/04/02/reconstruction-of-pelican-blog.html</guid><category>Pelican</category><category>Jinja2</category></item><item><title>Pelican进阶配置</title><link>/posts/2016/01/16/advanced-pelican-configuration.html</link><description>
 &lt;p&gt;上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。&lt;/p&gt;
 &lt;h3 id="markdown"&gt;Markdown扩展&lt;a class="headerlink" href="#markdown" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在&lt;code&gt;pelicanconf.py&lt;/code&gt;中对&lt;code&gt;MD_EXTENSIONS&lt;/code&gt;进行适当的赋值即可，我的配置如下：&lt;/p&gt;
