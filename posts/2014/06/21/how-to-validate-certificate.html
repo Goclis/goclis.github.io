@@ -2,40 +2,34 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8"> 
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
-        <meta property="og:type" content="article" />
-        <meta name="twitter:card" content="summary">
-
 <meta name="keywords" content="安全, 数字证书, Tech, " />
-
-<meta property="og:title" content="如何验证一个数字证书 "/>
-<meta property="og:url" content="/posts/2014/06/21/how-to-validate-certificate.html" />
-<meta property="og:description" content="首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。 假设完毕，首先看看这个待验证的证书包含哪些消息吧。 对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。 既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。 用密码学表示一下大概如下： // 设生成的中间数字证书为 MB，最终发放的为B 则B = MB || E(HASH(MB)) // 这里E是用CA的私钥加密， || 表示拼接 接下来，看看是如何验证的。往下我们称MB为 ..." />
-<meta property="og:site_name" content="Logging" />
-<meta property="og:article:author" content="Goclis Yao" />
-<meta property="og:article:published_time" content="2014-06-21T15:43:00+08:00" />
-<meta name="twitter:title" content="如何验证一个数字证书 ">
-<meta name="twitter:description" content="首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。 假设完毕，首先看看这个待验证的证书包含哪些消息吧。 对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。 既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。 用密码学表示一下大概如下： // 设生成的中间数字证书为 MB，最终发放的为B 则B = MB || E(HASH(MB)) // 这里E是用CA的私钥加密， || 表示拼接 接下来，看看是如何验证的。往下我们称MB为 ...">
-
         <title>如何验证一个数字证书  · Logging
 </title>
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/tipuesearch/tipuesearch.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+        <link href="/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
-                <div class="container-fluid">
+                <div class="container">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -44,15 +38,13 @@
                     <a class="brand" href="/"><span class=site-name>Logging</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li ><a href="/index.html">Tech</a></li>
+                            <li ><a href="/">Tech</a></li>
                             <li ><a href="/life.html">Life</a></li>
-                            <li ><a href="/tweet.html">Tweet</a></li>
                             <li ><a href="/note.html">Note</a></li>
                             <li ><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
                             <li><a href="/about.html">About</a></li>
-                            <!--<li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>-->
                         </ul>
                     </div>
                 </div>
@@ -64,7 +56,7 @@
                 <div class="span10">
 <article>
 <div class="row-fluid">
-    <header class="page-header span10 offset2">
+    <header class="page_header span10 offset2">
     <h1><a href="/posts/2014/06/21/how-to-validate-certificate.html"> 如何验证一个数字证书  </a></h1>
     </header>
 </div>
@@ -72,7 +64,6 @@
 <div class="row-fluid">
         <div class="span8 offset2 article-content">
 
-            
             <p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
 <p>假设完毕，首先看看这个待验证的证书包含哪些消息吧。</p>
 <p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
@@ -100,32 +91,35 @@
 </ol>
 <p><img alt="流程图" src="/images/certificate_chain_20140621155213.png" /></p>
 <p>当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。</p>
-            
-            
+            <aside>
             <hr/>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/posts/2014/05/25/basic-pelican-configuration.html" title="Previous: Pelican简要配置教程">Pelican简要配置教程</a></li>
+ 
+                <li class="next_article"><a href="/posts/2014/07/30/os-experiment-note.html" title="Next: 操作系统课设笔记">操作系统课设笔记</a> »</li>
+            </ul>
+            </nav>
+            </aside>
         </div>
         <section>
         <div class="span2" style="float:right;font-size:0.9em;">
+ 
             <h4>Published</h4>
             <time pubdate="pubdate" datetime="2014-06-21T15:43:00+08:00">Jun 21, 2014</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#tech-ref">Tech</a>
+            <a class="category-link" href="/categories.html#Tech-ref">Tech</a> 
             <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article">
-                <li><a href="/tags.html#an-quan-ref">安全
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="/tags.html#安全-ref">安全
                     <span>1</span>
 </a></li>
-                <li><a href="/tags.html#shu-zi-zheng-shu-ref">数字证书
+                <li><a href="/tags.html#数字证书-ref">数字证书
                     <span>1</span>
 </a></li>
             </ul>
-<h4>Contact me</h4>
-    <a href="https://github.com/Goclis/" title="My Github Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-github sidebar-social-links"></i></a>
-    <a href="https://twitter.com/Goclis" title="My Twitter Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-twitter sidebar-social-links"></i></a>
-    <a href="mailto:goclisyyh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-envelope sidebar-social-links"></i></a>
+
         </div>
         </section>
 </div>
@@ -134,7 +128,6 @@
                 <div class="span1"></div>
             </div>
         </div>
-        <div id="push"></div>
     </div>
 <footer>
 <div id="footer">
@@ -143,18 +136,14 @@
     </ul>
 </div>
 </footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
-            // Added by Goclis for rerendering table to bootstrap style
-            $("table").addClass("table");
+            $("table").addClass("table"); // Added by Goclis
         </script>
 
-    
     </body>
-    <!-- Theme: Elegant built for Pelican
-    License : http://oncrashreboot.com/pelican-elegant -->
 </html>

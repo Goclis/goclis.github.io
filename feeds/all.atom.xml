@@ -115,6 +115,9 @@
 &lt;span class="n"&gt;LIFE_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Life'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;TWEET_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Tweet'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="2016-04-03"&gt;2016-04-03更新&lt;a class="headerlink" href="#2016-04-03" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;发现了一个可以替换&lt;code&gt;tp_slug&lt;/code&gt;的变量&lt;code&gt;output_file&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;考虑再三，出于保证文章的顺序性，还是决定把琐碎部分的内容移除出，以避免它占用文章的时间线，未来可能考虑以一种非&lt;code&gt;article&lt;/code&gt;的方式加入。&lt;/p&gt;
 &lt;h3 id="_1"&gt;参考资料&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block&lt;/li&gt;

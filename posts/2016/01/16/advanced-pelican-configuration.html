@@ -2,40 +2,34 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8"> 
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
-        <meta property="og:type" content="article" />
-        <meta name="twitter:card" content="summary">
-
 <meta name="keywords" content="Pelican, Markdown, Python, " />
-
-<meta property="og:title" content="Pelican进阶配置 "/>
-<meta property="og:url" content="/posts/2016/01/16/advanced-pelican-configuration.html" />
-<meta property="og:description" content="上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。 Markdown扩展¶ 我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在pelicanconf.py中对MD_EXTENSIONS进行适当的赋值即可，我的配置如下： MD_EXTENSIONS = [&#39;codehilite(css_class=highlight)&#39;, &#39;extra&#39;, &#39;toc(permalink=true)&#39;] 总共三项： 第一个是参考我所引用主题的作者的配置，应该是代码高亮的配置。 第二个包含了一系列的小扩展，我主要是为了获得表格及代码块的支持。 第三个是为了生成目录，我的主题会提取文章的目录。 Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见Markdown模块官方文档。 Pelican page¶ 配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。 page按照直面的翻译也就是页面的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的templates中拥有article.html ..." />
-<meta property="og:site_name" content="Logging" />
-<meta property="og:article:author" content="Goclis Yao" />
-<meta property="og:article:published_time" content="2016-01-16T13:58:00+08:00" />
-<meta name="twitter:title" content="Pelican进阶配置 ">
-<meta name="twitter:description" content="上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。 Markdown扩展¶ 我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在pelicanconf.py中对MD_EXTENSIONS进行适当的赋值即可，我的配置如下： MD_EXTENSIONS = [&#39;codehilite(css_class=highlight)&#39;, &#39;extra&#39;, &#39;toc(permalink=true)&#39;] 总共三项： 第一个是参考我所引用主题的作者的配置，应该是代码高亮的配置。 第二个包含了一系列的小扩展，我主要是为了获得表格及代码块的支持。 第三个是为了生成目录，我的主题会提取文章的目录。 Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见Markdown模块官方文档。 Pelican page¶ 配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。 page按照直面的翻译也就是页面的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的templates中拥有article.html ...">
-
         <title>Pelican进阶配置  · Logging
 </title>
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/tipuesearch/tipuesearch.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+        <link href="/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
-                <div class="container-fluid">
+                <div class="container">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -44,15 +38,13 @@
                     <a class="brand" href="/"><span class=site-name>Logging</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li ><a href="/index.html">Tech</a></li>
+                            <li ><a href="/">Tech</a></li>
                             <li ><a href="/life.html">Life</a></li>
-                            <li ><a href="/tweet.html">Tweet</a></li>
                             <li ><a href="/note.html">Note</a></li>
                             <li ><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
                             <li><a href="/about.html">About</a></li>
-                            <!--<li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>-->
                         </ul>
                     </div>
                 </div>
@@ -64,7 +56,7 @@
                 <div class="span10">
 <article>
 <div class="row-fluid">
-    <header class="page-header span10 offset2">
+    <header class="page_header span10 offset2">
     <h1><a href="/posts/2016/01/16/advanced-pelican-configuration.html"> Pelican进阶配置  </a></h1>
     </header>
 </div>
@@ -89,7 +81,6 @@
     </div>
     <div class="span8 article-content">
 
-            
             
 <p>上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。</p>
 <h3 id="markdown">Markdown扩展<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h3>
@@ -168,32 +159,35 @@
 <p>逻辑主要是下面这部分，通过判断slug，只为<code>about.md</code>增加导航，其他页面忽略，这需要在<code>about.md</code>的开头设置<code>Slug: about</code>。</p>
 <h3 id="_2">小结<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
 <p>总的来说，尽管Pelican是个静态博客，但能够玩出花样的地方还是很多的，<a href="http://docs.getpelican.com/en/latest/faq.html#how-do-i-assign-custom-templates-on-a-per-page-basis">Pelican FAQ</a>里有不少可以参考的问题。</p>
-            
-            
+            <aside>
             <hr/>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/posts/2016/01/06/summary-of-2015.html" title="Previous: 2015小结">2015小结</a></li>
+ 
+                <li class="next_article"><a href="/posts/2016/04/02/reconstruction-of-pelican-blog.html" title="Next: Pelican博客结构改造">Pelican博客结构改造</a> »</li>
+            </ul>
+            </nav>
+            </aside>
         </div>
         <section>
         <div class="span2" style="float:right;font-size:0.9em;">
+ 
             <h4>Published</h4>
             <time pubdate="pubdate" datetime="2016-01-16T13:58:00+08:00">Jan 16, 2016</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#python-ref">Python</a>
+            <a class="category-link" href="/categories.html#Python-ref">Python</a> 
             <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article">
-                <li><a href="/tags.html#markdown-ref">Markdown
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="/tags.html#Markdown-ref">Markdown
                     <span>1</span>
 </a></li>
-                <li><a href="/tags.html#pelican-ref">Pelican
+                <li><a href="/tags.html#Pelican-ref">Pelican
                     <span>3</span>
 </a></li>
             </ul>
-<h4>Contact me</h4>
-    <a href="https://github.com/Goclis/" title="My Github Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-github sidebar-social-links"></i></a>
-    <a href="https://twitter.com/Goclis" title="My Twitter Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-twitter sidebar-social-links"></i></a>
-    <a href="mailto:goclisyyh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-envelope sidebar-social-links"></i></a>
+
         </div>
         </section>
 </div>
@@ -202,7 +196,6 @@
                 <div class="span1"></div>
             </div>
         </div>
-        <div id="push"></div>
     </div>
 <footer>
 <div id="footer">
@@ -211,18 +204,14 @@
     </ul>
 </div>
 </footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
-            // Added by Goclis for rerendering table to bootstrap style
-            $("table").addClass("table");
+            $("table").addClass("table"); // Added by Goclis
         </script>
 
-    
     </body>
-    <!-- Theme: Elegant built for Pelican
-    License : http://oncrashreboot.com/pelican-elegant -->
 </html>

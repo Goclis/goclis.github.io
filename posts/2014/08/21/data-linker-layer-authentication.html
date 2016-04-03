@@ -2,40 +2,34 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8"> 
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
-        <meta property="og:type" content="article" />
-        <meta name="twitter:card" content="summary">
-
 <meta name="keywords" content="PPPoE, ISP, Tech, " />
-
-<meta property="og:title" content="数据链路层的身份认证 "/>
-<meta property="og:url" content="/posts/2014/08/21/data-linker-layer-authentication.html" />
-<meta property="og:description" content="标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。 下面列举下我自己平常的一些上网方式： 宿舍网线拨号 WIFI + 网页验证 这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。 拨号上网¶ 一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。 以下为个人猜想，错误请指出，谢谢！ 先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机： 接下来就按照这个图来讲讲整个拨号的过程吧。 1. 插上网线 插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。 2. 拨号认证 这里以PPPoE为例，但协议本身的内容不少 ..." />
-<meta property="og:site_name" content="Logging" />
-<meta property="og:article:author" content="Goclis Yao" />
-<meta property="og:article:published_time" content="2014-08-21T16:21:00+08:00" />
-<meta name="twitter:title" content="数据链路层的身份认证 ">
-<meta name="twitter:description" content="标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。 下面列举下我自己平常的一些上网方式： 宿舍网线拨号 WIFI + 网页验证 这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。 拨号上网¶ 一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。 以下为个人猜想，错误请指出，谢谢！ 先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机： 接下来就按照这个图来讲讲整个拨号的过程吧。 1. 插上网线 插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。 2. 拨号认证 这里以PPPoE为例，但协议本身的内容不少 ...">
-
         <title>数据链路层的身份认证  · Logging
 </title>
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/tipuesearch/tipuesearch.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+        <link href="/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/theme/css/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-144x144.png" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
-                <div class="container-fluid">
+                <div class="container">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -44,15 +38,13 @@
                     <a class="brand" href="/"><span class=site-name>Logging</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li ><a href="/index.html">Tech</a></li>
+                            <li ><a href="/">Tech</a></li>
                             <li ><a href="/life.html">Life</a></li>
-                            <li ><a href="/tweet.html">Tweet</a></li>
                             <li ><a href="/note.html">Note</a></li>
                             <li ><a href="/categories.html">Categories</a></li>
                             <li ><a href="/tags.html">Tags</a></li>
                             <li ><a href="/archives.html">Archives</a></li>
                             <li><a href="/about.html">About</a></li>
-                            <!--<li><form class="navbar-search" action="/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>-->
                         </ul>
                     </div>
                 </div>
@@ -64,7 +56,7 @@
                 <div class="span10">
 <article>
 <div class="row-fluid">
-    <header class="page-header span10 offset2">
+    <header class="page_header span10 offset2">
     <h1><a href="/posts/2014/08/21/data-linker-layer-authentication.html"> 数据链路层的身份认证  </a></h1>
     </header>
 </div>
@@ -72,7 +64,6 @@
 <div class="row-fluid">
         <div class="span8 offset2 article-content">
 
-            
             <p>标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
 <p>下面列举下我自己平常的一些上网方式：</p>
 <ul>
@@ -132,32 +123,35 @@
 <li><a href="http://baike.baidu.com/view/3246.htm#2_2">PPPoE</a></li>
 <li><a href="http://whatismyipaddress.com/ppp-pppoe">What is PPP and PPPoE?</a></li>
 </ul>
-            
-            
+            <aside>
             <hr/>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/posts/2014/08/19/pptp-vpn-process.html" title="Previous: PPTP VPN连接过程">PPTP VPN连接过程</a></li>
+ 
+                <li class="next_article"><a href="/posts/2015/09/10/openssl-rsa-basic-use.html" title="Next: Openssl-RSA简单使用">Openssl-RSA简单使用</a> »</li>
+            </ul>
+            </nav>
+            </aside>
         </div>
         <section>
         <div class="span2" style="float:right;font-size:0.9em;">
+ 
             <h4>Published</h4>
             <time pubdate="pubdate" datetime="2014-08-21T16:21:00+08:00">Aug 21, 2014</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#tech-ref">Tech</a>
+            <a class="category-link" href="/categories.html#Tech-ref">Tech</a> 
             <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article">
-                <li><a href="/tags.html#isp-ref">ISP
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="/tags.html#ISP-ref">ISP
                     <span>1</span>
 </a></li>
-                <li><a href="/tags.html#pppoe-ref">PPPoE
+                <li><a href="/tags.html#PPPoE-ref">PPPoE
                     <span>1</span>
 </a></li>
             </ul>
-<h4>Contact me</h4>
-    <a href="https://github.com/Goclis/" title="My Github Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-github sidebar-social-links"></i></a>
-    <a href="https://twitter.com/Goclis" title="My Twitter Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-twitter sidebar-social-links"></i></a>
-    <a href="mailto:goclisyyh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-envelope sidebar-social-links"></i></a>
+
         </div>
         </section>
 </div>
@@ -166,7 +160,6 @@
                 <div class="span1"></div>
             </div>
         </div>
-        <div id="push"></div>
     </div>
 <footer>
 <div id="footer">
@@ -175,18 +168,14 @@
     </ul>
 </div>
 </footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
-            // Added by Goclis for rerendering table to bootstrap style
-            $("table").addClass("table");
+            $("table").addClass("table"); // Added by Goclis
         </script>
 
-    
     </body>
-    <!-- Theme: Elegant built for Pelican
-    License : http://oncrashreboot.com/pelican-elegant -->
 </html>
