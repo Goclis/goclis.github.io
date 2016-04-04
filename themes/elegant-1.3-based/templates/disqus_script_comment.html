@@ -4,7 +4,8 @@
     {% if article.disqus_identifier %}
         var disqus_identifier = '{{ article.disqus_identifier }}';
     {% else %}
-        var disqus_identifier = '{{ SITEURL }}/{{ article.url }}';
+        {# Set default disqus_identifier to 'disqus-{{ article.url }}' #}
+        var disqus_identifier = 'disqus-{{ article.url }}';
     {% endif %}
     var disqus_url = '{{ SITEURL }}/{{ article.url }}';
 

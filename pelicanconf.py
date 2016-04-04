@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = u'Goclis Yao'
 SITENAME = u'Logging'
-SITEURL = ''
+SITEURL = 'http://goclis.github.io'
 
 TIMEZONE = 'Asia/Shanghai'
 DATE_FORMATS = {
@@ -53,7 +53,7 @@ MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'extra', 'toc(permalink=true
 
 # 插件：提取目录
 PLUGIN_PATHS = ['plugins']
-PLUGINS = ['extract_toc']
+PLUGINS = ['extract_toc', 'sitemap', 'tipue_search']
 
 # 文章生成
 STATIC_PATHS = ['images', 'pdfs']  # 静态文件目录
@@ -62,3 +62,8 @@ ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_LANG_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_LANG_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
+
+# Disqus
+DISQUS_SITENAME = "goclis"
+COMMENTS_INTRO = u"有啥留个言呗~"
+
