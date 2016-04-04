@@ -1,6 +1,6 @@
 Title: Pelican博客结构改造  
 Date: 2016-04-02 23:43:50  
-Modified: 2016-04-03 15:35:20  
+Modified: 2016-04-04 12:06:30  
 Tags: Pelican, Jinja2  
 Slug: reconstruction-of-pelican-blog  
 Author: Goclis Yao  
@@ -154,6 +154,17 @@ NOTE_CATEGORIES = ['Note']
 LIFE_CATEGORIES = ['Life']
 TWEET_CATEGORIES = ['Tweet']
 ```
+
+### 添加Disqus评论
+过程挺简单的，毕竟主题都帮你弄好了，申请Disqus，创建Site，然后在`pelicanconf.py`中添加如下内容即可：
+
+```python
+DISQUS_SITENAME = "yoursitename"
+```
+
+得提一下，Pelican-Elegant这个主题为文章提供了一个`disqus_identifier`的metadata，作者给出的解释是：因为Pelican默认提交给Disqus的是基于`SITEURL`和文章URL生成的，这样的话，在`SITEURL`发生变动后，你的评论就可能丢失了。
+
+但是出于懒，并不想为每篇文章都加上`disqus_identifier`，我直接把主题进行修改了，调整了一下默认`disqus_identifier`的生成，改为`disqus-{{ article.url }}`，应该能够保证唯一。
 
 ### 2016-04-03更新
 发现了一个可以替换`tp_slug`的变量`output_file`。
