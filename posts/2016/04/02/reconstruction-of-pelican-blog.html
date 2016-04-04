@@ -73,6 +73,7 @@
 <li><a href="#jinja2_2">Jinja2把文章分类</a></li>
 </ul>
 </li>
+<li><a href="#disqus">添加Disqus评论</a></li>
 <li><a href="#2016-04-03">2016-04-03更新</a></li>
 <li><a href="#_1">参考资料</a></li>
 </ul>
@@ -197,6 +198,12 @@
 <span class="n">LIFE_CATEGORIES</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Life'</span><span class="p">]</span>
 <span class="n">TWEET_CATEGORIES</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Tweet'</span><span class="p">]</span>
 </pre></div>
+<h3 id="disqus">添加Disqus评论<a class="headerlink" href="#disqus" title="Permanent link">¶</a></h3>
+<p>过程挺简单的，毕竟主题都帮你弄好了，申请Disqus，创建Site，然后在<code>pelicanconf.py</code>中添加如下内容即可：</p>
+<div class="highlight"><pre><span class="n">DISQUS_SITENAME</span> <span class="o">=</span> <span class="s">"yoursitename"</span>
+</pre></div>
+<p>得提一下，Pelican-Elegant这个主题为文章提供了一个<code>disqus_identifier</code>的metadata，作者给出的解释是：因为Pelican默认提交给Disqus的是基于<code>SITEURL</code>和文章URL生成的，这样的话，在<code>SITEURL</code>发生变动后，你的评论就可能丢失了。</p>
+<p>但是出于懒，并不想为每篇文章都加上<code>disqus_identifier</code>，我直接把主题进行修改了，调整了一下默认<code>disqus_identifier</code>的生成，改为<code>disqus-{{ article.url }}</code>，应该能够保证唯一。</p>
 <h3 id="2016-04-03">2016-04-03更新<a class="headerlink" href="#2016-04-03" title="Permanent link">¶</a></h3>
 <p>发现了一个可以替换<code>tp_slug</code>的变量<code>output_file</code>。</p>
 <p>考虑再三，出于保证文章的顺序性，还是决定把琐碎部分的内容移除出，以避免它占用文章的时间线，未来可能考虑以一种非<code>article</code>的方式加入。</p>
@@ -253,7 +260,7 @@
             <time pubdate="pubdate" datetime="2016-04-02T23:43:50+08:00">Apr 2, 2016</time>
  
             <h4>Last Updated</h4>
-            <div class="last_updated">2016-04-03 15:35:20+08:00</div>
+            <div class="last_updated">2016-04-04 12:06:30+08:00</div>
             <h4>Category</h4>
             <a class="category-link" href="/categories.html#Python-ref">Python</a> 
             <h4>Tags</h4>
