@@ -6,8 +6,8 @@
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
-<meta name="keywords" content="吃点评, Life, " />
-        <title>【吃点评】小红烤翅  · Logging
+<meta name="keywords" content="HTTP, JSON, Tech, " />
+        <title>HTTP请求中的数据  · Logging
 </title>
         <link href="http://goclis.github.io/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
@@ -57,25 +57,91 @@
 <article>
 <div class="row-fluid">
     <header class="page_header span10 offset2">
-    <h1><a href="http://goclis.github.io/posts/2016/04/12/【吃点评】小红烤翅.html"> 【吃点评】小红烤翅  </a></h1>
+    <h1><a href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html"> HTTP请求中的数据  </a></h1>
     </header>
 </div>
 
 <div class="row-fluid">
-        <div class="span8 offset2 article-content">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#http">HTTP请求格式</a></li>
+<li><a href="#query-string">Query String</a></li>
+<li><a href="#form-data">Form Data</a></li>
+<li><a href="#json-data">JSON Data</a></li>
+<li><a href="#_1">参考资料</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
 
-            <p>之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。</p>
-<p>价格方面，总共7个人，2个女生，吃了477，折扣后437（这个我真不知道咋算的，大众点评给的是100-9，会员价是9折，但这个数字应该是477-400/4*10，有点诡异），人均62吧，不是很贵。</p>
-<p>主打还是烤翅，挺好吃的！！一人吃了4串，一串两只，默认分辣和不辣两种，可能可以特别要变态辣吧。其他点了些羊肉串、脆骨、金针菇、韭菜等吧，都还行，韭菜有点咸。特别提下羊肉串，挺大串的，感觉这种7-8块一串的比那种3-4块两小串吃的过瘾多了（没错，就是黑的勿相忘那种小串串）。</p>
-<p>总得来说，下次再去这家店的话，我可能只点烤翅和羊肉串吧23333。没拍图，败笔。</p>
+            
+<p>那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。</p>
+<h3 id="http">HTTP请求格式<a class="headerlink" href="#http" title="Permanent link">¶</a></h3>
+<p>先看看HTTP请求消息的格式 <a href="http://www.tutorialspoint.com/http/http_requests.htm">1</a>：</p>
+<ul>
+<li>A Request Line</li>
+<li>Zero or more header (General|Request|Entity) fields followed by CRLF</li>
+<li>An empty line (i.e., a line with nothing preceding the CRLF) indicating the end of the header fields</li>
+<li>Optionally a message-body</li>
+</ul>
+<p>从格式上来看，除了第三部分，都能够附带用户数据，但一般来说，不会在HTTP头里放数据，而且在第一部分的URL以及第四部分中放数据，下面分别讲一下，主要区分下：</p>
+<ul>
+<li>Query String</li>
+<li>Form Data</li>
+<li>JSON/File Data</li>
+</ul>
+<h3 id="query-string">Query String<a class="headerlink" href="#query-string" title="Permanent link">¶</a></h3>
+<p>这个实际上就是HTTP请求消息的第一部分URL中?后面的那部分信息，因此，它与请求的类型无关，只和URL相关，下面是个例子：</p>
+<div class="highlight"><pre># 附带数据为name: xxx, age: 18
+GET example.com?name=xxx&amp;age=18
+POST example.com?name=xxx&amp;age=18
+</pre></div>
+<p>用python的requests库来实现这个请求的话就是下面这样：</p>
+<div class="highlight"><pre><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'example.com'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="s">'xxx'</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'example.com'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="s">'xxx'</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
+</pre></div>
+<p>即这些数据会当做参数被编码到请求的URL中，而服务器端会解析这些参数。</p>
+<h3 id="form-data">Form Data<a class="headerlink" href="#form-data" title="Permanent link">¶</a></h3>
+<p>一般来说，form data是指html中form标签提交的数据：</p>
+<div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"xxx"</span> <span class="na">method=</span><span class="s">"GET"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"first"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"second"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</pre></div>
+<p>但是，form data是放在HTTP请求报文中的哪呢？？这个得看提交的方法：</p>
+<ul>
+<li>GET：会被当做Query String一样处理；</li>
+<li>POST：会放到请求消息的第四部分中，编码方式同Query String。</li>
+</ul>
+<h3 id="json-data">JSON Data<a class="headerlink" href="#json-data" title="Permanent link">¶</a></h3>
+<p>其实这里所描述的情况不仅仅适用于JSON数据，而适用于使用其他类型的数据。对于一开始的Web，Query String和Form Data就基本够用了，但后来Web应用的数据的格式越来越复杂，就需要有一定的扩展。</p>
+<p>扩展很简单，使用HTTP头中的Content-Type来表示附带的数据的类型，并按照类型编码数据，然后放到请求消息的第四部分中。服务端可以根据Content-Type来判断如何数据进行解码，常见的数据类型（实际上就是<a href="http://www.iana.org/assignments/media-types/media-types.xhtml">Media Type</a>）有：</p>
+<ul>
+<li>text/html</li>
+<li>text/xml</li>
+<li>application/json</li>
+<li>...</li>
+</ul>
+<p>关于JSON编码的示例，可以查看 <a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html">2</a>。</p>
+<h3 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
+<ol>
+<li><a href="http://www.tutorialspoint.com/http/http_requests.htm">HTTP Requests</a></li>
+<li><a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html">x-www-form-urlencoded vs json</a></li>
+<li><a href="http://www.iana.org/assignments/media-types/media-types.xhtml">IANA Media Types</a></li>
+</ol>
 <section>
 <p id="comment-message">有啥留个言呗~ </p>
 <div class="accordion" id="accordion2">
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle disqus-comment-count" data-toggle="collapse" data-parent="#accordion2"
-                    data-disqus-identifier="disqus-posts/2016/04/12/【吃点评】小红烤翅.html"
-                href="http://goclis.github.io/posts/2016/04/12/【吃点评】小红烤翅.html#disqus_thread">
+                    data-disqus-identifier="disqus-posts/2016/04/16/data-in-http-request.html"
+                href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html#disqus_thread">
                 Comments
             </a>
         </div>
@@ -85,8 +151,8 @@
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'goclis';
-        var disqus_identifier = 'disqus-posts/2016/04/12/【吃点评】小红烤翅.html';
-    var disqus_url = 'http://goclis.github.io/posts/2016/04/12/【吃点评】小红烤翅.html';
+        var disqus_identifier = 'disqus-posts/2016/04/16/data-in-http-request.html';
+    var disqus_url = 'http://goclis.github.io/posts/2016/04/16/data-in-http-request.html';
 
     (function() {
          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -106,9 +172,7 @@
             <nav>
             <ul class="articles_timeline">
  
-                <li class="previous_article">« <a href="http://goclis.github.io/posts/2016/04/10/享受孤独，真不容易.html" title="Previous: 享受孤独，真不容易">享受孤独，真不容易</a></li>
- 
-                <li class="next_article"><a href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" title="Next: HTTP请求中的数据">HTTP请求中的数据</a> »</li>
+                <li class="previous_article">« <a href="http://goclis.github.io/posts/2016/04/12/【吃点评】小红烤翅.html" title="Previous: 【吃点评】小红烤翅">【吃点评】小红烤翅</a></li>
             </ul>
             </nav>
             </aside>
@@ -117,13 +181,16 @@
         <div class="span2" style="float:right;font-size:0.9em;">
  
             <h4>Published</h4>
-            <time pubdate="pubdate" datetime="2016-04-12T23:05:00+08:00">Apr 12, 2016</time>
+            <time pubdate="pubdate" datetime="2016-04-16T22:47:20+08:00">Apr 16, 2016</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#Life-ref">Life</a> 
+            <a class="category-link" href="/categories.html#Tech-ref">Tech</a> 
             <h4>Tags</h4>
             <ul class="list-of-tags tags-in-article"> 
-                <li><a href="/tags.html#吃点评-ref">吃点评
-                    <span>2</span>
+                <li><a href="/tags.html#HTTP-ref">HTTP
+                    <span>1</span>
+</a></li>
+                <li><a href="/tags.html#JSON-ref">JSON
+                    <span>1</span>
 </a></li>
             </ul>
 

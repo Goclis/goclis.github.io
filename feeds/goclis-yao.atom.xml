@@ -1,5 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/goclis-yao.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-04-12T23:05:00+08:00</updated><entry><title>【吃点评】小红烤翅</title><link href="http://goclis.github.io/posts/2016/04/12/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E5%B0%8F%E7%BA%A2%E7%83%A4%E7%BF%85.html" rel="alternate"></link><updated>2016-04-12T23:05:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-12:posts/2016/04/12/【吃点评】小红烤翅.html</id><summary type="html">&lt;p&gt;之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/goclis-yao.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-04-16T22:47:20+08:00</updated><entry><title>HTTP请求中的数据</title><link href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" rel="alternate"></link><updated>2016-04-16T22:47:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-16:posts/2016/04/16/data-in-http-request.html</id><summary type="html">
+&lt;p&gt;那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。&lt;/p&gt;
+&lt;h3 id="http"&gt;HTTP请求格式&lt;a class="headerlink" href="#http" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;先看看HTTP请求消息的格式 &lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;1&lt;/a&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A Request Line&lt;/li&gt;
+&lt;li&gt;Zero or more header (General|Request|Entity) fields followed by CRLF&lt;/li&gt;
+&lt;li&gt;An empty line (i.e., a line with nothing preceding the CRLF) indicating the end of the header fields&lt;/li&gt;
+&lt;li&gt;Optionally a message-body&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从格式上来看，除了第三部分，都能够附带用户数据，但一般来说，不会在HTTP头里放数据，而且在第一部分的URL以及第四部分中放数据，下面分别讲一下，主要区分下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Query String&lt;/li&gt;
+&lt;li&gt;Form Data&lt;/li&gt;
+&lt;li&gt;JSON/File Data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="query-string"&gt;Query String&lt;a class="headerlink" href="#query-string" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;这个实际上就是HTTP请求消息的第一部分URL中?后面的那部分信息，因此，它与请求的类型无关，只和URL相关，下面是个例子：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# 附带数据为name: xxx, age: 18
+GET example.com?name=xxx&amp;amp;age=18
+POST example.com?name=xxx&amp;amp;age=18
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;用python的requests库来实现这个请求的话就是下面这样：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;即这些数据会当做参数被编码到请求的URL中，而服务器端会解析这些参数。&lt;/p&gt;
+&lt;h3 id="form-data"&gt;Form Data&lt;a class="headerlink" href="#form-data" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;一般来说，form data是指html中form标签提交的数据：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;action=&lt;/span&gt;&lt;span class="s"&gt;"xxx"&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;"GET"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"first"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"second"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"submit"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;但是，form data是放在HTTP请求报文中的哪呢？？这个得看提交的方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GET：会被当做Query String一样处理；&lt;/li&gt;
+&lt;li&gt;POST：会放到请求消息的第四部分中，编码方式同Query String。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="json-data"&gt;JSON Data&lt;a class="headerlink" href="#json-data" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;其实这里所描述的情况不仅仅适用于JSON数据，而适用于使用其他类型的数据。对于一开始的Web，Query String和Form Data就基本够用了，但后来Web应用的数据的格式越来越复杂，就需要有一定的扩展。&lt;/p&gt;
+&lt;p&gt;扩展很简单，使用HTTP头中的Content-Type来表示附带的数据的类型，并按照类型编码数据，然后放到请求消息的第四部分中。服务端可以根据Content-Type来判断如何数据进行解码，常见的数据类型（实际上就是&lt;a href="http://www.iana.org/assignments/media-types/media-types.xhtml"&gt;Media Type&lt;/a&gt;）有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;text/html&lt;/li&gt;
+&lt;li&gt;text/xml&lt;/li&gt;
+&lt;li&gt;application/json&lt;/li&gt;
+&lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关于JSON编码的示例，可以查看 &lt;a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html"&gt;2&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="_1"&gt;参考资料&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;HTTP Requests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html"&gt;x-www-form-urlencoded vs json&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.iana.org/assignments/media-types/media-types.xhtml"&gt;IANA Media Types&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</summary><category term="HTTP"></category><category term="JSON"></category></entry><entry><title>【吃点评】小红烤翅</title><link href="http://goclis.github.io/posts/2016/04/12/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E5%B0%8F%E7%BA%A2%E7%83%A4%E7%BF%85.html" rel="alternate"></link><updated>2016-04-12T23:05:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-12:posts/2016/04/12/【吃点评】小红烤翅.html</id><summary type="html">&lt;p&gt;之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。&lt;/p&gt;
 &lt;p&gt;价格方面，总共7个人，2个女生，吃了477，折扣后437（这个我真不知道咋算的，大众点评给的是100-9，会员价是9折，但这个数字应该是477-400/4*10，有点诡异），人均62吧，不是很贵。&lt;/p&gt;
 &lt;p&gt;主打还是烤翅，挺好吃的！！一人吃了4串，一串两只，默认分辣和不辣两种，可能可以特别要变态辣吧。其他点了些羊肉串、脆骨、金针菇、韭菜等吧，都还行，韭菜有点咸。特别提下羊肉串，挺大串的，感觉这种7-8块一串的比那种3-4块两小串吃的过瘾多了（没错，就是黑的勿相忘那种小串串）。&lt;/p&gt;
 &lt;p&gt;总得来说，下次再去这家店的话，我可能只点烤翅和羊肉串吧23333。没拍图，败笔。&lt;/p&gt;</summary><category term="吃点评"></category></entry><entry><title>享受孤独，真不容易</title><link href="http://goclis.github.io/posts/2016/04/10/%E4%BA%AB%E5%8F%97%E5%AD%A4%E7%8B%AC%EF%BC%8C%E7%9C%9F%E4%B8%8D%E5%AE%B9%E6%98%93.html" rel="alternate"></link><updated>2016-04-10T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-10:posts/2016/04/10/享受孤独，真不容易.html</id><summary type="html">&lt;p&gt;最近算是一直在体会独处带来的孤独，说真的，挺不好受的。一个多月了，顶多是缓解吧，这种心理感受的问题还是没法解决。&lt;/p&gt;

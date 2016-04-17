@@ -1,5 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2015-12-26T00:00:00+08:00</updated><entry><title>Openssl-RSA简单使用</title><link href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html" rel="alternate"></link><updated>2015-12-26T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</id><summary type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-04-16T22:47:20+08:00</updated><entry><title>HTTP请求中的数据</title><link href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" rel="alternate"></link><updated>2016-04-16T22:47:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-16:posts/2016/04/16/data-in-http-request.html</id><summary type="html">
+&lt;p&gt;那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。&lt;/p&gt;
+&lt;h3 id="http"&gt;HTTP请求格式&lt;a class="headerlink" href="#http" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;先看看HTTP请求消息的格式 &lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;1&lt;/a&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A Request Line&lt;/li&gt;
+&lt;li&gt;Zero or more header (General|Request|Entity) fields followed by CRLF&lt;/li&gt;
+&lt;li&gt;An empty line (i.e., a line with nothing preceding the CRLF) indicating the end of the header fields&lt;/li&gt;
+&lt;li&gt;Optionally a message-body&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从格式上来看，除了第三部分，都能够附带用户数据，但一般来说，不会在HTTP头里放数据，而且在第一部分的URL以及第四部分中放数据，下面分别讲一下，主要区分下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Query String&lt;/li&gt;
+&lt;li&gt;Form Data&lt;/li&gt;
+&lt;li&gt;JSON/File Data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="query-string"&gt;Query String&lt;a class="headerlink" href="#query-string" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;这个实际上就是HTTP请求消息的第一部分URL中?后面的那部分信息，因此，它与请求的类型无关，只和URL相关，下面是个例子：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# 附带数据为name: xxx, age: 18
+GET example.com?name=xxx&amp;amp;age=18
+POST example.com?name=xxx&amp;amp;age=18
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;用python的requests库来实现这个请求的话就是下面这样：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;即这些数据会当做参数被编码到请求的URL中，而服务器端会解析这些参数。&lt;/p&gt;
+&lt;h3 id="form-data"&gt;Form Data&lt;a class="headerlink" href="#form-data" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;一般来说，form data是指html中form标签提交的数据：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;action=&lt;/span&gt;&lt;span class="s"&gt;"xxx"&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;"GET"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"first"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"second"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"submit"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;但是，form data是放在HTTP请求报文中的哪呢？？这个得看提交的方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GET：会被当做Query String一样处理；&lt;/li&gt;
+&lt;li&gt;POST：会放到请求消息的第四部分中，编码方式同Query String。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="json-data"&gt;JSON Data&lt;a class="headerlink" href="#json-data" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;其实这里所描述的情况不仅仅适用于JSON数据，而适用于使用其他类型的数据。对于一开始的Web，Query String和Form Data就基本够用了，但后来Web应用的数据的格式越来越复杂，就需要有一定的扩展。&lt;/p&gt;
+&lt;p&gt;扩展很简单，使用HTTP头中的Content-Type来表示附带的数据的类型，并按照类型编码数据，然后放到请求消息的第四部分中。服务端可以根据Content-Type来判断如何数据进行解码，常见的数据类型（实际上就是&lt;a href="http://www.iana.org/assignments/media-types/media-types.xhtml"&gt;Media Type&lt;/a&gt;）有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;text/html&lt;/li&gt;
+&lt;li&gt;text/xml&lt;/li&gt;
+&lt;li&gt;application/json&lt;/li&gt;
+&lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关于JSON编码的示例，可以查看 &lt;a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html"&gt;2&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id="_1"&gt;参考资料&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;HTTP Requests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html"&gt;x-www-form-urlencoded vs json&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.iana.org/assignments/media-types/media-types.xhtml"&gt;IANA Media Types&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</summary><category term="HTTP"></category><category term="JSON"></category></entry><entry><title>Openssl-RSA简单使用</title><link href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html" rel="alternate"></link><updated>2015-12-26T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</id><summary type="html">
 &lt;p&gt;最近需要用到RSA的一些功能，出于方便，打算直接用openssl，但是在不同平台上使用openssl所需要做的工作还不一样，干脆就记个笔记整理一下。&lt;/p&gt;
 &lt;h3 id="windowsvs2013openssl"&gt;Windows下使用VS2013编译openssl源码&lt;a class="headerlink" href="#windowsvs2013openssl" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。&lt;/p&gt;
