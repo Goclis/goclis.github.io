@@ -6,8 +6,8 @@
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
-<meta name="keywords" content=", Life, " />
-        <title>我的存在，不需要什么意义  · Logging
+<meta name="keywords" content="预处理器, 宏, Tech, " />
+        <title>C预处理器宏展开  · Logging
 </title>
         <link href="http://goclis.github.io/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
@@ -57,30 +57,87 @@
 <article>
 <div class="row-fluid">
     <header class="page_header span10 offset2">
-    <h1><a href="http://goclis.github.io/posts/2016/04/20/我的存在，不需要什么意义.html"> 我的存在，不需要什么意义  </a></h1>
+    <h1><a href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html"> C预处理器宏展开  </a></h1>
     </header>
 </div>
 
 <div class="row-fluid">
         <div class="span8 offset2 article-content">
 
-            <p>很长的一段时间里，只要我闲下来，就会思考，自己存在的意义。好在自己闲下来的日子其实不多，而且正能量挺足时总能找到点意义，这事也没怎么困扰我。但上个月初恋分手后，突然就啥也不想做了，人又闲了，心情还负，这个问题又跳了出来。</p>
-<p>写下这篇东西，并不意味着我彻底想明白了，只能说暂时找到了更让自己信服的结论：我的存在，不需要什么意义。</p>
-<p>最近看了本小说，叫《我是个年轻人，我的心情不太好》，多看限免日的时候淘到的。主人公25岁，一个我即将到达的年龄，他却不知道自己该做什么，人生的一切都很没有意义，但他很幸运，处在挪威这样一个福利较好的国家，有大把的时间可以让他安静地思考思考；同样，他有个好哥哥，带他旅行，教他放空自己；似乎他的运气也不错，想做的事情基本都可以做做。相比之下，我没这些条件，但幸运的是，我有看这本书的时间，这段时间，我能和他一样。</p>
-<p>书中的观点多多少少影响了我现在的看法，但不全是，朋友也给出了一些不小的帮助。</p>
-<p>书中提到了宇宙，时间，两个好大同时可能也好复杂的概念。我是个不懂物理，对它的兴趣也不是特别大的人。但基本的常识说，宇宙很大，人很渺小，太阳系有寿命，地球终将GG。哈哈，我没书中主人公那么夸张，听到宇宙会结束时慌乱无措，但这一可能的事实确实让我觉得自己更渺小了，那我要求也小一点好了，过的开心就好～</p>
-<p>我也曾问过不少人存在的意义，结果大多是：“你别想太多啦，好好做事就好了”；“我不在乎”；等等。大家似乎不在意，或者也和我一样在意过，但又不想继续烦恼了，挺好的，我也不打算继续烦恼了，有时候选择放空大脑不去思考，会更开心。这确实可能是“哲学家的事，我们只要负责开心就好了”。</p>
-<p>还有一些看法，它们大多躺在各色这类问题的答案中：你的存在，因价值而有意义。你对社会产生价值，你的存在有意义了；你做的事让你关心的人开心，你的存在有意义了；等等。这种从他人身上折射出的自身意义，主观上我是反感的，因为自己一直在追求一种独立个体的状态。但，我没法否认，当我为亲人、朋友做了一件让他们开心的事时，我确实能感觉到那种存在的意义，但是很怪，我认为这种感觉绝对不是止步于他们开心，而应该在他们开心和我开心中不断地交替，否则过段时间后，我就不会再觉得让他们开心是我存在的意义了，一般这种情况被大家叫做“单方面付出”。父母除外，亲情是我暂时放不下的东西，或许没有他们，照我这种喜欢瞎想的性格，早已经在另一个世界开启了旅程。</p>
-<p>我存在，不意味着我需要特意做些什么，来产生对他人有益的价值，这是各种主义为了维持社会进步要求的。而我，暂时不想为社会进步做些什么，我也不会干坏事，因为这些都不会让现在的我觉得开心。我现在只想做能让自己开心，而且做了也不会导致什么让自己不开心的后果（比如违法）的事。这或许很没意义，对社会，对绝大多数人，但我开心，这对那些关心我的人，应该有意义。</p>
-<p>谢谢这段时间一直陪着我的爸妈，陪我吃喝玩乐、关心我的朋友们。</p>
+            <p>最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：</p>
+<div class="highlight"><pre><span class="c1">// macro.h</span>
+<span class="cp">#if defined(T)</span>
+
+<span class="kt">void</span> <span class="n">T</span> <span class="err">##</span> <span class="n">_func</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+
+
+<p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
+<div class="highlight"><pre><span class="c1">// 这段代码希望定义一个int_func方法</span>
+<span class="cp">#define T int</span>
+<span class="cp">#include &quot;macro.h&quot;</span>
+<span class="cp">#undef T</span>
+</pre></div>
+
+
+<p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
+<div class="highlight"><pre><span class="c1">// macro.h</span>
+<span class="cp">#if defined(T)</span>
+
+<span class="cp">#define func_m(TN) TN ## _func</span>
+<span class="cp">#define T_func func_m(T)</span>
+
+<span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+
+
+<p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func</code>方法，而是会定义一个<code>T_func</code>方法（这一点可以通过查看VS生成的obj文件中的符号确定，或是设置选项让编译器保留预处理产生的.i文件），下面给出正确的写法：</p>
+<div class="highlight"><pre><span class="c1">// macro.h</span>
+<span class="cp">#if defined(T)</span>
+
+<span class="cp">#define concate(A, B) A ## B</span>
+<span class="cp">#define func_m(TN) concate(TN, _func)</span>
+<span class="cp">#define T_func func_m(T)</span>
+
+<span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+
+
+<p>之所以需要这样来实现是因为宏展开的规则，我对于宏展开的规则不是特别熟悉，但在<a href="https://msdn.microsoft.com/zh-cn/library/09dwwt6y.aspx">MSDN</a>上找到了一段可能能够用来解释的内容：</p>
+<blockquote>
+<p>如果宏定义中的形参的前面或后面带有 token-pasting 运算符，则会立即将形参替换为未扩展的实参。在替换前将不会对参数执行宏扩展。</p>
+</blockquote>
+<p>token-pasting运算符就是<code>##</code>。结合我原先的实现以及这段话，当预处理器在处理<code>T_func</code>时，它会替换为<code>func_m(T)</code>，这类似于一个函数调用，预处理器查看了一下<code>func_m</code>这个宏的内容，发现其中有<code>##</code>符号，所以，它直接将形参（即TN）替换成了未扩展的实参（即T），替换前并没有对T进行宏展开，从而导致无论T是什么，<code>T_func</code>都是最终结果。</p>
+<p>这点通过修改一下代码也可以验证：</p>
+<div class="highlight"><pre><span class="cp">#define T_func func_m(B)</span>
+</pre></div>
+
+
+<p>这里改成了B，所以最后定义的符号是<code>B_func</code>，因为不管是啥，预处理器都不会对它展开。</p>
+<p>本来想结合生成的obj文件来写的，但写这个的时候不是用的Windows，所以就算了，懒23333。</p>
 <section>
 <p id="comment-message">有啥留个言呗~ </p>
 <div class="accordion" id="accordion2">
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle disqus-comment-count" data-toggle="collapse" data-parent="#accordion2"
-                    data-disqus-identifier="disqus-posts/2016/04/20/我的存在，不需要什么意义.html"
-                href="http://goclis.github.io/posts/2016/04/20/我的存在，不需要什么意义.html#disqus_thread">
+                    data-disqus-identifier="disqus-posts/2016/04/26/c-preprocessor-macro-expansion.html"
+                href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html#disqus_thread">
                 Comments
             </a>
         </div>
@@ -90,8 +147,8 @@
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'goclis';
-        var disqus_identifier = 'disqus-posts/2016/04/20/我的存在，不需要什么意义.html';
-    var disqus_url = 'http://goclis.github.io/posts/2016/04/20/我的存在，不需要什么意义.html';
+        var disqus_identifier = 'disqus-posts/2016/04/26/c-preprocessor-macro-expansion.html';
+    var disqus_url = 'http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html';
 
     (function() {
          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -111,9 +168,7 @@
             <nav>
             <ul class="articles_timeline">
  
-                <li class="previous_article">« <a href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" title="Previous: HTTP请求中的数据">HTTP请求中的数据</a></li>
- 
-                <li class="next_article"><a href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html" title="Next: C预处理器宏展开">C预处理器宏展开</a> »</li>
+                <li class="previous_article">« <a href="http://goclis.github.io/posts/2016/04/20/我的存在，不需要什么意义.html" title="Previous: 我的存在，不需要什么意义">我的存在，不需要什么意义</a></li>
             </ul>
             </nav>
             </aside>
@@ -122,9 +177,18 @@
         <div class="span2" style="float:right;font-size:0.9em;">
  
             <h4>Published</h4>
-            <time pubdate="pubdate" datetime="2016-04-20T09:40:00+08:00">Apr 20, 2016</time>
+            <time pubdate="pubdate" datetime="2016-04-26T23:21:20+08:00">Apr 26, 2016</time>
             <h4>Category</h4>
-            <a class="category-link" href="/categories.html#Life-ref">Life</a> 
+            <a class="category-link" href="/categories.html#Tech-ref">Tech</a> 
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="/tags.html#宏-ref">宏
+                    <span>1</span>
+</a></li>
+                <li><a href="/tags.html#预处理器-ref">预处理器
+                    <span>1</span>
+</a></li>
+            </ul>
 
         </div>
         </section>
