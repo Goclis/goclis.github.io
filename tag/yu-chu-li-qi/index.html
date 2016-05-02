@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+
+        <title>预处理器
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-offset-1 col-md-10 main-content">
+            	<div class="cover tag-cover">
+				    <h3 class="tag-name">
+				        标签：预处理器
+				    </h3>
+				    <div class="post-count">
+				        共 1 篇文章 
+				    </div>
+				</div>
+                <article id="c-preprocessor-macro-expansion" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html">C预处理器宏展开</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-04-26T23:21:20+08:00" title="2016-04-26T23:21:20+08:00">2016-04-26</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：</p>
+<div class="highlight"><pre><span></span><span class="c1">// macro.h</span>
+<span class="cp">#if defined(T)</span>
+
+<span class="kt">void</span> <span class="n">T</span> <span class="err">##</span> <span class="n">_func</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+
+
+<p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
+<div class="highlight"><pre><span></span><span class="c1">// 这段代码希望定义一个int_func方法</span>
+<span class="cp">#define T int</span>
+<span class="cp">#include</span> <span class="cpf">&quot;macro.h&quot;</span><span class="cp"></span>
+<span class="cp">#undef T</span>
+</pre></div>
+
+
+<p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
+<div class="highlight"><pre><span></span><span class="c1">// macro.h</span>
+<span class="cp">#if defined(T)</span>
+
+<span class="cp">#define func_m(TN) TN ## _func</span>
+<span class="cp">#define T_func func_m(T)</span>
+
+<span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+
+
+<p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func ...</code></p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/04/26/c-preprocessor-macro-expansion.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/hong/index.html">宏</a>
+                            <a href="/tag/yu-chu-li-qi/index.html">预处理器</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+
+            </main>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+    </body>
+</html>

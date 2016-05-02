@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+
+        <title>PPTP
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-offset-1 col-md-10 main-content">
+            	<div class="cover tag-cover">
+				    <h3 class="tag-name">
+				        标签：PPTP
+				    </h3>
+				    <div class="post-count">
+				        共 1 篇文章 
+				    </div>
+				</div>
+                <article id="pptp-vpn-process" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN连接过程</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-08-19T14:41:00+08:00" title="2014-08-19T14:41:00+08:00">2014-08-19</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
+<p>以下文章中VPN如不特指皆为PPTP VPN。</p>
+<p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
+<p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
+<h3 id="vpn">VPN的两种架构<a class="headerlink" href="#vpn" title="Permanent link">¶</a></h3>
+<ul>
+<li>Remote access VPN</li>
+<li>Site-to-site VPN</li>
+</ul>
+<p>Remote access VPN是我们平时个人用的比较多的那种，也就是你在网上买了个VPN，然后拿着账号密码和服务器名连接上了的种，这种就只能保证你自己的那台设备是连上VPN的，而Site-to-site VPN则更像是，如果你用了路由这样的设备，在该设备上拨了VPN，这样路由的私有网络就是一个Site，而路由连上的VPN服务器又构成了另外一个Site，所以是Site-to-site，这种方式就能保证你私有网络中的所有设备都连上了VPN。</p>
+<p>个人感觉 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2014/08/19/pptp-vpn-process.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/pptp/index.html">PPTP</a>
+                            <a href="/tag/vpn/index.html">VPN</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+
+            </main>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+    </body>
+</html>

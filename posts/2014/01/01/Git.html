@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+<meta name="keywords" content="Git, Note, " />
+
+        <title>Git  | Logging
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li class="nav-current" role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="Git" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/01/01/Git.html">Git</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-01-01T00:00:00+08:00" title="2014-01-01T00:00:00+08:00"> 发布：2014-01-01</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <div class="widget">
+                            <h4 class="title">目录</h4>
+                            <div class="content toc">
+                                <div class="toc">
+<ul>
+<li><a href="#1-git">1. 本地初始化git项目并添加远程仓库</a></li>
+<li><a href="#2-git">2. Git设置</a></li>
+<li><a href="#3-git-bashgit">3. Git Bash生成公私钥访问内网git仓库</a></li>
+<li><a href="#4-git-subtree">4. git subtree</a></li>
+<li><a href="#5-git">5. Git补充提交内容</a></li>
+<li><a href="#6-git-clone">6. Git clone指定文件夹名</a></li>
+<li><a href="#7">7. 重命名当前分支</a></li>
+</ul>
+</div>
+                            </div>
+                        </div>
+                        
+<h3 id="1-git">1. 本地初始化git项目并添加远程仓库<a class="headerlink" href="#1-git" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><span class="nb">cd</span> newProject
+git init
+git remote add origin url <span class="c1"># url为项目的远程仓库路径</span>
+git push master origin
+</pre></div>
+<h3 id="2-git">2. Git设置<a class="headerlink" href="#2-git" title="Permanent link">¶</a></h3>
+<p>全局设置（--global）：</p>
+<div class="highlight"><pre><span></span>git config --global user.name <span class="s2">"Goclis Yao"</span>
+git config --global user.email <span class="s2">"goclisyyh@gmail.com"</span>
+git config --global branch.master.remote origin
+git config --global branch.master.merge refs/heads/master
+</pre></div>
+<p>本地设置：</p>
+<div class="highlight"><pre><span></span>git config branch.master.remote origin
+</pre></div>
+<p>查看设置：</p>
+<div class="highlight"><pre><span></span>git config --list
+</pre></div>
+<h3 id="3-git-bashgit">3. Git Bash生成公私钥访问内网git仓库<a class="headerlink" href="#3-git-bashgit" title="Permanent link">¶</a></h3>
+<p>打开Git Bash，输入如下命令：</p>
+<div class="highlight"><pre><span></span>ssh-keygen -t rsa -C <span class="s2">"goclisyyh@gmail.com"</span>  <span class="c1"># -C后的参数为注释，一般为开发者的email，后面有个步骤会让你输入密码</span>
+</pre></div>
+<p>将 ~/.ssh/id_rsa.pub 交给管理员，就可以clone服务器的仓库了。</p>
+<div class="highlight"><pre><span></span>git clone user@hostname:gitname.git  <span class="c1"># ssh仓库</span>
+git clone git@192.168.1.1:Blog.git  <span class="c1"># eg</span>
+</pre></div>
+<h3 id="4-git-subtree">4. git subtree<a class="headerlink" href="#4-git-subtree" title="Permanent link">¶</a></h3>
+<p>当一个项目需要用到另一个项目，并且可能会修改那个项目时，用此命令即可实现。</p>
+<p>假设情境如下：</p>
+<ul>
+<li>some-lib：服务器上的某个项目仓库，要在新项目上引入的。</li>
+<li>pro：服务器上的新项目仓库。</li>
+</ul>
+<p>下面的操作在本地进行：</p>
+<div class="highlight"><pre><span></span>git clone url1 pro    <span class="c1"># 将pro项目拷贝到本地，url1为服务器上pro仓库的地址</span>
+<span class="nb">cd</span> pro
+git remote add -f remote-lib url2    <span class="c1"># 从服务器上把要引入的仓库加入进来，命名为remote-lib，url2为服务器上some-lib仓库的地址</span>
+git subtree add -P lib remote-lib master    <span class="c1"># 将外部仓库的master分支变为本地的文件夹，-P指定文件夹名</span>
+<span class="nb">cd</span> lib
+...    <span class="c1"># 修改了外部仓库lib的内容，准备提交</span>
+git add .
+git commit -m <span class="s2">"modify lib"</span>
+git subtree push -P lib remote-lib master    <span class="c1"># 将修改提交到外部仓库的远程仓库的master分支</span>
+git subtree pull -P lib remote-lib master    <span class="c1"># 如果服务器上的some-lib修改了，用这句命令进行修改，拉下来会设计到合并问题。</span>
+</pre></div>
+<p>Over，服务器上的some-lib已经被修改了，其他引用了some-lib的地方pull下来即可发现。</p>
+<p>git subtree的本质上是将另一个仓库的某个commit与本仓库进行合并，所以会产生commit提交，而在选择对方的commit的时候可以使用branch、tag等来指代，比如将对方的develop分支合（或更新）进来，如下：</p>
+<div class="highlight"><pre><span></span>git subtree add -P remote-develop remote-lib/develop  <span class="c1"># 假设先前已remote add了remote-lib</span>
+git subtree pull -P remote-develop remote-lib/develop
+</pre></div>
+<h3 id="5-git">5. Git补充提交内容<a class="headerlink" href="#5-git" title="Permanent link">¶</a></h3>
+<p><strong>Reference</strong>: <a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend">git commit --amend</a></p>
+<p>有时候在提交的时候会遗漏一些文件，可以通过命令来弥补，以下假设遗漏<code>todo.txt</code>。</p>
+<div class="highlight"><pre><span></span>git add todo.txt
+git commit --amend
+</pre></div>
+<p>重新修改commit message后提交即可。</p>
+<h3 id="6-git-clone">6. Git clone指定文件夹名<a class="headerlink" href="#6-git-clone" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span>git clone url your-folder-name
+</pre></div>
+<h3 id="7">7. 重命名当前分支<a class="headerlink" href="#7" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span>git branch -m new-name
+</pre></div>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2014/01/01/Git.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2014/01/01/Git.html';
+    var disqus_url = 'http://goclis.github.io/posts/2014/01/01/Git.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    &nbsp;
+                    <a class="btn btn-default" href="/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别 <i class="fa fa-angle-right fa-fw"></i></a>
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/note/index.html">Note</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/git/index.html">Git</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+    </body>
+</html>

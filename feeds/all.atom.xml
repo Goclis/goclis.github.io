@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-04-26T23:21:20+08:00</updated><entry><title>C预处理器宏展开</title><link href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html" rel="alternate"></link><updated>2016-04-26T23:21:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-26:posts/2016/04/26/c-preprocessor-macro-expansion.html</id><summary type="html">&lt;p&gt;最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-04-26T23:21:20+08:00</updated><entry><title>C预处理器宏展开</title><link href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html" rel="alternate"></link><published>2016-04-26T23:21:20+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-26:posts/2016/04/26/c-preprocessor-macro-expansion.html</id><summary type="html">&lt;p&gt;最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
 
 &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="err"&gt;##&lt;/span&gt; &lt;span class="n"&gt;_func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -13,15 +13,15 @@
 
 
 &lt;p&gt;这段代码是不能用的，因为预处理符号&lt;code&gt;##&lt;/code&gt;是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 这段代码希望定义一个int_func方法&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 这段代码希望定义一个int_func方法&lt;/span&gt;
 &lt;span class="cp"&gt;#define T int&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;quot;macro.h&amp;quot;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;quot;macro.h&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;#undef T&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;上面提到了&lt;code&gt;##&lt;/code&gt;是不能直接写在代码里的，所以我一开始是这样实现的：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
 
 &lt;span class="cp"&gt;#define func_m(TN) TN ## _func&lt;/span&gt;
@@ -37,7 +37,7 @@
 
 
 &lt;p&gt;但是，这样的写法并不能够正确的定义我们例子中想要的&lt;code&gt;int_func&lt;/code&gt;方法，而是会定义一个&lt;code&gt;T_func&lt;/code&gt;方法（这一点可以通过查看VS生成的obj文件中的符号确定，或是设置选项让编译器保留预处理产生的.i文件），下面给出正确的写法：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
 
 &lt;span class="cp"&gt;#define concate(A, B) A ## B&lt;/span&gt;
@@ -59,12 +59,12 @@
 &lt;/blockquote&gt;
 &lt;p&gt;token-pasting运算符就是&lt;code&gt;##&lt;/code&gt;。结合我原先的实现以及这段话，当预处理器在处理&lt;code&gt;T_func&lt;/code&gt;时，它会替换为&lt;code&gt;func_m(T)&lt;/code&gt;，这类似于一个函数调用，预处理器查看了一下&lt;code&gt;func_m&lt;/code&gt;这个宏的内容，发现其中有&lt;code&gt;##&lt;/code&gt;符号，所以，它直接将形参（即TN）替换成了未扩展的实参（即T），替换前并没有对T进行宏展开，从而导致无论T是什么，&lt;code&gt;T_func&lt;/code&gt;都是最终结果。&lt;/p&gt;
 &lt;p&gt;这点通过修改一下代码也可以验证：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define T_func func_m(B)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define T_func func_m(B)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;这里改成了B，所以最后定义的符号是&lt;code&gt;B_func&lt;/code&gt;，因为不管是啥，预处理器都不会对它展开。&lt;/p&gt;
-&lt;p&gt;本来想结合生成的obj文件来写的，但写这个的时候不是用的Windows，所以就算了，懒23333。&lt;/p&gt;</summary><category term="预处理器"></category><category term="宏"></category></entry><entry><title>我的存在，不需要什么意义</title><link href="http://goclis.github.io/posts/2016/04/20/%E6%88%91%E7%9A%84%E5%AD%98%E5%9C%A8%EF%BC%8C%E4%B8%8D%E9%9C%80%E8%A6%81%E4%BB%80%E4%B9%88%E6%84%8F%E4%B9%89.html" rel="alternate"></link><updated>2016-04-20T09:40:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-20:posts/2016/04/20/我的存在，不需要什么意义.html</id><summary type="html">&lt;p&gt;很长的一段时间里，只要我闲下来，就会思考，自己存在的意义。好在自己闲下来的日子其实不多，而且正能量挺足时总能找到点意义，这事也没怎么困扰我。但上个月初恋分手后，突然就啥也不想做了，人又闲了，心情还负，这个问题又跳了出来。&lt;/p&gt;
+&lt;p&gt;本来想结合生成的obj文件来写的，但写这个的时候不是用的Windows，所以就算了，懒23333。&lt;/p&gt;</summary><category term="预处理器"></category><category term="宏"></category></entry><entry><title>我的存在，不需要什么意义</title><link href="http://goclis.github.io/posts/2016/04/20/%E6%88%91%E7%9A%84%E5%AD%98%E5%9C%A8%EF%BC%8C%E4%B8%8D%E9%9C%80%E8%A6%81%E4%BB%80%E4%B9%88%E6%84%8F%E4%B9%89.html" rel="alternate"></link><published>2016-04-20T09:40:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-20:posts/2016/04/20/我的存在，不需要什么意义.html</id><summary type="html">&lt;p&gt;很长的一段时间里，只要我闲下来，就会思考，自己存在的意义。好在自己闲下来的日子其实不多，而且正能量挺足时总能找到点意义，这事也没怎么困扰我。但上个月初恋分手后，突然就啥也不想做了，人又闲了，心情还负，这个问题又跳了出来。&lt;/p&gt;
 &lt;p&gt;写下这篇东西，并不意味着我彻底想明白了，只能说暂时找到了更让自己信服的结论：我的存在，不需要什么意义。&lt;/p&gt;
 &lt;p&gt;最近看了本小说，叫《我是个年轻人，我的心情不太好》，多看限免日的时候淘到的。主人公25岁，一个我即将到达的年龄，他却不知道自己该做什么，人生的一切都很没有意义，但他很幸运，处在挪威这样一个福利较好的国家，有大把的时间可以让他安静地思考思考；同样，他有个好哥哥，带他旅行，教他放空自己；似乎他的运气也不错，想做的事情基本都可以做做。相比之下，我没这些条件，但幸运的是，我有看这本书的时间，这段时间，我能和他一样。&lt;/p&gt;
 &lt;p&gt;书中的观点多多少少影响了我现在的看法，但不全是，朋友也给出了一些不小的帮助。&lt;/p&gt;
@@ -72,7 +72,7 @@
 &lt;p&gt;我也曾问过不少人存在的意义，结果大多是：“你别想太多啦，好好做事就好了”；“我不在乎”；等等。大家似乎不在意，或者也和我一样在意过，但又不想继续烦恼了，挺好的，我也不打算继续烦恼了，有时候选择放空大脑不去思考，会更开心。这确实可能是“哲学家的事，我们只要负责开心就好了”。&lt;/p&gt;
 &lt;p&gt;还有一些看法，它们大多躺在各色这类问题的答案中：你的存在，因价值而有意义。你对社会产生价值，你的存在有意义了；你做的事让你关心的人开心，你的存在有意义了；等等。这种从他人身上折射出的自身意义，主观上我是反感的，因为自己一直在追求一种独立个体的状态。但，我没法否认，当我为亲人、朋友做了一件让他们开心的事时，我确实能感觉到那种存在的意义，但是很怪，我认为这种感觉绝对不是止步于他们开心，而应该在他们开心和我开心中不断地交替，否则过段时间后，我就不会再觉得让他们开心是我存在的意义了，一般这种情况被大家叫做“单方面付出”。父母除外，亲情是我暂时放不下的东西，或许没有他们，照我这种喜欢瞎想的性格，早已经在另一个世界开启了旅程。&lt;/p&gt;
 &lt;p&gt;我存在，不意味着我需要特意做些什么，来产生对他人有益的价值，这是各种主义为了维持社会进步要求的。而我，暂时不想为社会进步做些什么，我也不会干坏事，因为这些都不会让现在的我觉得开心。我现在只想做能让自己开心，而且做了也不会导致什么让自己不开心的后果（比如违法）的事。这或许很没意义，对社会，对绝大多数人，但我开心，这对那些关心我的人，应该有意义。&lt;/p&gt;
-&lt;p&gt;谢谢这段时间一直陪着我的爸妈，陪我吃喝玩乐、关心我的朋友们。&lt;/p&gt;</summary></entry><entry><title>HTTP请求中的数据</title><link href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" rel="alternate"></link><updated>2016-04-16T22:47:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-16:posts/2016/04/16/data-in-http-request.html</id><summary type="html">
+&lt;p&gt;谢谢这段时间一直陪着我的爸妈，陪我吃喝玩乐、关心我的朋友们。&lt;/p&gt;</summary></entry><entry><title>HTTP请求中的数据</title><link href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" rel="alternate"></link><published>2016-04-16T22:47:20+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-16:posts/2016/04/16/data-in-http-request.html</id><summary type="html">
 &lt;p&gt;那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。&lt;/p&gt;
 &lt;h3 id="http"&gt;HTTP请求格式&lt;a class="headerlink" href="#http" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;先看看HTTP请求消息的格式 &lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;1&lt;/a&gt;：&lt;/p&gt;
@@ -90,22 +90,22 @@
 &lt;/ul&gt;
 &lt;h3 id="query-string"&gt;Query String&lt;a class="headerlink" href="#query-string" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;这个实际上就是HTTP请求消息的第一部分URL中?后面的那部分信息，因此，它与请求的类型无关，只和URL相关，下面是个例子：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;# 附带数据为name: xxx, age: 18
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# 附带数据为name: xxx, age: 18
 GET example.com?name=xxx&amp;amp;age=18
 POST example.com?name=xxx&amp;amp;age=18
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;用python的requests库来实现这个请求的话就是下面这样：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;即这些数据会当做参数被编码到请求的URL中，而服务器端会解析这些参数。&lt;/p&gt;
 &lt;h3 id="form-data"&gt;Form Data&lt;a class="headerlink" href="#form-data" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;一般来说，form data是指html中form标签提交的数据：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;action=&lt;/span&gt;&lt;span class="s"&gt;"xxx"&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;"GET"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"first"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"second"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"submit"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt; &lt;span class="na"&gt;action&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"xxx"&lt;/span&gt; &lt;span class="na"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"GET"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"first"&lt;/span&gt; &lt;span class="p"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"second"&lt;/span&gt; &lt;span class="p"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"submit"&lt;/span&gt; &lt;span class="p"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;但是，form data是放在HTTP请求报文中的哪呢？？这个得看提交的方法：&lt;/p&gt;
 &lt;ul&gt;
@@ -127,78 +127,78 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;li&gt;&lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;HTTP Requests&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html"&gt;x-www-form-urlencoded vs json&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://www.iana.org/assignments/media-types/media-types.xhtml"&gt;IANA Media Types&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="HTTP"></category><category term="JSON"></category></entry><entry><title>【吃点评】小红烤翅</title><link href="http://goclis.github.io/posts/2016/04/12/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E5%B0%8F%E7%BA%A2%E7%83%A4%E7%BF%85.html" rel="alternate"></link><updated>2016-04-12T23:05:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-12:posts/2016/04/12/【吃点评】小红烤翅.html</id><summary type="html">&lt;p&gt;之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。&lt;/p&gt;
+&lt;/ol&gt;</summary><category term="HTTP"></category><category term="JSON"></category></entry><entry><title>【吃点评】小红烤翅</title><link href="http://goclis.github.io/posts/2016/04/12/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E5%B0%8F%E7%BA%A2%E7%83%A4%E7%BF%85.html" rel="alternate"></link><published>2016-04-12T23:05:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-12:posts/2016/04/12/【吃点评】小红烤翅.html</id><summary type="html">&lt;p&gt;之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。&lt;/p&gt;
 &lt;p&gt;价格方面，总共7个人，2个女生，吃了477，折扣后437（这个我真不知道咋算的，大众点评给的是100-9，会员价是9折，但这个数字应该是477-400/4*10，有点诡异），人均62吧，不是很贵。&lt;/p&gt;
 &lt;p&gt;主打还是烤翅，挺好吃的！！一人吃了4串，一串两只，默认分辣和不辣两种，可能可以特别要变态辣吧。其他点了些羊肉串、脆骨、金针菇、韭菜等吧，都还行，韭菜有点咸。特别提下羊肉串，挺大串的，感觉这种7-8块一串的比那种3-4块两小串吃的过瘾多了（没错，就是黑的勿相忘那种小串串）。&lt;/p&gt;
-&lt;p&gt;总得来说，下次再去这家店的话，我可能只点烤翅和羊肉串吧23333。没拍图，败笔。&lt;/p&gt;</summary><category term="吃点评"></category></entry><entry><title>享受孤独，真不容易</title><link href="http://goclis.github.io/posts/2016/04/10/%E4%BA%AB%E5%8F%97%E5%AD%A4%E7%8B%AC%EF%BC%8C%E7%9C%9F%E4%B8%8D%E5%AE%B9%E6%98%93.html" rel="alternate"></link><updated>2016-04-10T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-10:posts/2016/04/10/享受孤独，真不容易.html</id><summary type="html">&lt;p&gt;最近算是一直在体会独处带来的孤独，说真的，挺不好受的。一个多月了，顶多是缓解吧，这种心理感受的问题还是没法解决。&lt;/p&gt;
+&lt;p&gt;总得来说，下次再去这家店的话，我可能只点烤翅和羊肉串吧23333。没拍图，败笔。&lt;/p&gt;</summary><category term="吃点评"></category></entry><entry><title>享受孤独，真不容易</title><link href="http://goclis.github.io/posts/2016/04/10/%E4%BA%AB%E5%8F%97%E5%AD%A4%E7%8B%AC%EF%BC%8C%E7%9C%9F%E4%B8%8D%E5%AE%B9%E6%98%93.html" rel="alternate"></link><published>2016-04-10T00:00:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-10:posts/2016/04/10/享受孤独，真不容易.html</id><summary type="html">&lt;p&gt;最近算是一直在体会独处带来的孤独，说真的，挺不好受的。一个多月了，顶多是缓解吧，这种心理感受的问题还是没法解决。&lt;/p&gt;
 &lt;p&gt;我记得高中的时候写过一篇作文，材料不记得了，但我取的标题好像叫“身寂而心不寂”，大概就是即使独处也要享受孤独，当时举的例证也比较简单，李白寄情于酒，曹操志在天下，均不感孤独。当时的我以为，只要专注于做一些喜爱的事情，我将不会感到孤独，这个认识从现在来看，还是有些浅薄了。&lt;/p&gt;
 &lt;p&gt;独处是一种物理状态，孤独是一种感受及心理状态，所以也被称为孤独感。有一个观点，我想对于很多人都比较适用，包括我自己，即独处会让人产生孤独感。我并不想讨论孤独感带给人的好与坏，只想写写自己的感受。&lt;/p&gt;
 &lt;p&gt;我原以为，我是能够忍受孤独的。但这一个多月的经历让我明白，自己还是太年轻。细细一想，除了最近这段时间，自己并未体会过真正的独处，更说不上忍受孤独了。高中以前，天天回家，父母总在身旁；高中三年，同学及舍友常伴；本科四年，如高中一般。研究生，舍友基本也不待在宿舍，每次自己独自一人呆在宿舍的时候就会比较的沉闷，但好在那段刚开始的日子有ex陪伴，尽管她出国在外，但聊天总能缓解那种独处产生的孤独感。&lt;/p&gt;
 &lt;p&gt;我原以为，孤独感是能够通过专注地去做其他事情而消除的。但现在看来，对我来说并不是这样。我或许能找到一件让你非常专注的事情，读书、Coding或是运动，但无论怎样，它们只能缓解而不是消除孤独感，因为孤独感的袭来的时刻往往是夜幕降临的时候，在每个夜晚，在我躺下准备休息时，你或许会说，“你可以去尝试专注于睡觉”，我不否认这种说法，我羡慕能这样做的人，实在幸福，但我着实做不到，我能做的只是忍受。&lt;/p&gt;
 &lt;p&gt;我原以为，只要喜欢，我就能专注去做。但现在发现，能让我无条件专注的事情实在是难寻，起码现在看来，读书不算，心不安时我读不进去；毫无目标的Coding不算，但目标同样不好找，尤其杂事缠身之时；运动或许真的算，但想找到一个愿意和你一起酣畅淋漓打上一场球的同伴，也真是不易。越是思考这些，我越是佩服以跑步、健身为爱好的那些人，尤其是没人陪伴的情况下，这样的人，内心都不会太脆弱吧，或许他们确实是在享受那种孤独。而我这种，唉。&lt;/p&gt;
-&lt;p&gt;现在的我，暂时放弃去完全消除这种孤独感了，让自己更坚强，忍受它。半夜醒来就醒来吧，再睡过去就是了；入睡不深，那就接受它，而不是因惶恐而受到更严重的影响；无聊，找朋友聊，找朋友玩。享受这种孤独吧，人生，还怪长的。&lt;/p&gt;</summary></entry><entry><title>炒螺狮后的五台山保龄球</title><link href="http://goclis.github.io/posts/2016/04/03/%E7%82%92%E8%9E%BA%E7%8B%AE%E5%90%8E%E7%9A%84%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BF%9D%E9%BE%84%E7%90%83.html" rel="alternate"></link><updated>2016-04-03T23:33:50+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-03:posts/2016/04/03/炒螺狮后的五台山保龄球.html</id><summary type="html">&lt;p&gt;清明时节雨纷纷啊，从昨天开始就一直阴雨连绵，好在今天还不错，只有一点小雨，不过风有点大，只穿一件短袖和外套还会感觉有点凉。天气不错当然要跑出去玩啦，别白费了一个清明三天的假期。&lt;/p&gt;
+&lt;p&gt;现在的我，暂时放弃去完全消除这种孤独感了，让自己更坚强，忍受它。半夜醒来就醒来吧，再睡过去就是了；入睡不深，那就接受它，而不是因惶恐而受到更严重的影响；无聊，找朋友聊，找朋友玩。享受这种孤独吧，人生，还怪长的。&lt;/p&gt;</summary></entry><entry><title>炒螺狮后的五台山保龄球</title><link href="http://goclis.github.io/posts/2016/04/03/%E7%82%92%E8%9E%BA%E7%8B%AE%E5%90%8E%E7%9A%84%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BF%9D%E9%BE%84%E7%90%83.html" rel="alternate"></link><published>2016-04-03T23:33:50+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-03:posts/2016/04/03/炒螺狮后的五台山保龄球.html</id><summary type="html">&lt;p&gt;清明时节雨纷纷啊，从昨天开始就一直阴雨连绵，好在今天还不错，只有一点小雨，不过风有点大，只穿一件短袖和外套还会感觉有点凉。天气不错当然要跑出去玩啦，别白费了一个清明三天的假期。&lt;/p&gt;
 &lt;p&gt;晚上和雪姨还有蓝神在一家叫“炒螺狮”的店吃了晚饭，大概是一家以“螺狮”为主题的店吧。。虽然我并不清楚“螺狮”究竟是个什么东西，姑且认为是田螺吧，这是南京特色么？？为何我觉得这店的其他菜还比较好吃，比如地锅鸡、酸汤肥牛啥的。。不说了，今天吃不是重点！！吃完后去五台山保龄球馆玩才是重点！！&lt;/p&gt;
 &lt;p&gt;之前没玩过保龄球，但一直想尝试一下，上次来过想打，却因为在比赛没玩成，这次来算是尝鲜加结愿吧～场馆设施还挺不错的，价格也还可以，4人局（肉团没吃晚饭，我们吃完饭后才一起去的）一局104，会员卡9折，以为会打很久就只买了两局，后来发现一局只用了半个小时吧，挺快的。&lt;/p&gt;
 &lt;p&gt;唉，肌肉不够发达，感觉保龄球好重啊，一开始拿的姿势不对，没把大拇指插进去，而是把食指和中指插进去了，导致球甩出去的时候压到了大拇指的指甲盖，英勇受伤，Get淤青一块。。往后就只敢拿轻一点的球打了，打到第三轮的时候，雪姨摊上了和我一样悲催的事，不过他的指甲更长，所以。。整个大拇指被血染红了，直接赛季报销，衰。。吓的我立马去把不长的指甲剪掉了。一开始还看到大众点评里有人提到这儿提供指甲剪时还纳闷这有啥关联，现在可算明白了。。&lt;/p&gt;
 &lt;p&gt;剪完指甲后继续战斗，我们三人还得肩负雪姨的那份一起战斗（其实就是多玩了他的机会233333，瞬间感觉最后摊钱不该算他啊！！），不过得提一下，雪姨上来三轮就打了两轮的Strike，也就是第一发就全中，6的飞起啊。。相较之下，我这种弱鸡，两局20轮就只有最后换了一下重点的球才狗到了一次Strike！！虽然前面有一次好像击中的位置也挺好，但球太轻冲击力不够，剩了1个没击倒。最后的感觉就是，这运动不适合我啊。。不过出来玩真的很开心啊，接触的球类又多了一种哈哈哈~~~&lt;/p&gt;
 &lt;p&gt;打完保龄球后去先锋书店逛了一下，话说来南京这么多年了，都还没去过。感觉一般吧，可能是因为自己现在已经没有那种看中一本书就在书店坐一下午的心情了。拍照的人比看书的多，差不多就是这样吧。&lt;/p&gt;
 &lt;p&gt;回去的时候就比较悲催了。。赶的最后一班校车，却被司机拒绝了不让上车，因为人满了QAQ，唉，我猜我是个女生的话可能就能上了，因为排我前面的两个女生上去了并且也是站着的。。好在Uber比较方便而且便宜，最后和两个同学拼了个车回去了，省了一段要走半个小时的路。&lt;/p&gt;
-&lt;p&gt;Over～&lt;/p&gt;</summary></entry><entry><title>Pelican博客结构改造</title><link href="http://goclis.github.io/posts/2016/04/02/reconstruction-of-pelican-blog.html" rel="alternate"></link><updated>2016-04-04T12:06:30+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-02:posts/2016/04/02/reconstruction-of-pelican-blog.html</id><summary type="html">
+&lt;p&gt;Over～&lt;/p&gt;</summary></entry><entry><title>Pelican博客结构改造</title><link href="http://goclis.github.io/posts/2016/04/02/reconstruction-of-pelican-blog.html" rel="alternate"></link><published>2016-04-04T12:06:30+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-02:posts/2016/04/02/reconstruction-of-pelican-blog.html</id><summary type="html">
 &lt;p&gt;最近想要在博客里写一些生活相关的东西（也就是吃喝玩乐啦），同时还希望能够比较清晰地区分开技术文章和生活文章，所以这两天就在折腾着博客内容的改造，不得不提一下，这个折腾过程中看代码的感觉真的是让我找回了一丝大二时的感觉，很爽！&lt;/p&gt;
 &lt;p&gt;这篇文章把一些我在改造过程中遇到的问题以及解决思路记录下来。&lt;/p&gt;
 &lt;h3 id="template-page"&gt;使用Template Page划分内容&lt;a class="headerlink" href="#template-page" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客的改造是希望把内容分成四块：技术、生活、笔记、琐碎。技术就是先前写的这些博文；生活记录一些小结或是感想的东西；笔记实质上是我平时针对一些具体技术记录的一些Tip，打算一并放上来；琐碎实际上就类似于微博，一些短的想法之类的。&lt;/p&gt;
 &lt;p&gt;按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板&lt;code&gt;page.html&lt;/code&gt;决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。&lt;/p&gt;
 &lt;p&gt;因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在&lt;code&gt;pelicanconf.py&lt;/code&gt;中对&lt;code&gt;TEMPLATE_PAGES&lt;/code&gt;进行相关的设置即可，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;TEMPLATE_PAGES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="s"&gt;'tpages/life.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'life.html'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'tpages/tweet.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'tweet.html'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'tpages/note.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'note.html'&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;TEMPLATE_PAGES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;'tpages/life.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'life.html'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;'tpages/tweet.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'tweet.html'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;'tpages/note.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'note.html'&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;字典的键是页面的模板的路径，相对于content目录，这个模板的语法遵从是Pelican使用的Jinja2的模板引擎的规定。字典的值是生成的页面的输出路径，相对于output目录。这里只有三个页面，因为我直接修改了&lt;code&gt;index.html&lt;/code&gt;这个模板，把它作为了技术文章的页面。&lt;/p&gt;
 &lt;p&gt;在实现这块的时候，遇到了导航栏的激活的问题。我希望把这四个页面都加入到导航栏，关于导航栏的内容，一般都在&lt;code&gt;base.html&lt;/code&gt;这个模板里，对于每个页面哪个导航项该被激活，实现一般如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;# 1
-&lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;categories&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/categories.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Categories&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# 1
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;categories&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/categories.html"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Categories&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 
 # 2
 {% if page %}
-&lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;slug =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;about&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/about.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;About&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;slug &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;about&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/about.html"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;About&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% else %}
-&lt;span class="nt"&gt;&amp;lt;li&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/about.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;About&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/about.html"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;About&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% endif %}
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;实现的不同是因为Pelican生成时的处理不同。我们知道，对于Jinja2这样的模板引擎来说，你除了需要给定它模板文件，还需要指定一个context，也就是你这个模板文件中使用到的变量对应的具体的值，Pelican针对不同类型的输入给定了不同的context&lt;/p&gt;
 &lt;p&gt;实现1用于几个特殊的模板，如&lt;code&gt;index.html&lt;/code&gt;、&lt;code&gt;categories.html&lt;/code&gt;、&lt;code&gt;tags.html&lt;/code&gt;等，Pelican规定了每一个主题都需要提供这些模板，在调用Jinja2生成它们时，Pelican会把如&lt;code&gt;page_name&lt;/code&gt;等变量传到对应的context里，所以我们可以通过判断当前页面的&lt;code&gt;page_name&lt;/code&gt;来确定激活对应导航项。&lt;/p&gt;
 &lt;p&gt;实现2用于Page，是先前在实现“关于我”页面的时候，为该页面增加导航项的做法，之所以这样做在于我上面提到的context的问题，Pelican在Page页面的context中提供了一个&lt;code&gt;page&lt;/code&gt;变量，其中包含了一系列的信息，但由于&lt;code&gt;base.html&lt;/code&gt;不仅仅供Page使用，需要加个判断。类似的，Pelican在Article页面的context中提供了一个&lt;code&gt;article&lt;/code&gt;变量。&lt;/p&gt;
 &lt;p&gt;但是，并没有办法区分两个Template Page，因为Pelican没有为它的context提供额外的信息，这点我是通过查看源代码确认的，关于它的代码在&lt;code&gt;generators.py&lt;/code&gt;中，下面给出一部分，其中包含了我的修改：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# generators.py&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# generators.py&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;TemplatePagesGenerator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Generator&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
      &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;generate_output&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-         &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dest&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'TEMPLATE_PAGES'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+         &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dest&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'TEMPLATE_PAGES'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
              &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loaders&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;insert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_FileLoader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
              &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
                  &lt;span class="n"&gt;template&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_template&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                 &lt;span class="n"&gt;rurls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'RELATIVE_URLS'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-                 &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dest&lt;/span&gt; &lt;span class="c"&gt;# 为TemplatePage增加slug供模板使用&lt;/span&gt;
+                 &lt;span class="n"&gt;rurls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'RELATIVE_URLS'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+                 &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dest&lt;/span&gt; &lt;span class="c1"&gt;# 为TemplatePage增加slug供模板使用&lt;/span&gt;
                  &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dest&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;template&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;rurls&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                    &lt;span class="n"&gt;override_output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
              &lt;span class="k"&gt;finally&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
                  &lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loaders&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-             &lt;span class="c"&gt;# 删除掉以避免影响其他的模板context&lt;/span&gt;
-             &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-                 &lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+             &lt;span class="c1"&gt;# 删除掉以避免影响其他的模板context&lt;/span&gt;
+             &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+                 &lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;从源码中可以看到，&lt;code&gt;writer.write_file&lt;/code&gt;的参数中并没有传入额外的参数，仅仅是&lt;code&gt;self.context&lt;/code&gt;，我修改了代码把该变量打印了一下，发现并没有可以区分Template Page的信息，所以，改动也很简单，我自己加了一个表示slug的&lt;code&gt;tp_slug&lt;/code&gt;变量到context中，这样就可以简单区分了，模板中的导航项实现如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;tp_slug =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;note&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;html&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/note.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Note&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;tp_slug &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;note&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;html&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/note.html"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Note&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;搞定了这个问题后，我就只需要好好的设计&lt;code&gt;index.html&lt;/code&gt;、&lt;code&gt;life.html&lt;/code&gt;、&lt;code&gt;note.html&lt;/code&gt;以及&lt;code&gt;tweet.html&lt;/code&gt;这四个分别对应四块内容的模板就行了。&lt;/p&gt;
 &lt;h3 id="jinja2"&gt;Jinja2模板使用&lt;a class="headerlink" href="#jinja2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;在设计模板的过程中遇到了一些问题，并查到了一些解决方案，这里记录一下。&lt;/p&gt;
 &lt;h4 id="jinja2_1"&gt;Jinja2变量作用域&lt;a class="headerlink" href="#jinja2_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Jinja2的变量的作用域比较奇怪，不是全局的那种，如下例子：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;% set last_year = 0 %}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% set last_year = 0 %}
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;article&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;dates&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;article.category&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;TECH_CATEGORIES&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;article.date.strftime&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'%Y'&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
@@ -236,7 +236,7 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;p&gt;解决办法是&lt;a href="http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block"&gt;使用列表&lt;/a&gt;，貌似列表变量的作用域是全局的，所以可行，逻辑也很简单，初始化为只包含初值的列表，修改值即为弹出再插入值，然后读取值即为访问第一个元素。&lt;/p&gt;
 &lt;h4 id="jinja2_2"&gt;Jinja2把文章分类&lt;a class="headerlink" href="#jinja2_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;这个其实不是很通用，但还是说一下，发生在我改造&lt;code&gt;archives.html&lt;/code&gt;模板的时候，希望能够把所有的文章给分一下类，然后再挨个处理。从编程的角度来看，实际上就是把一个列表拆分成四个列表嘛，在Jinja2里也是能做的，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;{# -- 把所有文章按大类分到不同的list中 -- #}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;{# -- 把所有文章按大类分到不同的list中 -- #}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;tech_articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;life_articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;tweet_articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
@@ -254,14 +254,14 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这里只有三个，是因为笔记类的不归档。代码里涉及到了&lt;code&gt;XXX_CATEGORIES&lt;/code&gt;这样的变量，它们是我自己添加，用于对文章进行类型划分的，主要是针对一个大类下可能有不同小类的情况（比如技术类下有Python子类），在&lt;code&gt;pelicanconf.py&lt;/code&gt;中添加：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;TECH_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Tech'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'Python'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;NOTE_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Note'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;LIFE_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Life'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;TWEET_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Tweet'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;TECH_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'Tech'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'Python'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;NOTE_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'Note'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;LIFE_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'Life'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;TWEET_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'Tweet'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="disqus"&gt;添加Disqus评论&lt;a class="headerlink" href="#disqus" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;过程挺简单的，毕竟主题都帮你弄好了，申请Disqus，创建Site，然后在&lt;code&gt;pelicanconf.py&lt;/code&gt;中添加如下内容即可：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;DISQUS_SITENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"yoursitename"&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;DISQUS_SITENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"yoursitename"&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;得提一下，Pelican-Elegant这个主题为文章提供了一个&lt;code&gt;disqus_identifier&lt;/code&gt;的metadata，作者给出的解释是：因为Pelican默认提交给Disqus的是基于&lt;code&gt;SITEURL&lt;/code&gt;和文章URL生成的，这样的话，在&lt;code&gt;SITEURL&lt;/code&gt;发生变动后，你的评论就可能丢失了。&lt;/p&gt;
 &lt;p&gt;但是出于懒，并不想为每篇文章都加上&lt;code&gt;disqus_identifier&lt;/code&gt;，我直接把主题进行修改了，调整了一下默认&lt;code&gt;disqus_identifier&lt;/code&gt;的生成，改为&lt;code&gt;disqus-{{ article.url }}&lt;/code&gt;，应该能够保证唯一。&lt;/p&gt;
@@ -271,18 +271,18 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;h3 id="_1"&gt;参考资料&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="Pelican"></category><category term="Jinja2"></category></entry><entry><title>【吃点评】胖哥俩肉蟹煲</title><link href="http://goclis.github.io/posts/2016/03/19/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E8%83%96%E5%93%A5%E4%BF%A9%E8%82%89%E8%9F%B9%E7%85%B2.html" rel="alternate"></link><updated>2016-03-19T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-03-19:posts/2016/03/19/【吃点评】胖哥俩肉蟹煲.html</id><summary type="html">&lt;p&gt;这篇是填坑的。。好早前和雪姨去吃的，大概回忆下吧。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="Pelican"></category><category term="Jinja2"></category></entry><entry><title>【吃点评】胖哥俩肉蟹煲</title><link href="http://goclis.github.io/posts/2016/03/19/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E8%83%96%E5%93%A5%E4%BF%A9%E8%82%89%E8%9F%B9%E7%85%B2.html" rel="alternate"></link><published>2016-03-19T00:00:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-03-19:posts/2016/03/19/【吃点评】胖哥俩肉蟹煲.html</id><summary type="html">&lt;p&gt;这篇是填坑的。。好早前和雪姨去吃的，大概回忆下吧。&lt;/p&gt;
 &lt;p&gt;地点在中央商城8楼，排队人很多，当时并不是周末！！另外小桌拍的特别慢。。我们是5点拿到号的，A28吧？从A20到我们等了一个小时，出来的时候发现小桌已经排到了100+吧。。&lt;/p&gt;
 &lt;p&gt;我们点的小份肉蟹煲，加了点牛蛙，要了扎奇异果汁，人均80，还可以接受。分量够的，两个人都要了份米饭，最后都很饱。&lt;/p&gt;
 &lt;p&gt;本来以为肉蟹煲会把蟹弄的特别烂，吃起来特方便，结果发现并不是。。蟹壳依旧在，还是得咬，两个处女座表示很后悔点了肉蟹煲，应该点虾、牛蛙之类容易吃的。。做法大概类似于大锅煮的吧，里面有蟹、年糕、土豆、鸡爪以及加的牛蛙，最后端上来就一锅，大致如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="肉蟹煲" src="/images/20160412233920633.jpg" /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="奇异果汁" src="/images/20160412234147593.jpg" /&gt;&lt;/p&gt;
 &lt;p&gt;味道方面，蟹其实一般般，鸡爪特别好吃！！牛蛙也很不错！！奇异果汁也好喝！唉，越想越觉得该点虾煲的。。&lt;/p&gt;
-&lt;p&gt;嗯，怎么说呢，追求吃鸡爪的话，我其实可以选择更便宜的焖锅之类的，总之下次不会为了吃蟹来这家店。&lt;/p&gt;</summary><category term="吃点评"></category></entry><entry><title>Pelican进阶配置</title><link href="http://goclis.github.io/posts/2016/01/16/advanced-pelican-configuration.html" rel="alternate"></link><updated>2016-01-16T13:58:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-01-16:posts/2016/01/16/advanced-pelican-configuration.html</id><summary type="html">
+&lt;p&gt;嗯，怎么说呢，追求吃鸡爪的话，我其实可以选择更便宜的焖锅之类的，总之下次不会为了吃蟹来这家店。&lt;/p&gt;</summary><category term="吃点评"></category></entry><entry><title>Pelican进阶配置</title><link href="http://goclis.github.io/posts/2016/01/16/advanced-pelican-configuration.html" rel="alternate"></link><published>2016-01-16T13:58:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-01-16:posts/2016/01/16/advanced-pelican-configuration.html</id><summary type="html">
 &lt;p&gt;上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。&lt;/p&gt;
 &lt;h3 id="markdown"&gt;Markdown扩展&lt;a class="headerlink" href="#markdown" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在&lt;code&gt;pelicanconf.py&lt;/code&gt;中对&lt;code&gt;MD_EXTENSIONS&lt;/code&gt;进行适当的赋值即可，我的配置如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;MD_EXTENSIONS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'codehilite(css_class=highlight)'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'extra'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'toc(permalink=true)'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;MD_EXTENSIONS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'codehilite(css_class=highlight)'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'extra'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'toc(permalink=true)'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;总共三项：&lt;/p&gt;
 &lt;ul&gt;
@@ -295,13 +295,13 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;p&gt;配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。&lt;/p&gt;
 &lt;p&gt;page按照直面的翻译也就是&lt;strong&gt;页面&lt;/strong&gt;的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的&lt;code&gt;templates&lt;/code&gt;中拥有&lt;code&gt;article.html&lt;/code&gt;和&lt;code&gt;page.html&lt;/code&gt;，只是文章更倾向于内容，而页面可以很随意，所以一般可以拿来构造导航栏（比如about页面）。&lt;/p&gt;
 &lt;p&gt;页面和文章一样，都是Pelican根据你所编写的内容生成的，内容的格式同样可以是Markdown（或是支持的其他格式），并且也必须放到&lt;code&gt;content&lt;/code&gt;目录下，为了更好分辨，还可以在&lt;code&gt;pelicanconf.py&lt;/code&gt;中指定页面所在的文件夹以及页面生成相关的内容，我的配置如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;PAGE_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'pages'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;PAGE_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'{slug}.html'&lt;/span&gt;
-&lt;span class="n"&gt;PAGE_SAVE_AS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'{slug}.html'&lt;/span&gt;
-&lt;span class="n"&gt;DISPLAY_PAGES_ON_MENU&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt; &lt;span class="c"&gt;# 主题的模板可能会使用的值，一般用于导航栏&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;PAGE_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'pages'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;PAGE_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'{slug}.html'&lt;/span&gt;
+&lt;span class="n"&gt;PAGE_SAVE_AS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'{slug}.html'&lt;/span&gt;
+&lt;span class="n"&gt;DISPLAY_PAGES_ON_MENU&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt; &lt;span class="c1"&gt;# 主题的模板可能会使用的值，一般用于导航栏&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;content&lt;/code&gt;的目录结构如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;|—— content
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;|—— content
 |   |—— posts # 文章的目录
 |   |   |—— article1.md
 |   |   |—— article2.md
@@ -318,44 +318,44 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;p&gt;在主题是基于Bootstrap的前提下，把表格改为Bootstrap风格就非常容易，只要改为&lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt;即可，两个方法。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;(1) 修改生成的内容&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;前面提到过，Pelican的Markdown支持是依赖于Markdown模块的，因而本质上，它是利用了Markdown模块对输入进行了解析，然后对解析得到的结果进行生成。所以，一个简单的办法就是直接把生成的内容当成字符串进行搜索替换，把&lt;code&gt;&amp;lt;table&amp;gt;&lt;/code&gt;替换为&lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt;，这需要修改Pelican的源码，修改&lt;code&gt;reader.py&lt;/code&gt;中的&lt;code&gt;MarkdownReader&lt;/code&gt;的&lt;code&gt;read&lt;/code&gt;方法：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_source_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;source_path&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_source_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;source_path&lt;/span&gt;
 &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_md&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;extensions&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extensions&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pelican_open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source_path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_md&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;metadata&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_parse_metadata&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_md&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Meta&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="c"&gt;# 增加下面这一行&lt;/span&gt;
-&lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'&amp;lt;table&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'&amp;lt;table class="table"&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# 增加下面这一行&lt;/span&gt;
+&lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&amp;lt;table&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'&amp;lt;table class="table"&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这种方法要改源码，迁移的时候有点麻烦。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;(2) 改主题&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;目的都是给table标签加上class，可以直接修改主题，插入相应的JS代码即可，未考虑兼容性的问题，我直接在主题的&lt;code&gt;base.html&lt;/code&gt;的末尾增加了如下代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;script&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;script&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="c1"&gt;// Added by Goclis for rerendering table to bootstrap style&lt;/span&gt;
     &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"table"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;addClass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"table"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;/script&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h4 id="about"&gt;增加about页面&lt;a class="headerlink" href="#about" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;在&lt;code&gt;pages&lt;/code&gt;文件夹里增加了一个&lt;code&gt;about.md&lt;/code&gt;，但希望在导航栏上增加一个About比较麻烦，对主题的&lt;code&gt;base.html&lt;/code&gt;进行了小小的修改：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"nav-collapse collapse"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;ul&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"nav pull-right top-menu"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;index&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"/"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Home&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;categories&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/categories.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Categories&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;tags&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/tags.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Tags&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;archives&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/archives.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Archives&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"nav-collapse collapse"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;ul&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"nav pull-right top-menu"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;index&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"/"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Home&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;categories&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/categories.html"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Categories&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;tags&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/tags.html"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Tags&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;archives&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/archives.html"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Archives&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 
         {% if DISPLAY_PAGES_ON_MENU %}
         {% for p in pages %}
         {% if p.slug == 'about' %}
-        &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;p =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="na"&gt;page&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/{{ p.url }}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;About&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;p &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="na"&gt;page&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/{{ p.url }}"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;About&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
         {% endif %}
         {% endfor %}
         {% endif %}
-    &lt;span class="nt"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;ul&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;逻辑主要是下面这部分，通过判断slug，只为&lt;code&gt;about.md&lt;/code&gt;增加导航，其他页面忽略，这需要在&lt;code&gt;about.md&lt;/code&gt;的开头设置&lt;code&gt;Slug: about&lt;/code&gt;。&lt;/p&gt;
 &lt;h3 id="_2"&gt;小结&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;总的来说，尽管Pelican是个静态博客，但能够玩出花样的地方还是很多的，&lt;a href="http://docs.getpelican.com/en/latest/faq.html#how-do-i-assign-custom-templates-on-a-per-page-basis"&gt;Pelican FAQ&lt;/a&gt;里有不少可以参考的问题。&lt;/p&gt;</summary><category term="Pelican"></category><category term="Markdown"></category></entry><entry><title>2015小结</title><link href="http://goclis.github.io/posts/2016/01/06/summary-of-2015.html" rel="alternate"></link><updated>2016-01-06T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-01-06:posts/2016/01/06/summary-of-2015.html</id><summary type="html">&lt;p&gt;这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。&lt;/p&gt;
+&lt;p&gt;总的来说，尽管Pelican是个静态博客，但能够玩出花样的地方还是很多的，&lt;a href="http://docs.getpelican.com/en/latest/faq.html#how-do-i-assign-custom-templates-on-a-per-page-basis"&gt;Pelican FAQ&lt;/a&gt;里有不少可以参考的问题。&lt;/p&gt;</summary><category term="Pelican"></category><category term="Markdown"></category></entry><entry><title>2015小结</title><link href="http://goclis.github.io/posts/2016/01/06/summary-of-2015.html" rel="alternate"></link><published>2016-01-06T00:00:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-01-06:posts/2016/01/06/summary-of-2015.html</id><summary type="html">&lt;p&gt;这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。&lt;/p&gt;
 &lt;h3 id="_1"&gt;回顾&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;现在细细回想了一下，对这段时间好像还是有那么点印象的，不过总的说起来也只是一直处于一个不断在学校和“创业”中切换的混沌状态。下面按照时间线大概理一下吧，流水账。&lt;/p&gt;
 &lt;p&gt;从“创业”开始说吧，加引号是因为有点伤，下面再说吧。大概来说是从大三下（14年6月）的时候开始的，那时候老师找了我和几个同学谈做一个分布式相关的产品，因为当时合伙的老师中有一个是以后读研的导师，想想觉得边读研边做项目还挺好的，而且许诺的期权及期限都还可以接受，就答应一起做了。&lt;/p&gt;
@@ -392,13 +392,13 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;/ol&gt;
 &lt;p&gt;所以，在接下来的读研时间里还是让自己更理想一些吧，喜欢什么就去了解什么，想做实验就去做，不要急功近利。等到实在要正式入职进社会工作了，再把时间腾些过去吧。&lt;/p&gt;
 &lt;p&gt;博客的话，有些稍微能整理的成果就更新吧，现在这阶段的水平大概也就只能继续写写教程了，但还是要写的。其实这段时间还是有写些东西的，但都只是放到笔记里，回头整理整理放上来吧。还有以前发的文章也得整理下，有些写的实在有点随意。。&lt;/p&gt;
-&lt;p&gt;关于公司，这段时间的事情让自己失去了一种创业者的感觉，残留的念头只有把手头工作维护好并继续完善（码农的执着2333）。再多的只能说工作必须好好干了（工资实在是可怜QAQ），别让自己去年的投资（交的期权）打水漂。&lt;/p&gt;</summary></entry><entry><title>Openssl-RSA简单使用</title><link href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html" rel="alternate"></link><updated>2015-12-26T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</id><summary type="html">
+&lt;p&gt;关于公司，这段时间的事情让自己失去了一种创业者的感觉，残留的念头只有把手头工作维护好并继续完善（码农的执着2333）。再多的只能说工作必须好好干了（工资实在是可怜QAQ），别让自己去年的投资（交的期权）打水漂。&lt;/p&gt;</summary></entry><entry><title>Openssl-RSA简单使用</title><link href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html" rel="alternate"></link><published>2015-12-26T00:00:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</id><summary type="html">
 &lt;p&gt;最近需要用到RSA的一些功能，出于方便，打算直接用openssl，但是在不同平台上使用openssl所需要做的工作还不一样，干脆就记个笔记整理一下。&lt;/p&gt;
 &lt;h3 id="windowsvs2013openssl"&gt;Windows下使用VS2013编译openssl源码&lt;a class="headerlink" href="#windowsvs2013openssl" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。&lt;/p&gt;
 &lt;p&gt;编译需要用到perl，去官网下个ActivePerl就可以了，为了往后在cmd中操作简单，最好安装时勾上加入PATH的选项。&lt;/p&gt;
 &lt;p&gt;解压源码包，打开cmd进入该解压后的目录，执行如下命令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这是编译前必须执行的配置命令，可以自行根据所使用的编译工具以及平台的不同来选择不同的参数（具体可以查看解压后目录中的README以及一系列的INSTALL文件），稍微解释一下：&lt;/p&gt;
 &lt;ul&gt;
@@ -413,18 +413,18 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;/ol&gt;
 &lt;p&gt;简单的配置完毕后开始进行编译。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;静态库&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;ms\do_ms
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ms\do_ms
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;动态库&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;ms\do_ms
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ms\do_ms
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;install&lt;/code&gt;表示将生成的内容（头文件及库）安装到使用perl进行配置时指定的目录中。&lt;/p&gt;
 &lt;p&gt;就我而言，我需要生成debug及release的库，整个过程如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;perl Configure debug-VC-WIN32 no-asm --prefix=c:\openssl-1.0.1p\debug-VC-WIN32
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;perl Configure debug-VC-WIN32 no-asm --prefix=c:\openssl-1.0.1p\debug-VC-WIN32
 ms\do_ms
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
@@ -436,7 +436,7 @@ nmake -f ms\nt.mak install
 &lt;p&gt;经过简单的测试，发现使用VS的08、10、13来进行编译产生的内容是一样的。&lt;/p&gt;
 &lt;h3 id="linuxopenssl"&gt;Linux下安装openssl库&lt;a class="headerlink" href="#linuxopenssl" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;我的发行版是Ubuntu 14.04，但是默认安装的好像只有一个openssl的可执行程序，没有头文件及库文件，需要另外安装&lt;code&gt;libssl&lt;/code&gt;，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install libssl-dev
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install libssl-dev
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在编译你的目标文件时指定&lt;code&gt;-lssl&lt;/code&gt;及&lt;code&gt;-lcrypto&lt;/code&gt;选项即可使用相关的功能，如果只用到加密库的话，只需要使用后者即可。&lt;/p&gt;
 &lt;p&gt;暂时没有去研究如何静态链接openssl。&lt;/p&gt;
@@ -444,18 +444,18 @@ nmake -f ms\nt.mak install
 &lt;p&gt;openssl除了提供编程相关的头文件及库文件外，还有一个应用程序直接提供了相关的功能，这里简单的罗列一些。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;RSA密钥生成&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;使用该程序可以直接生成RSA的公私钥：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;openssl genrsa -out private.pem 2048 &amp;amp;&amp;amp; openssl rsa -in private.pem -pubout &amp;gt; public.pem
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;openssl genrsa -out private.pem 2048 &amp;amp;&amp;amp; openssl rsa -in private.pem -pubout &amp;gt; public.pem
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;但是需要注意的是，这里的生成是按照PEM格式进行的，所以如果在编程时需要读取这些文件，要使用PEM相关的API。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;提取RSA公钥内容&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;我们知道RSA的公钥是由(n,e)组成的，但是openssl生成的公钥为了可读进行了BASE64编码，可以使用如下命令进行提取：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;openssl rsa -pubin -inform PEM -text -noout &amp;lt; public.pem
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;openssl rsa -pubin -inform PEM -text -noout &amp;lt; public.pem
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="rsa"&gt;RSA相关编程&lt;a class="headerlink" href="#rsa" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;h4 id="rsa_1"&gt;RSA结构体&lt;a class="headerlink" href="#rsa_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;RSA结构体在编程中代表RSA的密钥（公钥或私钥），在描述RSA操作之前，先说说RSA的结构体如何构建，也就两种方式：从文件构建或从内存构建。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;文件&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithFilename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithFilename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;BIO&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BIO_new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BIO_s_file&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
@@ -484,7 +484,7 @@ nmake -f ms\nt.mak install
 &lt;p&gt;PS：对于从文件构建密钥，有一组方法&lt;code&gt;PEM_read_RSA_PUBKEY&lt;/code&gt;和&lt;code&gt;PEM_read_RSAPrivateKey&lt;/code&gt;可以直接根据打开的文件构建出对应的RSA结构体，但是在Windows上使用前面那个方法的时候，编译通过，但运行时会提示&lt;code&gt;Openssl Uplink&lt;/code&gt;，所以改用了openssl内置的BIO。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;内存&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;同样利用BIO，代码类似：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithMemory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;bufLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithMemory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;bufLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;BIO&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BIO_new_mem_buf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bufLen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -512,7 +512,7 @@ nmake -f ms\nt.mak install
 &lt;/ul&gt;
 &lt;p&gt;以下代码省略构造RSA的部分，公钥的RSA为&lt;code&gt;pubRSA&lt;/code&gt;，私钥的RSA为&lt;code&gt;priRSA&lt;/code&gt;，处理的内容为&lt;code&gt;content&lt;/code&gt;，长度为&lt;code&gt;contentLen&lt;/code&gt;，忽略一些强制转换。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;公钥加密 &amp;amp; 私钥解密&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;encrypted&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="c1"&gt;// 返回值表示密文的长度，由于Padding，应该等于size&lt;/span&gt;
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ecRet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_public_encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;contentLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;RSA_PKCS1_PADDING&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -533,7 +533,7 @@ nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;私钥签名 &amp;amp; 公钥验签&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;代码类似，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;encrypted&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ecRet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_private_encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;contentLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;priRSA&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;RSA_PKCS1_PADDING&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ecRet&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -552,7 +552,7 @@ nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h4 id="rsa_3"&gt;大数操作替换RSA&lt;a class="headerlink" href="#rsa_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;&lt;strong&gt;公钥验签&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 公钥使用(n,e)表示, 验签的内容使用c表示&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 公钥使用(n,e)表示, 验签的内容使用c表示&lt;/span&gt;
 &lt;span class="n"&gt;BigInteger&lt;/span&gt; &lt;span class="nf"&gt;n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nbuf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nlen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="n"&gt;BigInteger&lt;/span&gt; &lt;span class="nf"&gt;e&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ebuf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;elen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="n"&gt;BigInteger&lt;/span&gt; &lt;span class="nf"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cbuf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;clen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -566,7 +566,7 @@ nmake -f ms\nt.mak install
 &lt;li&gt;&lt;a href="http://blog.csdn.net/rabbit729/article/details/3886984"&gt;Openssl Uplink&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;http://developer.covenanteyes.com/building-openssl-for-visual-studio/&lt;/li&gt;
 &lt;li&gt;http://linux.die.net/man/3/bio_new_mem_buf&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="Openssl"></category><category term="RSA"></category></entry><entry><title>数据链路层的身份认证</title><link href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html" rel="alternate"></link><updated>2014-08-21T16:21:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-21:posts/2014/08/21/data-linker-layer-authentication.html</id><summary type="html">&lt;p&gt;标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。&lt;/p&gt;
+&lt;/ol&gt;</summary><category term="Openssl"></category><category term="RSA"></category></entry><entry><title>数据链路层的身份认证</title><link href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html" rel="alternate"></link><published>2014-08-21T16:21:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-21:posts/2014/08/21/data-linker-layer-authentication.html</id><summary type="html">&lt;p&gt;标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。&lt;/p&gt;
 &lt;p&gt;下面列举下我自己平常的一些上网方式：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;宿舍网线拨号&lt;/li&gt;
@@ -624,7 +624,7 @@ nmake -f ms\nt.mak install
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://baike.baidu.com/view/3246.htm#2_2"&gt;PPPoE&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://whatismyipaddress.com/ppp-pppoe"&gt;What is PPP and PPPoE?&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="PPPoE"></category><category term="ISP"></category></entry><entry><title>PPTP VPN连接过程</title><link href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html" rel="alternate"></link><updated>2014-08-19T14:41:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-19:posts/2014/08/19/pptp-vpn-process.html</id><summary type="html">
+&lt;/ul&gt;</summary><category term="PPPoE"></category><category term="ISP"></category></entry><entry><title>PPTP VPN连接过程</title><link href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html" rel="alternate"></link><published>2014-08-19T14:41:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-19:posts/2014/08/19/pptp-vpn-process.html</id><summary type="html">
 &lt;p&gt;不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。&lt;/p&gt;
 &lt;p&gt;以下文章中VPN如不特指皆为PPTP VPN。&lt;/p&gt;
 &lt;p&gt;首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。&lt;/p&gt;
@@ -727,8 +727,8 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 &lt;li&gt;&lt;a href="http://technet.microsoft.com/en-us/library/cc958006.aspx"&gt;PPP Connection Process&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://technet.microsoft.com/zh-cn/library/cc779919(v=ws.10).aspx"&gt;How VPN Works: Virtual Private Network (VPN)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://technet.microsoft.com/en-us/library/cc957992.aspx"&gt;PPP Link Negotiation with LCP&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="VPN"></category><category term="PPTP"></category></entry><entry><title>mov指令与内存</title><link href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html" rel="alternate"></link><updated>2014-08-08T16:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-08:posts/2014/08/08/mov-with-memory.html</id><summary type="html">&lt;p&gt;今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;movl 12(%ebp), %eax
+&lt;/ol&gt;</summary><category term="VPN"></category><category term="PPTP"></category></entry><entry><title>mov指令与内存</title><link href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html" rel="alternate"></link><published>2014-08-08T16:00:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-08:posts/2014/08/08/mov-with-memory.html</id><summary type="html">&lt;p&gt;今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;movl 12(%ebp), %eax
 imull 8(%ebp)
 movl %eax, (%esp)
 movl %edx, 4(%esp)
@@ -744,13 +744,13 @@ movl %edx, 4(%esp)
 &lt;h3 id="mov"&gt;mov指令&lt;a class="headerlink" href="#mov" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;我们知道mov在IA32中有基础的三类操作，即b, w, l。&lt;/p&gt;
 &lt;p&gt;而mov在使用时大致如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;这里因为是b类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。&lt;/p&gt;
 &lt;p&gt;然而对于w和l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;movl %eax, (%edx)
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;movl %eax, (%edx)
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -851,7 +851,7 @@ movl %edx, 4(%esp)
 &lt;blockquote&gt;
 &lt;p&gt;%edx 的高位存在相对于 %eax 的低位偏移量为 4 的地方&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;这句话还是没法解释。。%edx的高位(01)相对于%eax的低位(0D)，偏移量好像不是4。。&lt;/p&gt;</summary><category term="汇编"></category></entry><entry><title>操作系统课设笔记</title><link href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html" rel="alternate"></link><updated>2014-07-30T17:22:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-07-30:posts/2014/07/30/os-experiment-note.html</id><summary type="html">
+&lt;p&gt;这句话还是没法解释。。%edx的高位(01)相对于%eax的低位(0D)，偏移量好像不是4。。&lt;/p&gt;</summary><category term="汇编"></category></entry><entry><title>操作系统课设笔记</title><link href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html" rel="alternate"></link><published>2014-07-30T17:22:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-07-30:posts/2014/07/30/os-experiment-note.html</id><summary type="html">
 &lt;p&gt;因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。&lt;/p&gt;
 &lt;p&gt;这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。&lt;/p&gt;
 &lt;p&gt;课设平台：&lt;/p&gt;
@@ -864,15 +864,15 @@ movl %edx, 4(%esp)
 &lt;p&gt;纯粹照着书搞。。&lt;/p&gt;
 &lt;h4 id="_1"&gt;实验过程&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;以下操作假设用户为root，目录自行决定。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;% tar -zxvf linux-2.6.21.tar.gz
-% &lt;span class="nb"&gt;cd &lt;/span&gt;linux-2.6.21
-% make mrproper  &lt;span class="c"&gt;# 清楚掉之前编译产生的垃圾&lt;/span&gt;
-% make oldconfig  &lt;span class="c"&gt;# 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% tar -zxvf linux-2.6.21.tar.gz
+% &lt;span class="nb"&gt;cd&lt;/span&gt; linux-2.6.21
+% make mrproper  &lt;span class="c1"&gt;# 清楚掉之前编译产生的垃圾&lt;/span&gt;
+% make oldconfig  &lt;span class="c1"&gt;# 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可&lt;/span&gt;
 % vim Makefile
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;修改&lt;code&gt;EXTARVERSION =&lt;/code&gt;，改为&lt;code&gt;EXTRAVERSION = .7-custom-version&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;这样的话你生成的内核版本号就为2.6.21.7-custom-version（前面有几个参数是指定 2,6,21 的，这里没给出），继续：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;% make all
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% make all
 % make modules_install
 % make install
 &lt;/pre&gt;&lt;/div&gt;
@@ -883,21 +883,21 @@ movl %edx, 4(%esp)
 &lt;p&gt;这里只是添加一个最简单的系统调用，无参数，无实际操作！加复杂的系统调用的时候可能会遇到各种坑，在做往后几个实验的时候再去解决吧。&lt;/p&gt;
 &lt;h4 id="_2"&gt;实验过程&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;假设要添加的系统调用名为goclis，则内核对应的实现函数名一般为&lt;code&gt;sys_goclis&lt;/code&gt;，现在开始实现。目录和用户假设同实验1。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% cd linux-2.6.21&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% cd linux-2.6.21&lt;/span&gt;
 &lt;span class="c"&gt;% vim arch/i386/kernel/syscall_table.S&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;往系统调用表的末尾添加要新增的系统调用：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_tee&lt;/span&gt;       &lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="p"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;315&lt;/span&gt; &lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_tee&lt;/span&gt;       &lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="p"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;315&lt;/span&gt; &lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;
 &lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_vmsplice&lt;/span&gt;
 &lt;span class="c"&gt;# 省略几个。。&lt;/span&gt;
 
 &lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_goclis&lt;/span&gt;    &lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="p"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;320&lt;/span&gt; &lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;添加头文件goclis.h（这里其实非必要）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% vim include/linux/goclis.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% vim include/linux/goclis.h&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;正如我所说，这个系统调用非常简单，所以。。头文件除了宏保护就是空：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// goclis.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// goclis.h&lt;/span&gt;
 
 &lt;span class="cp"&gt;#ifndef _LINUX_GOCLIS_H&lt;/span&gt;
 &lt;span class="cp"&gt;#define _LINUX_GOCLIS_H&lt;/span&gt;
@@ -905,12 +905,12 @@ movl %edx, 4(%esp)
 &lt;span class="cp"&gt;#endif&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;添加实现文件goclis.c，在里面要加入我们指定的系统调用的实现，宏&lt;code&gt;asmlinkage&lt;/code&gt;表示该函数的参数通过栈传递：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 
 &lt;span class="c1"&gt;// goclis.c&lt;/span&gt;
 
-&lt;span class="cp"&gt;#include &amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 
 &lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;sys_goclis&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -918,28 +918,28 @@ movl %edx, 4(%esp)
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;实现很简单的系统调用，继续，为该系统调用添加支持：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;vim kernel/Makefile
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;vim kernel/Makefile
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;找到如下内容：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;obj-y = sched.o fork.o exec_domain.o \
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;obj-y = sched.o fork.o exec_domain.o \
         ...
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;加入goclis.o：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;obj-y = goclis.o sched.o ...
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;obj-y = goclis.o sched.o ...
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这样才能保证goclis.c在内核编译链接的时候是可见的。但其实这个调用的实现也不一定要写在goclis.c中，完全可以放在一个已经存在的.c中即可，只要保证这个.c对应的.o能被编译链接。&lt;/p&gt;
 &lt;p&gt;接着为这个系统调用定义系统调用，我们之前那个320只是个注释：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% vim include/asm-i386/unistd.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% vim include/asm-i386/unistd.h&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;是i386不是ia64，因为我们是32位的系统。接着找到：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
 
 &lt;span class="cp"&gt;#ifdef __KERNEL__&lt;/span&gt;
 
 &lt;span class="cp"&gt;#define NR_syscalls         320&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;修改为：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
 &lt;span class="cp"&gt;#define __NR_goclis         320&lt;/span&gt;
 
 &lt;span class="cp"&gt;#ifdef __KERNEL__&lt;/span&gt;
@@ -948,20 +948,20 @@ movl %edx, 4(%esp)
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;很显然吧，用&lt;code&gt;__NR_goclis&lt;/code&gt;来命名我们的系统调用，然后把它定义为320，这样就真的 320了。。&lt;/p&gt;
 &lt;p&gt;最后，还得把你的这个系统调用加入到统一的系统调用头文件中：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% vim include/linux/syscalls.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% vim include/linux/syscalls.h&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;加入头文件：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;加入声明：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;asmlinkage int sys_goclis();
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;asmlinkage int sys_goclis();
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;OK，重新编译内核然后reboot，就ok了！&lt;/p&gt;
 &lt;p&gt;关于编译内核，因为之前已经编译过产生了很多的.o 了，节省时间的话，直接make就可以接着编译了，否则重头编译超级浪费时间。。&lt;/p&gt;
 &lt;p&gt;重启后测试下我们的系统调用是否生效，注意得重启为我们创的这个内核！&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// test.c&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;unistd.h&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// test.c&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -971,7 +971,7 @@ movl %edx, 4(%esp)
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;编译后运行：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% gcc test.c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% gcc test.c&lt;/span&gt;
 &lt;span class="c"&gt;% ./a.out&lt;/span&gt;
 
 &lt;span class="mi"&gt;320&lt;/span&gt;
@@ -981,7 +981,7 @@ movl %edx, 4(%esp)
 &lt;p&gt;实验的本质目的应该是修改一系列与/proc目录相关的方法，从而实现“隐藏”的要求。&lt;/p&gt;
 &lt;h4 id="_3"&gt;思路分析&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;ls /proc及ps aux引起的系统调用层次如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% ls /proc (or ps aux)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% ls /proc (or ps aux)&lt;/span&gt;
 &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proc_root_readdir&lt;/span&gt;
     &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proc_readdir&lt;/span&gt;
     &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proc_pid_readdir&lt;/span&gt;
@@ -1000,17 +1000,17 @@ movl %edx, 4(%esp)
 &lt;h4 id="_4"&gt;实验过程&lt;a class="headerlink" href="#_4" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;添加系统调用，过程类似于实验2。&lt;/p&gt;
 &lt;p&gt;修改系统调用表：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% vim arch/i386/kernel/syscall_table.S&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% vim arch/i386/kernel/syscall_table.S&lt;/span&gt;
 &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;syscall_table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;S&lt;/span&gt;
 &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;long&lt;/span&gt; &lt;span class="n"&gt;sys_hide&lt;/span&gt;
 &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;long&lt;/span&gt; &lt;span class="n"&gt;sys_hide_user_processes&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;增加系统调用实现：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// hide.c&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;asm/current.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;asm/current.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 
 &lt;span class="cm"&gt;/*&lt;/span&gt;
 &lt;span class="cm"&gt; * set the attribute hide of task with pid, &lt;/span&gt;
@@ -1043,9 +1043,9 @@ movl %edx, 4(%esp)
 
 &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;hide_user_processes&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// hide_user_processes.c&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;asm/current.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;asm/current.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 
 &lt;span class="cm"&gt;/*&lt;/span&gt;
 &lt;span class="cm"&gt; * hide processes with uid, accroing to binname, hide one or all.&lt;/span&gt;
@@ -1084,7 +1084,7 @@ movl %edx, 4(%esp)
 &lt;p&gt;接着，&lt;code&gt;hide.c&lt;/code&gt;通过方法查找到对应pid的&lt;code&gt;task_struct&lt;/code&gt;指针，修改其内部的hide的值，这个hide是为了实验添加的，后面讲。&lt;/p&gt;
 &lt;p&gt;而&lt;code&gt;hide_user_processes.c&lt;/code&gt;则通过&lt;code&gt;for_each_process&lt;/code&gt;遍历所有的&lt;code&gt;task_struct&lt;/code&gt;，将符合条件的修改hide进行隐藏。这里使用到的&lt;code&gt;p-&amp;gt;comm&lt;/code&gt;代表的是该&lt;code&gt;task_struct&lt;/code&gt;的二进制映像名称。&lt;/p&gt;
 &lt;p&gt;继续完善系统调用的添加，修改&lt;code&gt;kernel/Makefile&lt;/code&gt;，&lt;code&gt;unistd.h&lt;/code&gt;，&lt;code&gt;syscalls.h&lt;/code&gt;：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Makefile&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Makefile&lt;/span&gt;
 &lt;span class="c1"&gt;// Makefile&lt;/span&gt;
 &lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;hide_user_processes&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
 
@@ -1101,7 +1101,7 @@ movl %edx, 4(%esp)
 &lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;sys_hide_user_processes&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;uid_t&lt;/span&gt; &lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;binname&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;注意，要保持&lt;code&gt;NR_syscalls&lt;/code&gt;最大！系统调用添加完毕，下面修改&lt;code&gt;task_struct&lt;/code&gt;，添加hide属性：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sched&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sched&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
 &lt;span class="c1"&gt;// sched.h&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;task_struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1111,7 +1111,7 @@ movl %edx, 4(%esp)
 &lt;span class="p"&gt;};&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;既然为&lt;code&gt;task_struct&lt;/code&gt;添加了属性，就得为该属性进行初始化，而它的初始化发生在fork的时候，所以要进行相应修改：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// fork.c&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;do_fork&lt;/span&gt;&lt;span class="p"&gt;(...)&lt;/span&gt;
@@ -1126,7 +1126,7 @@ movl %edx, 4(%esp)
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;接下来，实现一下&lt;code&gt;/proc/hidden&lt;/code&gt;和&lt;code&gt;/proc/hidden_process&lt;/code&gt;的功能，显然，可以通过添加一个模块来实现它，但是，麻烦的是那样我们还得手动加载，不如修改现有模块来的方便，所以，下面通过修改&lt;code&gt;fs/proc/proc_misc.c&lt;/code&gt;这个模块来实现功能：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc_misc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc_misc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// proc_misc.c&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="cp"&gt;#define BUFSIZE 1024&lt;/span&gt;
@@ -1207,7 +1207,7 @@ movl %edx, 4(%esp)
 &lt;li&gt;&lt;code&gt;proc_pid_readdir&lt;/code&gt;：让其过滤掉隐藏的&lt;code&gt;task_struct&lt;/code&gt;，不返回给用户缓冲区。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;proc_pid_lookup&lt;/code&gt;：让其过滤掉隐藏的&lt;code&gt;task_struct&lt;/code&gt;，使得open不能解析类似&lt;code&gt;/proc/pid/xxx&lt;/code&gt;的路径名。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;base&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;base&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// base.c&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;hidden_flag&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -1232,7 +1232,7 @@ movl %edx, 4(%esp)
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;proc_pid_readdir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;filp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;dirent&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;filldir_t&lt;/span&gt; &lt;span class="n"&gt;filldir&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;proc_pid_readdir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;filp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;dirent&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;filldir_t&lt;/span&gt; &lt;span class="n"&gt;filldir&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="p"&gt;...&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;task&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;next_tgid&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tgid&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -1253,10 +1253,10 @@ movl %edx, 4(%esp)
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;基本完成了，下面添加两个基础的程序用于测试：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;stdio.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;stdlib.h&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1283,10 +1283,10 @@ movl %edx, 4(%esp)
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;hide_all&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;stdio.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;stdlib.h&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;string.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1317,38 +1317,38 @@ movl %edx, 4(%esp)
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;基于这两个程序进行测试：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;% cat /proc/hidden  &lt;span class="c"&gt;# 0&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c"&gt;# No hide process.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% cat /proc/hidden  &lt;span class="c1"&gt;# 0&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# No hide process.&lt;/span&gt;
 % gcc -o hide hide.c
 % gcc -o hide_all hide_all.c
 
-% ps aux &lt;span class="c"&gt;# all process&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c"&gt;# hide pid 1&lt;/span&gt;
-% ps aux &lt;span class="c"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
+% ps aux &lt;span class="c1"&gt;# all process&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c1"&gt;# hide pid 1&lt;/span&gt;
+% ps aux &lt;span class="c1"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
 % &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"1"&lt;/span&gt; &amp;gt; /proc/hidden
-% ps aux &lt;span class="c"&gt;# pid 1 is hided.&lt;/span&gt;
-% ls /proc &lt;span class="c"&gt;# can not find directory 1&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c"&gt;# 1&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c"&gt;# hide pid 3&lt;/span&gt;
-% ps aux &lt;span class="c"&gt;# pid 1 and 3 is hided.&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c"&gt;# 1 3&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c"&gt;# show pid 1&lt;/span&gt;
-% ps aux &lt;span class="c"&gt;# pid 3 is hided.&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c"&gt;# 3&lt;/span&gt;
+% ps aux &lt;span class="c1"&gt;# pid 1 is hided.&lt;/span&gt;
+% ls /proc &lt;span class="c1"&gt;# can not find directory 1&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# 1&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c1"&gt;# hide pid 3&lt;/span&gt;
+% ps aux &lt;span class="c1"&gt;# pid 1 and 3 is hided.&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# 1 3&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c1"&gt;# show pid 1&lt;/span&gt;
+% ps aux &lt;span class="c1"&gt;# pid 3 is hided.&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# 3&lt;/span&gt;
 % &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"0"&lt;/span&gt; &amp;gt; /proc/hidden
-% ps aux &lt;span class="c"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c"&gt;# No hide process.&lt;/span&gt;
+% ps aux &lt;span class="c1"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# No hide process.&lt;/span&gt;
 
 % &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"1"&lt;/span&gt; &amp;gt; /proc/hidden
-% ./hide_all -1 NULL &lt;span class="c"&gt;# hide all root processes&lt;/span&gt;
+% ./hide_all -1 NULL &lt;span class="c1"&gt;# hide all root processes&lt;/span&gt;
 % ps aux
-% cat /proc/hidden_process &lt;span class="c"&gt;# 1 2 3 ....&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c"&gt;# show pid 1&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# 1 2 3 ....&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c1"&gt;# show pid 1&lt;/span&gt;
 % ps aux
-% cat /proc/hidden_process &lt;span class="c"&gt;# 2 3...&lt;/span&gt;
-% ./hide_all -1 init &lt;span class="c"&gt;# hide root process with binname 'init'&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# 2 3...&lt;/span&gt;
+% ./hide_all -1 init &lt;span class="c1"&gt;# hide root process with binname 'init'&lt;/span&gt;
 % ps aux
-% cat /proc/hidden_process &lt;span class="c"&gt;# 1 2 3 ....&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c1"&gt;# 1 2 3 ....&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="4-shell"&gt;实验4 实现Shell&lt;a class="headerlink" href="#4-shell" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;用户态编程，使用lex进行前端的词法分析，然后结合系统调用即可实现。&lt;/p&gt;
@@ -1358,12 +1358,12 @@ movl %edx, 4(%esp)
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://stackoverflow.com/questions/18686114/cd-command-not-working-with-execvp"&gt;cd command not working with execvp&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://lxr.free-electrons.com/ident?v=2.6.24&amp;amp;i=uid_t"&gt;Linux Cross Reference&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="OS"></category></entry><entry><title>如何验证一个数字证书</title><link href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html" rel="alternate"></link><updated>2014-06-21T15:43:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-06-21:posts/2014/06/21/how-to-validate-certificate.html</id><summary type="html">&lt;p&gt;首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="OS"></category></entry><entry><title>如何验证一个数字证书</title><link href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html" rel="alternate"></link><published>2014-06-21T15:43:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-06-21:posts/2014/06/21/how-to-validate-certificate.html</id><summary type="html">&lt;p&gt;首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。&lt;/p&gt;
 &lt;p&gt;假设完毕，首先看看这个待验证的证书包含哪些消息吧。&lt;/p&gt;
 &lt;p&gt;对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。&lt;/p&gt;
 &lt;p&gt;既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。&lt;/p&gt;
 &lt;p&gt;用密码学表示一下大概如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;// 设生成的中间数字证书为 MB，最终发放的为B
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -1384,11 +1384,11 @@ movl %edx, 4(%esp)
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;&lt;img alt="流程图" src="/images/certificate_chain_20140621155213.png" /&gt;&lt;/p&gt;
-&lt;p&gt;当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。&lt;/p&gt;</summary><category term="安全"></category><category term="数字证书"></category></entry><entry><title>Pelican简要配置教程</title><link href="http://goclis.github.io/posts/2014/05/25/basic-pelican-configuration.html" rel="alternate"></link><updated>2014-05-25T20:30:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-25:posts/2014/05/25/basic-pelican-configuration.html</id><summary type="html">&lt;p&gt;最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。&lt;/p&gt;
+&lt;p&gt;当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。&lt;/p&gt;</summary><category term="安全"></category><category term="数字证书"></category></entry><entry><title>Pelican简要配置教程</title><link href="http://goclis.github.io/posts/2014/05/25/basic-pelican-configuration.html" rel="alternate"></link><published>2014-05-25T20:30:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-25:posts/2014/05/25/basic-pelican-configuration.html</id><summary type="html">&lt;p&gt;最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。&lt;/p&gt;
 &lt;h3 id="_1"&gt;博客初始化&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Install&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;pip install pelican
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pelican
 
 pip install markdown
 &lt;/pre&gt;&lt;/div&gt;
@@ -1396,14 +1396,14 @@ pip install markdown
 
 &lt;p&gt;&lt;strong&gt;Quick-Start&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;自己新建一个文件夹，然后：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;pelican-quickstart
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pelican-quickstart
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Usage&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;make html # 将content中的markdown (or others) 生成为html
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;make html # 将content中的markdown (or others) 生成为html
 
 make regenerate
 
@@ -1414,7 +1414,7 @@ make devserver
 
 
 &lt;p&gt;make一般涉及到一些生成的操作，pelican自带了一个&lt;strong&gt;develop_server.sh&lt;/strong&gt;以供开发的时候调试：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;./develop_server.sh start  # http://localhost:8000
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./develop_server.sh start  # http://localhost:8000
 
 ./develop_server.sh stop
 &lt;/pre&gt;&lt;/div&gt;
@@ -1430,7 +1430,7 @@ make devserver
 &lt;/ul&gt;
 &lt;p&gt;接下来一个个处理吧。&lt;/p&gt;
 &lt;p&gt;pelican的content目录结构：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;|—— content
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;|—— content
 |   |—— articles  # blog或者其他按日期排序的文本
 |   |   |—— article1.md
 |   |   |—— article2.md
@@ -1450,7 +1450,7 @@ make devserver
 &lt;p&gt;总之，articles下放各种文章就对了。。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;file metadata&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;pelican会从你的文件的开头获取一些关于这个文件的信息，比如标题、日期等，下面以markdown为例：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;# your file xxx.md
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# your file xxx.md
 
 Title: My first file        # 标题
 Date: 2014-5-25 20:30       # 时间
@@ -1469,7 +1469,7 @@ Summary: Somethings         # 概要
 &lt;p&gt;静态文件路径（典型的是突破）是静态博客必须要指定好的一个东西。&lt;/p&gt;
 &lt;p&gt;pelican默认会在生成文章时拷贝content目录中的images文件夹到output的文件夹中。&lt;/p&gt;
 &lt;p&gt;如果你想要自己手动添加一个新的文件夹（比如pdfs）让其在生成文章时被拷贝到output中，可以在pelicanconf.py中添加：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;STATIC_PATHS = [&amp;#39;images&amp;#39;, &amp;#39;pdfs&amp;#39;]  # 这意味着这两个文件夹都会被copy过去
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;STATIC_PATHS = [&amp;#39;images&amp;#39;, &amp;#39;pdfs&amp;#39;]  # 这意味着这两个文件夹都会被copy过去
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1477,57 +1477,57 @@ Summary: Somethings         # 概要
 &lt;p&gt;pelican的默认主题不是很好看。。所以得研究研究怎么换了。。&lt;/p&gt;
 &lt;p&gt;这有一些&lt;a href="https://github.com/getpelican/pelican-themes"&gt;主题&lt;/a&gt;，所以打算基于这些修改了。。&lt;/p&gt;
 &lt;p&gt;更换主题很容易，直接在配置文件里修改主题路径即可：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;THEME = &amp;quot;/home/user/pelican-themes/theme-folder&amp;quot;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;THEME = &amp;quot;/home/user/pelican-themes/theme-folder&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;&lt;strong&gt;配置文件&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;在移植的时候需要注意主题的路径需要修改pelicanconf.py：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;__future__&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;unicode_literals&lt;/span&gt;
 
-&lt;span class="n"&gt;AUTHOR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;Goclis Yao&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;SITENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;Logging&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;SITEURL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;AUTHOR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;u&amp;#39;Goclis Yao&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SITENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;u&amp;#39;Logging&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SITEURL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
 
-&lt;span class="n"&gt;TIMEZONE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Asia/Shanghai&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;TIMEZONE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Asia/Shanghai&amp;#39;&lt;/span&gt;
 &lt;span class="n"&gt;DATE_FORMATS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="s"&gt;&amp;#39;zh_CN&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s"&gt; %H:%M:%S&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;zh_CN&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s1"&gt; %H:%M:%S&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="n"&gt;DEFAULT_DATE_FORMAT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s"&gt; %H:%M:%S&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;DEFAULT_DATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;  &lt;span class="c"&gt;# use filesystem&amp;#39;s mtime&lt;/span&gt;
-&lt;span class="c"&gt;# LOCALE = (&amp;#39;zh_CN.utf8&amp;#39;,)&lt;/span&gt;
-&lt;span class="n"&gt;DEFAULT_LANG&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;zh_CN&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;FILENAME_METADATA&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;(?P&amp;lt;slug&amp;gt;.*)&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_DATE_FORMAT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s1"&gt; %H:%M:%S&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_DATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;  &lt;span class="c1"&gt;# use filesystem&amp;#39;s mtime&lt;/span&gt;
+&lt;span class="c1"&gt;# LOCALE = (&amp;#39;zh_CN.utf8&amp;#39;,)&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_LANG&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;u&amp;#39;zh_CN&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;FILENAME_METADATA&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;slug&amp;gt;.*)&amp;#39;&lt;/span&gt;
 
-&lt;span class="c"&gt;# Feed generation is usually not desired when developing&lt;/span&gt;
+&lt;span class="c1"&gt;# Feed generation is usually not desired when developing&lt;/span&gt;
 &lt;span class="n"&gt;FEED_ALL_ATOM&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
 &lt;span class="n"&gt;CATEGORY_FEED_ATOM&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
 &lt;span class="n"&gt;TRANSLATION_FEED_ATOM&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
 
-&lt;span class="c"&gt;# Blogroll&lt;/span&gt;
-&lt;span class="n"&gt;LINKS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Pelican&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://getpelican.com/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
-          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Python.org&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://python.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
-          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Jinja2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://jinja.pocoo.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+&lt;span class="c1"&gt;# Blogroll&lt;/span&gt;
+&lt;span class="n"&gt;LINKS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Pelican&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;http://getpelican.com/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Python.org&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;http://python.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+          &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Jinja2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;http://jinja.pocoo.org/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
 
-&lt;span class="c"&gt;# Social widget&lt;/span&gt;
-&lt;span class="n"&gt;SOCIAL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Github&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;https://github.com/Goclis/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+&lt;span class="c1"&gt;# Social widget&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Github&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;https://github.com/Goclis/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
 
 &lt;span class="n"&gt;DEFAULT_PAGINATION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
 
-&lt;span class="c"&gt;# Uncomment following line if you want document-relative URLs when developing&lt;/span&gt;
-&lt;span class="c"&gt;#RELATIVE_URLS = True&lt;/span&gt;
+&lt;span class="c1"&gt;# Uncomment following line if you want document-relative URLs when developing&lt;/span&gt;
+&lt;span class="c1"&gt;#RELATIVE_URLS = True&lt;/span&gt;
 
-&lt;span class="n"&gt;STATIC_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;images&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;pdfs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;src&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c"&gt;# images and pdf files&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;images&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pdfs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;src&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c1"&gt;# images and pdf files&lt;/span&gt;
 
-&lt;span class="n"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/home/goclis/SHARE/Blog/themes/pelican-bootstrap3&amp;quot;&lt;/span&gt;
-&lt;span class="c"&gt;# THEME = &amp;quot;/home/goclis/niu-x2-sidebar&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/home/goclis/SHARE/Blog/themes/pelican-bootstrap3&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;# THEME = &amp;quot;/home/goclis/niu-x2-sidebar&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3 id="nginx"&gt;结合nginx&lt;a class="headerlink" href="#nginx" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;修改nginx.conf，添加server如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
         &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
@@ -1543,7 +1543,7 @@ Summary: Somethings         # 概要
         &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
             &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Serve&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;if&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;exists&lt;/span&gt;
             &lt;span class="n"&gt;gzip_static&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Try&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;clean&lt;/span&gt; &lt;span class="k"&gt;url&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Try&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;clean&lt;/span&gt; &lt;span class="nb"&gt;url&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;
             &lt;span class="n"&gt;try_files&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;htm&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;uri&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;404&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
         &lt;span class="p"&gt;}&lt;/span&gt;
 
@@ -1553,7 +1553,7 @@ Summary: Somethings         # 概要
         &lt;span class="p"&gt;}&lt;/span&gt;
 
         &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;^~&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;theme&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="k"&gt;content&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;very&lt;/span&gt; &lt;span class="n"&gt;rarely&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;if&lt;/span&gt; &lt;span class="n"&gt;ever&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;change&lt;/span&gt;
+            &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="nb"&gt;content&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;very&lt;/span&gt; &lt;span class="n"&gt;rarely&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;if&lt;/span&gt; &lt;span class="n"&gt;ever&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;change&lt;/span&gt;
             &lt;span class="n"&gt;expires&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
         &lt;span class="p"&gt;}&lt;/span&gt;
     &lt;span class="err"&gt;}&lt;/span&gt;
@@ -1564,14 +1564,14 @@ Summary: Somethings         # 概要
 &lt;p&gt;重启后访问localhost即可。&lt;/p&gt;
 &lt;h3 id="some-bugs"&gt;Some bugs&lt;a class="headerlink" href="#some-bugs" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;基本都解决了，但是有一些中文的原因导致的不兼容，比如说代码高亮。&lt;/p&gt;
-&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</summary><category term="Pelican"></category></entry><entry><title>动态载入和虚拟内存的按需调页的关联</title><link href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" rel="alternate"></link><updated>2014-05-25T17:20:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-25:posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html</id><summary type="html">&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：&lt;/p&gt;
+&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</summary><category term="Pelican"></category></entry><entry><title>动态载入和虚拟内存的按需调页的关联</title><link href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" rel="alternate"></link><published>2014-05-25T17:20:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-25:posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html</id><summary type="html">&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;那么，额外工作指的是？在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。&lt;/p&gt;
 &lt;p&gt;以下为个人理解，理解基于&lt;strong&gt;动态载入不需要操作系统提供特别支持&lt;/strong&gt;这一事实。&lt;/p&gt;
 &lt;p&gt;动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的&lt;strong&gt;编码&lt;/strong&gt;就是所谓的额外开销。比如下面这段代码（我不确定是否正确）&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// so_obj是一个变量标识是否导入了某个.so&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// so_obj是一个变量标识是否导入了某个.so&lt;/span&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;so_obj&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// load it here&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
@@ -1580,7 +1580,7 @@ Summary: Somethings         # 概要
 
 &lt;p&gt;而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~&lt;/p&gt;
 &lt;h3 id="update-at-2014-05-26"&gt;Update at 2014-05-26&lt;a class="headerlink" href="#update-at-2014-05-26" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解基本上是正确的。&lt;/p&gt;</summary><category term="OS"></category></entry><entry><title>动态链接和动态载入的区别</title><link href="http://goclis.github.io/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html" rel="alternate"></link><updated>2014-05-21T15:32:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-21:posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html</id><summary type="html">&lt;p&gt;大致的理解如下，不一定正确，确认后会更新。按照一般的步骤，用户程序在执行前会经历以下几个步骤：&lt;/p&gt;
+&lt;p&gt;因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解基本上是正确的。&lt;/p&gt;</summary><category term="OS"></category></entry><entry><title>动态链接和动态载入的区别</title><link href="http://goclis.github.io/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html" rel="alternate"></link><published>2014-05-21T15:32:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-21:posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html</id><summary type="html">&lt;p&gt;大致的理解如下，不一定正确，确认后会更新。按照一般的步骤，用户程序在执行前会经历以下几个步骤：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;编译汇编&lt;/li&gt;
 &lt;li&gt;链接（将编译出来的模块和其他引用了的模块合并）&lt;/li&gt;
@@ -1607,4 +1607,68 @@ Summary: Somethings         # 概要
 &lt;/blockquote&gt;
 &lt;p&gt;看上去比起动态加载貌似只多了一个共享吧？&lt;/p&gt;
 &lt;p&gt;实际上，动态链接做的不止是动态加载，还有链接的工作。回想我们在一开始说的那个常规步骤就可以明白了。&lt;/p&gt;
-&lt;p&gt;其实，这两个概念在现在操作系统的实现上已经混合了，没有纯粹的&lt;strong&gt;动态加载&lt;/strong&gt;了，都是基于动态链接做的了，比如Windows的dll和Linux的.so都是如此。&lt;/p&gt;</summary><category term="OS"></category></entry></feed>
+&lt;p&gt;其实，这两个概念在现在操作系统的实现上已经混合了，没有纯粹的&lt;strong&gt;动态加载&lt;/strong&gt;了，都是基于动态链接做的了，比如Windows的dll和Linux的.so都是如此。&lt;/p&gt;</summary><category term="OS"></category></entry><entry><title>Git</title><link href="http://goclis.github.io/posts/2014/01/01/Git.html" rel="alternate"></link><published>2014-01-01T00:00:00+08:00</published><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-01-01:posts/2014/01/01/Git.html</id><summary type="html">
+&lt;h3 id="1-git"&gt;1. 本地初始化git项目并添加远程仓库&lt;a class="headerlink" href="#1-git" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; newProject
+git init
+git remote add origin url &lt;span class="c1"&gt;# url为项目的远程仓库路径&lt;/span&gt;
+git push master origin
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="2-git"&gt;2. Git设置&lt;a class="headerlink" href="#2-git" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;全局设置（--global）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git config --global user.name &lt;span class="s2"&gt;"Goclis Yao"&lt;/span&gt;
+git config --global user.email &lt;span class="s2"&gt;"goclisyyh@gmail.com"&lt;/span&gt;
+git config --global branch.master.remote origin
+git config --global branch.master.merge refs/heads/master
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;本地设置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git config branch.master.remote origin
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;查看设置：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git config --list
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="3-git-bashgit"&gt;3. Git Bash生成公私钥访问内网git仓库&lt;a class="headerlink" href="#3-git-bashgit" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;打开Git Bash，输入如下命令：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ssh-keygen -t rsa -C &lt;span class="s2"&gt;"goclisyyh@gmail.com"&lt;/span&gt;  &lt;span class="c1"&gt;# -C后的参数为注释，一般为开发者的email，后面有个步骤会让你输入密码&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;将 ~/.ssh/id_rsa.pub 交给管理员，就可以clone服务器的仓库了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone user@hostname:gitname.git  &lt;span class="c1"&gt;# ssh仓库&lt;/span&gt;
+git clone git@192.168.1.1:Blog.git  &lt;span class="c1"&gt;# eg&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="4-git-subtree"&gt;4. git subtree&lt;a class="headerlink" href="#4-git-subtree" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;当一个项目需要用到另一个项目，并且可能会修改那个项目时，用此命令即可实现。&lt;/p&gt;
+&lt;p&gt;假设情境如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;some-lib：服务器上的某个项目仓库，要在新项目上引入的。&lt;/li&gt;
+&lt;li&gt;pro：服务器上的新项目仓库。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面的操作在本地进行：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone url1 pro    &lt;span class="c1"&gt;# 将pro项目拷贝到本地，url1为服务器上pro仓库的地址&lt;/span&gt;
+&lt;span class="nb"&gt;cd&lt;/span&gt; pro
+git remote add -f remote-lib url2    &lt;span class="c1"&gt;# 从服务器上把要引入的仓库加入进来，命名为remote-lib，url2为服务器上some-lib仓库的地址&lt;/span&gt;
+git subtree add -P lib remote-lib master    &lt;span class="c1"&gt;# 将外部仓库的master分支变为本地的文件夹，-P指定文件夹名&lt;/span&gt;
+&lt;span class="nb"&gt;cd&lt;/span&gt; lib
+...    &lt;span class="c1"&gt;# 修改了外部仓库lib的内容，准备提交&lt;/span&gt;
+git add .
+git commit -m &lt;span class="s2"&gt;"modify lib"&lt;/span&gt;
+git subtree push -P lib remote-lib master    &lt;span class="c1"&gt;# 将修改提交到外部仓库的远程仓库的master分支&lt;/span&gt;
+git subtree pull -P lib remote-lib master    &lt;span class="c1"&gt;# 如果服务器上的some-lib修改了，用这句命令进行修改，拉下来会设计到合并问题。&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Over，服务器上的some-lib已经被修改了，其他引用了some-lib的地方pull下来即可发现。&lt;/p&gt;
+&lt;p&gt;git subtree的本质上是将另一个仓库的某个commit与本仓库进行合并，所以会产生commit提交，而在选择对方的commit的时候可以使用branch、tag等来指代，比如将对方的develop分支合（或更新）进来，如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git subtree add -P remote-develop remote-lib/develop  &lt;span class="c1"&gt;# 假设先前已remote add了remote-lib&lt;/span&gt;
+git subtree pull -P remote-develop remote-lib/develop
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="5-git"&gt;5. Git补充提交内容&lt;a class="headerlink" href="#5-git" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Reference&lt;/strong&gt;: &lt;a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend"&gt;git commit --amend&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;有时候在提交的时候会遗漏一些文件，可以通过命令来弥补，以下假设遗漏&lt;code&gt;todo.txt&lt;/code&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git add todo.txt
+git commit --amend
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;重新修改commit message后提交即可。&lt;/p&gt;
+&lt;h3 id="6-git-clone"&gt;6. Git clone指定文件夹名&lt;a class="headerlink" href="#6-git-clone" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone url your-folder-name
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="7"&gt;7. 重命名当前分支&lt;a class="headerlink" href="#7" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git branch -m new-name
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="Git"></category></entry></feed>

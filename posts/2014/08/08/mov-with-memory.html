@@ -1,19 +1,25 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="zh-CN">
     <head>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
+
 <meta name="keywords" content="汇编, Tech, " />
-        <title>mov指令与内存  · Logging
+
+        <title>mov指令与内存  | Logging
 </title>
-        <link href="http://goclis.github.io/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/solarizedlight.css" media="screen">
-        <link rel="shortcut icon" href="http://goclis.github.io/images/favicon.ico" type="image/x-icon" />
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
         <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
@@ -22,50 +28,64 @@
         <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
         <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
         <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
         <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
         <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
     </head>
-    <body>
-        <div id="content-sans-footer">
-        <div class="navbar navbar-static-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="http://goclis.github.io/"><span class=site-name>Logging</span></a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav pull-right top-menu">
-                            <li ><a href="http://goclis.github.io/">Tech</a></li>
-                            <li ><a href="http://goclis.github.io/life.html">Life</a></li>
-                            <li ><a href="http://goclis.github.io/note.html">Note</a></li>
-                            <li ><a href="http://goclis.github.io/categories.html">Categories</a></li>
-                            <li ><a href="http://goclis.github.io/tags.html">Tags</a></li>
-                            <li ><a href="http://goclis.github.io/archives.html">Archives</a></li>
-                            <li><a href="http://goclis.github.io/about.html">About</a></li>
-                        </ul>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span1"></div>
-                <div class="span10">
-<article>
-<div class="row-fluid">
-    <header class="page_header span10 offset2">
-    <h1><a href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html"> mov指令与内存  </a></h1>
-    </header>
-</div>
-
-<div class="row-fluid">
-        <div class="span8 offset2 article-content">
-
-            <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
-<div class="highlight"><pre>movl 12(%ebp), %eax
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="mov-with-memory" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html">mov指令与内存</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-08-08T16:00:00+08:00" title="2014-08-08T16:00:00+08:00"> 发布：2014-08-08</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
+<div class="highlight"><pre><span></span>movl 12(%ebp), %eax
 imull 8(%ebp)
 movl %eax, (%esp)
 movl %edx, 4(%esp)
@@ -81,13 +101,13 @@ movl %edx, 4(%esp)
 <h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">&para;</a></h3>
 <p>我们知道mov在IA32中有基础的三类操作，即b, w, l。</p>
 <p>而mov在使用时大致如下：</p>
-<div class="highlight"><pre>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
+<div class="highlight"><pre><span></span>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
 </pre></div>
 
 
 <p>这里因为是b类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。</p>
 <p>然而对于w和l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：</p>
-<div class="highlight"><pre>movl %eax, (%edx)
+<div class="highlight"><pre><span></span>movl %eax, (%edx)
 </pre></div>
 
 
@@ -189,20 +209,13 @@ movl %edx, 4(%esp)
 <p>%edx 的高位存在相对于 %eax 的低位偏移量为 4 的地方</p>
 </blockquote>
 <p>这句话还是没法解释。。%edx的高位(01)相对于%eax的低位(0D)，偏移量好像不是4。。</p>
-<section>
-<p id="comment-message">有啥留个言呗~ </p>
-<div class="accordion" id="accordion2">
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle disqus-comment-count" data-toggle="collapse" data-parent="#accordion2"
-                    data-disqus-identifier="disqus-posts/2014/08/08/mov-with-memory.html"
-                href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html#disqus_thread">
-                Comments
-            </a>
-        </div>
-        <div id="disqus_thread" class="accordion-body collapse">
-            <div class="accordion-inner">
-                <div class="comments">
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2014/08/08/mov-with-memory.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'goclis';
@@ -216,63 +229,88 @@ movl %edx, 4(%esp)
      })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>                </div>
-            </div>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
         </div>
     </div>
 </div>
-</section>
-            <aside>
-            <hr/>
-            <nav>
-            <ul class="articles_timeline">
- 
-                <li class="previous_article">« <a href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html" title="Previous: 操作系统课设笔记">操作系统课设笔记</a></li>
- 
-                <li class="next_article"><a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html" title="Next: PPTP VPN连接过程">PPTP VPN连接过程</a> »</li>
-            </ul>
-            </nav>
-            </aside>
-        </div>
-        <section>
-        <div class="span2" style="float:right;font-size:0.9em;">
- 
-            <h4>Published</h4>
-            <time pubdate="pubdate" datetime="2014-08-08T16:00:00+08:00">Aug 8, 2014</time>
-            <h4>Category</h4>
-            <a class="category-link" href="/categories.html#Tech-ref">Tech</a> 
-            <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article"> 
-                <li><a href="/tags.html#汇编-ref">汇编
-                    <span>1</span>
-</a></li>
-            </ul>
-
-        </div>
-        </section>
-</div>
-</article>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2014/07/30/os-experiment-note.html"><i class="fa fa-angle-left fa-fw"></i> 操作系统课设笔记</a>
+                    &nbsp;
+                    <a class="btn btn-default" href="/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN连接过程 <i class="fa fa-angle-right fa-fw"></i></a>
                 </div>
-                <div class="span1"></div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/hui-bian/index.html">汇编</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
             </div>
         </div>
     </div>
-<footer>
-<div id="footer">
-    <ul class="footer-content">
-        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
-        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
-    </ul>
-</div>
-</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
             $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
         </script>
+
 
 <script type="text/javascript">
     var disqus_shortname = 'goclis';

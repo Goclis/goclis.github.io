@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+
+        <title>PPPoE
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-offset-1 col-md-10 main-content">
+            	<div class="cover tag-cover">
+				    <h3 class="tag-name">
+				        标签：PPPoE
+				    </h3>
+				    <div class="post-count">
+				        共 1 篇文章 
+				    </div>
+				</div>
+                <article id="data-linker-layer-authentication" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html">数据链路层的身份认证</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-08-21T16:21:00+08:00" title="2014-08-21T16:21:00+08:00">2014-08-21</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
+<p>下面列举下我自己平常的一些上网方式：</p>
+<ul>
+<li>宿舍网线拨号</li>
+<li>WIFI + 网页验证</li>
+</ul>
+<p>这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。</p>
+<h3 id="_1">拨号上网<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
+<p>以下为个人猜想，错误请指出，谢谢！</p>
+<p>先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：</p>
+<p><img alt="isp-architecture" src="/images/isp-architecture.png" /></p>
+<p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
+<p><strong>1. 插上网线</strong></p>
+<p>插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。</p>
+<p><strong>2. 拨号认证</strong></p>
+<p>这里以PPPoE为例，但协议本身的内容不少 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2014/08/21/data-linker-layer-authentication.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/isp/index.html">ISP</a>
+                            <a href="/tag/pppoe/index.html">PPPoE</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+
+            </main>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+    </body>
+</html>

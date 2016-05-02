@@ -1,19 +1,25 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="zh-CN">
     <head>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
+
 <meta name="keywords" content="安全, 数字证书, Tech, " />
-        <title>如何验证一个数字证书  · Logging
+
+        <title>如何验证一个数字证书  | Logging
 </title>
-        <link href="http://goclis.github.io/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/solarizedlight.css" media="screen">
-        <link rel="shortcut icon" href="http://goclis.github.io/images/favicon.ico" type="image/x-icon" />
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
         <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
@@ -22,54 +28,68 @@
         <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
         <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
         <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
         <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
         <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
     </head>
-    <body>
-        <div id="content-sans-footer">
-        <div class="navbar navbar-static-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="http://goclis.github.io/"><span class=site-name>Logging</span></a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav pull-right top-menu">
-                            <li ><a href="http://goclis.github.io/">Tech</a></li>
-                            <li ><a href="http://goclis.github.io/life.html">Life</a></li>
-                            <li ><a href="http://goclis.github.io/note.html">Note</a></li>
-                            <li ><a href="http://goclis.github.io/categories.html">Categories</a></li>
-                            <li ><a href="http://goclis.github.io/tags.html">Tags</a></li>
-                            <li ><a href="http://goclis.github.io/archives.html">Archives</a></li>
-                            <li><a href="http://goclis.github.io/about.html">About</a></li>
-                        </ul>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span1"></div>
-                <div class="span10">
-<article>
-<div class="row-fluid">
-    <header class="page_header span10 offset2">
-    <h1><a href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html"> 如何验证一个数字证书  </a></h1>
-    </header>
-</div>
-
-<div class="row-fluid">
-        <div class="span8 offset2 article-content">
-
-            <p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="how-to-validate-certificate" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html">如何验证一个数字证书</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-06-21T15:43:00+08:00" title="2014-06-21T15:43:00+08:00"> 发布：2014-06-21</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
 <p>假设完毕，首先看看这个待验证的证书包含哪些消息吧。</p>
 <p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
 <p>既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
 <p>用密码学表示一下大概如下：</p>
-<div class="highlight"><pre>// 设生成的中间数字证书为 MB，最终发放的为B
+<div class="highlight"><pre><span></span>// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 </pre></div>
 
@@ -91,20 +111,13 @@
 </ol>
 <p><img alt="流程图" src="/images/certificate_chain_20140621155213.png" /></p>
 <p>当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。</p>
-<section>
-<p id="comment-message">有啥留个言呗~ </p>
-<div class="accordion" id="accordion2">
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle disqus-comment-count" data-toggle="collapse" data-parent="#accordion2"
-                    data-disqus-identifier="disqus-posts/2014/06/21/how-to-validate-certificate.html"
-                href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html#disqus_thread">
-                Comments
-            </a>
-        </div>
-        <div id="disqus_thread" class="accordion-body collapse">
-            <div class="accordion-inner">
-                <div class="comments">
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2014/06/21/how-to-validate-certificate.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'goclis';
@@ -118,66 +131,89 @@
      })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>                </div>
-            </div>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
         </div>
     </div>
 </div>
-</section>
-            <aside>
-            <hr/>
-            <nav>
-            <ul class="articles_timeline">
- 
-                <li class="previous_article">« <a href="http://goclis.github.io/posts/2014/05/25/basic-pelican-configuration.html" title="Previous: Pelican简要配置教程">Pelican简要配置教程</a></li>
- 
-                <li class="next_article"><a href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html" title="Next: 操作系统课设笔记">操作系统课设笔记</a> »</li>
-            </ul>
-            </nav>
-            </aside>
-        </div>
-        <section>
-        <div class="span2" style="float:right;font-size:0.9em;">
- 
-            <h4>Published</h4>
-            <time pubdate="pubdate" datetime="2014-06-21T15:43:00+08:00">Jun 21, 2014</time>
-            <h4>Category</h4>
-            <a class="category-link" href="/categories.html#Tech-ref">Tech</a> 
-            <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article"> 
-                <li><a href="/tags.html#安全-ref">安全
-                    <span>1</span>
-</a></li>
-                <li><a href="/tags.html#数字证书-ref">数字证书
-                    <span>1</span>
-</a></li>
-            </ul>
-
-        </div>
-        </section>
-</div>
-</article>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2014/05/25/basic-pelican-configuration.html"><i class="fa fa-angle-left fa-fw"></i> Pelican简要配置教程</a>
+                    &nbsp;
+                    <a class="btn btn-default" href="/posts/2014/07/30/os-experiment-note.html">操作系统课设笔记 <i class="fa fa-angle-right fa-fw"></i></a>
                 </div>
-                <div class="span1"></div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/an-quan/index.html">安全</a>
+                        <a href="/tag/shu-zi-zheng-shu/index.html">数字证书</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
             </div>
         </div>
     </div>
-<footer>
-<div id="footer">
-    <ul class="footer-content">
-        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
-        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
-    </ul>
-</div>
-</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
             $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
         </script>
+
 
 <script type="text/javascript">
     var disqus_shortname = 'goclis';

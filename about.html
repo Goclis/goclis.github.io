@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="zh-CN">
     <head>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <meta name="author" content="Goclis Yao" />
         <meta name="copyright" content="Goclis Yao" />
 
-        <title>About me  · Logging
+
+
+        <title>关于 | Logging
 </title>
-        <link href="http://goclis.github.io/theme/css/slim-081711.css" rel="stylesheet" type="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/solarizedlight.css" media="screen">
-        <link rel="shortcut icon" href="http://goclis.github.io/images/favicon.ico" type="image/x-icon" />
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
         <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
@@ -21,80 +27,124 @@
         <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
         <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
         <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
         <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
         <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
     </head>
-    <body>
-        <div id="content-sans-footer">
-        <div class="navbar navbar-static-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="http://goclis.github.io/"><span class=site-name>Logging</span></a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav pull-right top-menu">
-                            <li ><a href="http://goclis.github.io/">Tech</a></li>
-                            <li ><a href="http://goclis.github.io/life.html">Life</a></li>
-                            <li ><a href="http://goclis.github.io/note.html">Note</a></li>
-                            <li ><a href="http://goclis.github.io/categories.html">Categories</a></li>
-                            <li ><a href="http://goclis.github.io/tags.html">Tags</a></li>
-                            <li ><a href="http://goclis.github.io/archives.html">Archives</a></li>
-                            <li  class="active"><a href="http://goclis.github.io/about.html">About</a></li>
-                        </ul>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span1"></div>
-                <div class="span10">
-<article>
-<div class="row-fluid">
-    <header class="page_header span10 offset2">
-    <h1><a href="http://goclis.github.io/about.html"> About me  </a></h1>
-    </header>
-</div>
-
-<div class="row-fluid">
-        <div class="span8 offset2 article-content">
-
-            <p>小小程序猿，认真工作，努力科研。</p>
-        </div>
-        <section>
-        <div class="span2" style="float:right;font-size:0.9em;">
- 
-            <h4>Published</h4>
-            <time pubdate="pubdate" datetime="2016-01-08T00:00:00+08:00">Jan 8, 2016</time>
-      
-        </div>
-        </section>
-    </div>
-    </article>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li class="nav-current" role="presentation"><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
                 </div>
-                <div class="span1"></div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="about" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/about.html">关于</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <h3 id="_1">关于本站<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>本站的主题模板基于<a href="http://oncrashreboot.com/pelican-elegant">Pelican-elegant</a>进行改造，设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a>，如侵权请联系我进行删除，谢谢。</p>
+<h3 id="_2">关于我<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>辣鸡程序猿一只，不定期在本站放各种东西，不喜勿喷。</p>
+                    </div>
+                </article>
+            </main>
+            <aside class="col-md-4 sidebar">
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
             </div>
         </div>
     </div>
-<footer>
-<div id="footer">
-    <ul class="footer-content">
-        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
-        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
-    </ul>
-</div>
-</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
         <script>
             function validateForm(query)
             {
                 return (query.length > 0);
             }
             $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
         </script>
 
     </body>

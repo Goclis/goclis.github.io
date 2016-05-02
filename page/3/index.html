@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+
+        <title>Logging - Page 3
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(http://static.ghostchina.com/image/6/d1/fcb3879e14429d75833a461572e64.jpg)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="http://goclis.github.io" title="Logging">
+                            <img src="/images/panda.png" alt="Logging" style="height:60px;width:60px;border-radius:500px">
+                        </a>
+                        <!-- end logo -->
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li class="nav-current" role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="reconstruction-of-pelican-blog" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/04/02/reconstruction-of-pelican-blog.html">Pelican博客结构改造</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-04-02T23:43:50+08:00" title="2016-04-02T23:43:50+08:00">2016-04-02</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>最近想要在博客里写一些生活相关的东西（也就是吃喝玩乐啦），同时还希望能够比较清晰地区分开技术文章和生活文章，所以这两天就在折腾着博客内容的改造，不得不提一下，这个折腾过程中看代码的感觉真的是让我找回了一丝大二时的感觉，很爽！</p>
+<p>这篇文章把一些我在改造过程中遇到的问题以及解决思路记录下来。</p>
+<h3 id="template-page">使用Template Page划分内容<a class="headerlink" href="#template-page" title="Permanent link">¶</a></h3>
+<p>博客的改造是希望把内容分成四块：技术、生活、笔记、琐碎。技术就是先前写的这些博文；生活记录一些小结或是感想的东西；笔记实质上是我平时针对一些具体技术记录的一些Tip，打算一并放上来；琐碎实际上就类似于微博，一些短的想法之类的。</p>
+<p>按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板<code>page.html</code>决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。</p>
+<p>因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在<code>pelicanconf.py</code>中对<code>TEMPLATE_PAGES</code>进行相关的设置即可，如下：</p>
+<div class="highlight"><pre><span></span><span class="n">TEMPLATE_PAGES ...</span></pre></div>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/04/02/reconstruction-of-pelican-blog.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/jinja2/index.html">Jinja2</a>
+                            <a href="/tag/pelican/index.html">Pelican</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="【吃点评】胖哥俩肉蟹煲" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/03/19/【吃点评】胖哥俩肉蟹煲.html">【吃点评】胖哥俩肉蟹煲</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-03-19T00:00:00+08:00" title="2016-03-19T00:00:00+08:00">2016-03-19</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>这篇是填坑的。。好早前和雪姨去吃的，大概回忆下吧。</p>
+<p>地点在中央商城8楼，排队人很多，当时并不是周末！！另外小桌拍的特别慢。。我们是5点拿到号的，A28吧？从A20到我们等了一个小时，出来的时候发现小桌已经排到了100+吧。。</p>
+<p>我们点的小份肉蟹煲，加了点牛蛙，要了扎奇异果汁，人均80，还可以接受。分量够的，两个人都要了份米饭，最后都很饱。</p>
+<p>本来以为肉蟹煲会把蟹弄的特别烂，吃起来特方便，结果发现并不是。。蟹壳依旧在，还是得咬，两个处女座表示很后悔点了肉蟹煲，应该点虾、牛蛙之类容易吃的。。做法大概类似于大锅煮的吧，里面有蟹、年糕、土豆、鸡爪以及加的牛蛙，最后端上来就一锅，大致如下图：</p>
+<p><img alt="肉蟹煲" src="/images/20160412233920633.jpg" /></p>
+<p><img alt="奇异果汁" src="/images/20160412234147593.jpg" /></p>
+<p>味道方面，蟹其实一般般，鸡爪特别好吃！！牛蛙也很不错！！奇异果汁也好喝！唉，越想越觉得该点虾煲的。。</p>
+<p>嗯，怎么说呢，追求吃鸡爪的话，我其实可以选择更便宜的焖锅之类的，总之下次不会为了吃蟹来这家店。</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/03/19/【吃点评】胖哥俩肉蟹煲.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/chi-dian-ping/index.html">吃点评</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="advanced-pelican-configuration" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/01/16/advanced-pelican-configuration.html">Pelican进阶配置</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-01-16T13:58:00+08:00" title="2016-01-16T13:58:00+08:00">2016-01-16</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。</p>
+<h3 id="markdown">Markdown扩展<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h3>
+<p>我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在<code>pelicanconf.py</code>中对<code>MD_EXTENSIONS</code>进行适当的赋值即可，我的配置如下：</p>
+<div class="highlight"><pre><span></span><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s1">'extra'</span><span class="p">,</span> <span class="s1">'toc(permalink=true)'</span><span class="p">]</span>
+</pre></div>
+<p>总共三项：</p>
+<ul>
+<li>第一个是参考我所引用主题的作者的配置，应该是代码高亮的配置。</li>
+<li>第二个包含了一系列的小扩展，我主要是为了获得表格及代码块的支持。</li>
+<li>第三个是为了生成目录，我的主题会提取文章的目录。</li>
+</ul>
+<p>Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见<a href="http://pythonhosted.org/Markdown/extensions/">Markdown模块官方文档</a>。</p>
+<h3 id="pelican-page">Pelican page<a class="headerlink" href="#pelican-page" title="Permanent link">¶</a></h3>
+<p>配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。</p>
+<p>page按照直面的翻译也就是<strong>页面</strong>的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的<code>templates</code>中拥有<code>article.html ...</code></p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/01/16/advanced-pelican-configuration.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/markdown/index.html">Markdown</a>
+                            <a href="/tag/pelican/index.html">Pelican</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+
+<nav class="pagination" role="navigation">
+        <a class="newer-posts" href="/page/2/"><i class="fa fa-angle-left"></i></a>
+    <span class="page-number">第 3 页 ⁄ 共 7 页</span>
+        <a class="older-posts" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+</nav>
+            </main>
+        </div>
+    </div>
+</section>
+                
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+    </body>
+</html>
