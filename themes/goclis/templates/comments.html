@@ -1,0 +1,17 @@
+{% if DISQUS_SITENAME and SITEURL and article.status != "draft" %}
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">{{ COMMENTS_INTRO }}</h4>
+    <div id="disqus_thread"
+        {% if article.disqus_identifier %}
+            data-disqus-identifier="{{ article.disqus_identifier }}"
+        {% else %}
+            data-disqus-identifier="disqus-{{ article.url }}"
+        {% endif %}>
+        <div class="accordion-inner">
+            <div class="comments">
+                {% include 'disqus_script_comment.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

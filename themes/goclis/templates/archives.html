@@ -1,0 +1,66 @@
+{% extends "base.html" %}                                                                                                                                                                                  
+{% block title %}
+归档 | {{ super() }}
+{% endblock title %}
+
+{% block head_description %}
+Full archives of {{ SITENAME|striptags }} blog.
+{% endblock head_description %}
+
+{% block content %}
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <div class="post">
+                    {% set last_year = 0 %}
+                    {% for article in articles %}
+                        {% set year = article.date.strftime('%Y') %}
+                        {% if last_year != year %}
+                        <div class="widget">
+                            <h4 id="{{ year }}" class="title">{{ year }}</h4>
+                            <div class="content community">
+                        {% set last_year = year %}
+                        {% endif %}
+                        {% set next_year = 0 %}
+                        {% if not loop.last %}
+                            {% set next = loop.index0 + 1 %}
+                            {% set next_article = articles[next] %}
+                            {% set next_year = next_article.date.strftime('%Y') %}
+                        {% endif %}
+                        <article>
+                            <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }} {%if article.subtitle %} <small> {{ article.subtitle }} </small> {% endif %} </a>
+                            <time pubdate="pubdate" datetime="{{ article.date.isoformat() }}" class="pull-right">{{ article.locale_date }}</time>
+                        </article>
+                        {% if next_year != year %}
+                        </div></div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                {% if categories %}
+                <div class="widget">
+                    <h4 class="title">所有分类</h4>
+                    <div class="content tag-cloud">
+                        {% for category, articles in categories|sort %}
+                        <a href="/{{ category.url }}">{{ category }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if tags %}
+                <div class="widget">
+                    <h4 class="title">所有标签</h4>
+                    <div class="content tag-cloud">
+                        {% for tag, articles in tags|sort %}
+                        <a href="/{{ tag.url }}">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock content %}

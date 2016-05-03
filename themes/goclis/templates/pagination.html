@@ -1,0 +1,11 @@
+{% if articles_page and articles_paginator.num_pages > 1 %}
+<nav class="pagination" role="navigation">
+    {% if articles_page.has_previous() %}
+        <a class="newer-posts" href="/{{ articles_previous_page.url }}"><i class="fa fa-angle-left"></i></a>
+    {% endif %}
+    <span class="page-number">第 {{ articles_page.number }} 页 ⁄ 共 {{ articles_paginator.num_pages }} 页</span>
+    {% if articles_page.has_next() %}
+        <a class="older-posts" href="/{{ articles_next_page.url }}"><i class="fa fa-angle-right"></i></a>
+    {% endif %}
+</nav>
+{% endif %}

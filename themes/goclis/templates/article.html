@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ article.title }} {%if article.subtitle %} - {{ article.subtitle }} {% endif %} | {{ super() }}
+{% endblock title %}
+
+{% block head_description %}
+{% if article.summary %}
+{{ article.summary|striptags }}
+{% endif %}
+{% endblock head_description %}
+
+{% block meta_tags_in_head %}
+{% if article.tags or article.category or article.keywords %}
+<meta name="keywords" content="{{ [article.tags|join(', '), article.category, article.keywords]|join(', ') }}" />
+{% endif %}
+{% endblock meta_tags_in_head %}
+
+{% block content %}
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="{{ article.slug }}" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/{{ article.author.url }}">{{ article.author }}</a></span> •
+                            <time class="post-date" datetime="{{ article.date.isoformat() }}" title="{{ article.date.isoformat() }}"> 发布：{{ article.locale_date }}</time>
+                            {% if article.modified %}
+                             •
+                            <time class="post-date" datetime="{{ article.modified.isoformat() }}" title="{{ article.modified.isoformat() }}"> 更新：{{ article.modified.year }}-{{ article.modified.strftime('%m') }}-{{ article.modified.strftime('%d') }}</time> 
+                            {% endif %}
+                        </div>
+                    </header>
+                    {% if article.thumbnail %}
+                    <section class="featured-media">
+                        <img src="{{ article.thumbnail }}">
+                    </section>
+                    {% endif %}
+                    <div class="post-content">
+                        {% if article.toc %}
+                        <div class="widget">
+                            <h4 class="title">目录</h4>
+                            <div class="content toc">
+                                {{ article.toc }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {{ article.content }}
+                        {% include 'comments.html' %}
+                    </div>
+                </article>
+                {% for an_article in dates %}
+                {% if an_article.url == article.url %}
+                {% set index = loop.index0 %}
+                {% if not loop.first %}
+                {% set next_article = dates[index-1] %}
+                {% endif %}
+                {% if not loop.last %}
+                {% set previous_article = dates[index+1] %}
+                {% endif %}
+                <div class="prev-next-wrap clearfix">
+                    {% if previous_article %}
+                    <a class="btn btn-default" href="/{{ previous_article.url }}"><i class="fa fa-angle-left fa-fw"></i> {{ previous_article.title }}</a>
+                    {% endif %}
+                    &nbsp;
+                    {% if next_article %}
+                    <a class="btn btn-default" href="/{{ next_article.url }}">{{ next_article.title }} <i class="fa fa-angle-right fa-fw"></i></a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </main>
+            <aside class="col-md-4 sidebar">
+                {% if article.category %}
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/{{ article.category.url }}">{{ article.category }}</a>
+                    </div>
+                </div>
+                {% endif %}
+                {% if article.tags %}
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        {% for tag in article.tags|sort %}
+                        <a href="/{{ tag.url }}">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% include 'social_links.html' %}
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+    {{ super() }}
+    {% include 'disqus_script_count.html' %}
+    {% if DISQUS_SITENAME and SITEURL and article.status != "draft" %}
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+    {% endif %}
+{% endblock script %}

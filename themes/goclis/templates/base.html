@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% if article and article.author %}
+        <meta name="author" content="{{ article.author }}" />
+        <meta name="copyright" content="{{ article.author }}" />
+        {% elif page and page.author %}
+        <meta name="author" content="{{ page.author }}" />
+        <meta name="copyright" content="{{ page.author }}" />
+        {% else %}
+        <meta name="author" content="{{ AUTHOR }}" />
+        <meta name="copyright" content="{{ AUTHOR }}" />
+        {% endif %}
+
+        {% if SITE_DESCRIPTION %}
+        <meta name="description" content="{% block head_description %}{{ SITE_DESCRIPTION }}{% endblock head_description %}" />
+        {% endif %}
+
+        {% block meta_tags_in_head %}
+        {% endblock meta_tags_in_head %}
+
+        <title>{% block title %}{{ SITENAME|striptags }}{% endblock title %}</title>
+
+        {% block head_links %}
+        <link rel="stylesheet" href="{{ SITEURL }}/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+        {% endblock head_links %}
+
+        <link rel="shortcut icon" href="{{ FAVICON_URL }}" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="{{ SITEURL }}/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="{{ SITEURL }}/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ SITEURL }}/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ SITEURL }}/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ SITEURL }}/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="{{ SITEURL }}/theme/images/apple-touch-icon-144x144.png" />
+        {% include 'feeds.html' %}
+        {% include 'analytics.html' %}
+    </head>
+    <body class="home-template">
+        <header class="main-header" style="background-image: url(https://drscdn.500px.org/photo/112158533/m%3D2048/be9112048316e43876caba0af0dc5e87)" "=">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start logo -->
+                        <a class="branding" href="{{ SITEURL }}" title="{{ SITENAME }}">
+                            <img src="{{ PORTRAIT_URL }}" alt="{{ SITENAME }}" style="height:99px;width:99px;border-radius:500px;opacity:0.8">
+                        </a>
+                        <!-- end logo -->
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="navbar-header">
+                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="main-menu">
+                            <ul class="menu">
+                                <li {% if page_name == "index" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}">首页</a></li>
+                                <li {% if category|trim == "Note" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/category/note/">笔记</a></li>
+                                <li {% if page_name == "archives" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/archives.html">归档</a></li>
+                                {% if page %}
+                                <li {% if page.slug == 'about' %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/about.html">关于</a></li>
+                                {% else %}
+                                <li><a href="{{ SITEURL }}/about.html">关于</a></li>
+                                {% endif %}
+                            </ul>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        {% block content %}
+        {% endblock content %}
+                
+        {% include 'footer.html' %}
+        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        {% block script %}
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="{{ SITEURL }}/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+        {% endblock script %}
+    </body>
+</html>
