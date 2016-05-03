@@ -6,6 +6,7 @@ AUTHOR = u'Goclis Yao'
 SITENAME = u'Logging'
 FAVICON_URL = '/images/favicon.ico'
 PORTRAIT_URL = '/images/panda.jpg'
+BACKGROUND_URL = '/images/background.png'
 SITEURL = 'http://goclis.github.io'
 
 TIMEZONE = 'Asia/Shanghai'

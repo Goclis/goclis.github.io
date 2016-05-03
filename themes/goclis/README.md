@@ -6,6 +6,7 @@ __新增__
 
 - article: 增加了`thumbnail`这个metadata，从而可以为文章增加插图；
 - FAVICON_URL：设置`favicon`的URL；
+- BACKGROUND_URL: 设置背景图片的URL；
 - PORTRAIT_URL：设置头像的URL；
 - highlight：使用`friendly.css`的样式。
 
