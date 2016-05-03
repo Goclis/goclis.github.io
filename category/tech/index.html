@@ -92,7 +92,7 @@
                     </div>
                     <div class="post-content">
                         <p>最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：</p>
-<div class="highlight"><pre><span></span><span class="c1">// macro.h</span>
+<div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
 
 <span class="kt">void</span> <span class="n">T</span> <span class="err">##</span> <span class="n">_func</span><span class="p">()</span>
@@ -105,15 +105,15 @@
 
 
 <p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
-<div class="highlight"><pre><span></span><span class="c1">// 这段代码希望定义一个int_func方法</span>
+<div class="highlight"><pre><span class="c1">// 这段代码希望定义一个int_func方法</span>
 <span class="cp">#define T int</span>
-<span class="cp">#include</span> <span class="cpf">&quot;macro.h&quot;</span><span class="cp"></span>
+<span class="cp">#include &quot;macro.h&quot;</span>
 <span class="cp">#undef T</span>
 </pre></div>
 
 
 <p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
-<div class="highlight"><pre><span></span><span class="c1">// macro.h</span>
+<div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
 
 <span class="cp">#define func_m(TN) TN ## _func</span>
@@ -196,7 +196,7 @@
 <p>源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。</p>
 <p>编译需要用到perl，去官网下个ActivePerl就可以了，为了往后在cmd中操作简单，最好安装时勾上加入PATH的选项。</p>
 <p>解压源码包，打开cmd进入该解压后的目录，执行如下命令：</p>
-<div class="highlight"><pre><span></span>perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
+<div class="highlight"><pre>perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
 </pre></div>
 <p>这是编译前必须执行的配置命令，可以自行根据所使用的编译工具以及平台的不同来选择不同的参数（具体可以查看解压后目录中的README以及一系列的INSTALL文件），稍微解释一下：</p>
 <ul>

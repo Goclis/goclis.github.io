@@ -71,6 +71,50 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="os-experiment-note" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html">操作系统课设笔记</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-07-30T17:22:00+08:00" title="2014-07-30T17:22:00+08:00">2014-07-30</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。</p>
+<p>这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。</p>
+<p>课设平台：</p>
+<ul>
+<li>fedora 7</li>
+<li>linux-2.6.21 source code</li>
+<li>i386</li>
+</ul>
+<h3 id="1">实验1 编译内核<a class="headerlink" href="#1" title="Permanent link">¶</a></h3>
+<p>纯粹照着书搞。。</p>
+<h4 id="_1">实验过程<a class="headerlink" href="#_1" title="Permanent link">¶</a></h4>
+<p>以下操作假设用户为root，目录自行决定。</p>
+<div class="highlight"><pre>% tar -zxvf linux-2.6.21.tar.gz
+% <span class="nb">cd </span>linux-2.6.21
+% make mrproper  <span class="c"># 清楚掉之前编译产生的垃圾</span>
+% make oldconfig  <span class="c"># 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可</span>
+% vim Makefile
+</pre></div>
+<p>修改<code>EXTARVERSION ...</code></p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2014/07/30/os-experiment-note.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/os/index.html">OS</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="how-to-validate-certificate" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -87,7 +131,7 @@
 <p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
 <p>既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
 <p>用密码学表示一下大概如下：</p>
-<div class="highlight"><pre><span></span>// 设生成的中间数字证书为 MB，最终发放的为B
+<div class="highlight"><pre>// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 </pre></div>
 
@@ -122,7 +166,7 @@
 <h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
 <p><strong>Install</strong></p>
-<div class="highlight"><pre><span></span>pip install pelican
+<div class="highlight"><pre>pip install pelican
 
 pip install markdown
 </pre></div>
@@ -130,14 +174,14 @@ pip install markdown
 
 <p><strong>Quick-Start</strong></p>
 <p>自己新建一个文件夹，然后：</p>
-<div class="highlight"><pre><span></span>pelican-quickstart
+<div class="highlight"><pre>pelican-quickstart
 </pre></div>
 
 
 <p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
 <p><strong>Usage</strong></p>
 <p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
-<div class="highlight"><pre><span></span>make html # 将content中的markdown (or others) 生成为html
+<div class="highlight"><pre>make html # 将content中的markdown (or others) 生成为html
 
 make regenerate
 
@@ -148,7 +192,7 @@ make devserver
 
 
 <p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
-<div class="highlight"><pre><span></span>./develop_server.sh ...</pre></div>
+<div class="highlight"><pre>./develop_server.sh ...</pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2014/05/25/basic-pelican-configuration.html" class="btn btn-default">阅读全文</a>
@@ -157,47 +201,6 @@ make devserver
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/pelican/index.html">Pelican</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="dynamic-load-and-virtual-memory-page-schedule-relation" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-05-25T17:20:00+08:00" title="2014-05-25T17:20:00+08:00">2014-05-25</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：</p>
-<blockquote>
-<p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
-</blockquote>
-<p>那么，额外工作指的是？在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。</p>
-<p>以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
-<p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）</p>
-<div class="highlight"><pre><span></span><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// load it here</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
-<h3 id="update-at-2014-05-26">Update at 2014-05-26<a class="headerlink" href="#update-at-2014-05-26" title="Permanent link">&para;</a></h3>
-<p>因为动态加载和动态链接在操作系统的实现上已经模糊了 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/os/index.html">OS</a>
                         </div>
                         <div class="pull-right share">
                         </div>

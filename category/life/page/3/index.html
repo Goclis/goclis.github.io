@@ -9,7 +9,7 @@
 
 
 
-        <title>数字证书
+        <title>Life - Page 3
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -74,49 +74,46 @@
             <main class="col-md-offset-1 col-md-10 main-content">
             	<div class="cover tag-cover">
 				    <h3 class="tag-name">
-				        标签：数字证书
+				        分类：Life
 				    </h3>
 				    <div class="post-count">
-				        共 1 篇文章 
+				        共 7 篇文章 
 				    </div>
 				</div>
-                <article id="how-to-validate-certificate" class="post">
+                <article id="summary-of-2015" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html">如何验证一个数字证书</a>
+                            <a href="http://goclis.github.io/posts/2016/01/06/summary-of-2015.html">2015小结</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-06-21T15:43:00+08:00" title="2014-06-21T15:43:00+08:00">2014-06-21</time>
+                            <time class="post-date" datetime="2016-01-06T00:00:00+08:00" title="2016-01-06T00:00:00+08:00">2016-01-06</time>
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
-<p>假设完毕，首先看看这个待验证的证书包含哪些消息吧。</p>
-<p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
-<p>既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
-<p>用密码学表示一下大概如下：</p>
-<div class="highlight"><pre>// 设生成的中间数字证书为 MB，最终发放的为B
-则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
-</pre></div>
-
-
-<p>接下来，看看是如何验证的。往下我们称MB为 ...</p>
+                        <p>这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。</p>
+<h3 id="_1">回顾<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>现在细细回想了一下，对这段时间好像还是有那么点印象的，不过总的说起来也只是一直处于一个不断在学校和“创业”中切换的混沌状态。下面按照时间线大概理一下吧，流水账。</p>
+<p>从“创业”开始说吧，加引号是因为有点伤，下面再说吧。大概来说是从大三下（14年6月）的时候开始的，那时候老师找了我和几个同学谈做一个分布式相关的产品，因为当时合伙的老师中有一个是以后读研的导师，想想觉得边读研边做项目还挺好的，而且许诺的期权及期限都还可以接受，就答应一起做了。</p>
+<p>然后暑假没回家就一直在公司做产品，刚开始的时候还是公司机器还是能够上网的，所以那段时间开发产生的一些问题也能随时弄到为知笔记里，然后晚上回去的时候可以查查资料补充一下，所以那个暑假偶尔还是会发一些东西到博客上。现在想想，主要原因还是因为项目刚开启，还在补充基本知识阶段，比较闲暇，到后面忙了而且公司进行了内外网隔离后就基本没什么时间去多想以及记录笔记了。说多了都是懒啊！！！</p>
+<p>暑假结束大四上开始，没课，就三个课设，操作系统课设暑假就自己抽空搞了，所以挺快的，网络课设拖得挺长但也不麻烦。蛋疼的也就是综合课设，要组队在FPGA板子上做个MIPS指令集的CPU，还要做编辑器、编译器、汇编器等工具来把C代码编译到MIPS的机器码 ...</p>
                     </div>
                     <div class="post-permalink">
-                        <a href="/posts/2014/06/21/how-to-validate-certificate.html" class="btn btn-default">阅读全文</a>
+                        <a href="/posts/2016/01/06/summary-of-2015.html" class="btn btn-default">阅读全文</a>
                     </div>
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/an-quan/index.html">安全</a>
-                            <a href="/tag/shu-zi-zheng-shu/index.html">数字证书</a>
                         </div>
                         <div class="pull-right share">
                         </div>
                     </footer>
                 </article>
 
+<nav class="pagination" role="navigation">
+        <a class="newer-posts" href="/category/life/page/2/"><i class="fa fa-angle-left"></i></a>
+    <span class="page-number">第 3 页 ⁄ 共 3 页</span>
+</nav>
             </main>
         </div>
     </div>

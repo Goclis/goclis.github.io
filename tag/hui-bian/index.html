@@ -92,7 +92,7 @@
                     </div>
                     <div class="post-content">
                         <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
-<div class="highlight"><pre><span></span>movl 12(%ebp), %eax
+<div class="highlight"><pre>movl 12(%ebp), %eax
 imull 8(%ebp)
 movl %eax, (%esp)
 movl %edx, 4(%esp)
@@ -108,7 +108,7 @@ movl %edx, 4(%esp)
 <h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">&para;</a></h3>
 <p>我们知道mov在IA32中有基础的三类操作，即b, w, l。</p>
 <p>而mov在使用时大致如下：</p>
-<div class="highlight"><pre><span></span>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域 ...</pre></div>
+<div class="highlight"><pre>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域 ...</pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2014/08/08/mov-with-memory.html" class="btn btn-default">阅读全文</a>

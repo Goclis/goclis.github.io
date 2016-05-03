@@ -122,15 +122,15 @@
 <p>纯粹照着书搞。。</p>
 <h4 id="_1">实验过程<a class="headerlink" href="#_1" title="Permanent link">¶</a></h4>
 <p>以下操作假设用户为root，目录自行决定。</p>
-<div class="highlight"><pre><span></span>% tar -zxvf linux-2.6.21.tar.gz
-% <span class="nb">cd</span> linux-2.6.21
-% make mrproper  <span class="c1"># 清楚掉之前编译产生的垃圾</span>
-% make oldconfig  <span class="c1"># 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可</span>
+<div class="highlight"><pre>% tar -zxvf linux-2.6.21.tar.gz
+% <span class="nb">cd </span>linux-2.6.21
+% make mrproper  <span class="c"># 清楚掉之前编译产生的垃圾</span>
+% make oldconfig  <span class="c"># 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可</span>
 % vim Makefile
 </pre></div>
 <p>修改<code>EXTARVERSION =</code>，改为<code>EXTRAVERSION = .7-custom-version</code>。</p>
 <p>这样的话你生成的内核版本号就为2.6.21.7-custom-version（前面有几个参数是指定 2,6,21 的，这里没给出），继续：</p>
-<div class="highlight"><pre><span></span>% make all
+<div class="highlight"><pre>% make all
 % make modules_install
 % make install
 </pre></div>
@@ -141,21 +141,21 @@
 <p>这里只是添加一个最简单的系统调用，无参数，无实际操作！加复杂的系统调用的时候可能会遇到各种坑，在做往后几个实验的时候再去解决吧。</p>
 <h4 id="_2">实验过程<a class="headerlink" href="#_2" title="Permanent link">¶</a></h4>
 <p>假设要添加的系统调用名为goclis，则内核对应的实现函数名一般为<code>sys_goclis</code>，现在开始实现。目录和用户假设同实验1。</p>
-<div class="highlight"><pre><span></span><span class="c">% cd linux-2.6.21</span>
+<div class="highlight"><pre><span class="c">% cd linux-2.6.21</span>
 <span class="c">% vim arch/i386/kernel/syscall_table.S</span>
 </pre></div>
 <p>往系统调用表的末尾添加要新增的系统调用：</p>
-<div class="highlight"><pre><span></span><span class="na">.long</span> <span class="no">sys_tee</span>       <span class="err">/</span><span class="p">*</span> <span class="mi">315</span> <span class="p">*</span><span class="err">/</span>
+<div class="highlight"><pre><span class="na">.long</span> <span class="no">sys_tee</span>       <span class="err">/</span><span class="p">*</span> <span class="mi">315</span> <span class="p">*</span><span class="err">/</span>
 <span class="na">.long</span> <span class="no">sys_vmsplice</span>
 <span class="c"># 省略几个。。</span>
 
 <span class="na">.long</span> <span class="no">sys_goclis</span>    <span class="err">/</span><span class="p">*</span> <span class="mi">320</span> <span class="p">*</span><span class="err">/</span>
 </pre></div>
 <p>添加头文件goclis.h（这里其实非必要）：</p>
-<div class="highlight"><pre><span></span><span class="c">% vim include/linux/goclis.h</span>
+<div class="highlight"><pre><span class="c">% vim include/linux/goclis.h</span>
 </pre></div>
 <p>正如我所说，这个系统调用非常简单，所以。。头文件除了宏保护就是空：</p>
-<div class="highlight"><pre><span></span><span class="c1">// goclis.h</span>
+<div class="highlight"><pre><span class="c1">// goclis.h</span>
 
 <span class="cp">#ifndef _LINUX_GOCLIS_H</span>
 <span class="cp">#define _LINUX_GOCLIS_H</span>
@@ -163,12 +163,12 @@
 <span class="cp">#endif</span>
 </pre></div>
 <p>添加实现文件goclis.c，在里面要加入我们指定的系统调用的实现，宏<code>asmlinkage</code>表示该函数的参数通过栈传递：</p>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">goclis</span><span class="p">.</span><span class="n">c</span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">goclis</span><span class="p">.</span><span class="n">c</span>
 
 <span class="c1">// goclis.c</span>
 
-<span class="cp">#include</span> <span class="cpf">&lt;linux/linkage.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;linux/goclis.h&gt;</span><span class="cp"></span>
+<span class="cp">#include &lt;linux/linkage.h&gt;</span>
+<span class="cp">#include &lt;linux/goclis.h&gt;</span>
 
 <span class="n">asmlinkage</span> <span class="kt">int</span> <span class="n">sys_goclis</span><span class="p">()</span>
 <span class="p">{</span>
@@ -176,28 +176,28 @@
 <span class="p">}</span>
 </pre></div>
 <p>实现很简单的系统调用，继续，为该系统调用添加支持：</p>
-<div class="highlight"><pre><span></span>vim kernel/Makefile
+<div class="highlight"><pre>vim kernel/Makefile
 </pre></div>
 <p>找到如下内容：</p>
-<div class="highlight"><pre><span></span>obj-y = sched.o fork.o exec_domain.o \
+<div class="highlight"><pre>obj-y = sched.o fork.o exec_domain.o \
         ...
 </pre></div>
 <p>加入goclis.o：</p>
-<div class="highlight"><pre><span></span>obj-y = goclis.o sched.o ...
+<div class="highlight"><pre>obj-y = goclis.o sched.o ...
 </pre></div>
 <p>这样才能保证goclis.c在内核编译链接的时候是可见的。但其实这个调用的实现也不一定要写在goclis.c中，完全可以放在一个已经存在的.c中即可，只要保证这个.c对应的.o能被编译链接。</p>
 <p>接着为这个系统调用定义系统调用，我们之前那个320只是个注释：</p>
-<div class="highlight"><pre><span></span><span class="c">% vim include/asm-i386/unistd.h</span>
+<div class="highlight"><pre><span class="c">% vim include/asm-i386/unistd.h</span>
 </pre></div>
 <p>是i386不是ia64，因为我们是32位的系统。接着找到：</p>
-<div class="highlight"><pre><span></span><span class="cp">#define __NR_epoll_wait     319</span>
+<div class="highlight"><pre><span class="cp">#define __NR_epoll_wait     319</span>
 
 <span class="cp">#ifdef __KERNEL__</span>
 
 <span class="cp">#define NR_syscalls         320</span>
 </pre></div>
 <p>修改为：</p>
-<div class="highlight"><pre><span></span><span class="cp">#define __NR_epoll_wait     319</span>
+<div class="highlight"><pre><span class="cp">#define __NR_epoll_wait     319</span>
 <span class="cp">#define __NR_goclis         320</span>
 
 <span class="cp">#ifdef __KERNEL__</span>
@@ -206,20 +206,20 @@
 </pre></div>
 <p>很显然吧，用<code>__NR_goclis</code>来命名我们的系统调用，然后把它定义为320，这样就真的 320了。。</p>
 <p>最后，还得把你的这个系统调用加入到统一的系统调用头文件中：</p>
-<div class="highlight"><pre><span></span><span class="c">% vim include/linux/syscalls.h</span>
+<div class="highlight"><pre><span class="c">% vim include/linux/syscalls.h</span>
 </pre></div>
 <p>加入头文件：</p>
-<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;linux/goclis.h&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span class="cp">#include &lt;linux/goclis.h&gt;</span>
 </pre></div>
 <p>加入声明：</p>
-<div class="highlight"><pre><span></span>asmlinkage int sys_goclis();
+<div class="highlight"><pre>asmlinkage int sys_goclis();
 </pre></div>
 <p>OK，重新编译内核然后reboot，就ok了！</p>
 <p>关于编译内核，因为之前已经编译过产生了很多的.o 了，节省时间的话，直接make就可以接着编译了，否则重头编译超级浪费时间。。</p>
 <p>重启后测试下我们的系统调用是否生效，注意得重启为我们创的这个内核！</p>
-<div class="highlight"><pre><span></span><span class="c1">// test.c</span>
-<span class="cp">#include</span> <span class="cpf">&lt;sys/syscall.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span class="c1">// test.c</span>
+<span class="cp">#include &lt;sys/syscall.h&gt;</span>
+<span class="cp">#include &lt;unistd.h&gt;</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 <span class="p">{</span>
@@ -229,7 +229,7 @@
 <span class="p">}</span>
 </pre></div>
 <p>编译后运行：</p>
-<div class="highlight"><pre><span></span><span class="c">% gcc test.c</span>
+<div class="highlight"><pre><span class="c">% gcc test.c</span>
 <span class="c">% ./a.out</span>
 
 <span class="mi">320</span>
@@ -239,7 +239,7 @@
 <p>实验的本质目的应该是修改一系列与/proc目录相关的方法，从而实现“隐藏”的要求。</p>
 <h4 id="_3">思路分析<a class="headerlink" href="#_3" title="Permanent link">¶</a></h4>
 <p>ls /proc及ps aux引起的系统调用层次如下：</p>
-<div class="highlight"><pre><span></span><span class="c">% ls /proc (or ps aux)</span>
+<div class="highlight"><pre><span class="c">% ls /proc (or ps aux)</span>
 <span class="p">=</span><span class="o">&gt;</span> <span class="n">proc_root_readdir</span>
     <span class="p">=</span><span class="o">&gt;</span> <span class="n">proc_readdir</span>
     <span class="p">=</span><span class="o">&gt;</span> <span class="n">proc_pid_readdir</span>
@@ -258,17 +258,17 @@
 <h4 id="_4">实验过程<a class="headerlink" href="#_4" title="Permanent link">¶</a></h4>
 <p>添加系统调用，过程类似于实验2。</p>
 <p>修改系统调用表：</p>
-<div class="highlight"><pre><span></span><span class="c">% vim arch/i386/kernel/syscall_table.S</span>
+<div class="highlight"><pre><span class="c">% vim arch/i386/kernel/syscall_table.S</span>
 <span class="o">//</span> <span class="n">syscall_table</span><span class="p">.</span><span class="n">S</span>
 <span class="p">.</span><span class="n">long</span> <span class="n">sys_hide</span>
 <span class="p">.</span><span class="n">long</span> <span class="n">sys_hide_user_processes</span>
 </pre></div>
 <p>增加系统调用实现：</p>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">hide</span><span class="p">.</span><span class="n">c</span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">hide</span><span class="p">.</span><span class="n">c</span>
 <span class="c1">// hide.c</span>
-<span class="cp">#include</span> <span class="cpf">&lt;linux/linkage.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;linux/sched.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;asm/current.h&gt;</span><span class="cp"></span>
+<span class="cp">#include &lt;linux/linkage.h&gt;</span>
+<span class="cp">#include &lt;linux/sched.h&gt;</span>
+<span class="cp">#include &lt;asm/current.h&gt;</span>
 
 <span class="cm">/*</span>
 <span class="cm"> * set the attribute hide of task with pid, </span>
@@ -301,9 +301,9 @@
 
 <span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">hide_user_processes</span><span class="p">.</span><span class="n">c</span>
 <span class="c1">// hide_user_processes.c</span>
-<span class="cp">#include</span> <span class="cpf">&lt;linux/linkage.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;linux/sched.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;asm/current.h&gt;</span><span class="cp"></span>
+<span class="cp">#include &lt;linux/linkage.h&gt;</span>
+<span class="cp">#include &lt;linux/sched.h&gt;</span>
+<span class="cp">#include &lt;asm/current.h&gt;</span>
 
 <span class="cm">/*</span>
 <span class="cm"> * hide processes with uid, accroing to binname, hide one or all.</span>
@@ -342,7 +342,7 @@
 <p>接着，<code>hide.c</code>通过方法查找到对应pid的<code>task_struct</code>指针，修改其内部的hide的值，这个hide是为了实验添加的，后面讲。</p>
 <p>而<code>hide_user_processes.c</code>则通过<code>for_each_process</code>遍历所有的<code>task_struct</code>，将符合条件的修改hide进行隐藏。这里使用到的<code>p-&gt;comm</code>代表的是该<code>task_struct</code>的二进制映像名称。</p>
 <p>继续完善系统调用的添加，修改<code>kernel/Makefile</code>，<code>unistd.h</code>，<code>syscalls.h</code>：</p>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">Makefile</span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">Makefile</span>
 <span class="c1">// Makefile</span>
 <span class="n">obj</span><span class="o">-</span><span class="n">y</span> <span class="o">=</span> <span class="n">hide</span><span class="p">.</span><span class="n">o</span> <span class="n">hide_user_processes</span><span class="p">.</span><span class="n">o</span> <span class="n">goclis</span><span class="p">.</span><span class="n">o</span> <span class="p">...</span>
 
@@ -359,7 +359,7 @@
 <span class="n">asmlinkage</span> <span class="kt">int</span> <span class="nf">sys_hide_user_processes</span><span class="p">(</span><span class="kt">uid_t</span> <span class="n">uid</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">binname</span><span class="p">);</span>
 </pre></div>
 <p>注意，要保持<code>NR_syscalls</code>最大！系统调用添加完毕，下面修改<code>task_struct</code>，添加hide属性：</p>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">include</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">sched</span><span class="p">.</span><span class="n">h</span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">include</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">sched</span><span class="p">.</span><span class="n">h</span>
 <span class="c1">// sched.h</span>
 <span class="p">...</span>
 <span class="k">struct</span> <span class="n">task_struct</span> <span class="p">{</span>
@@ -369,7 +369,7 @@
 <span class="p">};</span>
 </pre></div>
 <p>既然为<code>task_struct</code>添加了属性，就得为该属性进行初始化，而它的初始化发生在fork的时候，所以要进行相应修改：</p>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">fork</span><span class="p">.</span><span class="n">c</span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">kernel</span><span class="o">/</span><span class="n">fork</span><span class="p">.</span><span class="n">c</span>
 <span class="c1">// fork.c</span>
 <span class="p">...</span>
 <span class="kt">long</span> <span class="n">do_fork</span><span class="p">(...)</span>
@@ -384,7 +384,7 @@
 <span class="p">...</span>
 </pre></div>
 <p>接下来，实现一下<code>/proc/hidden</code>和<code>/proc/hidden_process</code>的功能，显然，可以通过添加一个模块来实现它，但是，麻烦的是那样我们还得手动加载，不如修改现有模块来的方便，所以，下面通过修改<code>fs/proc/proc_misc.c</code>这个模块来实现功能：</p>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">fs</span><span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">proc_misc</span><span class="p">.</span><span class="n">c</span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">fs</span><span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">proc_misc</span><span class="p">.</span><span class="n">c</span>
 <span class="c1">// proc_misc.c</span>
 <span class="p">...</span>
 <span class="cp">#define BUFSIZE 1024</span>
@@ -465,7 +465,7 @@
 <li><code>proc_pid_readdir</code>：让其过滤掉隐藏的<code>task_struct</code>，不返回给用户缓冲区。</li>
 <li><code>proc_pid_lookup</code>：让其过滤掉隐藏的<code>task_struct</code>，使得open不能解析类似<code>/proc/pid/xxx</code>的路径名。</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">fs</span><span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">base</span><span class="p">.</span><span class="n">c</span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">fs</span><span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">base</span><span class="p">.</span><span class="n">c</span>
 <span class="c1">// base.c</span>
 <span class="p">...</span>
 <span class="k">extern</span> <span class="kt">int</span> <span class="n">hidden_flag</span><span class="p">;</span>
@@ -490,7 +490,7 @@
     <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="p">...</span>
-<span class="kt">int</span> <span class="n">proc_pid_readdir</span><span class="p">(</span><span class="k">struct</span> <span class="n">file</span> <span class="o">*</span> <span class="n">filp</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">dirent</span><span class="p">,</span> <span class="n">filldir_t</span> <span class="n">filldir</span><span class="p">)</span>
+<span class="kt">int</span> <span class="n">proc_pid_readdir</span><span class="p">(</span><span class="k">struct</span> <span class="n">file</span> <span class="o">*</span> <span class="n">filp</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">dirent</span><span class="p">,</span> <span class="kt">filldir_t</span> <span class="n">filldir</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="p">...</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">task</span> <span class="o">=</span> <span class="n">next_tgid</span><span class="p">(</span><span class="n">tgid</span><span class="p">);</span>
@@ -511,10 +511,10 @@
 <span class="p">}</span>
 </pre></div>
 <p>基本完成了，下面添加两个基础的程序用于测试：</p>
-<div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">vim</span> <span class="n">hide</span><span class="p">.</span><span class="n">c</span>
-<span class="cp">#include</span> <span class="cpf">&lt;sys/syscall.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span class="o">%</span> <span class="n">vim</span> <span class="n">hide</span><span class="p">.</span><span class="n">c</span>
+<span class="cp">#include &lt;sys/syscall.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
 
 <span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
@@ -541,10 +541,10 @@
 <span class="p">}</span>
 
 <span class="o">%</span> <span class="n">vim</span> <span class="n">hide_all</span><span class="p">.</span><span class="n">c</span>
-<span class="cp">#include</span> <span class="cpf">&lt;sys/syscall.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<span class="cp">#include &lt;sys/syscall.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;string.h&gt;</span>
 
 <span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
@@ -575,38 +575,38 @@
 <span class="p">}</span>
 </pre></div>
 <p>基于这两个程序进行测试：</p>
-<div class="highlight"><pre><span></span>% cat /proc/hidden  <span class="c1"># 0</span>
-% cat /proc/hidden_process <span class="c1"># No hide process.</span>
+<div class="highlight"><pre>% cat /proc/hidden  <span class="c"># 0</span>
+% cat /proc/hidden_process <span class="c"># No hide process.</span>
 % gcc -o hide hide.c
 % gcc -o hide_all hide_all.c
 
-% ps aux <span class="c1"># all process</span>
-% ./hide <span class="m">1</span> <span class="m">1</span> <span class="c1"># hide pid 1</span>
-% ps aux <span class="c1"># no hide process because of hidden_flag == 0</span>
+% ps aux <span class="c"># all process</span>
+% ./hide <span class="m">1</span> <span class="m">1</span> <span class="c"># hide pid 1</span>
+% ps aux <span class="c"># no hide process because of hidden_flag == 0</span>
 % <span class="nb">echo</span> <span class="s2">"1"</span> &gt; /proc/hidden
-% ps aux <span class="c1"># pid 1 is hided.</span>
-% ls /proc <span class="c1"># can not find directory 1</span>
-% cat /proc/hidden_process <span class="c1"># 1</span>
-% ./hide <span class="m">3</span> <span class="m">1</span> <span class="c1"># hide pid 3</span>
-% ps aux <span class="c1"># pid 1 and 3 is hided.</span>
-% cat /proc/hidden_process <span class="c1"># 1 3</span>
-% ./hide <span class="m">1</span> <span class="m">0</span> <span class="c1"># show pid 1</span>
-% ps aux <span class="c1"># pid 3 is hided.</span>
-% cat /proc/hidden_process <span class="c1"># 3</span>
+% ps aux <span class="c"># pid 1 is hided.</span>
+% ls /proc <span class="c"># can not find directory 1</span>
+% cat /proc/hidden_process <span class="c"># 1</span>
+% ./hide <span class="m">3</span> <span class="m">1</span> <span class="c"># hide pid 3</span>
+% ps aux <span class="c"># pid 1 and 3 is hided.</span>
+% cat /proc/hidden_process <span class="c"># 1 3</span>
+% ./hide <span class="m">1</span> <span class="m">0</span> <span class="c"># show pid 1</span>
+% ps aux <span class="c"># pid 3 is hided.</span>
+% cat /proc/hidden_process <span class="c"># 3</span>
 % <span class="nb">echo</span> <span class="s2">"0"</span> &gt; /proc/hidden
-% ps aux <span class="c1"># no hide process because of hidden_flag == 0</span>
-% cat /proc/hidden_process <span class="c1"># No hide process.</span>
+% ps aux <span class="c"># no hide process because of hidden_flag == 0</span>
+% cat /proc/hidden_process <span class="c"># No hide process.</span>
 
 % <span class="nb">echo</span> <span class="s2">"1"</span> &gt; /proc/hidden
-% ./hide_all -1 NULL <span class="c1"># hide all root processes</span>
+% ./hide_all -1 NULL <span class="c"># hide all root processes</span>
 % ps aux
-% cat /proc/hidden_process <span class="c1"># 1 2 3 ....</span>
-% ./hide <span class="m">1</span> <span class="m">0</span> <span class="c1"># show pid 1</span>
+% cat /proc/hidden_process <span class="c"># 1 2 3 ....</span>
+% ./hide <span class="m">1</span> <span class="m">0</span> <span class="c"># show pid 1</span>
 % ps aux
-% cat /proc/hidden_process <span class="c1"># 2 3...</span>
-% ./hide_all -1 init <span class="c1"># hide root process with binname 'init'</span>
+% cat /proc/hidden_process <span class="c"># 2 3...</span>
+% ./hide_all -1 init <span class="c"># hide root process with binname 'init'</span>
 % ps aux
-% cat /proc/hidden_process <span class="c1"># 1 2 3 ....</span>
+% cat /proc/hidden_process <span class="c"># 1 2 3 ....</span>
 </pre></div>
 <h3 id="4-shell">实验4 实现Shell<a class="headerlink" href="#4-shell" title="Permanent link">¶</a></h3>
 <p>用户态编程，使用lex进行前端的词法分析，然后结合系统调用即可实现。</p>

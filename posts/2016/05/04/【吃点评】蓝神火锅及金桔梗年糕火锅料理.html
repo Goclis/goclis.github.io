@@ -8,9 +8,9 @@
         <meta name="copyright" content="Goclis Yao" />
 
 
-<meta name="keywords" content="OS, Tech, " />
+<meta name="keywords" content="吃点评, Life, " />
 
-        <title>动态载入和虚拟内存的按需调页的关联  | Logging
+        <title>【吃点评】蓝神火锅及金桔梗年糕火锅料理  | Logging
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -73,46 +73,33 @@
     <div class="container">
         <div class="row">
             <main class="col-md-8 main-content">
-                <article id="dynamic-load-and-virtual-memory-page-schedule-relation" class="post">
+                <article id="【吃点评】蓝神火锅及金桔梗年糕火锅料理" class="post">
                     <header class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联</a>
+                            <a href="http://goclis.github.io/posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html">【吃点评】蓝神火锅及金桔梗年糕火锅料理</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-05-25T17:20:00+08:00" title="2014-05-25T17:20:00+08:00"> 发布：2014-05-25</time>
+                            <time class="post-date" datetime="2016-05-04T00:00:30+08:00" title="2016-05-04T00:00:30+08:00"> 发布：2016-05-04</time>
                         </div>
                     </header>
                     <div class="post-content">
-                        <p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：</p>
-<blockquote>
-<p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
-</blockquote>
-<p>那么，额外工作指的是？在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。</p>
-<p>以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
-<p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）</p>
-<div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// load it here</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
-<h3 id="update-at-2014-05-26">Update at 2014-05-26<a class="headerlink" href="#update-at-2014-05-26" title="Permanent link">&para;</a></h3>
-<p>因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解基本上是正确的。</p>
+                        <p>五一三天假浪了两天，小小的记录一下吃了的东西。</p>
+<p>第一天，蓝神火锅，这并不是一家店2333，只是一群人跑到了外号为蓝神的小伙伴家里吃了火锅而已，味道嘛，中规中矩，买的火锅底料和火锅的食材，没啥可吐槽的，就是菜买多了，不是浪费就是蓝神得吃蔬菜沙拉了哈哈哈。吃完火锅后打了一下午掼蛋，这游戏，感觉运气很重要。。</p>
+<p>第二天本来没打算出门的，听同学说要去南博，就顺便一起去了，逛着逛着居然遇到了西瓜一行人，就抛弃同学了哈哈哈，省略逛的内容，就是看着一堆女生各种找适合自拍的地方吧（一脸懵逼状）。晚饭去新街口金鹰吃的金桔梗年糕火锅料理，= =#做法类似于焖锅吧，点个年糕锅底，然后再把所有你点的东西都混在一锅里，上来后基本都可以吃了（除了虾），味道还可以，不过按我的饭量，不吃了两块面大概是不会饱的。价格方面，人均50吧。有一个注意的点，<strong>最多四人一桌</strong>。</p>
+<p>今年五一过的很开心啊，不过主要是看和谁过2333。</p>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
     <div id="disqus_thread"
-            data-disqus-identifier="disqus-posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html"
+            data-disqus-identifier="disqus-posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html"
 >
         <div class="accordion-inner">
             <div class="comments">
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'goclis';
-        var disqus_identifier = 'disqus-posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html';
-    var disqus_url = 'http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html';
+        var disqus_identifier = 'disqus-posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html';
+    var disqus_url = 'http://goclis.github.io/posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html';
 
     (function() {
          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -128,22 +115,21 @@
                     </div>
                 </article>
                 <div class="prev-next-wrap clearfix">
-                    <a class="btn btn-default" href="/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html"><i class="fa fa-angle-left fa-fw"></i> 动态链接和动态载入的区别</a>
+                    <a class="btn btn-default" href="/posts/2016/04/26/c-preprocessor-macro-expansion.html"><i class="fa fa-angle-left fa-fw"></i> C预处理器宏展开</a>
                     &nbsp;
-                    <a class="btn btn-default" href="/posts/2014/05/25/basic-pelican-configuration.html">Pelican简要配置教程 <i class="fa fa-angle-right fa-fw"></i></a>
                 </div>
             </main>
             <aside class="col-md-4 sidebar">
                 <div class="widget">
                     <h4 class="title">分类</h4>
                     <div class="content tag-cloud">
-                        <a href="/category/tech/index.html">Tech</a>
+                        <a href="/category/life/index.html">Life</a>
                     </div>
                 </div>
                 <div class="widget">
                     <h4 class="title">标签</h4>
                     <div class="content tag-cloud">
-                        <a href="/tag/os/index.html">OS</a>
+                        <a href="/tag/chi-dian-ping/index.html">吃点评</a>
                     </div>
                 </div>
 <div class="widget">
