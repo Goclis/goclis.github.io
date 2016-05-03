@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 AUTHOR = u'Goclis Yao'
 SITENAME = u'Logging'
 FAVICON_URL = '/images/favicon.ico'
-PORTRAIT_URL = '/images/panda.png'
+PORTRAIT_URL = '/images/panda.jpg'
 SITEURL = 'http://goclis.github.io'
 
 TIMEZONE = 'Asia/Shanghai'

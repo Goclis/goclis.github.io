@@ -884,3 +884,14 @@ pre {
 .headerlink {
   display: none
 }
+.portrait img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  border: 0;
+  opacity: 0.8;
+}
+.portrait img:hover {
+  box-shadow: 0 0 14px #f66214;
+}
+
