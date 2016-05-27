@@ -50,7 +50,7 @@ PLUGINS = ['extract_toc', 'sitemap', 'tipue_search']
 
 # 文章生成
 STATIC_PATHS = ['images', 'pdfs']  # 静态文件目录
-ARTICLE_EXCLUDES = ['unposts'] # 生成忽略的目录
+ARTICLE_EXCLUDES = ['unposts', 'drafts'] # 生成忽略的目录
 ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
 ARTICLE_LANG_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html'

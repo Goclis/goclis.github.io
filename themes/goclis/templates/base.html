@@ -43,51 +43,54 @@
         {% include 'analytics.html' %}
     </head>
     <body class="home-template">
-    <header class="main-header" style="background-image: url({{ BACKGROUND_URL }})" "=">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <!-- start logo -->
-                        <a class="branding portrait" href="{{ SITEURL }}" title="{{ SITENAME }}">
-                            <img src="{{ PORTRAIT_URL }}" alt="{{ SITENAME }}">
-                        </a>
-                        <!-- end logo -->
-                    </div>
-                </div>
-            </div>
-        </header>
-        <nav class="main-navigation">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="navbar-header">
-                            <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
-                            <span class="sr-only">Toggle navigation</span>
-                            <i class="fa fa-bars"></i>
-                            </span>
-                        </div>
-                        <div class="collapse navbar-collapse" id="main-menu">
-                            <ul class="menu">
-                                <li {% if page_name == "index" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}">首页</a></li>
-                                <li {% if category|trim == "Note" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/category/note/">笔记</a></li>
-                                <li {% if page_name == "archives" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/archives.html">归档</a></li>
-                                {% if page %}
-                                <li {% if page.slug == 'about' %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/about.html">关于</a></li>
-                                {% else %}
-                                <li><a href="{{ SITEURL }}/about.html">关于</a></li>
-                                {% endif %}
-                            </ul>   
+        <div id="wrapper">
+            <header class="main-header" style="background-image: url({{ BACKGROUND_URL }})" "=">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- start logo -->
+                            <a class="branding portrait" href="{{ SITEURL }}" title="{{ SITENAME }}">
+                                <img src="{{ PORTRAIT_URL }}" alt="{{ SITENAME }}">
+                            </a>
+                            <!-- end logo -->
                         </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </header>
+            <nav class="main-navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="navbar-header">
+                                <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                                </span>
+                            </div>
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="menu">
+                                    <li {% if page_name == "index" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}">首页</a></li>
+                                    <li {% if category|trim == "Note" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/category/note/">笔记</a></li>
+                                    <li {% if page_name == "archives" %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/archives.html">归档</a></li>
+                                    {% if page %}
+                                    <li {% if page.slug == 'about' %}class="nav-current"{% endif %} role="presentation"><a href="{{ SITEURL }}/about.html">关于</a></li>
+                                    {% else %}
+                                    <li><a href="{{ SITEURL }}/about.html">关于</a></li>
+                                    {% endif %}
+                                </ul>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            {% block content %}
+            {% endblock content %}
+                    
+            {% include 'footer.html' %}
+            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
         
-        {% block content %}
-        {% endblock content %}
-                
-        {% include 'footer.html' %}
-        <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
         {% block script %}
         <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
         <script src="{{ SITEURL }}/theme/js/bootstrap.min.js"></script>

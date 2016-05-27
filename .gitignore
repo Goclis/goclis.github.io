@@ -58,5 +58,6 @@ docs/_build/
 output/
 cache/
 unposts/
+drafts/
 .DS_store
 
