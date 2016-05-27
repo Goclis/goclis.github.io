@@ -8,6 +8,9 @@
 /*====================================================
     common styles
 ====================================================*/
+#wrapper {
+  overflow: hidden;
+}
 html,
 body {
   color: #505050;
@@ -15,6 +18,10 @@ body {
   background: #ebebeb;
   position: relative;
   font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 h1,
 h2,
