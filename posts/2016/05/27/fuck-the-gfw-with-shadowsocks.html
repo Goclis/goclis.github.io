@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+<meta name="keywords" content="Shadowsocks, VPS, VPN, Ubuntu, DigitalOcean, Tech, " />
+
+        <title>和Shadowsocks一起科学上网  | Logging
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <div id="wrapper">
+            <header class="main-header" style="background-image: url(/images/background.png)" "=">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- start logo -->
+                            <a class="branding portrait" href="http://goclis.github.io" title="Logging">
+                                <img src="/images/panda.jpg" alt="Logging">
+                            </a>
+                            <!-- end logo -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <nav class="main-navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="navbar-header">
+                                <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                                </span>
+                            </div>
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="menu">
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                    <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                                </ul>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="fuck-the-gfw-with-shadowsocks" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html">和Shadowsocks一起科学上网</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00"> 发布：2016-05-27</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <div class="widget">
+                            <h4 class="title">目录</h4>
+                            <div class="content toc">
+                                <div class="toc">
+<ul>
+<li><a href="#vps">VPS搭建服务器</a><ul>
+<li><a href="#ipv6">开启IPv6</a></li>
+</ul>
+</li>
+<li><a href="#vpsshadowsocks">在VPS上配置Shadowsocks服务</a></li>
+<li><a href="#shadowsocks">使用Shadowsocks客户端</a><ul>
+<li><a href="#_1">代理模式</a></li>
+<li><a href="#ipv6_1">利用IPv6</a></li>
+</ul>
+</li>
+<li><a href="#pptp-vpn">PPTP VPN</a></li>
+<li><a href="#_2">参考资料</a></li>
+</ul>
+</div>
+                            </div>
+                        </div>
+                        
+<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。</p>
+<p>这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
+<h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
+<p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
+<p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
+<p>额，毕竟不是软文也不是小白教程，就不截没必要的图了。Droplet选的Ubuntu 14.04，创建完毕后，DO会给你发邮件，里面有VPS的IP以及root用户的密码，用ssh工具（Windows下可以下载putty）连接上去进行如设置root密码等一系列基础的配置后即可：</p>
+<ul>
+<li>*unix: <code>ssh root@IP</code></li>
+<li>Windows: 在putty里填写IP，然后点击连接</li>
+</ul>
+<h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
+<p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：</p>
+<p><img alt="DO VPS IPv6 Address" src="/images/160526_DOVPSIPv6Address.png"/></p>
+<p>接着需要到VPS上<a href="http://4b3r.com/digitalocean-enable-ipv6/">配置IPv6</a>，使用ssh连接，编辑<code>/etc/network/interfaces</code>，在<code>auto eth0</code>后加上下面的内容：</p>
+<div class="highlight"><pre>iface eth0 inet6 static
+        address primary_ipv6_address
+        netmask 64
+        gateway ipv6_gateway
+        autoconf 0
+        dns-nameservers 2001:4860:4860::8844 2001:4860:4860::8888 209.244.0.3
+</pre></div>
+<p>其中<code>primary_ipv6_address</code>和<code>ipv6_gateway</code>换成上面那张图里DO分配给你的内容，保存后<code>service networking restart</code>重启网络即可，实在不行重启VPS，可以使用<code>ifconfig</code>来查看是否配置成功。</p>
+<h3 id="vpsshadowsocks">在VPS上配置Shadowsocks服务<a class="headerlink" href="#vpsshadowsocks" title="Permanent link">¶</a></h3>
+<p>在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：</p>
+<div class="highlight"><pre>apt-get install python-pip
+pip install shadowsocks
+</pre></div>
+<p>安装完后还需要对Shadowsocks进行配置，找个地方创建一个配置文件即可，比如：</p>
+<div class="highlight"><pre>mkdir /etc/shadowsocks
+vim /etc/shadowsocks/config.json
+</pre></div>
+<p>配置文件的基本内容：</p>
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"server"</span><span class="p">:</span><span class="s2">"::"</span><span class="p">,</span>
+    <span class="nt">"server_port"</span><span class="p">:</span> <span class="mi">8382</span><span class="p">,</span>
+    <span class="nt">"local_port"</span><span class="p">:</span> <span class="mi">1080</span><span class="p">,</span>
+    <span class="nt">"password"</span><span class="p">:</span> <span class="s2">"yourpassword"</span><span class="p">,</span>
+    <span class="nt">"timeout"</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
+    <span class="nt">"method"</span><span class="p">:</span> <span class="s2">"aes-256-cfb"</span>
+<span class="p">}</span>
+</pre></div>
+<p>稍微解释下：</p>
+<ul>
+<li>server: 指定SOCKS5服务监听的IP，指定为<code>::</code>的话可以同时监听IPv4及IPv6。</li>
+<li>server_port: 指定监听的端口。</li>
+<li>password: 客户端连接SOCKS5服务时的密码。</li>
+</ul>
+<p>更多的配置可以到<a href="https://shadowsocks.org/en/config/quick-guide.html">Shadowsocks官网</a>查看。</p>
+<p>关于服务的启动，ssh连上服务器然后执行下面这个命令：</p>
+<div class="highlight"><pre># 注意配置文件的路径
+nohup ssserver -c /etc/shadowsocks/config.json &gt;&gt; /var/log/shadowsocks.log&amp;
+</pre></div>
+<p>关闭服务的话。。不大优雅：</p>
+<div class="highlight"><pre># 利用lsof通过端口号找到pid
+lsof -i:port
+kill xxx
+</pre></div>
+<h3 id="shadowsocks">使用Shadowsocks客户端<a class="headerlink" href="#shadowsocks" title="Permanent link">¶</a></h3>
+<p>这里只讲Windows的，OSX上的也基本一样。</p>
+<p>客户端的话到<a href="https://github.com/shadowsocks/">Github</a>下载即可，Windows推荐使用<a href="https://github.com/shadowsocks/shadowsocks-windows/releases">Release</a>里的2.5.6，亲测比较妥。</p>
+<p>解压后直接启动，在服务器设定里添加服务器即可，填写你在VPS配置的那些内容：</p>
+<ul>
+<li>VPS IP (v4/v6均可)</li>
+<li>端口、密码、加密方式均按配置文件填</li>
+</ul>
+<h4 id="_1">代理模式<a class="headerlink" href="#_1" title="Permanent link">¶</a></h4>
+<p>Shadowsocks的客户端有两种代理模式：PAC及全局模式。PAC就是只代理部分网站，而全局模式是代理所有的网站。</p>
+<p>Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默认监听端口为1080（可以通过配置修改）。之后所有的80及443端口的出境流量，都会经过<code>localhost:1080</code>的过滤，Shadowsocks根据代理模式来判断如何处理流量，PAC模式的话则会查看PAC列表（只有在列表中的站点才会代理），而全局模式则全部代理。</p>
+<p>在Windows上，Shadowsocks是通过修改<code>Internet选项-&gt;连接-&gt;局域网(LAN)设置</code>中的内容实现的代理，如下图：</p>
+<p><img alt="WindowsLANSettings" src="/images/160527_WindowsLANSettings.png"/></p>
+<p>当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。</p>
+<p>比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为<code>127.0.0.1:1080</code>，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：</p>
+<p><img alt="NeteaseMusic" src="/images/160527_NeteaseMusic.png"/></p>
+<p>自己可以查看一下使用的软件是否要被代理，比如IDM、迅雷之类的下载软件就可以考虑设置代理。</p>
+<h4 id="ipv6_1">利用IPv6<a class="headerlink" href="#ipv6_1" title="Permanent link">¶</a></h4>
+<p>如果你的运营商支持IPv6的话，建议在客户端配置上增加一个服务器，IP设置为VPS的IPv6 IP。Shadowsocks的服务端程序非常机智，如果你访问的网站是v4站点的话，服务器会在它那边使用v4访问该站，但结果依旧通过v6返回给你。对于校园网用户来说，IPv6一般都是免费的，可以省一笔流量费，并且，v6由于使用人数较少，网络状况也比较好。</p>
+<h3 id="pptp-vpn">PPTP VPN<a class="headerlink" href="#pptp-vpn" title="Permanent link">¶</a></h3>
+<p>这个是额外的，除了在VPS上搭建Shadowsocks服务以外，你还可以自己去做些别的，这里贴个PPTP VPN的<a href="http://blog.kunyu.li/digitalocean-ubuntu-vps-vpn.html">教程</a>。</p>
+<h3 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
+<ol>
+<li><a href="https://shadowsocks.org">Shadowsocks官网</a></li>
+<li><a href="https://github.com/shadowsocks/">Shadowsocks on Github</a></li>
+<li><a href="http://blog.kunyu.li/digitalocean-ubuntu-vps-vpn.html">PPTP VPN搭建</a></li>
+</ol>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html';
+    var disqus_url = 'http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html"><i class="fa fa-angle-left fa-fw"></i> 【吃点评】蓝神火锅及金桔梗年糕火锅料理</a>
+                    &nbsp;
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/digitalocean/index.html">DigitalOcean</a>
+                        <a href="/tag/shadowsocks/index.html">Shadowsocks</a>
+                        <a href="/tag/ubuntu/index.html">Ubuntu</a>
+                        <a href="/tag/vpn/index.html">VPN</a>
+                        <a href="/tag/vps/index.html">VPS</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+            <p>
+                <a href="http://weibo.com/u/3312761102" title="My Weibo Profile" target="_blank"><i class="fa fa-weibo"></i> Weibo</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                    
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
+        
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+    </body>
+</html>

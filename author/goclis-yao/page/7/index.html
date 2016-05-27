@@ -72,6 +72,61 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="basic-pelican-configuration" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/05/25/basic-pelican-configuration.html">Pelican简要配置教程</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-05-25T20:30:00+08:00" title="2014-05-25T20:30:00+08:00">2014-05-25</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。</p>
+<h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
+<p><strong>Install</strong></p>
+<div class="highlight"><pre>pip install pelican
+
+pip install markdown
+</pre></div>
+
+
+<p><strong>Quick-Start</strong></p>
+<p>自己新建一个文件夹，然后：</p>
+<div class="highlight"><pre>pelican-quickstart
+</pre></div>
+
+
+<p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
+<p><strong>Usage</strong></p>
+<p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
+<div class="highlight"><pre>make html # 将content中的markdown (or others) 生成为html
+
+make regenerate
+
+make serve
+
+make devserver
+</pre></div>
+
+
+<p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
+<div class="highlight"><pre>./develop_server.sh ...</pre></div>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2014/05/25/basic-pelican-configuration.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/pelican/index.html">Pelican</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="dynamic-load-and-virtual-memory-page-schedule-relation" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -152,47 +207,11 @@
                         </div>
                     </footer>
                 </article>
-                <article id="Git" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/01/01/Git.html">Git</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-01-01T00:00:00+08:00" title="2014-01-01T00:00:00+08:00">2014-01-01</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<h3 id="1-git">1. 本地初始化git项目并添加远程仓库<a class="headerlink" href="#1-git" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span class="nb">cd </span>newProject
-git init
-git remote add origin url <span class="c"># url为项目的远程仓库路径</span>
-git push master origin
-</pre></div>
-<h3 id="2-git">2. Git设置<a class="headerlink" href="#2-git" title="Permanent link">¶</a></h3>
-<p>全局设置（--global）：</p>
-<div class="highlight"><pre>git config --global user.name <span class="s2">"Goclis Yao"</span>
-git config --global user.email <span class="s2">"goclisyyh@gmail.com"</span>
-git config --global branch.master.remote origin
-git config --global branch.master.merge refs/heads ...</pre></div>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/01/01/Git.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/git/index.html">Git</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
 
 <nav class="pagination" role="navigation">
         <a class="newer-posts" href="/author/goclis-yao/page/6/"><i class="fa fa-angle-left"></i></a>
-    <span class="page-number">第 7 页 ⁄ 共 7 页</span>
+    <span class="page-number">第 7 页 ⁄ 共 8 页</span>
+        <a class="older-posts" href="/author/goclis-yao/page/8/"><i class="fa fa-angle-right"></i></a>
 </nav>
             </main>
         </div>

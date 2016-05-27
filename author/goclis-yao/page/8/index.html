@@ -9,8 +9,7 @@
 
 
 
-        <title>Tech - Page 4
-</title>
+        <title>Logging - Articles by Goclis Yao</title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
@@ -73,89 +72,38 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
-            	<div class="cover tag-cover">
-				    <h3 class="tag-name">
-				        分类：Tech
-				    </h3>
-				    <div class="post-count">
-				        共 11 篇文章 
-				    </div>
-				</div>
-                <article id="dynamic-load-and-virtual-memory-page-schedule-relation" class="post">
+                <article id="Git" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html">动态载入和虚拟内存的按需调页的关联</a>
+                            <a href="http://goclis.github.io/posts/2014/01/01/Git.html">Git</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-05-25T17:20:00+08:00" title="2014-05-25T17:20:00+08:00">2014-05-25</time>
+                            <time class="post-date" datetime="2014-01-01T00:00:00+08:00" title="2014-01-01T00:00:00+08:00">2014-01-01</time>
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：</p>
-<blockquote>
-<p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
-</blockquote>
-<p>那么，额外工作指的是？在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。</p>
-<p>以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
-<p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）</p>
-<div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// load it here</span>
-<span class="p">}</span>
+                        
+<h3 id="1-git">1. 本地初始化git项目并添加远程仓库<a class="headerlink" href="#1-git" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span class="nb">cd </span>newProject
+git init
+git remote add origin url <span class="c"># url为项目的远程仓库路径</span>
+git push master origin
 </pre></div>
-
-
-<p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
-<h3 id="update-at-2014-05-26">Update at 2014-05-26<a class="headerlink" href="#update-at-2014-05-26" title="Permanent link">&para;</a></h3>
-<p>因为动态加载和动态链接在操作系统的实现上已经模糊了 ...</p>
+<h3 id="2-git">2. Git设置<a class="headerlink" href="#2-git" title="Permanent link">¶</a></h3>
+<p>全局设置（--global）：</p>
+<div class="highlight"><pre>git config --global user.name <span class="s2">"Goclis Yao"</span>
+git config --global user.email <span class="s2">"goclisyyh@gmail.com"</span>
+git config --global branch.master.remote origin
+git config --global branch.master.merge refs/heads ...</pre></div>
                     </div>
                     <div class="post-permalink">
-                        <a href="/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" class="btn btn-default">阅读全文</a>
+                        <a href="/posts/2014/01/01/Git.html" class="btn btn-default">阅读全文</a>
                     </div>
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/os/index.html">OS</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="difference-between-dynamic-link-and-dynamic-load" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html">动态链接和动态载入的区别</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-05-21T15:32:00+08:00" title="2014-05-21T15:32:00+08:00">2014-05-21</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>大致的理解如下，不一定正确，确认后会更新。按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
-<ul>
-<li>编译汇编</li>
-<li>链接（将编译出来的模块和其他引用了的模块合并）</li>
-<li>加载（从硬盘加载到内存中）</li>
-<li>执行（在内存中执行）</li>
-</ul>
-<p>动态加载和动态链接是打破以上所描述的常规行为的。</p>
-<h3 id="_1">动态加载<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
-<p>硬盘上存储了一个已经生成好的目标模块，但是这个目标模块是由许多子程序组成的。每时每刻，不一定所有的子程序都需要在内存中，所以，在使用到相应子程序时再把其加载到内存中来使用，这要求用户在编写程序时合理地编写子程序，不需要操作系统提供特别的支持。</p>
-<h3 id="_2">动态链接<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
-<p>它与动态加载的概念相似，但是，它不是将加载延迟到了执行时，而是将链接延迟到执行时。主要的问题就在于理解这句话。对于动态链接，磁盘上存储着的目标模块中包含着一部分它并未链接的模块（但是它迟早要用，所以动态链接嘛~）。而使用动态加载技术时，你动态加载的模块是经过链接之后的，也就是该模块已经结合了所有它会用到的模块，只是在你程序的不同地方使用了，所以在不同的地方动态加载需要的代码。</p>
-<p>动态链接的实现是依赖于存根（stub）的，目标模块中在使用需要动态链接的模块的地方使用存根来代替，存根能够指出如何装入以及装入后的程序在内存的哪。</p>
-<p>动态链接的好处在于多个程序使用到了一个相同的模块时，不需要将该模块都像常规步骤或者动态加载那样合并到目标模块中，而是在执行时再动态链接，这样在内存中就只用存在一份该模块的代码了，即实现了共享库。</p>
-<h3 id="update-at-2014-05-26">Update at 2014-05-26 ...</h3>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/os/index.html">OS</a>
+                            <a href="/tag/git/index.html">Git</a>
                         </div>
                         <div class="pull-right share">
                         </div>
@@ -163,8 +111,8 @@
                 </article>
 
 <nav class="pagination" role="navigation">
-        <a class="newer-posts" href="/category/tech/page/3/"><i class="fa fa-angle-left"></i></a>
-    <span class="page-number">第 4 页 ⁄ 共 4 页</span>
+        <a class="newer-posts" href="/author/goclis-yao/page/7/"><i class="fa fa-angle-left"></i></a>
+    <span class="page-number">第 8 页 ⁄ 共 8 页</span>
 </nav>
             </main>
         </div>

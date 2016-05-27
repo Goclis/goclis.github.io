@@ -9,7 +9,8 @@
 
 
 
-        <title>Logging - Articles by Goclis Yao</title>
+        <title>Ubuntu
+</title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
@@ -72,6 +73,14 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+            	<div class="cover tag-cover">
+				    <h3 class="tag-name">
+				        标签：Ubuntu
+				    </h3>
+				    <div class="post-count">
+				        共 1 篇文章 
+				    </div>
+				</div>
                 <article id="fuck-the-gfw-with-shadowsocks" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -113,102 +122,7 @@
                         </div>
                     </footer>
                 </article>
-                <article id="【吃点评】蓝神火锅及金桔梗年糕火锅料理" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html">【吃点评】蓝神火锅及金桔梗年糕火锅料理</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-05-04T00:00:30+08:00" title="2016-05-04T00:00:30+08:00">2016-05-04</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>五一三天假浪了两天，小小的记录一下吃了的东西。</p>
-<p>第一天，蓝神火锅，这并不是一家店2333，只是一群人跑到了外号为蓝神的小伙伴家里吃了火锅而已，味道嘛，中规中矩，买的火锅底料和火锅的食材，没啥可吐槽的，就是菜买多了，不是浪费就是蓝神得吃蔬菜沙拉了哈哈哈。吃完火锅后打了一下午掼蛋，这游戏，感觉运气很重要。。</p>
-<p>第二天本来没打算出门的，听同学说要去南博，就顺便一起去了，逛着逛着居然遇到了西瓜一行人，就抛弃同学了哈哈哈，省略逛的内容，就是看着一堆女生各种找适合自拍的地方吧（一脸懵逼状）。晚饭去新街口金鹰吃的金桔梗年糕火锅料理，= =#做法类似于焖锅吧，点个年糕锅底，然后再把所有你点的东西都混在一锅里，上来后基本都可以吃了（除了虾），味道还可以，不过按我的饭量，不吃了两块面大概是不会饱的。价格方面，人均50吧。有一个注意的点，<strong>最多四人一桌</strong>。</p>
-<p>今年五一过的很开心啊，不过主要是看和谁过2333。</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/chi-dian-ping/index.html">吃点评</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="c-preprocessor-macro-expansion" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html">C预处理器宏展开</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-26T23:21:20+08:00" title="2016-04-26T23:21:20+08:00">2016-04-26</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：</p>
-<div class="highlight"><pre><span class="c1">// macro.h</span>
-<span class="cp">#if defined(T)</span>
 
-<span class="kt">void</span> <span class="n">T</span> <span class="err">##</span> <span class="n">_func</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="c1">// ...</span>
-<span class="p">}</span>
-
-<span class="cp">#endif</span>
-</pre></div>
-
-
-<p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
-<div class="highlight"><pre><span class="c1">// 这段代码希望定义一个int_func方法</span>
-<span class="cp">#define T int</span>
-<span class="cp">#include &quot;macro.h&quot;</span>
-<span class="cp">#undef T</span>
-</pre></div>
-
-
-<p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
-<div class="highlight"><pre><span class="c1">// macro.h</span>
-<span class="cp">#if defined(T)</span>
-
-<span class="cp">#define func_m(TN) TN ## _func</span>
-<span class="cp">#define T_func func_m(T)</span>
-
-<span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="c1">// ...</span>
-<span class="p">}</span>
-
-<span class="cp">#endif</span>
-</pre></div>
-
-
-<p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func ...</code></p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/04/26/c-preprocessor-macro-expansion.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/hong/index.html">宏</a>
-                            <a href="/tag/yu-chu-li-qi/index.html">预处理器</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-
-<nav class="pagination" role="navigation">
-    <span class="page-number">第 1 页 ⁄ 共 8 页</span>
-        <a class="older-posts" href="/author/goclis-yao/page/2/"><i class="fa fa-angle-right"></i></a>
-</nav>
             </main>
         </div>
     </div>
