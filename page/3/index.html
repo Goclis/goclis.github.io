@@ -73,6 +73,34 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="【吃点评】小红烤翅" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/04/12/【吃点评】小红烤翅.html">【吃点评】小红烤翅</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-04-12T23:05:00+08:00" title="2016-04-12T23:05:00+08:00">2016-04-12</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。</p>
+<p>价格方面，总共7个人，2个女生，吃了477，折扣后437（这个我真不知道咋算的，大众点评给的是100-9，会员价是9折，但这个数字应该是477-400/4*10，有点诡异），人均62吧，不是很贵。</p>
+<p>主打还是烤翅，挺好吃的！！一人吃了4串，一串两只，默认分辣和不辣两种，可能可以特别要变态辣吧。其他点了些羊肉串、脆骨、金针菇、韭菜等吧，都还行，韭菜有点咸。特别提下羊肉串，挺大串的，感觉这种7-8块一串的比那种3-4块两小串吃的过瘾多了（没错，就是黑的勿相忘那种小串串）。</p>
+<p>总得来说，下次再去这家店的话，我可能只点烤翅和羊肉串吧23333。没拍图，败笔。</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/04/12/【吃点评】小红烤翅.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/chi-dian-ping/index.html">吃点评</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="享受孤独，真不容易" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -122,39 +150,6 @@
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="reconstruction-of-pelican-blog" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/02/reconstruction-of-pelican-blog.html">Pelican博客结构改造</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-02T23:43:50+08:00" title="2016-04-02T23:43:50+08:00">2016-04-02</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>最近想要在博客里写一些生活相关的东西（也就是吃喝玩乐啦），同时还希望能够比较清晰地区分开技术文章和生活文章，所以这两天就在折腾着博客内容的改造，不得不提一下，这个折腾过程中看代码的感觉真的是让我找回了一丝大二时的感觉，很爽！</p>
-<p>这篇文章把一些我在改造过程中遇到的问题以及解决思路记录下来。</p>
-<h3 id="template-page">使用Template Page划分内容<a class="headerlink" href="#template-page" title="Permanent link">¶</a></h3>
-<p>博客的改造是希望把内容分成四块：技术、生活、笔记、琐碎。技术就是先前写的这些博文；生活记录一些小结或是感想的东西；笔记实质上是我平时针对一些具体技术记录的一些Tip，打算一并放上来；琐碎实际上就类似于微博，一些短的想法之类的。</p>
-<p>按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板<code>page.html</code>决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。</p>
-<p>因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在<code>pelicanconf.py</code>中对<code>TEMPLATE_PAGES</code>进行相关的设置即可，如下：</p>
-<div class="highlight"><pre><span class="n">TEMPLATE_PAGES ...</span></pre></div>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/04/02/reconstruction-of-pelican-blog.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/jinja2/index.html">Jinja2</a>
-                            <a href="/tag/pelican/index.html">Pelican</a>
                         </div>
                         <div class="pull-right share">
                         </div>
