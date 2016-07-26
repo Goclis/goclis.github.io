@@ -46,7 +46,7 @@ MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'extra', 'toc(permalink=true
 
 # 插件：提取目录
 PLUGIN_PATHS = ['plugins']
-PLUGINS = ['extract_toc', 'sitemap', 'tipue_search']
+PLUGINS = ['extract_toc', 'sitemap', 'tipue_search', 'relative_url_replacer']
 
 # 文章生成
 STATIC_PATHS = ['images', 'pdfs']  # 静态文件目录
