@@ -93,8 +93,6 @@
 <div class="highlight"><pre>// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 </pre></div>
-
-
 <p>接下来，看看是如何验证的。往下我们称MB为<strong>内部证书</strong>，B为证书。</p>
 <ol>
 <li>
@@ -110,7 +108,7 @@
 <p>直至最后一个证书，如果摘要都匹配，说明这个证书是有效的，没被人篡改。</p>
 </li>
 </ol>
-<p><img alt="流程图" src="/images/certificate_chain_20140621155213.png" /></p>
+<p><img alt="流程图" src="/images/certificate_chain_20140621155213.png"/></p>
 <p>当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。</p>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>

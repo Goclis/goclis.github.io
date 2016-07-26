@@ -92,8 +92,6 @@
 <div class="highlight"><pre>// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 </pre></div>
-
-
 <p>接下来，看看是如何验证的。往下我们称MB为 ...</p>
                     </div>
                     <div class="post-permalink">
@@ -121,21 +119,17 @@
                     </div>
                     <div class="post-content">
                         <p>最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。</p>
-<h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
 <p><strong>Install</strong></p>
 <div class="highlight"><pre>pip install pelican
 
 pip install markdown
 </pre></div>
-
-
 <p><strong>Quick-Start</strong></p>
 <p>自己新建一个文件夹，然后：</p>
 <div class="highlight"><pre>pelican-quickstart
 </pre></div>
-
-
 <p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
 <p><strong>Usage</strong></p>
 <p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
@@ -147,8 +141,6 @@ make serve
 
 make devserver
 </pre></div>
-
-
 <p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
 <div class="highlight"><pre>./develop_server.sh ...</pre></div>
                     </div>
@@ -187,10 +179,8 @@ make devserver
     <span class="c1">// load it here</span>
 <span class="p">}</span>
 </pre></div>
-
-
 <p>而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~</p>
-<h3 id="update-at-2014-05-26">Update at 2014-05-26<a class="headerlink" href="#update-at-2014-05-26" title="Permanent link">&para;</a></h3>
+<h3 id="update-at-2014-05-26">Update at 2014-05-26<a class="headerlink" href="#update-at-2014-05-26" title="Permanent link">¶</a></h3>
 <p>因为动态加载和动态链接在操作系统的实现上已经模糊了 ...</p>
                     </div>
                     <div class="post-permalink">

@@ -96,16 +96,12 @@
 
 <span class="cp">#endif</span>
 </pre></div>
-
-
 <p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
 <div class="highlight"><pre><span class="c1">// 这段代码希望定义一个int_func方法</span>
 <span class="cp">#define T int</span>
-<span class="cp">#include &quot;macro.h&quot;</span>
+<span class="cp">#include "macro.h"</span>
 <span class="cp">#undef T</span>
 </pre></div>
-
-
 <p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
 <div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
@@ -120,8 +116,6 @@
 
 <span class="cp">#endif</span>
 </pre></div>
-
-
 <p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func</code>方法，而是会定义一个<code>T_func</code>方法（这一点可以通过查看VS生成的obj文件中的符号确定，或是设置选项让编译器保留预处理产生的.i文件），下面给出正确的写法：</p>
 <div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
@@ -137,8 +131,6 @@
 
 <span class="cp">#endif</span>
 </pre></div>
-
-
 <p>之所以需要这样来实现是因为宏展开的规则，我对于宏展开的规则不是特别熟悉，但在<a href="https://msdn.microsoft.com/zh-cn/library/09dwwt6y.aspx">MSDN</a>上找到了一段可能能够用来解释的内容：</p>
 <blockquote>
 <p>如果宏定义中的形参的前面或后面带有 token-pasting 运算符，则会立即将形参替换为未扩展的实参。在替换前将不会对参数执行宏扩展。</p>
@@ -147,8 +139,6 @@
 <p>这点通过修改一下代码也可以验证：</p>
 <div class="highlight"><pre><span class="cp">#define T_func func_m(B)</span>
 </pre></div>
-
-
 <p>这里改成了B，所以最后定义的符号是<code>B_func</code>，因为不管是啥，预处理器都不会对它展开。</p>
 <p>本来想结合生成的obj文件来写的，但写这个的时候不是用的Windows，所以就算了，懒23333。</p>
 <div class="widget">

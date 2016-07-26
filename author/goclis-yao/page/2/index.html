@@ -94,16 +94,12 @@
 
 <span class="cp">#endif</span>
 </pre></div>
-
-
 <p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
 <div class="highlight"><pre><span class="c1">// 这段代码希望定义一个int_func方法</span>
 <span class="cp">#define T int</span>
-<span class="cp">#include &quot;macro.h&quot;</span>
+<span class="cp">#include "macro.h"</span>
 <span class="cp">#undef T</span>
 </pre></div>
-
-
 <p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
 <div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
@@ -118,8 +114,6 @@
 
 <span class="cp">#endif</span>
 </pre></div>
-
-
 <p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func ...</code></p>
                     </div>
                     <div class="post-permalink">

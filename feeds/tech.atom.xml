@@ -94,16 +94,12 @@ kill xxx
 
 &lt;span class="cp"&gt;#endif&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;这段代码是不能用的，因为预处理符号&lt;code&gt;##&lt;/code&gt;是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 这段代码希望定义一个int_func方法&lt;/span&gt;
 &lt;span class="cp"&gt;#define T int&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;quot;macro.h&amp;quot;&lt;/span&gt;
+&lt;span class="cp"&gt;#include "macro.h"&lt;/span&gt;
 &lt;span class="cp"&gt;#undef T&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;上面提到了&lt;code&gt;##&lt;/code&gt;是不能直接写在代码里的，所以我一开始是这样实现的：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
@@ -118,8 +114,6 @@ kill xxx
 
 &lt;span class="cp"&gt;#endif&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;但是，这样的写法并不能够正确的定义我们例子中想要的&lt;code&gt;int_func&lt;/code&gt;方法，而是会定义一个&lt;code&gt;T_func&lt;/code&gt;方法（这一点可以通过查看VS生成的obj文件中的符号确定，或是设置选项让编译器保留预处理产生的.i文件），下面给出正确的写法：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
@@ -135,8 +129,6 @@ kill xxx
 
 &lt;span class="cp"&gt;#endif&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;之所以需要这样来实现是因为宏展开的规则，我对于宏展开的规则不是特别熟悉，但在&lt;a href="https://msdn.microsoft.com/zh-cn/library/09dwwt6y.aspx"&gt;MSDN&lt;/a&gt;上找到了一段可能能够用来解释的内容：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;如果宏定义中的形参的前面或后面带有 token-pasting 运算符，则会立即将形参替换为未扩展的实参。在替换前将不会对参数执行宏扩展。&lt;/p&gt;
@@ -145,8 +137,6 @@ kill xxx
 &lt;p&gt;这点通过修改一下代码也可以验证：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define T_func func_m(B)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;这里改成了B，所以最后定义的符号是&lt;code&gt;B_func&lt;/code&gt;，因为不管是啥，预处理器都不会对它展开。&lt;/p&gt;
 &lt;p&gt;本来想结合生成的obj文件来写的，但写这个的时候不是用的Windows，所以就算了，懒23333。&lt;/p&gt;</summary><category term="预处理器"></category><category term="宏"></category></entry><entry><title>HTTP请求中的数据</title><link href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" rel="alternate"></link><updated>2016-04-16T22:47:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-16:posts/2016/04/16/data-in-http-request.html</id><summary type="html">
 &lt;p&gt;那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。&lt;/p&gt;
@@ -384,11 +374,11 @@ nmake -f ms\nt.mak install
 &lt;li&gt;WIFI + 网页验证&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。&lt;/p&gt;
-&lt;h3 id="_1"&gt;拨号上网&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="_1"&gt;拨号上网&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。&lt;/p&gt;
 &lt;p&gt;以下为个人猜想，错误请指出，谢谢！&lt;/p&gt;
 &lt;p&gt;先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="isp-architecture" src="/images/isp-architecture.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="isp-architecture" src="/images/isp-architecture.png"/&gt;&lt;/p&gt;
 &lt;p&gt;接下来就按照这个图来讲讲整个拨号的过程吧。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1. 插上网线&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。&lt;/p&gt;
@@ -422,16 +412,16 @@ nmake -f ms\nt.mak install
 &lt;li&gt;数据帧到达Switch，Switch检查Source MAC Address是否可放行，不可放行则丢弃帧，否则放行。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;上面这3步基本上就是数据帧通过的过程，而数据帧能否通过，就是是否进行了用户认证的事了，其他的，DNS什么的事都是基于这个基础的。&lt;/p&gt;
-&lt;h3 id="wifi"&gt;Wifi上网&lt;a class="headerlink" href="#wifi" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="wifi"&gt;Wifi上网&lt;a class="headerlink" href="#wifi" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;学校的校园wifi的认证则要比拨号认证多一层。&lt;/p&gt;
 &lt;p&gt;首先，要连上AP，这个的认证的作用和拨号的用户认证相似，经过了这一层认证后才能保证你的数据帧能被AP转发出去，而学校的server，从校园网的记录上来看，很明显，它保存了你的MAC地址和分配的IP地址的映射。AP具体的认证过程参见802.11。&lt;/p&gt;
 &lt;p&gt;其次，在连接上AP后，我们已经可以上内网了，也就意味着，我们的数据包已经可以在内网中转发了，但是，依旧不可以访问外网。我个人的猜想是外网出口的路由那块把出境的数据包给丢弃了，而丢弃的原因，是因为没经过WIFI验证。所以，下一步我们得打开浏览器登陆网址进行WIFI认证。&lt;/p&gt;
 &lt;p&gt;而Wifi验证过后，我们的数据包就可以出境访问外网了。所以，这个Wifi验证实际上可能在出口的路由上保存了一组能够出境的IP地址，当数据包到来时，检查它的Source IP，以判断是否放行出境，或者是丢弃。这也就是有一段时间，我们一连上wifi不经过验证就能上网的原因，因为我们被分配到了一个别人已经认证的IP了，而服务器那边还没把这个下线的认证记录给注销掉。&lt;/p&gt;
-&lt;h3 id="_2"&gt;对先前问题的解答&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="_2"&gt;对先前问题的解答&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;现在，可以稍微解释下我在&lt;a href="/posts/2014/08/19/pptp-vpn-process.html"&gt;PPTP VPN Process&lt;/a&gt;留下的问题了。&lt;/p&gt;
 &lt;p&gt;第一个问题这篇文章已经解释的差不多了。&lt;/p&gt;
 &lt;p&gt;第二个的话，个人认为，服务器肯定是有一组key-value的映射保存了这些的，而数据包中的信息是足够组成唯一的key的，key由什么组成那就是VPN提供商自己决定的了。&lt;/p&gt;
-&lt;h3 id="_3"&gt;参考资料&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="_3"&gt;参考资料&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://baike.baidu.com/view/3246.htm#2_2"&gt;PPPoE&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://whatismyipaddress.com/ppp-pppoe"&gt;What is PPP and PPPoE?&lt;/a&gt;&lt;/li&gt;
@@ -544,27 +534,21 @@ imull 8(%ebp)
 movl %eax, (%esp)
 movl %edx, 4(%esp)
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;代码的作用就是将两个数的乘积存回栈顶。代码没有问题，让我疑惑的是书上这两句话：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;存储两个寄存器的位置对小端机器来说是对的——寄存器 %edx 中的高位存在相对于 %eax 的低位偏移量为 4 的地方。
 栈是向低地址方向增长的，也就是说低位在栈顶。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;在考虑这两句话的时候，突然发现自己对 mov 的操作并不是特别的清楚，就去查了查，大致搞明白了一些。&lt;/p&gt;
-&lt;h3 id="mov"&gt;mov指令&lt;a class="headerlink" href="#mov" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="mov"&gt;mov指令&lt;a class="headerlink" href="#mov" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;我们知道mov在IA32中有基础的三类操作，即b, w, l。&lt;/p&gt;
 &lt;p&gt;而mov在使用时大致如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;这里因为是b类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。&lt;/p&gt;
 &lt;p&gt;然而对于w和l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;movl %eax, (%edx)
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;我们知道内存是按字节整理的，也就是说edx代表的那个地址也就只有1个字节，而源操作数eax却是4个字节，因而，需要多个地址进行存放，我们假设&lt;code&gt;%eax=0x0A0B0C0D, %edx=4&lt;/code&gt;，则内存图如下表：&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -610,7 +594,7 @@ movl %edx, 4(%esp)
 &lt;/table&gt;
 &lt;p&gt;这里是假设机器为&lt;strong&gt;小端&lt;/strong&gt;。可见，占用了4~7的内存地址。&lt;/p&gt;
 &lt;p&gt;所以，mov指令实际占用内存地址的情况是与源操作数的字节数有关的，而多出来的地方，是通过开始地址（即指令中的目标操作数）往上加的。&lt;/p&gt;
-&lt;h3 id="_1"&gt;回归问题&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="_1"&gt;回归问题&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;既然知道了mov的行为，再回过头来看看那段代码。&lt;/p&gt;
 &lt;p&gt;假设乘积为&lt;code&gt;0x010203040A0B0C0D, %esp=104&lt;/code&gt;，小端机器，则该段代码执行后内存应该是如下这样的：&lt;/p&gt;
 &lt;table&gt;
@@ -1177,8 +1161,6 @@ movl %edx, 4(%esp)
 &lt;div class="highlight"&gt;&lt;pre&gt;// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;接下来，看看是如何验证的。往下我们称MB为&lt;strong&gt;内部证书&lt;/strong&gt;，B为证书。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
@@ -1194,7 +1176,7 @@ movl %edx, 4(%esp)
 &lt;p&gt;直至最后一个证书，如果摘要都匹配，说明这个证书是有效的，没被人篡改。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img alt="流程图" src="/images/certificate_chain_20140621155213.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="流程图" src="/images/certificate_chain_20140621155213.png"/&gt;&lt;/p&gt;
 &lt;p&gt;当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。&lt;/p&gt;</summary><category term="安全"></category><category term="数字证书"></category></entry><entry><title>动态载入和虚拟内存的按需调页的关联</title><link href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" rel="alternate"></link><updated>2014-05-25T17:20:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-25:posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html</id><summary type="html">&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。&lt;/p&gt;
@@ -1207,10 +1189,8 @@ movl %edx, 4(%esp)
     &lt;span class="c1"&gt;// load it here&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
-
 &lt;p&gt;而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~&lt;/p&gt;
-&lt;h3 id="update-at-2014-05-26"&gt;Update at 2014-05-26&lt;a class="headerlink" href="#update-at-2014-05-26" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="update-at-2014-05-26"&gt;Update at 2014-05-26&lt;a class="headerlink" href="#update-at-2014-05-26" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解基本上是正确的。&lt;/p&gt;</summary><category term="OS"></category></entry><entry><title>动态链接和动态载入的区别</title><link href="http://goclis.github.io/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html" rel="alternate"></link><updated>2014-05-21T15:32:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-21:posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html</id><summary type="html">&lt;p&gt;大致的理解如下，不一定正确，确认后会更新。按照一般的步骤，用户程序在执行前会经历以下几个步骤：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;编译汇编&lt;/li&gt;
@@ -1219,13 +1199,13 @@ movl %edx, 4(%esp)
 &lt;li&gt;执行（在内存中执行）&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;动态加载和动态链接是打破以上所描述的常规行为的。&lt;/p&gt;
-&lt;h3 id="_1"&gt;动态加载&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="_1"&gt;动态加载&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;硬盘上存储了一个已经生成好的目标模块，但是这个目标模块是由许多子程序组成的。每时每刻，不一定所有的子程序都需要在内存中，所以，在使用到相应子程序时再把其加载到内存中来使用，这要求用户在编写程序时合理地编写子程序，不需要操作系统提供特别的支持。&lt;/p&gt;
-&lt;h3 id="_2"&gt;动态链接&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="_2"&gt;动态链接&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;它与动态加载的概念相似，但是，它不是将加载延迟到了执行时，而是将链接延迟到执行时。主要的问题就在于理解这句话。对于动态链接，磁盘上存储着的目标模块中包含着一部分它并未链接的模块（但是它迟早要用，所以动态链接嘛~）。而使用动态加载技术时，你动态加载的模块是经过链接之后的，也就是该模块已经结合了所有它会用到的模块，只是在你程序的不同地方使用了，所以在不同的地方动态加载需要的代码。&lt;/p&gt;
 &lt;p&gt;动态链接的实现是依赖于存根（stub）的，目标模块中在使用需要动态链接的模块的地方使用存根来代替，存根能够指出如何装入以及装入后的程序在内存的哪。&lt;/p&gt;
 &lt;p&gt;动态链接的好处在于多个程序使用到了一个相同的模块时，不需要将该模块都像常规步骤或者动态加载那样合并到目标模块中，而是在执行时再动态链接，这样在内存中就只用存在一份该模块的代码了，即实现了共享库。&lt;/p&gt;
-&lt;h3 id="update-at-2014-05-26"&gt;Update at 2014-05-26&lt;a class="headerlink" href="#update-at-2014-05-26" title="Permanent link"&gt;&amp;para;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="update-at-2014-05-26"&gt;Update at 2014-05-26&lt;a class="headerlink" href="#update-at-2014-05-26" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;问了老师之后，再自己查了查维基百科之后有了更深的理解。上面的理解依旧是正确的，只是不那么准确，参考一下维基百科的内容。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;动态加载&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;

@@ -91,27 +91,21 @@ imull 8(%ebp)
 movl %eax, (%esp)
 movl %edx, 4(%esp)
 </pre></div>
-
-
 <p>代码的作用就是将两个数的乘积存回栈顶。代码没有问题，让我疑惑的是书上这两句话：</p>
 <blockquote>
 <p>存储两个寄存器的位置对小端机器来说是对的——寄存器 %edx 中的高位存在相对于 %eax 的低位偏移量为 4 的地方。
 栈是向低地址方向增长的，也就是说低位在栈顶。</p>
 </blockquote>
 <p>在考虑这两句话的时候，突然发现自己对 mov 的操作并不是特别的清楚，就去查了查，大致搞明白了一些。</p>
-<h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">&para;</a></h3>
+<h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">¶</a></h3>
 <p>我们知道mov在IA32中有基础的三类操作，即b, w, l。</p>
 <p>而mov在使用时大致如下：</p>
 <div class="highlight"><pre>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
 </pre></div>
-
-
 <p>这里因为是b类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。</p>
 <p>然而对于w和l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：</p>
 <div class="highlight"><pre>movl %eax, (%edx)
 </pre></div>
-
-
 <p>我们知道内存是按字节整理的，也就是说edx代表的那个地址也就只有1个字节，而源操作数eax却是4个字节，因而，需要多个地址进行存放，我们假设<code>%eax=0x0A0B0C0D, %edx=4</code>，则内存图如下表：</p>
 <table>
 <thead>
@@ -157,7 +151,7 @@ movl %edx, 4(%esp)
 </table>
 <p>这里是假设机器为<strong>小端</strong>。可见，占用了4~7的内存地址。</p>
 <p>所以，mov指令实际占用内存地址的情况是与源操作数的字节数有关的，而多出来的地方，是通过开始地址（即指令中的目标操作数）往上加的。</p>
-<h3 id="_1">回归问题<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<h3 id="_1">回归问题<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>既然知道了mov的行为，再回过头来看看那段代码。</p>
 <p>假设乘积为<code>0x010203040A0B0C0D, %esp=104</code>，小端机器，则该段代码执行后内存应该是如下这样的：</p>
 <table>
