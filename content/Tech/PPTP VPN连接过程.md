@@ -1,10 +1,8 @@
-Title: PPTP VPN连接过程  
+Title: PPTP VPN Process  
+Slug: pptp-vpn-process    
 Date: 2014-08-19 14:41  
 Tags: VPN, PPTP  
-Slug: pptp-vpn-process    
 Author: Goclis Yao  
-
-[TOC]
 
 不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。
 
@@ -125,7 +123,7 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 ### 总结
 微软TechNet的科普文业界良心，Reference值得一看！
 
-### 参考资料
+###References
 1. [RFC 2637][1]
 2. [PPP Connection Process][2]
 3. [How VPN Works: Virtual Private Network (VPN)][3]

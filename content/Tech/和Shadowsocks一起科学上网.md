@@ -1,12 +1,11 @@
 Title: 和Shadowsocks一起科学上网  
 Tags: Shadowsocks, VPS, VPN, Ubuntu, DigitalOcean  
 Slug: fuck-the-gfw-with-shadowsocks  
-Date: 2016-05-27 9:50  
-
+Date: 2016-05-27 9:50 
+ 
 [TOC]
 
 拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
-
 这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。
 
 ### VPS搭建服务器
@@ -22,7 +21,7 @@ Date: 2016-05-27 9:50
 #### 开启IPv6
 默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：
 
-![DO VPS IPv6 Address](../images/160526_DOVPSIPv6Address.png)
+![](http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg)
 
 接着需要到VPS上[配置IPv6][3]，使用ssh连接，编辑`/etc/network/interfaces`，在`auto eth0`后加上下面的内容：
 
@@ -105,13 +104,13 @@ Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默�
 
 在Windows上，Shadowsocks是通过修改`Internet选项->连接->局域网(LAN)设置`中的内容实现的代理，如下图：
 
-![WindowsLANSettings](../images/160527_WindowsLANSettings.png)
+![](http://ww3.sinaimg.cn/large/006y8lVagw1f86x0qp7gfj30cp0c5jst.jpg)
 
 当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。
 
 比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为`127.0.0.1:1080`，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：
 
-![NeteaseMusic](../images/160527_NeteaseMusic.png)
+![](http://ww1.sinaimg.cn/large/006y8lVagw1f86x15ike6j30g308bwep.jpg)
 
 自己可以查看一下使用的软件是否要被代理，比如IDM、迅雷之类的下载软件就可以考虑设置代理。
 
