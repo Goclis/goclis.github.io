@@ -107,8 +107,8 @@
                             </div>
                         </div>
                         
-<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。</p>
-<p>这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
+<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
+这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
 <h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
 <p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
 <p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
@@ -119,7 +119,7 @@
 </ul>
 <h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
 <p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：</p>
-<p><img alt="DO VPS IPv6 Address" src="/images/160526_DOVPSIPv6Address.png"/></p>
+<p><img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg"/></p>
 <p>接着需要到VPS上<a href="http://4b3r.com/digitalocean-enable-ipv6/">配置IPv6</a>，使用ssh连接，编辑<code>/etc/network/interfaces</code>，在<code>auto eth0</code>后加上下面的内容：</p>
 <div class="highlight"><pre>iface eth0 inet6 static
         address primary_ipv6_address
@@ -176,10 +176,10 @@ kill xxx
 <p>Shadowsocks的客户端有两种代理模式：PAC及全局模式。PAC就是只代理部分网站，而全局模式是代理所有的网站。</p>
 <p>Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默认监听端口为1080（可以通过配置修改）。之后所有的80及443端口的出境流量，都会经过<code>localhost:1080</code>的过滤，Shadowsocks根据代理模式来判断如何处理流量，PAC模式的话则会查看PAC列表（只有在列表中的站点才会代理），而全局模式则全部代理。</p>
 <p>在Windows上，Shadowsocks是通过修改<code>Internet选项-&gt;连接-&gt;局域网(LAN)设置</code>中的内容实现的代理，如下图：</p>
-<p><img alt="WindowsLANSettings" src="/images/160527_WindowsLANSettings.png"/></p>
+<p><img alt="" src="http://ww3.sinaimg.cn/large/006y8lVagw1f86x0qp7gfj30cp0c5jst.jpg"/></p>
 <p>当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。</p>
 <p>比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为<code>127.0.0.1:1080</code>，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：</p>
-<p><img alt="NeteaseMusic" src="/images/160527_NeteaseMusic.png"/></p>
+<p><img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x15ike6j30g308bwep.jpg"/></p>
 <p>自己可以查看一下使用的软件是否要被代理，比如IDM、迅雷之类的下载软件就可以考虑设置代理。</p>
 <h4 id="ipv6_1">利用IPv6<a class="headerlink" href="#ipv6_1" title="Permanent link">¶</a></h4>
 <p>如果你的运营商支持IPv6的话，建议在客户端配置上增加一个服务器，IP设置为VPS的IPv6 IP。Shadowsocks的服务端程序非常机智，如果你访问的网站是v4站点的话，服务器会在它那边使用v4访问该站，但结果依旧通过v6返回给你。对于校园网用户来说，IPv6一般都是免费的，可以省一笔流量费，并且，v6由于使用人数较少，网络状况也比较好。</p>

@@ -10,7 +10,7 @@
 
 <meta name="keywords" content="VPN, PPTP, Tech, " />
 
-        <title>PPTP VPN连接过程  | Logging
+        <title>PPTP VPN Process  | Logging
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -77,7 +77,7 @@
                 <article id="pptp-vpn-process" class="post">
                     <header class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN连接过程</a>
+                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
@@ -85,36 +85,7 @@
                         </div>
                     </header>
                     <div class="post-content">
-                        <div class="widget">
-                            <h4 class="title">目录</h4>
-                            <div class="content toc">
-                                <div class="toc">
-<ul>
-<li><a href="#vpn">VPN的两种架构</a></li>
-<li><a href="#vpn_1">两种使用VPN的情境</a><ul>
-<li><a href="#internet-based-vpn">Internet-Based VPN</a></li>
-<li><a href="#intranet-based-vpn">Intranet-Based VPN</a></li>
-</ul>
-</li>
-<li><a href="#vpn-tunneling">VPN Tunneling（隧道）</a></li>
-<li><a href="#point-to-point-tunneling-protocol-pptp">Point-to-Point Tunneling Protocol (PPTP)</a><ul>
-<li><a href="#pptp-inherit-ppp">PPTP inherit PPP</a></li>
-<li><a href="#pptp-control-connection">PPTP Control Connection</a></li>
-<li><a href="#pptp-data-tunneling">PPTP Data Tunneling</a></li>
-<li><a href="#pptp-vpn">PPTP VPN 连接过程</a></li>
-<li><a href="#pptp-vpn-data-transfer-process">PPTP VPN Data Transfer Process</a></li>
-</ul>
-</li>
-<li><a href="#vpn_2">云梯VPN区分设备</a></li>
-<li><a href="#problems">Problems</a></li>
-<li><a href="#_1">总结</a></li>
-<li><a href="#_2">参考资料</a></li>
-</ul>
-</div>
-                            </div>
-                        </div>
-                        
-<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
+                        <p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
 <p>以下文章中VPN如不特指皆为PPTP VPN。</p>
 <p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
 <p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
@@ -210,7 +181,7 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 </ol>
 <h3 id="_1">总结<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>微软TechNet的科普文业界良心，Reference值得一看！</p>
-<h3 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
+<h3 id="references">References<a class="headerlink" href="#references" title="Permanent link">¶</a></h3>
 <ol>
 <li><a href="http://tools.ietf.org/html/rfc2637">RFC 2637</a></li>
 <li><a href="http://technet.microsoft.com/en-us/library/cc958006.aspx">PPP Connection Process</a></li>
@@ -246,7 +217,7 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
                 <div class="prev-next-wrap clearfix">
                     <a class="btn btn-default" href="/posts/2014/08/08/mov-with-memory.html"><i class="fa fa-angle-left fa-fw"></i> mov指令与内存</a>
                     &nbsp;
-                    <a class="btn btn-default" href="/posts/2014/08/21/data-linker-layer-authentication.html">数据链路层的身份认证 <i class="fa fa-angle-right fa-fw"></i></a>
+                    <a class="btn btn-default" href="/posts/2014/08/21/data-linker-layer-authentication.html">Data Linker Layer Authentication <i class="fa fa-angle-right fa-fw"></i></a>
                 </div>
             </main>
             <aside class="col-md-4 sidebar">

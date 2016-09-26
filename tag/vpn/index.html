@@ -93,8 +93,8 @@
                     </div>
                     <div class="post-content">
                         
-<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。</p>
-<p>这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
+<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
+这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
 <h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
 <p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
 <p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
@@ -125,7 +125,7 @@
                 <article id="pptp-vpn-process" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN连接过程</a>
+                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
@@ -133,8 +133,7 @@
                         </div>
                     </div>
                     <div class="post-content">
-                        
-<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
+                        <p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
 <p>以下文章中VPN如不特指皆为PPTP VPN。</p>
 <p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
 <p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>

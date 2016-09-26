@@ -364,4 +364,4 @@ Summary: Somethings         # 概要
 &lt;p&gt;重启后访问localhost即可。&lt;/p&gt;
 &lt;h3 id="some-bugs"&gt;Some bugs&lt;a class="headerlink" href="#some-bugs" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;基本都解决了，但是有一些中文的原因导致的不兼容，比如说代码高亮。&lt;/p&gt;
-&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</summary><category term="Pelican"></category></entry></feed>
+&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</summary><category term="Pelican"></category><category term="Python"></category></entry></feed>

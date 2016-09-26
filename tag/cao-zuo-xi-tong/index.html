@@ -9,7 +9,7 @@
 
 
 
-        <title>Ubuntu
+        <title>操作系统
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -75,48 +75,51 @@
             <main class="col-md-offset-1 col-md-10 main-content">
             	<div class="cover tag-cover">
 				    <h3 class="tag-name">
-				        标签：Ubuntu
+				        标签：操作系统
 				    </h3>
 				    <div class="post-count">
 				        共 1 篇文章 
 				    </div>
 				</div>
-                <article id="fuck-the-gfw-with-shadowsocks" class="post">
+                <article id="os-experiment-note" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html">和Shadowsocks一起科学上网</a>
+                            <a href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html">操作系统课设笔记</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00">2016-05-27</time>
+                            <time class="post-date" datetime="2014-07-30T17:22:00+08:00" title="2014-07-30T17:22:00+08:00">2014-07-30</time>
                         </div>
                     </div>
                     <div class="post-content">
                         
-<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
-这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
-<h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
-<p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
-<p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
-<p>额，毕竟不是软文也不是小白教程，就不截没必要的图了。Droplet选的Ubuntu 14.04，创建完毕后，DO会给你发邮件，里面有VPS的IP以及root用户的密码，用ssh工具（Windows下可以下载putty）连接上去进行如设置root密码等一系列基础的配置后即可：</p>
+<p>因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。</p>
+<p>这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。</p>
+<p>课设平台：</p>
 <ul>
-<li>*unix: <code>ssh root@IP</code></li>
-<li>Windows: 在putty里填写IP，然后点击连接</li>
+<li>fedora 7</li>
+<li>linux-2.6.21 source code</li>
+<li>i386</li>
 </ul>
-<h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
-<p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址 ...</p>
+<h3 id="1">实验1 编译内核<a class="headerlink" href="#1" title="Permanent link">¶</a></h3>
+<p>纯粹照着书搞。。</p>
+<h4 id="_1">实验过程<a class="headerlink" href="#_1" title="Permanent link">¶</a></h4>
+<p>以下操作假设用户为root，目录自行决定。</p>
+<div class="highlight"><pre>% tar -zxvf linux-2.6.21.tar.gz
+% <span class="nb">cd </span>linux-2.6.21
+% make mrproper  <span class="c"># 清楚掉之前编译产生的垃圾</span>
+% make oldconfig  <span class="c"># 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可</span>
+% vim Makefile
+</pre></div>
+<p>修改<code>EXTARVERSION ...</code></p>
                     </div>
                     <div class="post-permalink">
-                        <a href="/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" class="btn btn-default">阅读全文</a>
+                        <a href="/posts/2014/07/30/os-experiment-note.html" class="btn btn-default">阅读全文</a>
                     </div>
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/digitalocean/index.html">DigitalOcean</a>
-                            <a href="/tag/shadowsocks/index.html">Shadowsocks</a>
-                            <a href="/tag/ubuntu/index.html">Ubuntu</a>
-                            <a href="/tag/vpn/index.html">VPN</a>
-                            <a href="/tag/vps/index.html">VPS</a>
+                            <a href="/tag/cao-zuo-xi-tong/index.html">操作系统</a>
                         </div>
                         <div class="pull-right share">
                         </div>

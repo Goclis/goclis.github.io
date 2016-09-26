@@ -73,10 +73,52 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="data-linker-layer-authentication" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html">Data Linker Layer Authentication</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-08-21T16:21:00+08:00" title="2014-08-21T16:21:00+08:00">2014-08-21</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>标题可能不是很准确，这篇东东主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
+<p>下面列举下我自己平常的一些上网方式：</p>
+<ul>
+<li>宿舍网线拨号</li>
+<li>WIFI + 网页验证</li>
+</ul>
+<p>这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。</p>
+<h3 id="_1">拨号上网<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
+<p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
+<p>以下为个人猜想，错误请指出，谢谢！</p>
+<p>先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：</p>
+<p><img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86y4uft4tj30p90fon0o.jpg"/></p>
+<p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
+<h4 id="1">1. 插上网线<a class="headerlink" href="#1" title="Permanent link">¶</a></h4>
+<p>插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。</p>
+<h4 id="2">2. 拨号认证<a class="headerlink" href="#2" title="Permanent link">¶</a></h4>
+<p>这里以PPPoE为例，但协议本身的内容不少 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2014/08/21/data-linker-layer-authentication.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/isp/index.html">ISP</a>
+                            <a href="/tag/pppoe/index.html">PPPoE</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="pptp-vpn-process" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN连接过程</a>
+                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
@@ -84,8 +126,7 @@
                         </div>
                     </div>
                     <div class="post-content">
-                        
-<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
+                        <p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
 <p>以下文章中VPN如不特指皆为PPTP VPN。</p>
 <p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
 <p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
@@ -145,50 +186,6 @@ movl %edx, 4(%esp)
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/hui-bian/index.html">汇编</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="os-experiment-note" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html">操作系统课设笔记</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-07-30T17:22:00+08:00" title="2014-07-30T17:22:00+08:00">2014-07-30</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。</p>
-<p>这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。</p>
-<p>课设平台：</p>
-<ul>
-<li>fedora 7</li>
-<li>linux-2.6.21 source code</li>
-<li>i386</li>
-</ul>
-<h3 id="1">实验1 编译内核<a class="headerlink" href="#1" title="Permanent link">¶</a></h3>
-<p>纯粹照着书搞。。</p>
-<h4 id="_1">实验过程<a class="headerlink" href="#_1" title="Permanent link">¶</a></h4>
-<p>以下操作假设用户为root，目录自行决定。</p>
-<div class="highlight"><pre>% tar -zxvf linux-2.6.21.tar.gz
-% <span class="nb">cd </span>linux-2.6.21
-% make mrproper  <span class="c"># 清楚掉之前编译产生的垃圾</span>
-% make oldconfig  <span class="c"># 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可</span>
-% vim Makefile
-</pre></div>
-<p>修改<code>EXTARVERSION ...</code></p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/07/30/os-experiment-note.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/os/index.html">OS</a>
                         </div>
                         <div class="pull-right share">
                         </div>

@@ -9,7 +9,7 @@
 
 
 
-        <title>Ubuntu
+        <title>Python
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -75,48 +75,57 @@
             <main class="col-md-offset-1 col-md-10 main-content">
             	<div class="cover tag-cover">
 				    <h3 class="tag-name">
-				        标签：Ubuntu
+				        标签：Python
 				    </h3>
 				    <div class="post-count">
 				        共 1 篇文章 
 				    </div>
 				</div>
-                <article id="fuck-the-gfw-with-shadowsocks" class="post">
+                <article id="basic-pelican-configuration" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html">和Shadowsocks一起科学上网</a>
+                            <a href="http://goclis.github.io/posts/2014/05/25/basic-pelican-configuration.html">Pelican简要配置教程</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00">2016-05-27</time>
+                            <time class="post-date" datetime="2014-05-25T20:30:00+08:00" title="2014-05-25T20:30:00+08:00">2014-05-25</time>
                         </div>
                     </div>
                     <div class="post-content">
-                        
-<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
-这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
-<h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
-<p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
-<p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
-<p>额，毕竟不是软文也不是小白教程，就不截没必要的图了。Droplet选的Ubuntu 14.04，创建完毕后，DO会给你发邮件，里面有VPS的IP以及root用户的密码，用ssh工具（Windows下可以下载putty）连接上去进行如设置root密码等一系列基础的配置后即可：</p>
-<ul>
-<li>*unix: <code>ssh root@IP</code></li>
-<li>Windows: 在putty里填写IP，然后点击连接</li>
-</ul>
-<h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
-<p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址 ...</p>
+                        <p>最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。</p>
+<h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
+<p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
+<p><strong>Install</strong></p>
+<div class="highlight"><pre>pip install pelican
+
+pip install markdown
+</pre></div>
+<p><strong>Quick-Start</strong></p>
+<p>自己新建一个文件夹，然后：</p>
+<div class="highlight"><pre>pelican-quickstart
+</pre></div>
+<p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
+<p><strong>Usage</strong></p>
+<p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
+<div class="highlight"><pre>make html # 将content中的markdown (or others) 生成为html
+
+make regenerate
+
+make serve
+
+make devserver
+</pre></div>
+<p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
+<div class="highlight"><pre>./develop_server.sh ...</pre></div>
                     </div>
                     <div class="post-permalink">
-                        <a href="/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" class="btn btn-default">阅读全文</a>
+                        <a href="/posts/2014/05/25/basic-pelican-configuration.html" class="btn btn-default">阅读全文</a>
                     </div>
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/digitalocean/index.html">DigitalOcean</a>
-                            <a href="/tag/shadowsocks/index.html">Shadowsocks</a>
-                            <a href="/tag/ubuntu/index.html">Ubuntu</a>
-                            <a href="/tag/vpn/index.html">VPN</a>
-                            <a href="/tag/vps/index.html">VPS</a>
+                            <a href="/tag/pelican/index.html">Pelican</a>
+                            <a href="/tag/python/index.html">Python</a>
                         </div>
                         <div class="pull-right share">
                         </div>

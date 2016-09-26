@@ -10,7 +10,7 @@
 
 <meta name="keywords" content="PPPoE, ISP, Tech, " />
 
-        <title>数据链路层的身份认证  | Logging
+        <title>Data Linker Layer Authentication  | Logging
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -77,7 +77,7 @@
                 <article id="data-linker-layer-authentication" class="post">
                     <header class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html">数据链路层的身份认证</a>
+                            <a href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html">Data Linker Layer Authentication</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
@@ -85,7 +85,7 @@
                         </div>
                     </header>
                     <div class="post-content">
-                        <p>标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
+                        <p>标题可能不是很准确，这篇东东主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
 <p>下面列举下我自己平常的一些上网方式：</p>
 <ul>
 <li>宿舍网线拨号</li>
@@ -96,11 +96,11 @@
 <p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
 <p>以下为个人猜想，错误请指出，谢谢！</p>
 <p>先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：</p>
-<p><img alt="isp-architecture" src="/images/isp-architecture.png"/></p>
+<p><img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86y4uft4tj30p90fon0o.jpg"/></p>
 <p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
-<p><strong>1. 插上网线</strong></p>
+<h4 id="1">1. 插上网线<a class="headerlink" href="#1" title="Permanent link">¶</a></h4>
 <p>插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。</p>
-<p><strong>2. 拨号认证</strong></p>
+<h4 id="2">2. 拨号认证<a class="headerlink" href="#2" title="Permanent link">¶</a></h4>
 <p>这里以PPPoE为例，但协议本身的内容不少，只粗略讲下过程，下面这段内容摘自<a href="http://baike.baidu.com/view/3246.htm#2_2">百度百科</a>：</p>
 <ol>
 <li>在STA和AP之间建立好关联之后，客户端向AC设备发送一个PADI报文，开始PPPOE接入的开始。</li>
@@ -122,7 +122,7 @@
 <p>之前，我对认证这块有着一个很大的疑问：ISP是如何确定一个数据帧是否应该转发，即ISP怎么知道这个数据帧是否来自于一个已经通过验证了的主机？</p>
 <p>这个问题并不属于协议内容，协议选择了将这个问题交给ISP去实现，我个人的猜想是通过记录MAC地址。
 在用户认证成功后，ISP会将你的主机的MAC地址记录为可放行的，当一个帧到来的时候，它就会检查该帧的Source MAC Address是否是可放行的，如果是的话，就放行。当然，这就要求和你机器直接相连的那台ISP设备有着区分这个的能力，因为如果经过那台设备，Source MAC Address就会换成它的了。</p>
-<p><strong>3. 上网</strong></p>
+<h4 id="3">3. 上网<a class="headerlink" href="#3" title="Permanent link">¶</a></h4>
 <p>经过1和2两步后，就可以上网了，数据包的分发大致如下：</p>
 <ol>
 <li>上层数据构成IP Packet，传递到链路层。</li>
@@ -135,11 +135,11 @@
 <p>首先，要连上AP，这个的认证的作用和拨号的用户认证相似，经过了这一层认证后才能保证你的数据帧能被AP转发出去，而学校的server，从校园网的记录上来看，很明显，它保存了你的MAC地址和分配的IP地址的映射。AP具体的认证过程参见802.11。</p>
 <p>其次，在连接上AP后，我们已经可以上内网了，也就意味着，我们的数据包已经可以在内网中转发了，但是，依旧不可以访问外网。我个人的猜想是外网出口的路由那块把出境的数据包给丢弃了，而丢弃的原因，是因为没经过WIFI验证。所以，下一步我们得打开浏览器登陆网址进行WIFI认证。</p>
 <p>而Wifi验证过后，我们的数据包就可以出境访问外网了。所以，这个Wifi验证实际上可能在出口的路由上保存了一组能够出境的IP地址，当数据包到来时，检查它的Source IP，以判断是否放行出境，或者是丢弃。这也就是有一段时间，我们一连上wifi不经过验证就能上网的原因，因为我们被分配到了一个别人已经认证的IP了，而服务器那边还没把这个下线的认证记录给注销掉。</p>
-<h3 id="_2">对先前问题的解答<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
-<p>现在，可以稍微解释下我在<a href="/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>留下的问题了。</p>
-<p>第一个问题这篇文章已经解释的差不多了。</p>
+<h3 id="fix-problems">Fix Problems<a class="headerlink" href="#fix-problems" title="Permanent link">¶</a></h3>
+<p>现在，可以稍微解释下我在<a href="/articles/pptp-vpn-process.html">PPTP VPN Process</a>留下的问题了。</p>
+<p>第一个问题这篇东东已经解释的差不多了。</p>
 <p>第二个的话，个人认为，服务器肯定是有一组key-value的映射保存了这些的，而数据包中的信息是足够组成唯一的key的，key由什么组成那就是VPN提供商自己决定的了。</p>
-<h3 id="_3">参考资料<a class="headerlink" href="#_3" title="Permanent link">¶</a></h3>
+<h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">¶</a></h3>
 <ul>
 <li><a href="http://baike.baidu.com/view/3246.htm#2_2">PPPoE</a></li>
 <li><a href="http://whatismyipaddress.com/ppp-pppoe">What is PPP and PPPoE?</a></li>
@@ -171,7 +171,7 @@
                     </div>
                 </article>
                 <div class="prev-next-wrap clearfix">
-                    <a class="btn btn-default" href="/posts/2014/08/19/pptp-vpn-process.html"><i class="fa fa-angle-left fa-fw"></i> PPTP VPN连接过程</a>
+                    <a class="btn btn-default" href="/posts/2014/08/19/pptp-vpn-process.html"><i class="fa fa-angle-left fa-fw"></i> PPTP VPN Process</a>
                     &nbsp;
                     <a class="btn btn-default" href="/posts/2015/09/10/openssl-rsa-basic-use.html">Openssl-RSA简单使用 <i class="fa fa-angle-right fa-fw"></i></a>
                 </div>

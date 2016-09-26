@@ -1,5 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>http://goclis.github.io/</link><description></description><atom:link href="http://goclis.github.io/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Thu, 30 Jun 2016 00:40:00 +0800</lastBuildDate><item><title>杂</title><link>http://goclis.github.io/posts/2016/06/30/201606%E6%9D%82.html</link><description>&lt;p&gt;很久没码东西了，随便码点碎碎念来结束这个月吧。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>http://goclis.github.io/</link><description></description><atom:link href="http://goclis.github.io/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 25 Sep 2016 15:31:00 +0800</lastBuildDate><item><title>MS Visual Studio对C++多继承的相关实现</title><link>http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</link><description>&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;首先，我们来明确一个观点：&lt;strong&gt;在类成员方法中，this指针是否一定要指向这个对象的内存起始处？&lt;/strong&gt;答案是不一定，指向起始处当然是很方便我们这些脑算成员变量偏移的，因为只用做加法就行了，但是对于编译器而言，它只需要确定好一个关于this指向的原则，随后基于这个原则，不管偏移要加法还是减法，对它来说都是没什么区别的。因此，this的指向实际上是编译器自己决定的，它可以遵照常规的想法，在进入成员方法代码前，把this调整至对象内存起始，或者是为了性能，采用它自己的原则。&lt;/p&gt;
+&lt;p&gt;显然，VS这样的编译器使用的是后者，它出于性能考虑，约定了自己的原则：&lt;strong&gt;this指针在一个类成员方法中的指向，取决于该方法的来源。&lt;/strong&gt;具体来说：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果该方法首次声明在本类中，那么this指向本类对象的内存起始位置。&lt;/li&gt;
+&lt;li&gt;如果该方法首次声明不在本类中，即来自于父类，那么this应指向第一个声明此方法的父类，也就是多继承的情况下，在子类的视角中，顺序靠前的父类覆盖靠后的父类。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;由于类成员方法是可以在继承关系中调用的，即子类对象可以调用父类的public成员方法。那么，按照这个原则中的第2条，编译器需要做一些调整工作。&lt;/p&gt;
+&lt;p&gt;下面举个例子，并结合例子来讲讲&lt;strong&gt;this调整&lt;/strong&gt;的过程：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="n"&gt;base_adjust_rule&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;P1&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;P2&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;P3&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f4&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;C&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;P1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;P2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;P3&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;f3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;C&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;P1&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pp1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;P2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pp2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;P3&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pp3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f4&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f2&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f3&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;示例代码很简单，子类C继承三个父类，测试代码中使用子类的指针去调用一系列成员方法，下面依次来从编译器的角度看看每个调用涉及的一些细节以及调整实现。&lt;/p&gt;
+&lt;p&gt;首先来看&lt;strong&gt;pc-&amp;gt;f4()&lt;/strong&gt;。从编译器的角度来看，pc的类型是C*，调用的方法f4的首次声明在父类P3中，并且C没有覆盖f4，所以调用的是P3::f4，按照原则，进入此方法前，this应该指向C对象中的P3部分的开始，即this应该调整到和示例代码中的pp3相等。推断完毕，来看看编译器是怎么进行这个调整的，上反汇编：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f85oejcg38j31220ktgp5.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;很明显，VS生成的代码中利用ecx来传递this指针，可以看到，在进行call之前，编译器加入了一句&lt;code&gt;add ecx 8&lt;/code&gt;，目的就是将this调整到和pp3一致，简单地计算一下右边监视变量的值确定了这一点。&lt;/p&gt;
+&lt;p&gt;接着看&lt;strong&gt;pc-&amp;gt;f1()&lt;/strong&gt;。按照原则，要把this调整至P1部分，而因为P1是C的第一个父类，在VS的多继承内存布局中，第一个父类的指针和子类指针指向相同，所以不需要进行任何调整，ecx直接等于pc，然后通过虚表指针获取f1的地址（放至eax），就执行call了。反汇编图证明了这一点。类似于pc-&amp;gt;f4()，&lt;strong&gt;pc-&amp;gt;f2()&lt;/strong&gt;和&lt;strong&gt;pc-&amp;gt;f3()&lt;/strong&gt;都要进行调整，只是各自的偏移不同而已。&lt;/p&gt;
+&lt;p&gt;结合示例代码及反汇编图，可以明确，VS确实是在遵守我们一开始所说的原则的，并且，即使你使用的是类对象而非对象指针去调用方法，原则依旧保持。如果感兴趣且想做进一步验证的话，可以在方法中加入一些访问成员变量的代码，然后在方法内部反汇编，查看它访问变量时的偏移计算，从而确定this指向。&lt;/p&gt;
+&lt;p&gt;上面的示例代码比较简单，都是使用pc去访问方法，而对于编译器来说，从类C的角度它可以在编译期就完全确定如何调整，所以才能生成一系列的add代码。但如果从P2的角度去分析的话，编译器将无法在编译期确定这些偏移量，下面将说明这一点并讲讲编译器如何处理这种情况。&lt;/p&gt;
+&lt;p&gt;继承结构不变，测试代码更换如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;test2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;P2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p21&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;P2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p22&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;P2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;p21&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;p22&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;可以看到，在编译期是没法确定如何对P2*进行调整的，对于C而言，f1是来自于P1的，它要调整至P1，而对于P2而言，它不需要调整，因为它的f1来自于自身。所以，这个调整只能放到运行期，依赖于对象内存中的内容（实际上就是虚表）。看看内存布局，单步一下反汇编代码就可以明白VS的处理了，截图如下：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww3.sinaimg.cn/large/006y8lVagw1f85rndokmlj31b10igjwd.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;可以看到，两个调用的反汇编代码完全相同，即访问虚表中的第一项，然后调用它，传入的参数即为调用时使用的指针。而从右边可以看到，对于p22，我们知道是不需要调整的，所以虚表中该项直接就是目标函数P2::f1；而对于p21，需要调整，所以编译器为C的内存布局中B部分虚表的第一项生成了thunk代码，并且此代码的作用是调整偏移再跳转（见下图），调整的目标也是按照原则使得this指向P1部分，调试器里对于虚表中该项的命名提示性也很强，就叫&lt;strong&gt;adjustor{4}&lt;/strong&gt;，大括号中的内容是偏移量。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f85rv1ytbbj30fc03lq32.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;注意，这里thunk是为类C生成的，因为C的父类中出现了同名的virtual方法。&lt;/p&gt;
+&lt;p&gt;提到了thunk，就顺便讲讲另外一种情况下的多态访问，即利用成员函数指针。这里的多态访问是指：使用指针或者引用去调用成员函数指针，需要保持多态语义。按照上面示例的继承结构，下面的代码中的调用都等价（子类指针是可以调用父类成员函数指针的）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;test3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;C&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;P1&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pp1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;P2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pp2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;pp1&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;pp2&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="k"&gt;auto&lt;/span&gt; &lt;span class="n"&gt;p1f1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;P1&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;*&lt;/span&gt;&lt;span class="n"&gt;p1f1&lt;/span&gt;&lt;span class="p"&gt;)();&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pp1&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;*&lt;/span&gt;&lt;span class="n"&gt;p1f1&lt;/span&gt;&lt;span class="p"&gt;)();&lt;/span&gt;
+    &lt;span class="k"&gt;auto&lt;/span&gt; &lt;span class="n"&gt;p2f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;P2&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;*&lt;/span&gt;&lt;span class="n"&gt;p2f&lt;/span&gt;&lt;span class="p"&gt;)();&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pp2&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;*&lt;/span&gt;&lt;span class="n"&gt;p2f&lt;/span&gt;&lt;span class="p"&gt;)();&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// p2f的类型为void (P2::*)()，所以可以进行如下赋值&lt;/span&gt;
+    &lt;span class="n"&gt;p2f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;P2&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;f3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;*&lt;/span&gt;&lt;span class="n"&gt;p2f&lt;/span&gt;&lt;span class="p"&gt;)();&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pp2&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;*&lt;/span&gt;&lt;span class="n"&gt;p2f&lt;/span&gt;&lt;span class="p"&gt;)();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;对于调用成员函数地址，VS也有类似一开始那样的规定，即在进入该方法前，需要将this指向调整至对象内存中该方法所属的类的开始部分，即调用&amp;amp;P1::f1要调整成P1，调用&amp;amp;P2::f1要调整至P2，因为只有该类本身及子类的指针或对象能调用，这个调整在编译期就能完成，然后把调整完后的指针传入成员函数地址所代表的函数即可。但是，要应对成员函数是虚函数和普通函数，前者需要访问虚表，而后者是固定地址，这项工作就必须通过运行期来完成了，所以，对每一个取地址的虚成员函数，都有对应的thunk代码，代码完成的工作就是访问虚表的对应项的函数，然后传递参数。这个通过查看反汇编同样能够证明，见下面的图片：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f85un5958ij31b80ketd8.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f85up231jkj31b20lu436.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;简单解释一下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pc和pp1相等，都指向了P1部分，所以它们调用不需要任何调整。&lt;/li&gt;
+&lt;li&gt;pp2指向P2部分，所以调用不调整。&lt;/li&gt;
+&lt;li&gt;pc指向P1部分，所以调用&amp;amp;P2::f1和&amp;amp;P2::f3的时候都要调整。&lt;/li&gt;
+&lt;li&gt;查看右边（p2f及p1f1）可以看到，对于虚函数，都是诸如&lt;code&gt;[thunk]:base_adjust_rule::P1::'vcall'{0, {flat}}&lt;/code&gt;这样的内容，而普通函数则无thunk。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果你仔细跟踪(pc-&amp;gt;*&amp;amp;P2::f1)()，你会发现，编译器在编译期把指针调整成了P2，而运行期，因为f1来自于P1，又要重新调整回去，很傻，但是没办法，利用成员函数指针来调用虚函数，在父类中存在同名时，就是会产生这样的一个代价。&lt;/p&gt;
+&lt;p&gt;这个实验至少告诉我们普通用户一点：尽量别让多个父类中出现同名方法，否则会导致一次额外的jmp。= =#这种看现象猜原则的过程也是蛮痛苦的，不过还好，总算是补完了。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sun, 25 Sep 2016 15:31:00 +0800</pubDate><guid>tag:goclis.github.io,2016-09-25:posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</guid><category>多继承</category><category>C++编译器thunk</category><category>成员函数指针</category><category>this指针</category></item><item><title>杂</title><link>http://goclis.github.io/posts/2016/06/30/201606%E6%9D%82.html</link><description>&lt;p&gt;很久没码东西了，随便码点碎碎念来结束这个月吧。&lt;/p&gt;
 &lt;h3 id="1"&gt;1&lt;a class="headerlink" href="#1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;最后一门考试结束了，基本和工作狗无异的上班生活也就跟着开始了。&lt;/p&gt;
 &lt;p&gt;最近公司入了一大批设备，闲的时候会跟着一起观摩组装一下，比如瞻仰下酷炫的GTX1070、把四个无屏电视拼一拼合成一块，组装组装机器等等。虽然都很没啥技术含量，但是整的我也心痒痒的想入各种设备了，然而可怜的钱包决定了这不大现实（悲伤脸）。不过，坏掉的键盘（坏的地方也挺诡异的，右Shift键，难道是A打多了？）给了我一个机会，随便买了个机械键盘来体验体验，理由是，以后坏掉某个键还能单独修，真特么牵强。&lt;/p&gt;
@@ -14,8 +123,8 @@
 &lt;h3 id="6"&gt;6&lt;a class="headerlink" href="#6" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;马上暑假了，没吃的了，得买锅做饭了。晚上没热水洗了个冷水澡，还以为是临时坏了，结果刚收到通知，说开启放假模式，以后23点后都没热水了，看来不能浪到那么晚了。&lt;/p&gt;
 &lt;p&gt;好像没啥想写的了，睡觉。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Thu, 30 Jun 2016 00:40:00 +0800</pubDate><guid>tag:goclis.github.io,2016-06-30:posts/2016/06/30/201606杂.html</guid></item><item><title>和Shadowsocks一起科学上网</title><link>http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html</link><description>
-&lt;p&gt;拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。&lt;/p&gt;
-&lt;p&gt;这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。&lt;/p&gt;
+&lt;p&gt;拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
+这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。&lt;/p&gt;
 &lt;h3 id="vps"&gt;VPS搭建服务器&lt;a class="headerlink" href="#vps" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;稍微讲讲VPS的选择吧，一句话，&lt;strong&gt;你选的VPS所在的网络必须能够访问你的目标网站&lt;/strong&gt;，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。&lt;/p&gt;
 &lt;p&gt;穷人表示我用的是&lt;a href="https://www.digitalocean.com"&gt;DigitalOcean&lt;/a&gt;，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。&lt;/p&gt;
@@ -26,7 +135,7 @@
 &lt;/ul&gt;
 &lt;h4 id="ipv6"&gt;开启IPv6&lt;a class="headerlink" href="#ipv6" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="DO VPS IPv6 Address" src="/images/160526_DOVPSIPv6Address.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;接着需要到VPS上&lt;a href="http://4b3r.com/digitalocean-enable-ipv6/"&gt;配置IPv6&lt;/a&gt;，使用ssh连接，编辑&lt;code&gt;/etc/network/interfaces&lt;/code&gt;，在&lt;code&gt;auto eth0&lt;/code&gt;后加上下面的内容：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;iface eth0 inet6 static
         address primary_ipv6_address
@@ -83,10 +192,10 @@ kill xxx
 &lt;p&gt;Shadowsocks的客户端有两种代理模式：PAC及全局模式。PAC就是只代理部分网站，而全局模式是代理所有的网站。&lt;/p&gt;
 &lt;p&gt;Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默认监听端口为1080（可以通过配置修改）。之后所有的80及443端口的出境流量，都会经过&lt;code&gt;localhost:1080&lt;/code&gt;的过滤，Shadowsocks根据代理模式来判断如何处理流量，PAC模式的话则会查看PAC列表（只有在列表中的站点才会代理），而全局模式则全部代理。&lt;/p&gt;
 &lt;p&gt;在Windows上，Shadowsocks是通过修改&lt;code&gt;Internet选项-&amp;gt;连接-&amp;gt;局域网(LAN)设置&lt;/code&gt;中的内容实现的代理，如下图：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="WindowsLANSettings" src="/images/160527_WindowsLANSettings.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww3.sinaimg.cn/large/006y8lVagw1f86x0qp7gfj30cp0c5jst.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。&lt;/p&gt;
 &lt;p&gt;比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为&lt;code&gt;127.0.0.1:1080&lt;/code&gt;，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="NeteaseMusic" src="/images/160527_NeteaseMusic.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x15ike6j30g308bwep.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;自己可以查看一下使用的软件是否要被代理，比如IDM、迅雷之类的下载软件就可以考虑设置代理。&lt;/p&gt;
 &lt;h4 id="ipv6_1"&gt;利用IPv6&lt;a class="headerlink" href="#ipv6_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;如果你的运营商支持IPv6的话，建议在客户端配置上增加一个服务器，IP设置为VPS的IPv6 IP。Shadowsocks的服务端程序非常机智，如果你访问的网站是v4站点的话，服务器会在它那边使用v4访问该站，但结果依旧通过v6返回给你。对于校园网用户来说，IPv6一般都是免费的，可以省一笔流量费，并且，v6由于使用人数较少，网络状况也比较好。&lt;/p&gt;
@@ -366,8 +475,8 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;p&gt;地点在中央商城8楼，排队人很多，当时并不是周末！！另外小桌拍的特别慢。。我们是5点拿到号的，A28吧？从A20到我们等了一个小时，出来的时候发现小桌已经排到了100+吧。。&lt;/p&gt;
 &lt;p&gt;我们点的小份肉蟹煲，加了点牛蛙，要了扎奇异果汁，人均80，还可以接受。分量够的，两个人都要了份米饭，最后都很饱。&lt;/p&gt;
 &lt;p&gt;本来以为肉蟹煲会把蟹弄的特别烂，吃起来特方便，结果发现并不是。。蟹壳依旧在，还是得咬，两个处女座表示很后悔点了肉蟹煲，应该点虾、牛蛙之类容易吃的。。做法大概类似于大锅煮的吧，里面有蟹、年糕、土豆、鸡爪以及加的牛蛙，最后端上来就一锅，大致如下图：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="肉蟹煲" src="/images/20160412233920633.jpg"/&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="奇异果汁" src="/images/20160412234147593.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww4.sinaimg.cn/large/006y8lVagw1f86ygwjcctj30l30sg41k.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86ygvzqrmj30l30sgtap.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;味道方面，蟹其实一般般，鸡爪特别好吃！！牛蛙也很不错！！奇异果汁也好喝！唉，越想越觉得该点虾煲的。。&lt;/p&gt;
 &lt;p&gt;嗯，怎么说呢，追求吃鸡爪的话，我其实可以选择更便宜的焖锅之类的，总之下次不会为了吃蟹来这家店。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 19 Mar 2016 00:00:00 +0800</pubDate><guid>tag:goclis.github.io,2016-03-19:posts/2016/03/19/【吃点评】胖哥俩肉蟹煲.html</guid><category>吃点评</category></item><item><title>Pelican进阶配置</title><link>http://goclis.github.io/posts/2016/01/16/advanced-pelican-configuration.html</link><description>
 &lt;p&gt;上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。&lt;/p&gt;
@@ -657,7 +766,7 @@ nmake -f ms\nt.mak install
 &lt;li&gt;&lt;a href="http://blog.csdn.net/rabbit729/article/details/3886984"&gt;Openssl Uplink&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;http://developer.covenanteyes.com/building-openssl-for-visual-studio/&lt;/li&gt;
 &lt;li&gt;http://linux.die.net/man/3/bio_new_mem_buf&lt;/li&gt;
-&lt;/ol&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 26 Dec 2015 00:00:00 +0800</pubDate><guid>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</guid><category>Openssl</category><category>RSA</category></item><item><title>数据链路层的身份认证</title><link>http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html</link><description>&lt;p&gt;标题可能不是很准确，这篇文章主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。&lt;/p&gt;
+&lt;/ol&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 26 Dec 2015 00:00:00 +0800</pubDate><guid>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</guid><category>Openssl</category><category>RSA</category></item><item><title>Data Linker Layer Authentication</title><link>http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html</link><description>&lt;p&gt;标题可能不是很准确，这篇东东主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。&lt;/p&gt;
 &lt;p&gt;下面列举下我自己平常的一些上网方式：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;宿舍网线拨号&lt;/li&gt;
@@ -668,11 +777,11 @@ nmake -f ms\nt.mak install
 &lt;p&gt;一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。&lt;/p&gt;
 &lt;p&gt;以下为个人猜想，错误请指出，谢谢！&lt;/p&gt;
 &lt;p&gt;先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="isp-architecture" src="/images/isp-architecture.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86y4uft4tj30p90fon0o.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;接下来就按照这个图来讲讲整个拨号的过程吧。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;1. 插上网线&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id="1"&gt;1. 插上网线&lt;a class="headerlink" href="#1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;2. 拨号认证&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id="2"&gt;2. 拨号认证&lt;a class="headerlink" href="#2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;这里以PPPoE为例，但协议本身的内容不少，只粗略讲下过程，下面这段内容摘自&lt;a href="http://baike.baidu.com/view/3246.htm#2_2"&gt;百度百科&lt;/a&gt;：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;在STA和AP之间建立好关联之后，客户端向AC设备发送一个PADI报文，开始PPPOE接入的开始。&lt;/li&gt;
@@ -694,7 +803,7 @@ nmake -f ms\nt.mak install
 &lt;p&gt;之前，我对认证这块有着一个很大的疑问：ISP是如何确定一个数据帧是否应该转发，即ISP怎么知道这个数据帧是否来自于一个已经通过验证了的主机？&lt;/p&gt;
 &lt;p&gt;这个问题并不属于协议内容，协议选择了将这个问题交给ISP去实现，我个人的猜想是通过记录MAC地址。
 在用户认证成功后，ISP会将你的主机的MAC地址记录为可放行的，当一个帧到来的时候，它就会检查该帧的Source MAC Address是否是可放行的，如果是的话，就放行。当然，这就要求和你机器直接相连的那台ISP设备有着区分这个的能力，因为如果经过那台设备，Source MAC Address就会换成它的了。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;3. 上网&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id="3"&gt;3. 上网&lt;a class="headerlink" href="#3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;经过1和2两步后，就可以上网了，数据包的分发大致如下：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;上层数据构成IP Packet，传递到链路层。&lt;/li&gt;
@@ -707,16 +816,15 @@ nmake -f ms\nt.mak install
 &lt;p&gt;首先，要连上AP，这个的认证的作用和拨号的用户认证相似，经过了这一层认证后才能保证你的数据帧能被AP转发出去，而学校的server，从校园网的记录上来看，很明显，它保存了你的MAC地址和分配的IP地址的映射。AP具体的认证过程参见802.11。&lt;/p&gt;
 &lt;p&gt;其次，在连接上AP后，我们已经可以上内网了，也就意味着，我们的数据包已经可以在内网中转发了，但是，依旧不可以访问外网。我个人的猜想是外网出口的路由那块把出境的数据包给丢弃了，而丢弃的原因，是因为没经过WIFI验证。所以，下一步我们得打开浏览器登陆网址进行WIFI认证。&lt;/p&gt;
 &lt;p&gt;而Wifi验证过后，我们的数据包就可以出境访问外网了。所以，这个Wifi验证实际上可能在出口的路由上保存了一组能够出境的IP地址，当数据包到来时，检查它的Source IP，以判断是否放行出境，或者是丢弃。这也就是有一段时间，我们一连上wifi不经过验证就能上网的原因，因为我们被分配到了一个别人已经认证的IP了，而服务器那边还没把这个下线的认证记录给注销掉。&lt;/p&gt;
-&lt;h3 id="_2"&gt;对先前问题的解答&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;现在，可以稍微解释下我在&lt;a href="/posts/2014/08/19/pptp-vpn-process.html"&gt;PPTP VPN Process&lt;/a&gt;留下的问题了。&lt;/p&gt;
-&lt;p&gt;第一个问题这篇文章已经解释的差不多了。&lt;/p&gt;
+&lt;h3 id="fix-problems"&gt;Fix Problems&lt;a class="headerlink" href="#fix-problems" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;现在，可以稍微解释下我在&lt;a href="/articles/pptp-vpn-process.html"&gt;PPTP VPN Process&lt;/a&gt;留下的问题了。&lt;/p&gt;
+&lt;p&gt;第一个问题这篇东东已经解释的差不多了。&lt;/p&gt;
 &lt;p&gt;第二个的话，个人认为，服务器肯定是有一组key-value的映射保存了这些的，而数据包中的信息是足够组成唯一的key的，key由什么组成那就是VPN提供商自己决定的了。&lt;/p&gt;
-&lt;h3 id="_3"&gt;参考资料&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="reference"&gt;Reference&lt;a class="headerlink" href="#reference" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://baike.baidu.com/view/3246.htm#2_2"&gt;PPPoE&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://whatismyipaddress.com/ppp-pppoe"&gt;What is PPP and PPPoE?&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Thu, 21 Aug 2014 16:21:00 +0800</pubDate><guid>tag:goclis.github.io,2014-08-21:posts/2014/08/21/data-linker-layer-authentication.html</guid><category>PPPoE</category><category>ISP</category></item><item><title>PPTP VPN连接过程</title><link>http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html</link><description>
-&lt;p&gt;不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。&lt;/p&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Thu, 21 Aug 2014 16:21:00 +0800</pubDate><guid>tag:goclis.github.io,2014-08-21:posts/2014/08/21/data-linker-layer-authentication.html</guid><category>PPPoE</category><category>ISP</category></item><item><title>PPTP VPN Process</title><link>http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html</link><description>&lt;p&gt;不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。&lt;/p&gt;
 &lt;p&gt;以下文章中VPN如不特指皆为PPTP VPN。&lt;/p&gt;
 &lt;p&gt;首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。&lt;/p&gt;
 &lt;p&gt;以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。&lt;/p&gt;
@@ -812,7 +920,7 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 &lt;/ol&gt;
 &lt;h3 id="_1"&gt;总结&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;微软TechNet的科普文业界良心，Reference值得一看！&lt;/p&gt;
-&lt;h3 id="_2"&gt;参考资料&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id="references"&gt;References&lt;a class="headerlink" href="#references" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href="http://tools.ietf.org/html/rfc2637"&gt;RFC 2637&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://technet.microsoft.com/en-us/library/cc958006.aspx"&gt;PPP Connection Process&lt;/a&gt;&lt;/li&gt;
@@ -1443,30 +1551,22 @@ movl %edx, 4(%esp)
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://stackoverflow.com/questions/18686114/cd-command-not-working-with-execvp"&gt;cd command not working with execvp&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://lxr.free-electrons.com/ident?v=2.6.24&amp;amp;i=uid_t"&gt;Linux Cross Reference&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 30 Jul 2014 17:22:00 +0800</pubDate><guid>tag:goclis.github.io,2014-07-30:posts/2014/07/30/os-experiment-note.html</guid><category>OS</category></item><item><title>如何验证一个数字证书</title><link>http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html</link><description>&lt;p&gt;首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。&lt;/p&gt;
-&lt;p&gt;假设完毕，首先看看这个待验证的证书包含哪些消息吧。&lt;/p&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 30 Jul 2014 17:22:00 +0800</pubDate><guid>tag:goclis.github.io,2014-07-30:posts/2014/07/30/os-experiment-note.html</guid><category>操作系统</category></item><item><title>如何验证一个数字证书的有效性</title><link>http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html</link><description>&lt;p&gt;首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。&lt;/p&gt;
+&lt;p&gt;好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧。&lt;/p&gt;
 &lt;p&gt;对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。&lt;/p&gt;
-&lt;p&gt;既然数字证书产生了，但它终究是个有格式的文件，我们下一步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。&lt;/p&gt;
-&lt;p&gt;用密码学表示一下大概如下：&lt;/p&gt;
+&lt;p&gt;既然数字证书产生了，但它终究是个有格式的文件，我们下步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。&lt;/p&gt;
+&lt;p&gt;用密码学表示一下大概就是：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;接下来，看看是如何验证的。往下我们称MB为&lt;strong&gt;内部证书&lt;/strong&gt;，B为证书。&lt;/p&gt;
+&lt;p&gt;接下来，看看是如何验证的（往下我们称MB为&lt;strong&gt;内部证书&lt;/strong&gt;，B为证书）：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;从获取到的证书B开始，根据签发该证书的CA的信息，顺着层次树往上找，直到找到根证书，这样就可以构成一条&lt;strong&gt;证书链&lt;/strong&gt;。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;从证书链的顶端，往下验证。提醒一点，按照我们的假设，这条证书链上的证书在我们的PC上都是有的。首先是根证书，根证书是自签名的，拿出它的公钥，对发证书时顺带的那个加了密的消息摘要进行解密，再对内部证书使用证书中定义的摘要算法进行处理，将产生的结果进行比较，匹配则往下。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;从根证书下来后就不再是自签名了，所以需要使用上层的公钥对发证书时顺带的消息摘要进行解密，然后同样地，对内部证书摘要，比较结果，匹配则往下。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;直至最后一个证书，如果摘要都匹配，说明这个证书是有效的，没被人篡改。&lt;/p&gt;
-&lt;/li&gt;
+&lt;li&gt;从获取到的证书B开始，根据签发该证书的CA的信息，顺着层次树往上找，直到找到根证书，这样就可以构成一条&lt;strong&gt;证书链&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;从证书链的顶端，往下验证。提醒一点，按照我们的假设，这条证书链上的证书在我们的PC上都是有的。首先是根证书，根证书是自签名的，拿出它的公钥，对发证书时顺带的那个加了密的消息摘要进行解密，再对内部证书使用证书中定义的摘要算法进行处理，将产生的结果进行比较，匹配则往下。&lt;/li&gt;
+&lt;li&gt;从根证书下来后就不再是自签名了，所以需要使用上层的公钥对发证书时顺带的消息摘要进行解密，然后同样地，对内部证书摘要，比较结果，匹配则往下。&lt;/li&gt;
+&lt;li&gt;直至最后一个证书，如果摘要都匹配，说明这个证书是有效的，没被人篡改。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img alt="流程图" src="/images/certificate_chain_20140621155213.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86xyp8lupj30s009ygok.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 21 Jun 2014 15:43:00 +0800</pubDate><guid>tag:goclis.github.io,2014-06-21:posts/2014/06/21/how-to-validate-certificate.html</guid><category>安全</category><category>数字证书</category></item><item><title>Pelican简要配置教程</title><link>http://goclis.github.io/posts/2014/05/25/basic-pelican-configuration.html</link><description>&lt;p&gt;最近看操作系统遇到不少问题，感觉记在书上有点不靠谱，所以一个一个的连带解答写在了trello里，但是总觉得写多了之后就好乱，于是又萌发了搭个blog的想法，想来想去还是用pelican吧，以后有空再买个域名挂上去。&lt;/p&gt;
 &lt;h3 id="_1"&gt;博客初始化&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。&lt;/p&gt;
@@ -1627,7 +1727,7 @@ Summary: Somethings         # 概要
 &lt;p&gt;重启后访问localhost即可。&lt;/p&gt;
 &lt;h3 id="some-bugs"&gt;Some bugs&lt;a class="headerlink" href="#some-bugs" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;基本都解决了，但是有一些中文的原因导致的不兼容，比如说代码高亮。&lt;/p&gt;
-&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sun, 25 May 2014 20:30:00 +0800</pubDate><guid>tag:goclis.github.io,2014-05-25:posts/2014/05/25/basic-pelican-configuration.html</guid><category>Pelican</category></item><item><title>动态载入和虚拟内存的按需调页的关联</title><link>http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html</link><description>&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：&lt;/p&gt;
+&lt;p&gt;代码高亮中会认为中文是err所以给中文加上了.err这个class，使得整体很难看，可以查看base.html中具体的css文件，将该文件中的.err给注释掉即可，当然，这不是长久解决，我觉得应该存在一种方式可以关闭这种检查。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sun, 25 May 2014 20:30:00 +0800</pubDate><guid>tag:goclis.github.io,2014-05-25:posts/2014/05/25/basic-pelican-configuration.html</guid><category>Pelican</category><category>Python</category></item><item><title>动态载入和虚拟内存的按需调页的关联</title><link>http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html</link><description>&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。&lt;/p&gt;
 &lt;/blockquote&gt;
