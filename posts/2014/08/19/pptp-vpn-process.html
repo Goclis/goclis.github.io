@@ -85,7 +85,36 @@
                         </div>
                     </header>
                     <div class="post-content">
-                        <p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
+                        <div class="widget">
+                            <h4 class="title">目录</h4>
+                            <div class="content toc">
+                                <div class="toc">
+<ul>
+<li><a href="#vpn">VPN的两种架构</a></li>
+<li><a href="#vpn_1">两种使用VPN的情境</a><ul>
+<li><a href="#internet-based-vpn">Internet-Based VPN</a></li>
+<li><a href="#intranet-based-vpn">Intranet-Based VPN</a></li>
+</ul>
+</li>
+<li><a href="#vpn-tunneling">VPN Tunneling（隧道）</a></li>
+<li><a href="#point-to-point-tunneling-protocol-pptp">Point-to-Point Tunneling Protocol (PPTP)</a><ul>
+<li><a href="#pptp-inherit-ppp">PPTP inherit PPP</a></li>
+<li><a href="#pptp-control-connection">PPTP Control Connection</a></li>
+<li><a href="#pptp-data-tunneling">PPTP Data Tunneling</a></li>
+<li><a href="#pptp-vpn">PPTP VPN 连接过程</a></li>
+<li><a href="#pptp-vpn-data-transfer-process">PPTP VPN Data Transfer Process</a></li>
+</ul>
+</li>
+<li><a href="#vpn_2">云梯VPN区分设备</a></li>
+<li><a href="#problems">Problems</a></li>
+<li><a href="#_1">总结</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+                            </div>
+                        </div>
+                        
+<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！ 但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？ 于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
 <p>以下文章中VPN如不特指皆为PPTP VPN。</p>
 <p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
 <p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
@@ -139,15 +168,13 @@
 <p>这是在使用PPTP Control Connection建立起连接后用来传送数据的，数据包格式如下：</p>
 <p><img alt="Tunneled PPTP Data" src="http://i.technet.microsoft.com/dynimg/IC196815.gif"/></p>
 <h4 id="pptp-vpn">PPTP VPN 连接过程<a class="headerlink" href="#pptp-vpn" title="Permanent link">¶</a></h4>
-<p>我打算以Windows的PPTP VPN连接的建立过程作为参照，也就是网络连接那，点击一个PPTP VPN，然后输入用户名密码，连接的那个过程，通过wireshark辅助抓包来分析分析。我尽量讲的细致，因为我自己在去分析的时候遇到了好多自己以前都没有考虑过的问题，比如PPP Authentication，PPP Configuration之类很多的地方，这些都很重要，因为PPTP VPN直接就是继承自PPP，不理解那些根本没法继续较细地分析。</p>
+<p>我打算以Windows的PPTP VPN连接的建立过程作为参照，也就是网络连接那，点击一个PPTP VPN，然后输入用户名密码，连接的那个过程，通过wireshark辅助抓包来分析分析。 我尽量讲的细致，因为我自己在去分析的时候遇到了好多自己以前都没有考虑过的问题，比如PPP Authentication，PPP Configuration之类很多的地方，这些都很重要，因为PPTP VPN直接就是继承自PPP，不理解那些根本没法继续较细地分析。</p>
 <p>这个问题是链路层的协议问题，与这儿关系不大，先抛开，下面开始描述整个连接过程：</p>
 <ul>
 <li>Pharse 1. 确定VPN Server可达，且支持PPTP
 创建一个TCP连接，请求连接VPN Server的1723端口（PPTP的端口），三次握手，失败就Over，成功进入下一步。</li>
-<li>Pharse 2. PPTP Control Connection
-PPTP Control有着一系列的Message，需要依次确认，其中很关键的步骤为Set-Link-Info，这个步骤需要协商一系列的参数，如身份验证协议等等。但正如之前提及的，PPTP使用的这些实际上是PPP的，所以这个过程和PPP的连接过程类似，单处放于Pharse 3。</li>
-<li>Pharse 3. PPP Configuration
-这个其实是属于Set-Link-Info中的一步，本质上就是PPP Link Negotiation with LCP，这个过程大致就是设置一系列PPP的参数，比如说用什么协议来进行身份验证，乃至加密协议等等。参考文章中有较为详细的过程。</li>
+<li>Pharse 2. PPTP Control Connection。PPTP Control有着一系列的Message，需要依次确认，其中很关键的步骤为Set-Link-Info，这个步骤需要协商一系列的参数，如身份验证协议等等。但正如之前提及的，PPTP使用的这些实际上是PPP的，所以这个过程和PPP的连接过程类似，单处放于Pharse 3。</li>
+<li>Pharse 3. PPP Configuration。这个其实是属于Set-Link-Info中的一步，本质上就是PPP Link Negotiation with LCP， 这个过程大致就是设置一系列PPP的参数，比如说用什么协议来进行身份验证，乃至加密协议等等。 参考文章中有较为详细的过程。</li>
 </ul>
 <p>整个连接过程执行完后，一系列的参数也就大概协商完毕了，接下来讲讲传输数据的过程。</p>
 <h4 id="pptp-vpn-data-transfer-process">PPTP VPN Data Transfer Process<a class="headerlink" href="#pptp-vpn-data-transfer-process" title="Permanent link">¶</a></h4>
@@ -176,7 +203,7 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 <h3 id="problems">Problems<a class="headerlink" href="#problems" title="Permanent link">¶</a></h3>
 <p>上面描述的过程中，有很多细节都没有具体的讲，尤其是关于PPP的加密之类的，原因是个人也没了解过链路层的协议，对这方面也很晕，打算接下来要补补，下面有一些遗留的问题，可能很蠢但是还是得解决呀，先把工作搞定囧。</p>
 <ol>
-<li>我们平常在连接Internet的时候，总会有输入账号密码进行身份验证的环节，验证的环节究竟做了些什么？验证过后，协议又是如何保证往后的数据包（或许该是帧）是经过验证的呢？？</li>
+<li>我们平常在连接 Internet 的时候，总会有输入账号密码进行身份验证的环节，验证的环节究竟做了些什么？验证过后，协议又是如何保证往后的数据包（或许该是帧）是经过验证的呢？？</li>
 <li>一台PPTP VPN Server是可以服务于多台机器的，那么，在接收的第三个步骤拿到的PPP包，服务器是如何知道该用哪个密钥或什么参数去反操作这个包（每个用户怎么可能都协商出相同的参数呢！）？</li>
 </ol>
 <h3 id="_1">总结<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
@@ -186,7 +213,7 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 <li><a href="http://tools.ietf.org/html/rfc2637">RFC 2637</a></li>
 <li><a href="http://technet.microsoft.com/en-us/library/cc958006.aspx">PPP Connection Process</a></li>
 <li><a href="http://technet.microsoft.com/zh-cn/library/cc779919(v=ws.10).aspx">How VPN Works: Virtual Private Network (VPN)</a></li>
-<li><a href="http://technet.microsoft.com/en-us/library/cc957992.aspx">PPP Link Negotiation with LCP</a></li>
+<li><a href="http://technet.microsoft.com/en-us/library/cc957992.aspx"> PPP Link Negotiation with LCP</a></li>
 </ol>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
@@ -322,6 +349,26 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

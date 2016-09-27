@@ -87,9 +87,8 @@
 <blockquote>
 <p>动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。</p>
 </blockquote>
-<p>那么，额外工作指的是？在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。</p>
-<p>以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
-<p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）</p>
+<p>那么，额外工作指的是？ 在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
+<p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）：</p>
 <div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// load it here</span>
@@ -105,7 +104,9 @@
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/os/index.html">OS</a>
+                            <a href="/tag/cao-zuo-xi-tong/index.html">操作系统</a>
+                            <a href="/tag/dong-tai-jia-zai/index.html">动态加载</a>
+                            <a href="/tag/xu-ni-nei-cun-huan-ye/index.html">虚拟内存换页</a>
                         </div>
                         <div class="pull-right share">
                         </div>
@@ -122,7 +123,8 @@
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>大致的理解如下，不一定正确，确认后会更新。按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
+                        <p>大致的理解如下，不一定正确，确认后会更新：</p>
+<p>按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
 <ul>
 <li>编译汇编</li>
 <li>链接（将编译出来的模块和其他引用了的模块合并）</li>
@@ -144,7 +146,9 @@
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/os/index.html">OS</a>
+                            <a href="/tag/cao-zuo-xi-tong/index.html">操作系统</a>
+                            <a href="/tag/dong-tai-jia-zai/index.html">动态加载</a>
+                            <a href="/tag/dong-tai-lian-jie/index.html">动态链接</a>
                         </div>
                         <div class="pull-right share">
                         </div>

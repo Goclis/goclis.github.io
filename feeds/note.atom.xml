@@ -52,12 +52,12 @@ git subtree pull -P lib remote-lib master    &lt;span class="c"&gt;# 如果服�
 git subtree pull -P remote-develop remote-lib/develop
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="5-git"&gt;5. Git补充提交内容&lt;a class="headerlink" href="#5-git" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Reference&lt;/strong&gt;: &lt;a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend"&gt;git commit --amend&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;有时候在提交的时候会遗漏一些文件，可以通过命令来弥补，以下假设遗漏&lt;code&gt;todo.txt&lt;/code&gt;。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;git add todo.txt
 git commit --amend
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;重新修改commit message后提交即可。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend"&gt;git commit --amend&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="6-git-clone"&gt;6. Git clone指定文件夹名&lt;a class="headerlink" href="#6-git-clone" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;git clone url your-folder-name
 &lt;/pre&gt;&lt;/div&gt;

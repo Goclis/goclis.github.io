@@ -142,8 +142,8 @@
 <p>这里只是添加一个最简单的系统调用，无参数，无实际操作！加复杂的系统调用的时候可能会遇到各种坑，在做往后几个实验的时候再去解决吧。</p>
 <h4 id="_2">实验过程<a class="headerlink" href="#_2" title="Permanent link">¶</a></h4>
 <p>假设要添加的系统调用名为goclis，则内核对应的实现函数名一般为<code>sys_goclis</code>，现在开始实现。目录和用户假设同实验1。</p>
-<div class="highlight"><pre><span class="c">% cd linux-2.6.21</span>
-<span class="c">% vim arch/i386/kernel/syscall_table.S</span>
+<div class="highlight"><pre>% <span class="nb">cd </span>linux-2.6.21
+% vim arch/i386/kernel/syscall_table.S
 </pre></div>
 <p>往系统调用表的末尾添加要新增的系统调用：</p>
 <div class="highlight"><pre><span class="na">.long</span> <span class="no">sys_tee</span>       <span class="err">/</span><span class="p">*</span> <span class="mi">315</span> <span class="p">*</span><span class="err">/</span>
@@ -153,7 +153,7 @@
 <span class="na">.long</span> <span class="no">sys_goclis</span>    <span class="err">/</span><span class="p">*</span> <span class="mi">320</span> <span class="p">*</span><span class="err">/</span>
 </pre></div>
 <p>添加头文件goclis.h（这里其实非必要）：</p>
-<div class="highlight"><pre><span class="c">% vim include/linux/goclis.h</span>
+<div class="highlight"><pre>% vim include/linux/goclis.h
 </pre></div>
 <p>正如我所说，这个系统调用非常简单，所以。。头文件除了宏保护就是空：</p>
 <div class="highlight"><pre><span class="c1">// goclis.h</span>
@@ -188,7 +188,7 @@
 </pre></div>
 <p>这样才能保证goclis.c在内核编译链接的时候是可见的。但其实这个调用的实现也不一定要写在goclis.c中，完全可以放在一个已经存在的.c中即可，只要保证这个.c对应的.o能被编译链接。</p>
 <p>接着为这个系统调用定义系统调用，我们之前那个320只是个注释：</p>
-<div class="highlight"><pre><span class="c">% vim include/asm-i386/unistd.h</span>
+<div class="highlight"><pre>% vim include/asm-i386/unistd.h
 </pre></div>
 <p>是i386不是ia64，因为我们是32位的系统。接着找到：</p>
 <div class="highlight"><pre><span class="cp">#define __NR_epoll_wait     319</span>
@@ -207,13 +207,13 @@
 </pre></div>
 <p>很显然吧，用<code>__NR_goclis</code>来命名我们的系统调用，然后把它定义为320，这样就真的 320了。。</p>
 <p>最后，还得把你的这个系统调用加入到统一的系统调用头文件中：</p>
-<div class="highlight"><pre><span class="c">% vim include/linux/syscalls.h</span>
+<div class="highlight"><pre>% vim include/linux/syscalls.h
 </pre></div>
 <p>加入头文件：</p>
 <div class="highlight"><pre><span class="cp">#include &lt;linux/goclis.h&gt;</span>
 </pre></div>
 <p>加入声明：</p>
-<div class="highlight"><pre>asmlinkage int sys_goclis();
+<div class="highlight"><pre><span class="n">asmlinkage</span> <span class="kt">int</span> <span class="nf">sys_goclis</span><span class="p">();</span>
 </pre></div>
 <p>OK，重新编译内核然后reboot，就ok了！</p>
 <p>关于编译内核，因为之前已经编译过产生了很多的.o 了，节省时间的话，直接make就可以接着编译了，否则重头编译超级浪费时间。。</p>
@@ -230,10 +230,10 @@
 <span class="p">}</span>
 </pre></div>
 <p>编译后运行：</p>
-<div class="highlight"><pre><span class="c">% gcc test.c</span>
-<span class="c">% ./a.out</span>
+<div class="highlight"><pre>% gcc test.c
+% ./a.out
 
-<span class="mi">320</span>
+320
 </pre></div>
 <p>ok~，打印出 320 了。</p>
 <h3 id="3">实验3 进程隐藏<a class="headerlink" href="#3" title="Permanent link">¶</a></h3>
@@ -272,9 +272,9 @@
 <span class="cp">#include &lt;asm/current.h&gt;</span>
 
 <span class="cm">/*</span>
-<span class="cm"> * set the attribute hide of task with pid, </span>
+<span class="cm"> * set the attribute hide of task with pid,</span>
 <span class="cm"> * according to the value of on.</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * if on value is invalid (except for 1 and 0), return 0 to indicate.</span>
 <span class="cm"> * if current user is not root, return 1 to indicate.</span>
 <span class="cm"> * if pid is not exist, return 2 to indicate.</span>
@@ -308,7 +308,7 @@
 
 <span class="cm">/*</span>
 <span class="cm"> * hide processes with uid, accroing to binname, hide one or all.</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * hide all processes when binname is NULL, otherwise, hide the process</span>
 <span class="cm"> * which binary name is equal to binname.</span>
 <span class="cm"> *</span>
@@ -378,7 +378,7 @@
     <span class="p">...</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IS_ERR</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="p">{</span>
         <span class="n">p</span><span class="o">-&gt;</span><span class="n">hide</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="p">...</span>      
+        <span class="p">...</span>
     <span class="p">}</span>
     <span class="p">...</span>
 <span class="p">}</span>
@@ -751,6 +751,26 @@
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

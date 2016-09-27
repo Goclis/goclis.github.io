@@ -154,12 +154,12 @@ git subtree pull -P lib remote-lib master    <span class="c"># 如果服务器�
 git subtree pull -P remote-develop remote-lib/develop
 </pre></div>
 <h3 id="5-git">5. Git补充提交内容<a class="headerlink" href="#5-git" title="Permanent link">¶</a></h3>
-<p><strong>Reference</strong>: <a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend">git commit --amend</a></p>
 <p>有时候在提交的时候会遗漏一些文件，可以通过命令来弥补，以下假设遗漏<code>todo.txt</code>。</p>
 <div class="highlight"><pre>git add todo.txt
 git commit --amend
 </pre></div>
 <p>重新修改commit message后提交即可。</p>
+<p>参考：<a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend">git commit --amend</a></p>
 <h3 id="6-git-clone">6. Git clone指定文件夹名<a class="headerlink" href="#6-git-clone" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre>git clone url your-folder-name
 </pre></div>
@@ -298,6 +298,26 @@ git commit --amend
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

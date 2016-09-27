@@ -122,7 +122,7 @@
 </ul>
 <p>使用VS编译会使用到VS的nmake、cl、link等工具，默认情况下这些工具是不在PATH里的，所以正常打开cmd是没法找到这些工具的，解决方案有两个：</p>
 <ol>
-<li>把它们所在的目录加入到PATH环境变量中。在<code>VS安装目录/VC</code>文件夹里有个<code>vcvarsall.bat</code>的脚本，执行这个脚本就可以了。</li>
+<li>把它们所在的目录加入到PATH环境变量中。在 <code>VS安装目录/VC</code> 文件夹里有个 <code>vcvarsall.bat</code> 的脚本，执行这个脚本就可以了。</li>
 <li>使用VS提供的Tools。每个VS基本都提供了相应的命令行工具（从开始菜单里可以找到），启动这些命令行工具后会自动把这些基础工具加入到此次运行的PATH中（实际上它就是运行了1中的脚本，只不过仅在此次cmd中生效）。</li>
 </ol>
 <p>简单的配置完毕后开始进行编译。</p>
@@ -136,7 +136,7 @@ nmake -f ms\nt.mak install
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
 </pre></div>
-<p><code>install</code>表示将生成的内容（头文件及库）安装到使用perl进行配置时指定的目录中。</p>
+<p><code>install</code> 表示将生成的内容（头文件及库）安装到使用perl进行配置时指定的目录中。</p>
 <p>就我而言，我需要生成debug及release的库，整个过程如下：</p>
 <div class="highlight"><pre>perl Configure debug-VC-WIN32 no-asm --prefix=c:\openssl-1.0.1p\debug-VC-WIN32
 ms\do_ms
@@ -149,16 +149,16 @@ nmake -f ms\nt.mak install
 </pre></div>
 <p>经过简单的测试，发现使用VS的08、10、13来进行编译产生的内容是一样的。</p>
 <h3 id="linuxopenssl">Linux下安装openssl库<a class="headerlink" href="#linuxopenssl" title="Permanent link">¶</a></h3>
-<p>我的发行版是Ubuntu 14.04，但是默认安装的好像只有一个openssl的可执行程序，没有头文件及库文件，需要另外安装<code>libssl</code>，如下：</p>
+<p>我的发行版是Ubuntu 14.04，但是默认安装的好像只有一个openssl的可执行程序，没有头文件及库文件，需要另外安装 <code>libssl</code> ，如下：</p>
 <div class="highlight"><pre>sudo apt-get install libssl-dev
 </pre></div>
-<p>在编译你的目标文件时指定<code>-lssl</code>及<code>-lcrypto</code>选项即可使用相关的功能，如果只用到加密库的话，只需要使用后者即可。</p>
+<p>在编译你的目标文件时指定 <code>-lssl</code> 及 <code>-lcrypto</code> 选项即可使用相关的功能，如果只用到加密库的话，只需要使用后者即可。</p>
 <p>暂时没有去研究如何静态链接openssl。</p>
 <h3 id="openssl">openssl可执行程序的使用<a class="headerlink" href="#openssl" title="Permanent link">¶</a></h3>
 <p>openssl除了提供编程相关的头文件及库文件外，还有一个应用程序直接提供了相关的功能，这里简单的罗列一些。</p>
 <p><strong>RSA密钥生成</strong></p>
 <p>使用该程序可以直接生成RSA的公私钥：</p>
-<div class="highlight"><pre>openssl genrsa -out private.pem 2048 &amp;&amp; openssl rsa -in private.pem -pubout &gt; public.pem
+<div class="highlight"><pre>openssl genrsa -out private.pem <span class="m">2048</span> <span class="o">&amp;&amp;</span> openssl rsa -in private.pem -pubout &gt; public.pem
 </pre></div>
 <p>但是需要注意的是，这里的生成是按照PEM格式进行的，所以如果在编程时需要读取这些文件，要使用PEM相关的API。</p>
 <p><strong>提取RSA公钥内容</strong></p>
@@ -194,8 +194,8 @@ nmake -f ms\nt.mak install
     <span class="k">return</span> <span class="n">rsa</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-<p>稍微注意一下构造公钥的方法是<code>*_RSA_PUBKEY</code>而不是<code>*_RSAPublicKey</code>。</p>
-<p>PS：对于从文件构建密钥，有一组方法<code>PEM_read_RSA_PUBKEY</code>和<code>PEM_read_RSAPrivateKey</code>可以直接根据打开的文件构建出对应的RSA结构体，但是在Windows上使用前面那个方法的时候，编译通过，但运行时会提示<code>Openssl Uplink</code>，所以改用了openssl内置的BIO。</p>
+<p>稍微注意一下构造公钥的方法是 <code>*_RSA_PUBKEY</code> 而不是 <code>*_RSAPublicKey</code> 。</p>
+<p>PS：对于从文件构建密钥，有一组方法 <code>PEM_read_RSA_PUBKEY</code> 和 <code>PEM_read_RSAPrivateKey</code> 可以直接根据打开的文件构建出对应的RSA结构体，但是在Windows上使用前面那个方法的时候，编译通过，但运行时会提示 <code>Openssl Uplink</code> ，所以改用了openssl内置的BIO。</p>
 <p><strong>内存</strong></p>
 <p>同样利用BIO，代码类似：</p>
 <div class="highlight"><pre><span class="n">RSA</span> <span class="o">*</span><span class="nf">createRSAWithMemory</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bufLen</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isPub</span><span class="p">)</span>
@@ -224,7 +224,7 @@ nmake -f ms\nt.mak install
 <li>公钥加密 &amp; 私钥解密</li>
 <li>私钥签名 &amp; 公钥验签</li>
 </ul>
-<p>以下代码省略构造RSA的部分，公钥的RSA为<code>pubRSA</code>，私钥的RSA为<code>priRSA</code>，处理的内容为<code>content</code>，长度为<code>contentLen</code>，忽略一些强制转换。</p>
+<p>以下代码省略构造RSA的部分，公钥的RSA为 <code>pubRSA</code> ，私钥的RSA为 <code>priRSA</code> ，处理的内容为 <code>content</code> ，长度为 <code>contentLen</code> ，忽略一些强制转换。</p>
 <p><strong>公钥加密 &amp; 私钥解密</strong></p>
 <div class="highlight"><pre><span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">RSA_size</span><span class="p">(</span><span class="n">pubRSA</span><span class="p">);</span>
 <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">encrypted</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
@@ -415,6 +415,26 @@ nmake -f ms\nt.mak install
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

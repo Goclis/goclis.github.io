@@ -88,12 +88,10 @@
                         <p>最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：</p>
 <div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
-
 <span class="kt">void</span> <span class="n">T</span> <span class="err">##</span> <span class="n">_func</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="c1">// ...</span>
+<span class="c1">// ...</span>
 <span class="p">}</span>
-
 <span class="cp">#endif</span>
 </pre></div>
 <p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
@@ -105,38 +103,32 @@
 <p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
 <div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
-
 <span class="cp">#define func_m(TN) TN ## _func</span>
 <span class="cp">#define T_func func_m(T)</span>
-
 <span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="c1">// ...</span>
+<span class="c1">// ...</span>
 <span class="p">}</span>
-
 <span class="cp">#endif</span>
 </pre></div>
 <p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func</code>方法，而是会定义一个<code>T_func</code>方法（这一点可以通过查看VS生成的obj文件中的符号确定，或是设置选项让编译器保留预处理产生的.i文件），下面给出正确的写法：</p>
 <div class="highlight"><pre><span class="c1">// macro.h</span>
 <span class="cp">#if defined(T)</span>
-
 <span class="cp">#define concate(A, B) A ## B</span>
 <span class="cp">#define func_m(TN) concate(TN, _func)</span>
 <span class="cp">#define T_func func_m(T)</span>
-
 <span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="c1">// ...</span>
+<span class="c1">// ...</span>
 <span class="p">}</span>
-
 <span class="cp">#endif</span>
 </pre></div>
 <p>之所以需要这样来实现是因为宏展开的规则，我对于宏展开的规则不是特别熟悉，但在<a href="https://msdn.microsoft.com/zh-cn/library/09dwwt6y.aspx">MSDN</a>上找到了一段可能能够用来解释的内容：</p>
 <blockquote>
 <p>如果宏定义中的形参的前面或后面带有 token-pasting 运算符，则会立即将形参替换为未扩展的实参。在替换前将不会对参数执行宏扩展。</p>
 </blockquote>
-<p>token-pasting运算符就是<code>##</code>。结合我原先的实现以及这段话，当预处理器在处理<code>T_func</code>时，它会替换为<code>func_m(T)</code>，这类似于一个函数调用，预处理器查看了一下<code>func_m</code>这个宏的内容，发现其中有<code>##</code>符号，所以，它直接将形参（即TN）替换成了未扩展的实参（即T），替换前并没有对T进行宏展开，从而导致无论T是什么，<code>T_func</code>都是最终结果。</p>
-<p>这点通过修改一下代码也可以验证：</p>
+<p>token-pasting运算符就是<code>##</code>。结合我原先的实现以及这段话，当预处理器在处理<code>T_func</code>时，它会替换为<code>func_m(T)</code>，这类似于一个函数调用，预处理器查看了一下<code>func_m</code>这个宏的内容，发现其中有<code>##</code>符号，所以，它直接将形参（即TN）替换成了未扩展的实参（即T），替换前并没有对T进行宏展开，从而导致无论T是什么，<code>T_func</code>都是最终结果。
+这点通过修改一下代码也可以验证：</p>
 <div class="highlight"><pre><span class="cp">#define T_func func_m(B)</span>
 </pre></div>
 <p>这里改成了B，所以最后定义的符号是<code>B_func</code>，因为不管是啥，预处理器都不会对它展开。</p>
@@ -275,6 +267,26 @@
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

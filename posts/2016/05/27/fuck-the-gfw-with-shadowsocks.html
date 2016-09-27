@@ -140,12 +140,12 @@ vim /etc/shadowsocks/config.json
 </pre></div>
 <p>配置文件的基本内容：</p>
 <div class="highlight"><pre><span class="p">{</span>
-    <span class="nt">"server"</span><span class="p">:</span><span class="s2">"::"</span><span class="p">,</span>
-    <span class="nt">"server_port"</span><span class="p">:</span> <span class="mi">8382</span><span class="p">,</span>
-    <span class="nt">"local_port"</span><span class="p">:</span> <span class="mi">1080</span><span class="p">,</span>
-    <span class="nt">"password"</span><span class="p">:</span> <span class="s2">"yourpassword"</span><span class="p">,</span>
-    <span class="nt">"timeout"</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
-    <span class="nt">"method"</span><span class="p">:</span> <span class="s2">"aes-256-cfb"</span>
+<span class="nt">"server"</span><span class="p">:</span><span class="s2">"::"</span><span class="p">,</span>
+<span class="nt">"server_port"</span><span class="p">:</span> <span class="mi">8382</span><span class="p">,</span>
+<span class="nt">"local_port"</span><span class="p">:</span> <span class="mi">1080</span><span class="p">,</span>
+<span class="nt">"password"</span><span class="p">:</span> <span class="s2">"yourpassword"</span><span class="p">,</span>
+<span class="nt">"timeout"</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
+<span class="nt">"method"</span><span class="p">:</span> <span class="s2">"aes-256-cfb"</span>
 <span class="p">}</span>
 </pre></div>
 <p>稍微解释下：</p>
@@ -156,13 +156,13 @@ vim /etc/shadowsocks/config.json
 </ul>
 <p>更多的配置可以到<a href="https://shadowsocks.org/en/config/quick-guide.html">Shadowsocks官网</a>查看。</p>
 <p>关于服务的启动，ssh连上服务器然后执行下面这个命令：</p>
-<div class="highlight"><pre># 注意配置文件的路径
-nohup ssserver -c /etc/shadowsocks/config.json &gt;&gt; /var/log/shadowsocks.log&amp;
+<div class="highlight"><pre><span class="c"># 注意配置文件的路径</span>
+nohup ssserver -c /etc/shadowsocks/config.json &gt;&gt; /var/log/shadowsocks.log<span class="p">&amp;</span>
 </pre></div>
 <p>关闭服务的话。。不大优雅：</p>
-<div class="highlight"><pre># 利用lsof通过端口号找到pid
+<div class="highlight"><pre><span class="c"># 利用lsof通过端口号找到pid</span>
 lsof -i:port
-kill xxx
+<span class="nb">kill </span>xxx
 </pre></div>
 <h3 id="shadowsocks">使用Shadowsocks客户端<a class="headerlink" href="#shadowsocks" title="Permanent link">¶</a></h3>
 <p>这里只讲Windows的，OSX上的也基本一样。</p>
@@ -328,6 +328,26 @@ kill xxx
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

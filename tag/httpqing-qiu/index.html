@@ -9,7 +9,7 @@
 
 
 
-        <title>预处理器
+        <title>HTTP请求
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -75,59 +75,42 @@
             <main class="col-md-offset-1 col-md-10 main-content">
             	<div class="cover tag-cover">
 				    <h3 class="tag-name">
-				        标签：预处理器
+				        标签：HTTP请求
 				    </h3>
 				    <div class="post-count">
 				        共 1 篇文章 
 				    </div>
 				</div>
-                <article id="c-preprocessor-macro-expansion" class="post">
+                <article id="data-in-http-request" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html">C预处理器宏展开</a>
+                            <a href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html">HTTP请求中的数据</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-26T23:21:20+08:00" title="2016-04-26T23:21:20+08:00">2016-04-26</time>
+                            <time class="post-date" datetime="2016-04-16T22:47:20+08:00" title="2016-04-16T22:47:20+08:00">2016-04-16</time>
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：</p>
-<div class="highlight"><pre><span class="c1">// macro.h</span>
-<span class="cp">#if defined(T)</span>
-<span class="kt">void</span> <span class="n">T</span> <span class="err">##</span> <span class="n">_func</span><span class="p">()</span>
-<span class="p">{</span>
-<span class="c1">// ...</span>
-<span class="p">}</span>
-<span class="cp">#endif</span>
-</pre></div>
-<p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
-<div class="highlight"><pre><span class="c1">// 这段代码希望定义一个int_func方法</span>
-<span class="cp">#define T int</span>
-<span class="cp">#include "macro.h"</span>
-<span class="cp">#undef T</span>
-</pre></div>
-<p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
-<div class="highlight"><pre><span class="c1">// macro.h</span>
-<span class="cp">#if defined(T)</span>
-<span class="cp">#define func_m(TN) TN ## _func</span>
-<span class="cp">#define T_func func_m(T)</span>
-<span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
-<span class="p">{</span>
-<span class="c1">// ...</span>
-<span class="p">}</span>
-<span class="cp">#endif</span>
-</pre></div>
-<p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func ...</code></p>
+                        
+<p>那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。</p>
+<h3 id="http">HTTP请求格式<a class="headerlink" href="#http" title="Permanent link">¶</a></h3>
+<p>先看看HTTP请求消息的格式 <a href="http://www.tutorialspoint.com/http/http_requests.htm">1</a>：</p>
+<ul>
+<li>A Request Line</li>
+<li>Zero or more header (General|Request|Entity) fields followed by CRLF</li>
+<li>An empty line (i.e., a line with nothing preceding the CRLF) indicating the end of the header fields</li>
+<li>Optionally a message-body</li>
+</ul>
+<p>从格式上来看，除了第三部分，都能够附带用户数据，但一般来说 ...</p>
                     </div>
                     <div class="post-permalink">
-                        <a href="/posts/2016/04/26/c-preprocessor-macro-expansion.html" class="btn btn-default">阅读全文</a>
+                        <a href="/posts/2016/04/16/data-in-http-request.html" class="btn btn-default">阅读全文</a>
                     </div>
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/hong/index.html">宏</a>
-                            <a href="/tag/yu-chu-li-qi/index.html">预处理器</a>
+                            <a href="/tag/httpqing-qiu/index.html">HTTP请求</a>
                         </div>
                         <div class="pull-right share">
                         </div>

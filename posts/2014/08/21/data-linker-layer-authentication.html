@@ -95,7 +95,7 @@
 <h3 id="_1">拨号上网<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
 <p>以下为个人猜想，错误请指出，谢谢！</p>
-<p>先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：</p>
+<p>先来看看一般的ISP架构， ISP的每一个组成可能都不止一台主机 ：</p>
 <p><img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86y4uft4tj30p90fon0o.jpg"/></p>
 <p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
 <h4 id="1">1. 插上网线<a class="headerlink" href="#1" title="Permanent link">¶</a></h4>
@@ -121,7 +121,7 @@
 <p>经过上面这个过程，在ISP那边就已经将你的用户名注册上网了，并且，它会为你的机器分配好IP地址，DNS服务器等参数。</p>
 <p>之前，我对认证这块有着一个很大的疑问：ISP是如何确定一个数据帧是否应该转发，即ISP怎么知道这个数据帧是否来自于一个已经通过验证了的主机？</p>
 <p>这个问题并不属于协议内容，协议选择了将这个问题交给ISP去实现，我个人的猜想是通过记录MAC地址。
-在用户认证成功后，ISP会将你的主机的MAC地址记录为可放行的，当一个帧到来的时候，它就会检查该帧的Source MAC Address是否是可放行的，如果是的话，就放行。当然，这就要求和你机器直接相连的那台ISP设备有着区分这个的能力，因为如果经过那台设备，Source MAC Address就会换成它的了。</p>
+在用户认证成功后，ISP会将你的主机的MAC地址记录为可放行的，当一个帧到来的时候，它就会检查该帧的Source MAC Address是否是可放行的，如果是的话，就放行。当然， 这就要求和你机器直接相连的那台ISP设备有着区分这个的能力，因为如果经过那台设备，Source MAC Address就会换成它的了。</p>
 <h4 id="3">3. 上网<a class="headerlink" href="#3" title="Permanent link">¶</a></h4>
 <p>经过1和2两步后，就可以上网了，数据包的分发大致如下：</p>
 <ol>
@@ -278,6 +278,26 @@
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

@@ -8,7 +8,7 @@
         <meta name="copyright" content="Goclis Yao" />
 
 
-<meta name="keywords" content="OS, Tech, " />
+<meta name="keywords" content="操作系统, 动态链接, 动态加载, Tech, " />
 
         <title>动态链接和动态载入的区别  | Logging
 </title>
@@ -85,7 +85,8 @@
                         </div>
                     </header>
                     <div class="post-content">
-                        <p>大致的理解如下，不一定正确，确认后会更新。按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
+                        <p>大致的理解如下，不一定正确，确认后会更新：</p>
+<p>按照一般的步骤，用户程序在执行前会经历以下几个步骤：</p>
 <ul>
 <li>编译汇编</li>
 <li>链接（将编译出来的模块和其他引用了的模块合并）</li>
@@ -100,19 +101,31 @@
 <p>动态链接的实现是依赖于存根（stub）的，目标模块中在使用需要动态链接的模块的地方使用存根来代替，存根能够指出如何装入以及装入后的程序在内存的哪。</p>
 <p>动态链接的好处在于多个程序使用到了一个相同的模块时，不需要将该模块都像常规步骤或者动态加载那样合并到目标模块中，而是在执行时再动态链接，这样在内存中就只用存在一份该模块的代码了，即实现了共享库。</p>
 <h3 id="update-at-2014-05-26">Update at 2014-05-26<a class="headerlink" href="#update-at-2014-05-26" title="Permanent link">¶</a></h3>
-<p>问了老师之后，再自己查了查维基百科之后有了更深的理解。上面的理解依旧是正确的，只是不那么准确，参考一下维基百科的内容。</p>
+<p>问了老师之后，再自己查了查wiki之后有了更深的理解。
+首先，上面的理解依旧是正确的，只是不那么准确，看看wiki的吧。</p>
 <p><strong>动态加载</strong></p>
 <blockquote>
-<p>Dynamic loading is a mechanism by which a computer program can, at run time, load a library (or other binary) into memory, retrieve the addresses of functions and variables contained in the library, execute those functions or access those variables, and unload the library from memory. Unlike static linking and loadtime linking, this mechanism allows a computer program to start up in the absence of these libraries, to discover available libraries, and to potentially gain additional functionality. <a href="http://en.wikipedia.org/wiki/Dynamic_loading">1</a></p>
+<p>Dynamic loading is a mechanism by which a computer program can, at run time, load a library (or other binary) into memory, retrieve the addresses of functions and variables contained in the library, execute those functions or access those variables, and unload the library from memory. Unlike static linking and loadtime linking, this mechanism allows a computer program to start up in the absence of these libraries, to discover available libraries, and to potentially gain additional functionality. <sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup></p>
 </blockquote>
 <p>大致的意思就是说动态加载是在运行时把一个library或者二进制文件调入内存，取出其中的functions或者variables来使用。</p>
 <p><strong>动态链接</strong></p>
 <blockquote>
-<p>In computing, a dynamic linker is the part of an operating system (OS) that loads (copies from persistent storage to RAM) and links (fills jump tables and relocates pointers) the shared libraries needed by an executable at run time, that is, when it is executed. The specific operating system and executable format determine how the dynamic linker functions and how it is implemented. Linking is often referred to as a process that is performed at compile time of the executable while a dynamic linker is in actuality a special loader that loads external shared libraries into a running process and then binds those shared libraries dynamically to the running process. This is also called dynamic or late linking. The specifics of how a dynamic linker functions is operating-system dependent. <a href="http://en.wikipedia.org/wiki/Dynamic_linker">2</a></p>
+<p>In computing, a dynamic linker is the part of an operating system (OS) that loads (copies from persistent storage to RAM) and links (fills jump tables and relocates pointers) the shared libraries needed by an executable at run time, that is, when it is executed. The specific operating system and executable format determine how the dynamic linker functions and how it is implemented. Linking is often referred to as a process that is performed at compile time of the executable while a dynamic linker is in actuality a special loader that loads external shared libraries into a running process and then binds those shared libraries dynamically to the running process. This is also called dynamic or late linking. The specifics of how a dynamic linker functions is operating-system dependent. <sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
 </blockquote>
 <p>看上去比起动态加载貌似只多了一个共享吧？</p>
 <p>实际上，动态链接做的不止是动态加载，还有链接的工作。回想我们在一开始说的那个常规步骤就可以明白了。</p>
-<p>其实，这两个概念在现在操作系统的实现上已经混合了，没有纯粹的<strong>动态加载</strong>了，都是基于动态链接做的了，比如Windows的dll和Linux的.so都是如此。</p>
+<p>其实，这两个概念在现在操作系统的实现上已经混合了，没有纯粹的<strong>动态加载</strong>了，都是基于动态链接做的了，比如windows的dll和linux的.so都是如此。</p>
+<div class="footnote">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><a href="http://en.wikipedia.org/wiki/Dynamic_loading">Dynamic Loading</a> <a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p><a href="http://en.wikipedia.org/wiki/Dynamic_linker">Dynamic Linker</a> <a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+</ol>
+</div>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
     <div id="disqus_thread"
@@ -155,7 +168,9 @@
                 <div class="widget">
                     <h4 class="title">标签</h4>
                     <div class="content tag-cloud">
-                        <a href="/tag/os/index.html">OS</a>
+                        <a href="/tag/cao-zuo-xi-tong/index.html">操作系统</a>
+                        <a href="/tag/dong-tai-jia-zai/index.html">动态加载</a>
+                        <a href="/tag/dong-tai-lian-jie/index.html">动态链接</a>
                     </div>
                 </div>
 <div class="widget">
@@ -246,6 +261,26 @@
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

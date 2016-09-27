@@ -86,10 +86,10 @@
                     </header>
                     <div class="post-content">
                         <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
-<div class="highlight"><pre>movl 12(%ebp), %eax
-imull 8(%ebp)
-movl %eax, (%esp)
-movl %edx, 4(%esp)
+<div class="highlight"><pre><span class="nf">movl</span> <span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">),</span> <span class="nv">%eax</span>
+<span class="nf">imull</span> <span class="mi">8</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>
+<span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
+<span class="nf">movl</span> <span class="nv">%edx</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
 </pre></div>
 <p>代码的作用就是将两个数的乘积存回栈顶。代码没有问题，让我疑惑的是书上这两句话：</p>
 <blockquote>
@@ -98,15 +98,14 @@ movl %edx, 4(%esp)
 </blockquote>
 <p>在考虑这两句话的时候，突然发现自己对 mov 的操作并不是特别的清楚，就去查了查，大致搞明白了一些。</p>
 <h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">¶</a></h3>
-<p>我们知道mov在IA32中有基础的三类操作，即b, w, l。</p>
-<p>而mov在使用时大致如下：</p>
-<div class="highlight"><pre>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域
+<p>我们知道 mov 在 IA32 中有基础的三类操作，即 b，w，l。
+而 mov 在使用时大致如下：</p>
+<div class="highlight"><pre><span class="nf">movb</span> <span class="nv">%al</span><span class="p">,</span> <span class="p">(</span><span class="nv">%edx</span><span class="p">)</span>  <span class="c"># 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域</span>
 </pre></div>
-<p>这里因为是b类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。</p>
-<p>然而对于w和l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：</p>
-<div class="highlight"><pre>movl %eax, (%edx)
+<p>这里因为是 b 类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。然而对于 w 和 l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：</p>
+<div class="highlight"><pre><span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%edx</span><span class="p">)</span>
 </pre></div>
-<p>我们知道内存是按字节整理的，也就是说edx代表的那个地址也就只有1个字节，而源操作数eax却是4个字节，因而，需要多个地址进行存放，我们假设<code>%eax=0x0A0B0C0D, %edx=4</code>，则内存图如下表：</p>
+<p>我们知道内存是按字节整理的，也就是说 edx 代表的那个地址也就只有 1 个字节，而源操作数 eax 却是 4 个字节，因而，需要多个地址进行存放，我们假设下 %eax = 0x0A0B0C0D，%edx = 4，则内存图如下表：</p>
 <table>
 <thead>
 <tr>
@@ -149,11 +148,9 @@ movl %edx, 4(%esp)
 </tr>
 </tbody>
 </table>
-<p>这里是假设机器为<strong>小端</strong>。可见，占用了4~7的内存地址。</p>
-<p>所以，mov指令实际占用内存地址的情况是与源操作数的字节数有关的，而多出来的地方，是通过开始地址（即指令中的目标操作数）往上加的。</p>
+<p>这里是假设机器为<strong>小端</strong>。可见，占用了 4~7 的内存地址。所以，mov 指令实际占用内存地址的情况是与源操作数的字节数有关的，而多出来的地方，是通过开始地址（即指令中的目标操作数）往上加的。</p>
 <h3 id="_1">回归问题<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
-<p>既然知道了mov的行为，再回过头来看看那段代码。</p>
-<p>假设乘积为<code>0x010203040A0B0C0D, %esp=104</code>，小端机器，则该段代码执行后内存应该是如下这样的：</p>
+<p>既然知道了 mov 的行为，再回过头来看看那段代码。假设乘积为 0x010203040A0B0C0D，%esp = 104，小端机器，则该段代码执行后内存应该是如下这样的：</p>
 <table>
 <thead>
 <tr>
@@ -203,7 +200,7 @@ movl %edx, 4(%esp)
 <blockquote>
 <p>%edx 的高位存在相对于 %eax 的低位偏移量为 4 的地方</p>
 </blockquote>
-<p>这句话还是没法解释。。%edx的高位(01)相对于%eax的低位(0D)，偏移量好像不是4。。</p>
+<p>这句话还是没法解释。。%edx 的高位 (01) 相对于 %eax 的低位 (0D)，偏移量好像不是 4 啊。。</p>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
     <div id="disqus_thread"
@@ -337,6 +334,26 @@ movl %edx, 4(%esp)
 
         <script type="text/javascript" language="JavaScript">
             uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
         </script>
     </body>
 </html>

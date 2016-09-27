@@ -93,7 +93,7 @@
 <h3 id="_1">拨号上网<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
 <p>以下为个人猜想，错误请指出，谢谢！</p>
-<p>先来看看一般的ISP架构，ISP的每一个组成可能都不止一台主机：</p>
+<p>先来看看一般的ISP架构， ISP的每一个组成可能都不止一台主机 ：</p>
 <p><img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86y4uft4tj30p90fon0o.jpg"/></p>
 <p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
 <h4 id="1">1. 插上网线<a class="headerlink" href="#1" title="Permanent link">¶</a></h4>
@@ -125,7 +125,8 @@
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
+                        
+<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！ 但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？ 于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
 <p>以下文章中VPN如不特指皆为PPTP VPN。</p>
 <p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
 <p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
@@ -162,10 +163,10 @@
                     </div>
                     <div class="post-content">
                         <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
-<div class="highlight"><pre>movl 12(%ebp), %eax
-imull 8(%ebp)
-movl %eax, (%esp)
-movl %edx, 4(%esp)
+<div class="highlight"><pre><span class="nf">movl</span> <span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">),</span> <span class="nv">%eax</span>
+<span class="nf">imull</span> <span class="mi">8</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>
+<span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
+<span class="nf">movl</span> <span class="nv">%edx</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
 </pre></div>
 <p>代码的作用就是将两个数的乘积存回栈顶。代码没有问题，让我疑惑的是书上这两句话：</p>
 <blockquote>
@@ -174,9 +175,9 @@ movl %edx, 4(%esp)
 </blockquote>
 <p>在考虑这两句话的时候，突然发现自己对 mov 的操作并不是特别的清楚，就去查了查，大致搞明白了一些。</p>
 <h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">¶</a></h3>
-<p>我们知道mov在IA32中有基础的三类操作，即b, w, l。</p>
-<p>而mov在使用时大致如下：</p>
-<div class="highlight"><pre>movb %al, (%edx)  # 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域 ...</pre></div>
+<p>我们知道 mov 在 IA32 中有基础的三类操作，即 b，w，l。
+而 mov 在使用时大致如下：</p>
+<div class="highlight"><pre><span class="nf">movb ...</span></pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2014/08/08/mov-with-memory.html" class="btn btn-default">阅读全文</a>
