@@ -1,8 +1,9 @@
 Title: 和Shadowsocks一起科学上网  
 Tags: Shadowsocks, VPS, VPN, Ubuntu, DigitalOcean  
 Slug: fuck-the-gfw-with-shadowsocks  
-Date: 2016-05-27 9:50 
- 
+Date: 2016-05-27 9:50  
+
+
 [TOC]
 
 拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
@@ -25,7 +26,7 @@ Date: 2016-05-27 9:50
 
 接着需要到VPS上[配置IPv6][3]，使用ssh连接，编辑`/etc/network/interfaces`，在`auto eth0`后加上下面的内容：
 
-```
+```conf
 iface eth0 inet6 static
         address primary_ipv6_address
         netmask 64
@@ -39,14 +40,14 @@ iface eth0 inet6 static
 ### 在VPS上配置Shadowsocks服务
 在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：
 
-```
+```bash
 apt-get install python-pip
 pip install shadowsocks
 ```
 
 安装完后还需要对Shadowsocks进行配置，找个地方创建一个配置文件即可，比如：
 
-```
+```bash
 mkdir /etc/shadowsocks
 vim /etc/shadowsocks/config.json
 ```
@@ -55,12 +56,12 @@ vim /etc/shadowsocks/config.json
 
 ```json
 {
-	"server":"::",
-	"server_port": 8382,
-	"local_port": 1080,
-	"password": "yourpassword",
-	"timeout": 600,
-	"method": "aes-256-cfb"
+"server":"::",
+"server_port": 8382,
+"local_port": 1080,
+"password": "yourpassword",
+"timeout": 600,
+"method": "aes-256-cfb"
 }
 ```
 
@@ -74,14 +75,14 @@ vim /etc/shadowsocks/config.json
 
 关于服务的启动，ssh连上服务器然后执行下面这个命令：
 
-```
+```bash
 # 注意配置文件的路径
 nohup ssserver -c /etc/shadowsocks/config.json >> /var/log/shadowsocks.log&
 ```
 
 关闭服务的话。。不大优雅：
 
-```
+```bash
 # 利用lsof通过端口号找到pid
 lsof -i:port
 kill xxx
@@ -125,9 +126,12 @@ Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默�
 2. [Shadowsocks on Github][4]
 3. [PPTP VPN搭建][6]
 
+
 [1]: https://www.digitalocean.com
 [2]: https://shadowsocks.org/en/config/quick-guide.html
 [3]: http://4b3r.com/digitalocean-enable-ipv6/
 [4]: https://github.com/shadowsocks/
 [5]: https://github.com/shadowsocks/shadowsocks-windows/releases
 [6]: http://blog.kunyu.li/digitalocean-ubuntu-vps-vpn.html
+
+

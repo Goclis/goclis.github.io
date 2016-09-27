@@ -1,10 +1,13 @@
 Title: PPTP VPN Process  
-Slug: pptp-vpn-process    
+Slug: pptp-vpn-process  
 Date: 2014-08-19 14:41  
 Tags: VPN, PPTP  
 Author: Goclis Yao  
 
-不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。
+
+[TOC]
+
+不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！ 但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？ 于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。
 
 以下文章中VPN如不特指皆为PPTP VPN。
 
@@ -13,16 +16,16 @@ Author: Goclis Yao
 以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。
 
 ### VPN的两种架构
- - Remote access VPN
- - Site-to-site VPN
+- Remote access VPN
+- Site-to-site VPN
 
 Remote access VPN是我们平时个人用的比较多的那种，也就是你在网上买了个VPN，然后拿着账号密码和服务器名连接上了的种，这种就只能保证你自己的那台设备是连上VPN的，而Site-to-site VPN则更像是，如果你用了路由这样的设备，在该设备上拨了VPN，这样路由的私有网络就是一个Site，而路由连上的VPN服务器又构成了另外一个Site，所以是Site-to-site，这种方式就能保证你私有网络中的所有设备都连上了VPN。
 
 个人感觉，这两种其实差不多算是一种情况吧，只是因为现在的交换设备越来越牛逼了，Site to Site VPN站在路由的角度来看其实就是Remote access VPN了。
 
 ### 两种使用VPN的情境
- - Internet
- - Intranet
+- Internet
+- Intranet
 
 本来VPN不是个科学上网的工具的，纯粹就是为了满足在划分了私有网络后又能保证某些有特权的人能访问私有网络的资源，但是，总归是被发掘成了科学上网的工具了。纯吐槽，下面将正事。
 
@@ -40,7 +43,6 @@ Remote access VPN是我们平时个人用的比较多的那种，也就是你在
 而VPN也就是使用了这样的技巧，把VPN协议的数据包当做数据报放到了IP包中，这样IP包像正常的数据包一样路由到对端就好了，然后对端通过IP包的IP Header中的协议是能够判断出包含的数据报是使用了某种VPN协议的，于是，对端就按那个协议处理，获取到了真正的数据报。
 
 这里只是模糊的讲一下大概的过程，这也是我先前对VPN的理解程度，下面从数据包的程度来理解一下，以最简单的PPTP VPN为例了。
-
 
 隧道的两端在连接建立的时候需要协商一系列配置变量：
 
@@ -60,7 +62,7 @@ Remote access VPN是我们平时个人用的比较多的那种，也就是你在
 上面的这个工作过程讲得很粗糙，但大概就是这么个过程，下面讲的细致一些。
 
 #### PPTP inherit PPP
-> Authentication that occurs during the creation of a PPTP-based VPN connection uses the same authentication mechanisms as PPP connections, such as Extensible Authentication Protocol (EAP), Microsoft Challenge-Handshake Authentication Protocol (MS-CHAP), Microsoft Challenge-Handshake Authentication Protocol version 2 (MS-CHAP v2), CHAP, Shiva Password Authentication Protocol (SPAP), and Password Authentication Protocol (PAP). PPTP inherits encryption, compression, or both of PPP payloads from PPP. For PPTP connections, EAP-Transport Layer Security (EAP-TLS), MS-CHAP, or MS-CHAP v2 must be used for the PPP payloads to be encrypted using Microsoft Point-to-Point Encryption (MPPE).
+>  Authentication that occurs during the creation of a PPTP-based VPN connection uses the same authentication mechanisms as PPP connections, such as Extensible Authentication Protocol (EAP), Microsoft Challenge-Handshake Authentication Protocol (MS-CHAP), Microsoft Challenge-Handshake Authentication Protocol version 2 (MS-CHAP v2), CHAP, Shiva Password Authentication Protocol (SPAP), and Password Authentication Protocol (PAP). PPTP inherits encryption, compression, or both of PPP payloads from PPP. For PPTP connections, EAP-Transport Layer Security (EAP-TLS), MS-CHAP, or MS-CHAP v2 must be used for the PPP payloads to be encrypted using Microsoft Point-to-Point Encryption (MPPE).
 
 上面这段引用很好的诠释了标题，即PPTP直接使用了很大一部分属于PPP的东西，比如加密、压缩等等。
 
@@ -75,16 +77,14 @@ PPTP毕竟不是PPP那般简单，它最基础的工作就在于它得维护一�
 ![Tunneled PPTP Data](http://i.technet.microsoft.com/dynimg/IC196815.gif)
 
 #### PPTP VPN 连接过程
-我打算以Windows的PPTP VPN连接的建立过程作为参照，也就是网络连接那，点击一个PPTP VPN，然后输入用户名密码，连接的那个过程，通过wireshark辅助抓包来分析分析。我尽量讲的细致，因为我自己在去分析的时候遇到了好多自己以前都没有考虑过的问题，比如PPP Authentication，PPP Configuration之类很多的地方，这些都很重要，因为PPTP VPN直接就是继承自PPP，不理解那些根本没法继续较细地分析。
+我打算以Windows的PPTP VPN连接的建立过程作为参照，也就是网络连接那，点击一个PPTP VPN，然后输入用户名密码，连接的那个过程，通过wireshark辅助抓包来分析分析。 我尽量讲的细致，因为我自己在去分析的时候遇到了好多自己以前都没有考虑过的问题，比如PPP Authentication，PPP Configuration之类很多的地方，这些都很重要，因为PPTP VPN直接就是继承自PPP，不理解那些根本没法继续较细地分析。
 
 这个问题是链路层的协议问题，与这儿关系不大，先抛开，下面开始描述整个连接过程：
 
- - Pharse 1. 确定VPN Server可达，且支持PPTP
+- Pharse 1. 确定VPN Server可达，且支持PPTP
 创建一个TCP连接，请求连接VPN Server的1723端口（PPTP的端口），三次握手，失败就Over，成功进入下一步。
- - Pharse 2. PPTP Control Connection
-PPTP Control有着一系列的Message，需要依次确认，其中很关键的步骤为Set-Link-Info，这个步骤需要协商一系列的参数，如身份验证协议等等。但正如之前提及的，PPTP使用的这些实际上是PPP的，所以这个过程和PPP的连接过程类似，单处放于Pharse 3。
- - Pharse 3. PPP Configuration
-这个其实是属于Set-Link-Info中的一步，本质上就是PPP Link Negotiation with LCP，这个过程大致就是设置一系列PPP的参数，比如说用什么协议来进行身份验证，乃至加密协议等等。参考文章中有较为详细的过程。
+- Pharse 2. PPTP Control Connection。PPTP Control有着一系列的Message，需要依次确认，其中很关键的步骤为Set-Link-Info，这个步骤需要协商一系列的参数，如身份验证协议等等。但正如之前提及的，PPTP使用的这些实际上是PPP的，所以这个过程和PPP的连接过程类似，单处放于Pharse 3。
+- Pharse 3. PPP Configuration。这个其实是属于Set-Link-Info中的一步，本质上就是PPP Link Negotiation with LCP， 这个过程大致就是设置一系列PPP的参数，比如说用什么协议来进行身份验证，乃至加密协议等等。 参考文章中有较为详细的过程。
 
 整个连接过程执行完后，一系列的参数也就大概协商完毕了，接下来讲讲传输数据的过程。
 
@@ -116,21 +116,21 @@ PPTP Control有着一系列的Message，需要依次确认，其中很关键的�
 ### Problems
 上面描述的过程中，有很多细节都没有具体的讲，尤其是关于PPP的加密之类的，原因是个人也没了解过链路层的协议，对这方面也很晕，打算接下来要补补，下面有一些遗留的问题，可能很蠢但是还是得解决呀，先把工作搞定囧。
 
-1. 我们平常在连接Internet的时候，总会有输入账号密码进行身份验证的环节，验证的环节究竟做了些什么？验证过后，协议又是如何保证往后的数据包（或许该是帧）是经过验证的呢？？
+1. 我们平常在连接 Internet 的时候，总会有输入账号密码进行身份验证的环节，验证的环节究竟做了些什么？验证过后，协议又是如何保证往后的数据包（或许该是帧）是经过验证的呢？？
 2. 一台PPTP VPN Server是可以服务于多台机器的，那么，在接收的第三个步骤拿到的PPP包，服务器是如何知道该用哪个密钥或什么参数去反操作这个包（每个用户怎么可能都协商出相同的参数呢！）？
-
 
 ### 总结
 微软TechNet的科普文业界良心，Reference值得一看！
 
-###References
+### References
 1. [RFC 2637][1]
 2. [PPP Connection Process][2]
 3. [How VPN Works: Virtual Private Network (VPN)][3]
-4. [PPP Link Negotiation with LCP][4]
+4. [ PPP Link Negotiation with LCP][4]
+
+[1]: http://tools.ietf.org/html/rfc2637
+[2]: http://technet.microsoft.com/en-us/library/cc958006.aspx
+[3]: http://technet.microsoft.com/zh-cn/library/cc779919(v=ws.10).aspx
+[4]: http://technet.microsoft.com/en-us/library/cc957992.aspx
 
 
-[1]:  http://tools.ietf.org/html/rfc2637
-[2]:  http://technet.microsoft.com/en-us/library/cc958006.aspx
-[3]:  http://technet.microsoft.com/zh-cn/library/cc779919(v=ws.10).aspx
-[4]:  http://technet.microsoft.com/en-us/library/cc957992.aspx

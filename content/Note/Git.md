@@ -2,6 +2,7 @@ Title: Git
 Date: 2014-01-01  
 Tags: Git  
 
+
 [TOC]
 
 ### 1. 本地初始化git项目并添加远程仓库
@@ -11,7 +12,6 @@ git init
 git remote add origin url # url为项目的远程仓库路径
 git push master origin
 ```
-
 
 ### 2. Git设置
 全局设置（--global）：
@@ -35,7 +35,6 @@ git config branch.master.remote origin
 git config --list
 ```
 
-
 ### 3. Git Bash生成公私钥访问内网git仓库
 打开Git Bash，输入如下命令：
 
@@ -49,7 +48,6 @@ ssh-keygen -t rsa -C "goclisyyh@gmail.com"  # -C后的参数为注释，一般�
 git clone user@hostname:gitname.git  # ssh仓库
 git clone git@192.168.1.1:Blog.git  # eg
 ```
-
 
 ### 4. git subtree
 当一个项目需要用到另一个项目，并且可能会修改那个项目时，用此命令即可实现。
@@ -83,10 +81,7 @@ git subtree add -P remote-develop remote-lib/develop  # 假设先前已remote ad
 git subtree pull -P remote-develop remote-lib/develop
 ```
 
-
 ### 5. Git补充提交内容
-__Reference__: [git commit --amend](https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend)
-
 有时候在提交的时候会遗漏一些文件，可以通过命令来弥补，以下假设遗漏`todo.txt`。
 
 ```bash
@@ -96,14 +91,16 @@ git commit --amend
 
 重新修改commit message后提交即可。
 
+参考：[git commit --amend](https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend)
 
 ### 6. Git clone指定文件夹名
 ```bash
 git clone url your-folder-name
 ```
 
-
 ### 7. 重命名当前分支
-```
+```bash
 git branch -m new-name
 ```
+
+

@@ -1,7 +1,8 @@
 Title: HTTP请求中的数据  
 Date: 2016-04-16 22:47:20  
 Slug: data-in-http-request  
-Tags: HTTP, JSON  
+Tags: HTTP请求  
+
 
 [TOC]
 
@@ -24,7 +25,7 @@ Tags: HTTP, JSON
 ### Query String
 这个实际上就是HTTP请求消息的第一部分URL中?后面的那部分信息，因此，它与请求的类型无关，只和URL相关，下面是个例子：
 
-```
+```other
 # 附带数据为name: xxx, age: 18
 GET example.com?name=xxx&age=18
 POST example.com?name=xxx&age=18
@@ -46,7 +47,7 @@ requests.post('example.com', params={name: 'xxx', age: 18})
 <form action="xxx" method="GET">
     <input type="text" name="first" />
     <input type="text" name="second" />
-    <input type="submit" />
+    <input type="submit />
 </form>
 ```
 
@@ -65,15 +66,15 @@ requests.post('example.com', params={name: 'xxx', age: 18})
 - application/json
 - ...
 
-关于JSON编码的示例，可以查看 [2]。
+关于JSON的示例，可以查看[2]。
 
 ### 参考资料
 1. [HTTP Requests][1]
 2. [x-www-form-urlencoded vs json][2]
 3. [IANA Media Types][3]
 
-
-[1]: http://www.tutorialspoint.com/http/http_requests.htm
-[2]: http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html
+[1]:  http://www.tutorialspoint.com/http/http_requests.htm
+[2]:  http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html
 [3]: http://www.iana.org/assignments/media-types/media-types.xhtml
+
 

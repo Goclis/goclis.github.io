@@ -3,17 +3,16 @@ Slug: c-preprocessor-macro-expansion
 Tags: 预处理器, 宏  
 Date: 2016-04-26 23:21:20  
 
+
 最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：
 
 ```c
 // macro.h
 #if defined(T)
-
 void T ## _func()
 {
-	// ...
+// ...
 }
-
 #endif
 ```
 
@@ -31,15 +30,12 @@ void T ## _func()
 ```c
 // macro.h
 #if defined(T)
-
 #define func_m(TN) TN ## _func
 #define T_func func_m(T)
-
 void T_func()
 {
-	// ...
+// ...
 }
-
 #endif
 ```
 
@@ -48,16 +44,13 @@ void T_func()
 ```c
 // macro.h
 #if defined(T)
-
 #define concate(A, B) A ## B
 #define func_m(TN) concate(TN, _func)
 #define T_func func_m(T)
-
 void T_func()
 {
-	// ...
+// ...
 }
-
 #endif
 ```
 
@@ -66,7 +59,6 @@ void T_func()
 > 如果宏定义中的形参的前面或后面带有 token-pasting 运算符，则会立即将形参替换为未扩展的实参。在替换前将不会对参数执行宏扩展。
 
 token-pasting运算符就是`##`。结合我原先的实现以及这段话，当预处理器在处理`T_func`时，它会替换为`func_m(T)`，这类似于一个函数调用，预处理器查看了一下`func_m`这个宏的内容，发现其中有`##`符号，所以，它直接将形参（即TN）替换成了未扩展的实参（即T），替换前并没有对T进行宏展开，从而导致无论T是什么，`T_func`都是最终结果。
-
 这点通过修改一下代码也可以验证：
 
 ```c
