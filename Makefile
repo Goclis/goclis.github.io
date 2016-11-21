@@ -55,7 +55,7 @@ help:
 html:
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS) -D
 
-public_github:
+publish_github:
 	cd output;git add .;git commit -m "update";git push origin master
 
 # 只删除掉内容，保留目录及Git信息
