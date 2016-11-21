@@ -82,6 +82,8 @@
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
                             <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00"> 发布：2016-05-27</time>
+                             •
+                            <time class="post-date" datetime="2016-11-21T16:45:00+08:00" title="2016-11-21T16:45:00+08:00"> 更新：2016-11-21</time> 
                         </div>
                     </header>
                     <div class="post-content">
@@ -120,7 +122,7 @@
 <h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
 <p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：</p>
 <p><img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg"/></p>
-<p>接着需要到VPS上<a href="http://4b3r.com/digitalocean-enable-ipv6/">配置IPv6</a>，使用ssh连接，编辑<code>/etc/network/interfaces</code>，在<code>auto eth0</code>后加上下面的内容：</p>
+<p>接着需要到VPS上<a href="http://4b3r.com/digitalocean-enable-ipv6/">配置IPv6</a>，使用ssh连接，编辑 <code>/etc/network/interfaces</code>，在 <code>auto eth0</code> 后加上下面的内容：</p>
 <div class="highlight"><pre>iface eth0 inet6 static
         address primary_ipv6_address
         netmask 64
@@ -128,7 +130,7 @@
         autoconf 0
         dns-nameservers 2001:4860:4860::8844 2001:4860:4860::8888 209.244.0.3
 </pre></div>
-<p>其中<code>primary_ipv6_address</code>和<code>ipv6_gateway</code>换成上面那张图里DO分配给你的内容，保存后<code>service networking restart</code>重启网络即可，实在不行重启VPS，可以使用<code>ifconfig</code>来查看是否配置成功。</p>
+<p>其中 <code>primary_ipv6_address</code> 和 <code>ipv6_gateway</code> 换成上面那张图里DO分配给你的内容，保存后 <code>service networking restart</code> 重启网络即可，实在不行重启VPS，可以使用 <code>ifconfig</code> 来查看是否配置成功。</p>
 <h3 id="vpsshadowsocks">在VPS上配置Shadowsocks服务<a class="headerlink" href="#vpsshadowsocks" title="Permanent link">¶</a></h3>
 <p>在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：</p>
 <div class="highlight"><pre>apt-get install python-pip
@@ -150,7 +152,7 @@ vim /etc/shadowsocks/config.json
 </pre></div>
 <p>稍微解释下：</p>
 <ul>
-<li>server: 指定SOCKS5服务监听的IP，指定为<code>::</code>的话可以同时监听IPv4及IPv6。</li>
+<li>server: 指定SOCKS5服务监听的IP，指定为 <code>::</code> 的话可以同时监听IPv4及IPv6。</li>
 <li>server_port: 指定监听的端口。</li>
 <li>password: 客户端连接SOCKS5服务时的密码。</li>
 </ul>
@@ -174,11 +176,11 @@ lsof -i:port
 </ul>
 <h4 id="_1">代理模式<a class="headerlink" href="#_1" title="Permanent link">¶</a></h4>
 <p>Shadowsocks的客户端有两种代理模式：PAC及全局模式。PAC就是只代理部分网站，而全局模式是代理所有的网站。</p>
-<p>Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默认监听端口为1080（可以通过配置修改）。之后所有的80及443端口的出境流量，都会经过<code>localhost:1080</code>的过滤，Shadowsocks根据代理模式来判断如何处理流量，PAC模式的话则会查看PAC列表（只有在列表中的站点才会代理），而全局模式则全部代理。</p>
-<p>在Windows上，Shadowsocks是通过修改<code>Internet选项-&gt;连接-&gt;局域网(LAN)设置</code>中的内容实现的代理，如下图：</p>
+<p>Shadowsocks客户端在本机运行了一个代理服务（实测不止SOCKS5，还有HTTP），默认监听端口为1080（可以通过配置修改）。有了代理服务器，剩下的问题就是将需要的流量转向代理。Shadowsocks根据代理模式来判断如何处理流量，PAC模式会根据PAC列表计算是否要代理，全局模式则全部代理，如果确定要代理，就将流量转向 <code>127.0.0.1:1080</code> 的代理服务，代理服务根据配置连接目标服务器，从而实现科学上网。</p>
+<p>在Windows上，Shadowsocks是通过修改 <code>Internet选项-&gt;连接-&gt;局域网(LAN)设置</code> 中的内容实现流量转发（至本地代理服务），如下图：</p>
 <p><img alt="" src="http://ww3.sinaimg.cn/large/006y8lVagw1f86x0qp7gfj30cp0c5jst.jpg"/></p>
 <p>当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。</p>
-<p>比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为<code>127.0.0.1:1080</code>，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：</p>
+<p>比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为 <code>127.0.0.1:1080</code>，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：</p>
 <p><img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x15ike6j30g308bwep.jpg"/></p>
 <p>自己可以查看一下使用的软件是否要被代理，比如IDM、迅雷之类的下载软件就可以考虑设置代理。</p>
 <h4 id="ipv6_1">利用IPv6<a class="headerlink" href="#ipv6_1" title="Permanent link">¶</a></h4>
@@ -190,6 +192,7 @@ lsof -i:port
 <li><a href="https://shadowsocks.org">Shadowsocks官网</a></li>
 <li><a href="https://github.com/shadowsocks/">Shadowsocks on Github</a></li>
 <li><a href="http://blog.kunyu.li/digitalocean-ubuntu-vps-vpn.html">PPTP VPN搭建</a></li>
+<li><a href="https://www.wikiwand.com/en/Proxy_auto-config">PAC</a></li>
 </ol>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>

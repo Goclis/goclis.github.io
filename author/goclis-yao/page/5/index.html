@@ -86,7 +86,7 @@
                         
 <p>上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。</p>
 <h3 id="markdown">Markdown扩展<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h3>
-<p>我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在<code>pelicanconf.py</code>中对<code>MD_EXTENSIONS</code>进行适当的赋值即可，我的配置如下：</p>
+<p>我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在 <code>pelicanconf.py</code> 中对 <code>MD_EXTENSIONS</code> 进行适当的赋值即可，我的配置如下：</p>
 <div class="highlight"><pre><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s">'extra'</span><span class="p">,</span> <span class="s">'toc(permalink=true)'</span><span class="p">]</span>
 </pre></div>
 <p>总共三项：</p>
@@ -95,10 +95,10 @@
 <li>第二个包含了一系列的小扩展，我主要是为了获得表格及代码块的支持。</li>
 <li>第三个是为了生成目录，我的主题会提取文章的目录。</li>
 </ul>
-<p>Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见<a href="http://pythonhosted.org/Markdown/extensions/">Markdown模块官方文档</a>。</p>
+<p>Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见 <a href="http://pythonhosted.org/Markdown/extensions/">Markdown模块官方文档</a> 。</p>
 <h3 id="pelican-page">Pelican page<a class="headerlink" href="#pelican-page" title="Permanent link">¶</a></h3>
 <p>配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。</p>
-<p>page按照直面的翻译也就是<strong>页面</strong>的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的<code>templates</code>中拥有<code>article.html ...</code></p>
+<p>page按照直面的翻译也就是 <strong>页面</strong> 的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的 <code>templates</code> 中拥有 <code>article.html ...</code></p>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2016/01/16/advanced-pelican-configuration.html" class="btn btn-default">阅读全文</a>

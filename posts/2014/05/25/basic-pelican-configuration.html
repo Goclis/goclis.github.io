@@ -100,7 +100,7 @@ pip install markdown
 <p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
 <p><strong>Usage</strong></p>
 <p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
-<div class="highlight"><pre>make html # 将content中的markdown (or others) 生成为html
+<div class="highlight"><pre>make html <span class="c"># 将content中的markdown (or others) 生成为html</span>
 
 make regenerate
 
@@ -109,7 +109,7 @@ make serve
 make devserver
 </pre></div>
 <p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
-<div class="highlight"><pre>./develop_server.sh start  # http://localhost:8000
+<div class="highlight"><pre>./develop_server.sh start  <span class="c"># http://localhost:8000</span>
 
 ./develop_server.sh stop
 </pre></div>
@@ -147,7 +147,7 @@ Title: My first file        # 标题
 Date: 2014-5-25 20:30       # 时间
 Category: Python            # 类别
 Tags: pelican, publishing   # 分类标志
-Slug: my-super-post         # 
+Slug: my-super-post         #
 Author: Goclis Yao          # 作者
 Summary: Somethings         # 概要
 
@@ -158,13 +158,13 @@ Summary: Somethings         # 概要
 <p>静态文件路径（典型的是突破）是静态博客必须要指定好的一个东西。</p>
 <p>pelican默认会在生成文章时拷贝content目录中的images文件夹到output的文件夹中。</p>
 <p>如果你想要自己手动添加一个新的文件夹（比如pdfs）让其在生成文章时被拷贝到output中，可以在pelicanconf.py中添加：</p>
-<div class="highlight"><pre>STATIC_PATHS = ['images', 'pdfs']  # 这意味着这两个文件夹都会被copy过去
+<div class="highlight"><pre><span class="n">STATIC_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'images'</span><span class="p">,</span> <span class="s">'pdfs'</span><span class="p">]</span>  <span class="c"># 这意味着这两个文件夹都会被copy过去</span>
 </pre></div>
 <p><strong>theme settings</strong></p>
 <p>pelican的默认主题不是很好看。。所以得研究研究怎么换了。。</p>
 <p>这有一些<a href="https://github.com/getpelican/pelican-themes">主题</a>，所以打算基于这些修改了。。</p>
 <p>更换主题很容易，直接在配置文件里修改主题路径即可：</p>
-<div class="highlight"><pre>THEME = "/home/user/pelican-themes/theme-folder"
+<div class="highlight"><pre><span class="n">THEME</span> <span class="o">=</span> <span class="s">"/home/user/pelican-themes/theme-folder"</span>
 </pre></div>
 <p><strong>配置文件</strong></p>
 <p>在移植的时候需要注意主题的路径需要修改pelicanconf.py：</p>

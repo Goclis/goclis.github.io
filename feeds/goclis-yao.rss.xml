@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>http://goclis.github.io/</link><description></description><atom:link href="http://goclis.github.io/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 25 Sep 2016 15:31:00 +0800</lastBuildDate><item><title>MS Visual Studio对C++多继承的相关实现</title><link>http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</link><description>&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>http://goclis.github.io/</link><description></description><atom:link href="http://goclis.github.io/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 21 Nov 2016 16:45:00 +0800</lastBuildDate><item><title>MS Visual Studio对C++多继承的相关实现</title><link>http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</link><description>&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;首先，我们来明确一个观点：&lt;strong&gt;在类成员方法中，this指针是否一定要指向这个对象的内存起始处？&lt;/strong&gt;答案是不一定，指向起始处当然是很方便我们这些脑算成员变量偏移的，因为只用做加法就行了，但是对于编译器而言，它只需要确定好一个关于this指向的原则，随后基于这个原则，不管偏移要加法还是减法，对它来说都是没什么区别的。因此，this的指向实际上是编译器自己决定的，它可以遵照常规的想法，在进入成员方法代码前，把this调整至对象内存起始，或者是为了性能，采用它自己的原则。&lt;/p&gt;
 &lt;p&gt;显然，VS这样的编译器使用的是后者，它出于性能考虑，约定了自己的原则：&lt;strong&gt;this指针在一个类成员方法中的指向，取决于该方法的来源。&lt;/strong&gt;具体来说：&lt;/p&gt;
 &lt;ul&gt;
@@ -135,7 +135,7 @@
 &lt;h4 id="ipv6"&gt;开启IPv6&lt;a class="headerlink" href="#ipv6" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg"/&gt;&lt;/p&gt;
-&lt;p&gt;接着需要到VPS上&lt;a href="http://4b3r.com/digitalocean-enable-ipv6/"&gt;配置IPv6&lt;/a&gt;，使用ssh连接，编辑&lt;code&gt;/etc/network/interfaces&lt;/code&gt;，在&lt;code&gt;auto eth0&lt;/code&gt;后加上下面的内容：&lt;/p&gt;
+&lt;p&gt;接着需要到VPS上&lt;a href="http://4b3r.com/digitalocean-enable-ipv6/"&gt;配置IPv6&lt;/a&gt;，使用ssh连接，编辑 &lt;code&gt;/etc/network/interfaces&lt;/code&gt;，在 &lt;code&gt;auto eth0&lt;/code&gt; 后加上下面的内容：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;iface eth0 inet6 static
         address primary_ipv6_address
         netmask 64
@@ -143,7 +143,7 @@
         autoconf 0
         dns-nameservers 2001:4860:4860::8844 2001:4860:4860::8888 209.244.0.3
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;其中&lt;code&gt;primary_ipv6_address&lt;/code&gt;和&lt;code&gt;ipv6_gateway&lt;/code&gt;换成上面那张图里DO分配给你的内容，保存后&lt;code&gt;service networking restart&lt;/code&gt;重启网络即可，实在不行重启VPS，可以使用&lt;code&gt;ifconfig&lt;/code&gt;来查看是否配置成功。&lt;/p&gt;
+&lt;p&gt;其中 &lt;code&gt;primary_ipv6_address&lt;/code&gt; 和 &lt;code&gt;ipv6_gateway&lt;/code&gt; 换成上面那张图里DO分配给你的内容，保存后 &lt;code&gt;service networking restart&lt;/code&gt; 重启网络即可，实在不行重启VPS，可以使用 &lt;code&gt;ifconfig&lt;/code&gt; 来查看是否配置成功。&lt;/p&gt;
 &lt;h3 id="vpsshadowsocks"&gt;在VPS上配置Shadowsocks服务&lt;a class="headerlink" href="#vpsshadowsocks" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;apt-get install python-pip
@@ -165,7 +165,7 @@ vim /etc/shadowsocks/config.json
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;稍微解释下：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;server: 指定SOCKS5服务监听的IP，指定为&lt;code&gt;::&lt;/code&gt;的话可以同时监听IPv4及IPv6。&lt;/li&gt;
+&lt;li&gt;server: 指定SOCKS5服务监听的IP，指定为 &lt;code&gt;::&lt;/code&gt; 的话可以同时监听IPv4及IPv6。&lt;/li&gt;
 &lt;li&gt;server_port: 指定监听的端口。&lt;/li&gt;
 &lt;li&gt;password: 客户端连接SOCKS5服务时的密码。&lt;/li&gt;
 &lt;/ul&gt;
@@ -189,11 +189,11 @@ lsof -i:port
 &lt;/ul&gt;
 &lt;h4 id="_1"&gt;代理模式&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Shadowsocks的客户端有两种代理模式：PAC及全局模式。PAC就是只代理部分网站，而全局模式是代理所有的网站。&lt;/p&gt;
-&lt;p&gt;Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默认监听端口为1080（可以通过配置修改）。之后所有的80及443端口的出境流量，都会经过&lt;code&gt;localhost:1080&lt;/code&gt;的过滤，Shadowsocks根据代理模式来判断如何处理流量，PAC模式的话则会查看PAC列表（只有在列表中的站点才会代理），而全局模式则全部代理。&lt;/p&gt;
-&lt;p&gt;在Windows上，Shadowsocks是通过修改&lt;code&gt;Internet选项-&amp;gt;连接-&amp;gt;局域网(LAN)设置&lt;/code&gt;中的内容实现的代理，如下图：&lt;/p&gt;
+&lt;p&gt;Shadowsocks客户端在本机运行了一个代理服务（实测不止SOCKS5，还有HTTP），默认监听端口为1080（可以通过配置修改）。有了代理服务器，剩下的问题就是将需要的流量转向代理。Shadowsocks根据代理模式来判断如何处理流量，PAC模式会根据PAC列表计算是否要代理，全局模式则全部代理，如果确定要代理，就将流量转向 &lt;code&gt;127.0.0.1:1080&lt;/code&gt; 的代理服务，代理服务根据配置连接目标服务器，从而实现科学上网。&lt;/p&gt;
+&lt;p&gt;在Windows上，Shadowsocks是通过修改 &lt;code&gt;Internet选项-&amp;gt;连接-&amp;gt;局域网(LAN)设置&lt;/code&gt; 中的内容实现流量转发（至本地代理服务），如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww3.sinaimg.cn/large/006y8lVagw1f86x0qp7gfj30cp0c5jst.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。&lt;/p&gt;
-&lt;p&gt;比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为&lt;code&gt;127.0.0.1:1080&lt;/code&gt;，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：&lt;/p&gt;
+&lt;p&gt;比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为 &lt;code&gt;127.0.0.1:1080&lt;/code&gt;，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x15ike6j30g308bwep.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;自己可以查看一下使用的软件是否要被代理，比如IDM、迅雷之类的下载软件就可以考虑设置代理。&lt;/p&gt;
 &lt;h4 id="ipv6_1"&gt;利用IPv6&lt;a class="headerlink" href="#ipv6_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
@@ -205,7 +205,8 @@ lsof -i:port
 &lt;li&gt;&lt;a href="https://shadowsocks.org"&gt;Shadowsocks官网&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/shadowsocks/"&gt;Shadowsocks on Github&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://blog.kunyu.li/digitalocean-ubuntu-vps-vpn.html"&gt;PPTP VPN搭建&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Fri, 27 May 2016 09:50:00 +0800</pubDate><guid>tag:goclis.github.io,2016-05-27:posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html</guid><category>Shadowsocks</category><category>VPS</category><category>VPN</category><category>Ubuntu</category><category>DigitalOcean</category></item><item><title>【吃点评】蓝神火锅及金桔梗年糕火锅料理</title><link>http://goclis.github.io/posts/2016/05/04/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E8%93%9D%E7%A5%9E%E7%81%AB%E9%94%85%E5%8F%8A%E9%87%91%E6%A1%94%E6%A2%97%E5%B9%B4%E7%B3%95%E7%81%AB%E9%94%85%E6%96%99%E7%90%86.html</link><description>&lt;p&gt;五一三天假浪了两天，小小的记录一下吃了的东西。&lt;/p&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Proxy_auto-config"&gt;PAC&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Mon, 21 Nov 2016 16:45:00 +0800</pubDate><guid>tag:goclis.github.io,2016-05-27:posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html</guid><category>Shadowsocks</category><category>VPS</category><category>VPN</category><category>Ubuntu</category><category>DigitalOcean</category></item><item><title>【吃点评】蓝神火锅及金桔梗年糕火锅料理</title><link>http://goclis.github.io/posts/2016/05/04/%E3%80%90%E5%90%83%E7%82%B9%E8%AF%84%E3%80%91%E8%93%9D%E7%A5%9E%E7%81%AB%E9%94%85%E5%8F%8A%E9%87%91%E6%A1%94%E6%A2%97%E5%B9%B4%E7%B3%95%E7%81%AB%E9%94%85%E6%96%99%E7%90%86.html</link><description>&lt;p&gt;五一三天假浪了两天，小小的记录一下吃了的东西。&lt;/p&gt;
 &lt;p&gt;第一天，蓝神火锅，这并不是一家店2333，只是一群人跑到了外号为蓝神的小伙伴家里吃了火锅而已，味道嘛，中规中矩，买的火锅底料和火锅的食材，没啥可吐槽的，就是菜买多了，不是浪费就是蓝神得吃蔬菜沙拉了哈哈哈。吃完火锅后打了一下午掼蛋，这游戏，感觉运气很重要。。&lt;/p&gt;
 &lt;p&gt;第二天本来没打算出门的，听同学说要去南博，就顺便一起去了，逛着逛着居然遇到了西瓜一行人，就抛弃同学了哈哈哈，省略逛的内容，就是看着一堆女生各种找适合自拍的地方吧（一脸懵逼状）。晚饭去新街口金鹰吃的金桔梗年糕火锅料理，= =#做法类似于焖锅吧，点个年糕锅底，然后再把所有你点的东西都混在一锅里，上来后基本都可以吃了（除了虾），味道还可以，不过按我的饭量，不吃了两块面大概是不会饱的。价格方面，人均50吧。有一个注意的点，&lt;strong&gt;最多四人一桌&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;今年五一过的很开心啊，不过主要是看和谁过2333。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 04 May 2016 00:00:30 +0800</pubDate><guid>tag:goclis.github.io,2016-05-04:posts/2016/05/04/【吃点评】蓝神火锅及金桔梗年糕火锅料理.html</guid><category>吃点评</category></item><item><title>C预处理器宏展开</title><link>http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html</link><description>&lt;p&gt;最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：&lt;/p&gt;
@@ -339,16 +340,16 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;p&gt;这篇文章把一些我在改造过程中遇到的问题以及解决思路记录下来。&lt;/p&gt;
 &lt;h3 id="template-page"&gt;使用Template Page划分内容&lt;a class="headerlink" href="#template-page" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;博客的改造是希望把内容分成四块：技术、生活、笔记、琐碎。技术就是先前写的这些博文；生活记录一些小结或是感想的东西；笔记实质上是我平时针对一些具体技术记录的一些Tip，打算一并放上来；琐碎实际上就类似于微博，一些短的想法之类的。&lt;/p&gt;
-&lt;p&gt;按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板&lt;code&gt;page.html&lt;/code&gt;决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。&lt;/p&gt;
-&lt;p&gt;因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在&lt;code&gt;pelicanconf.py&lt;/code&gt;中对&lt;code&gt;TEMPLATE_PAGES&lt;/code&gt;进行相关的设置即可，如下：&lt;/p&gt;
+&lt;p&gt;按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板 &lt;code&gt;page.html&lt;/code&gt; 决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。&lt;/p&gt;
+&lt;p&gt;因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在 &lt;code&gt;pelicanconf.py&lt;/code&gt; 中对 &lt;code&gt;TEMPLATE_PAGES&lt;/code&gt; 进行相关的设置即可，如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;TEMPLATE_PAGES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="s"&gt;'tpages/life.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'life.html'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
     &lt;span class="s"&gt;'tpages/tweet.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'tweet.html'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
     &lt;span class="s"&gt;'tpages/note.html'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'note.html'&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;字典的键是页面的模板的路径，相对于content目录，这个模板的语法遵从是Pelican使用的Jinja2的模板引擎的规定。字典的值是生成的页面的输出路径，相对于output目录。这里只有三个页面，因为我直接修改了&lt;code&gt;index.html&lt;/code&gt;这个模板，把它作为了技术文章的页面。&lt;/p&gt;
-&lt;p&gt;在实现这块的时候，遇到了导航栏的激活的问题。我希望把这四个页面都加入到导航栏，关于导航栏的内容，一般都在&lt;code&gt;base.html&lt;/code&gt;这个模板里，对于每个页面哪个导航项该被激活，实现一般如下：&lt;/p&gt;
+&lt;p&gt;字典的键是页面的模板的路径，相对于content目录，这个模板的语法遵从是Pelican使用的Jinja2的模板引擎的规定。字典的值是生成的页面的输出路径，相对于output目录。这里只有三个页面，因为我直接修改了 &lt;code&gt;index.html&lt;/code&gt; 这个模板，把它作为了技术文章的页面。&lt;/p&gt;
+&lt;p&gt;在实现这块的时候，遇到了导航栏的激活的问题。我希望把这四个页面都加入到导航栏，关于导航栏的内容，一般都在 &lt;code&gt;base.html&lt;/code&gt; 这个模板里，对于每个页面哪个导航项该被激活，实现一般如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# 1
 &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;categories&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/categories.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Categories&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
 
@@ -360,9 +361,9 @@ POST example.com?name=xxx&amp;amp;age=18
 {% endif %}
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;实现的不同是因为Pelican生成时的处理不同。我们知道，对于Jinja2这样的模板引擎来说，你除了需要给定它模板文件，还需要指定一个context，也就是你这个模板文件中使用到的变量对应的具体的值，Pelican针对不同类型的输入给定了不同的context&lt;/p&gt;
-&lt;p&gt;实现1用于几个特殊的模板，如&lt;code&gt;index.html&lt;/code&gt;、&lt;code&gt;categories.html&lt;/code&gt;、&lt;code&gt;tags.html&lt;/code&gt;等，Pelican规定了每一个主题都需要提供这些模板，在调用Jinja2生成它们时，Pelican会把如&lt;code&gt;page_name&lt;/code&gt;等变量传到对应的context里，所以我们可以通过判断当前页面的&lt;code&gt;page_name&lt;/code&gt;来确定激活对应导航项。&lt;/p&gt;
-&lt;p&gt;实现2用于Page，是先前在实现“关于我”页面的时候，为该页面增加导航项的做法，之所以这样做在于我上面提到的context的问题，Pelican在Page页面的context中提供了一个&lt;code&gt;page&lt;/code&gt;变量，其中包含了一系列的信息，但由于&lt;code&gt;base.html&lt;/code&gt;不仅仅供Page使用，需要加个判断。类似的，Pelican在Article页面的context中提供了一个&lt;code&gt;article&lt;/code&gt;变量。&lt;/p&gt;
-&lt;p&gt;但是，并没有办法区分两个Template Page，因为Pelican没有为它的context提供额外的信息，这点我是通过查看源代码确认的，关于它的代码在&lt;code&gt;generators.py&lt;/code&gt;中，下面给出一部分，其中包含了我的修改：&lt;/p&gt;
+&lt;p&gt;实现1用于几个特殊的模板，如 &lt;code&gt;index.html&lt;/code&gt; 、 &lt;code&gt;categories.html&lt;/code&gt; 、 &lt;code&gt;tags.html&lt;/code&gt; 等，Pelican规定了每一个主题都需要提供这些模板，在调用Jinja2生成它们时，Pelican会把如 &lt;code&gt;page_name&lt;/code&gt; 等变量传到对应的context里，所以我们可以通过判断当前页面的 &lt;code&gt;page_name&lt;/code&gt; 来确定激活对应导航项。&lt;/p&gt;
+&lt;p&gt;实现2用于Page，是先前在实现“关于我”页面的时候，为该页面增加导航项的做法，之所以这样做在于我上面提到的context的问题，Pelican在Page页面的context中提供了一个 &lt;code&gt;page&lt;/code&gt; 变量，其中包含了一系列的信息，但由于 &lt;code&gt;base.html&lt;/code&gt; 不仅仅供Page使用，需要加个判断。类似的，Pelican在Article页面的context中提供了一个 &lt;code&gt;article&lt;/code&gt; 变量。&lt;/p&gt;
+&lt;p&gt;但是，并没有办法区分两个Template Page，因为Pelican没有为它的context提供额外的信息，这点我是通过查看源代码确认的，关于它的代码在 &lt;code&gt;generators.py&lt;/code&gt; 中，下面给出一部分，其中包含了我的修改：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# generators.py&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;TemplatePagesGenerator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Generator&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
@@ -381,52 +382,52 @@ POST example.com?name=xxx&amp;amp;age=18
              &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
                  &lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'tp_slug'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;从源码中可以看到，&lt;code&gt;writer.write_file&lt;/code&gt;的参数中并没有传入额外的参数，仅仅是&lt;code&gt;self.context&lt;/code&gt;，我修改了代码把该变量打印了一下，发现并没有可以区分Template Page的信息，所以，改动也很简单，我自己加了一个表示slug的&lt;code&gt;tp_slug&lt;/code&gt;变量到context中，这样就可以简单区分了，模板中的导航项实现如下：&lt;/p&gt;
+&lt;p&gt;从源码中可以看到， &lt;code&gt;writer.write_file&lt;/code&gt; 的参数中并没有传入额外的参数，仅仅是 &lt;code&gt;self.context&lt;/code&gt; ，我修改了代码把该变量打印了一下，发现并没有可以区分Template Page的信息，所以，改动也很简单，我自己加了一个表示slug的 &lt;code&gt;tp_slug&lt;/code&gt; 变量到context中，这样就可以简单区分了，模板中的导航项实现如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;tp_slug =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;note&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;html&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/note.html"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Note&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;搞定了这个问题后，我就只需要好好的设计&lt;code&gt;index.html&lt;/code&gt;、&lt;code&gt;life.html&lt;/code&gt;、&lt;code&gt;note.html&lt;/code&gt;以及&lt;code&gt;tweet.html&lt;/code&gt;这四个分别对应四块内容的模板就行了。&lt;/p&gt;
+&lt;p&gt;搞定了这个问题后，我就只需要好好的设计 &lt;code&gt;index.html&lt;/code&gt; 、 &lt;code&gt;life.html&lt;/code&gt; 、 &lt;code&gt;note.html&lt;/code&gt; 以及 &lt;code&gt;tweet.html&lt;/code&gt; 这四个分别对应四块内容的模板就行了。&lt;/p&gt;
 &lt;h3 id="jinja2"&gt;Jinja2模板使用&lt;a class="headerlink" href="#jinja2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;在设计模板的过程中遇到了一些问题，并查到了一些解决方案，这里记录一下。&lt;/p&gt;
 &lt;h4 id="jinja2_1"&gt;Jinja2变量作用域&lt;a class="headerlink" href="#jinja2_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Jinja2的变量的作用域比较奇怪，不是全局的那种，如下例子：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;% set last_year = 0 %}
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;article&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;dates&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;article.category&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;TECH_CATEGORIES&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;article.date.strftime&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'%Y'&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;last_year&lt;/span&gt; &lt;span class="p"&gt;!&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;lt;h2&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"#&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;year&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;last_year&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-    &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;next_year&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;/&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;g_next_year&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="k"&gt;not&lt;/span&gt; &lt;span class="nb"&gt;loop&lt;/span&gt;&lt;span class="nv"&gt;.last&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;base&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;loop&lt;/span&gt;&lt;span class="nv"&gt;.index0&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;found&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;na&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;dates&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;base&lt;/span&gt;&lt;span class="o"&gt;:]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;found&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="k"&gt;and&lt;/span&gt; &lt;span class="nv"&gt;na.category&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;TECH_CATEGORIES&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;next&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;base&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;loop&lt;/span&gt;&lt;span class="nv"&gt;.index0&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;next_article&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;dates&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;next&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-    &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;next_year&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;next_article.date.strftime&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'%Y'&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;found&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-    &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="kp"&gt;_&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;g_next_year.pop&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-    &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="kp"&gt;_&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;g_next_year.append&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;next_year&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-    &lt;span class="cp"&gt;{%&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;next_year&lt;/span&gt; &lt;span class="p"&gt;!&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;/&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;g_next_year&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="p"&gt;!&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;year&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+{% for article in dates %}
+{% if article.category in TECH_CATEGORIES %}
+{% set year = article.date.strftime('%Y') %}
+{%if last_year != year %}
+&lt;span class="nt"&gt;&amp;lt;h2&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"{{year }}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"#{{year}}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;{{ year }}&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
+{% set last_year = year %}
+{% endif %}
+    {% set next_year = 0 %}/{% set g_next_year = [0] %}
+{% if not loop.last %}
+{% set base = loop.index0 + 1 %}
+{% set found = 0 %}
+{% for na in dates[base:] %}
+{% if found == 0 and na.category in TECH_CATEGORIES %}
+{% set next = base + loop.index0 %}
+{% set next_article = dates[next] %}
+    {% set next_year = next_article.date.strftime('%Y') %}
+{% set found = 1 %}
+    {% set _ = g_next_year.pop() %}
+    {% set _ = g_next_year.append(next_year) %}
+{% endif %}
+{% endfor %}
+{% endif %}
+    {%if next_year != year %}/{% if g_next_year[0] != year %}
 &lt;span class="nt"&gt;&amp;lt;article&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"last-entry-of-year"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+{% else %}
 &lt;span class="nt"&gt;&amp;lt;article&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;SITEURL&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;/&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;article.url&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;article.title&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt; &lt;span class="cp"&gt;{%&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;article.subtitle&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt; &lt;span class="nt"&gt;&amp;lt;small&amp;gt;&lt;/span&gt; &lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;article.subtitle&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt; &lt;span class="nt"&gt;&amp;lt;/small&amp;gt;&lt;/span&gt; &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt; &lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;lt;time&lt;/span&gt; &lt;span class="na"&gt;pubdate=&lt;/span&gt;&lt;span class="s"&gt;"pubdate"&lt;/span&gt; &lt;span class="na"&gt;datetime=&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;article.date.isoformat&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;article.locale_date&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/time&amp;gt;&lt;/span&gt;
+{% endif %}
+&lt;span class="nt"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ SITEURL }}/{{ article.url }}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;{{ article.title }} {%if article.subtitle %} &lt;span class="nt"&gt;&amp;lt;small&amp;gt;&lt;/span&gt; {{ article.subtitle }} &lt;span class="nt"&gt;&amp;lt;/small&amp;gt;&lt;/span&gt; {% endif %} &lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;time&lt;/span&gt; &lt;span class="na"&gt;pubdate=&lt;/span&gt;&lt;span class="s"&gt;"pubdate"&lt;/span&gt; &lt;span class="na"&gt;datetime=&lt;/span&gt;&lt;span class="s"&gt;"{{ article.date.isoformat() }}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;{{ article.locale_date }}&lt;span class="nt"&gt;&amp;lt;/time&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/article&amp;gt;&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+{% endif %}
+{% endfor %}
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;注意我特别缩进的几行，希望达到的目的是：外部设置初值，内部改变值，再出来后检查值是否有改变。从执行过程来说，内部是会对值进行改变的，但是由于Jinja2的作用域问题，它改变的并不是外部那个变量，从而导致出来后的检查永远是未改变。&lt;/p&gt;
-&lt;p&gt;解决办法是&lt;a href="http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block"&gt;使用列表&lt;/a&gt;，貌似列表变量的作用域是全局的，所以可行，逻辑也很简单，初始化为只包含初值的列表，修改值即为弹出再插入值，然后读取值即为访问第一个元素。&lt;/p&gt;
+&lt;p&gt;解决办法是 &lt;a href="http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block"&gt;使用列表&lt;/a&gt; ，貌似列表变量的作用域是全局的，所以可行，逻辑也很简单，初始化为只包含初值的列表，修改值即为弹出再插入值，然后读取值即为访问第一个元素。&lt;/p&gt;
 &lt;h4 id="jinja2_2"&gt;Jinja2把文章分类&lt;a class="headerlink" href="#jinja2_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;这个其实不是很通用，但还是说一下，发生在我改造&lt;code&gt;archives.html&lt;/code&gt;模板的时候，希望能够把所有的文章给分一下类，然后再挨个处理。从编程的角度来看，实际上就是把一个列表拆分成四个列表嘛，在Jinja2里也是能做的，如下：&lt;/p&gt;
+&lt;p&gt;这个其实不是很通用，但还是说一下，发生在我改造 &lt;code&gt;archives.html&lt;/code&gt; 模板的时候，希望能够把所有的文章给分一下类，然后再挨个处理。从编程的角度来看，实际上就是把一个列表拆分成四个列表嘛，在Jinja2里也是能做的，如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;{# -- 把所有文章按大类分到不同的list中 -- #}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;tech_articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;life_articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
@@ -444,21 +445,21 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;span class="x"&gt;    &lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;这里只有三个，是因为笔记类的不归档。代码里涉及到了&lt;code&gt;XXX_CATEGORIES&lt;/code&gt;这样的变量，它们是我自己添加，用于对文章进行类型划分的，主要是针对一个大类下可能有不同小类的情况（比如技术类下有Python子类），在&lt;code&gt;pelicanconf.py&lt;/code&gt;中添加：&lt;/p&gt;
+&lt;p&gt;这里只有三个，是因为笔记类的不归档。代码里涉及到了 &lt;code&gt;XXX_CATEGORIES&lt;/code&gt; 这样的变量，它们是我自己添加，用于对文章进行类型划分的，主要是针对一个大类下可能有不同小类的情况（比如技术类下有Python子类），在 &lt;code&gt;pelicanconf.py&lt;/code&gt; 中添加：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;TECH_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Tech'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'Python'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;NOTE_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Note'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;LIFE_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Life'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;TWEET_CATEGORIES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'Tweet'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="disqus"&gt;添加Disqus评论&lt;a class="headerlink" href="#disqus" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;过程挺简单的，毕竟主题都帮你弄好了，申请Disqus，创建Site，然后在&lt;code&gt;pelicanconf.py&lt;/code&gt;中添加如下内容即可：&lt;/p&gt;
+&lt;p&gt;过程挺简单的，毕竟主题都帮你弄好了，申请Disqus，创建Site，然后在 &lt;code&gt;pelicanconf.py&lt;/code&gt; 中添加如下内容即可：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;DISQUS_SITENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"yoursitename"&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;得提一下，Pelican-Elegant这个主题为文章提供了一个&lt;code&gt;disqus_identifier&lt;/code&gt;的metadata，作者给出的解释是：因为Pelican默认提交给Disqus的是基于&lt;code&gt;SITEURL&lt;/code&gt;和文章URL生成的，这样的话，在&lt;code&gt;SITEURL&lt;/code&gt;发生变动后，你的评论就可能丢失了。&lt;/p&gt;
-&lt;p&gt;但是出于懒，并不想为每篇文章都加上&lt;code&gt;disqus_identifier&lt;/code&gt;，我直接把主题进行修改了，调整了一下默认&lt;code&gt;disqus_identifier&lt;/code&gt;的生成，改为&lt;code&gt;disqus-{{ article.url }}&lt;/code&gt;，应该能够保证唯一。&lt;/p&gt;
+&lt;p&gt;得提一下，Pelican-Elegant这个主题为文章提供了一个 &lt;code&gt;disqus_identifier&lt;/code&gt; 的metadata，作者给出的解释是：因为Pelican默认提交给Disqus的是基于 &lt;code&gt;SITEURL&lt;/code&gt; 和文章URL生成的，这样的话，在 &lt;code&gt;SITEURL&lt;/code&gt; 发生变动后，你的评论就可能丢失了。&lt;/p&gt;
+&lt;p&gt;但是出于懒，并不想为每篇文章都加上 &lt;code&gt;disqus_identifier&lt;/code&gt; ，我直接把主题进行修改了，调整了一下默认 &lt;code&gt;disqus_identifier&lt;/code&gt; 的生成，改为 &lt;code&gt;disqus-{{ article.url }}&lt;/code&gt; ，应该能够保证唯一。&lt;/p&gt;
 &lt;h3 id="2016-04-03"&gt;2016-04-03更新&lt;a class="headerlink" href="#2016-04-03" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;发现了一个可以替换&lt;code&gt;tp_slug&lt;/code&gt;的变量&lt;code&gt;output_file&lt;/code&gt;。&lt;/p&gt;
-&lt;p&gt;考虑再三，出于保证文章的顺序性，还是决定把琐碎部分的内容移除出，以避免它占用文章的时间线，未来可能考虑以一种非&lt;code&gt;article&lt;/code&gt;的方式加入。&lt;/p&gt;
+&lt;p&gt;发现了一个可以替换 &lt;code&gt;tp_slug&lt;/code&gt; 的变量 &lt;code&gt;output_file&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;考虑再三，出于保证文章的顺序性，还是决定把琐碎部分的内容移除出，以避免它占用文章的时间线，未来可能考虑以一种非 &lt;code&gt;article&lt;/code&gt; 的方式加入。&lt;/p&gt;
 &lt;h3 id="_1"&gt;参考资料&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;http://stackoverflow.com/questions/4870346/can-a-jinja-variables-scope-extend-beyond-in-an-inner-block&lt;/li&gt;
@@ -472,7 +473,7 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;p&gt;嗯，怎么说呢，追求吃鸡爪的话，我其实可以选择更便宜的焖锅之类的，总之下次不会为了吃蟹来这家店。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 19 Mar 2016 00:00:00 +0800</pubDate><guid>tag:goclis.github.io,2016-03-19:posts/2016/03/19/【吃点评】胖哥俩肉蟹煲.html</guid><category>吃点评</category></item><item><title>Pelican进阶配置</title><link>http://goclis.github.io/posts/2016/01/16/advanced-pelican-configuration.html</link><description>
 &lt;p&gt;上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。&lt;/p&gt;
 &lt;h3 id="markdown"&gt;Markdown扩展&lt;a class="headerlink" href="#markdown" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在&lt;code&gt;pelicanconf.py&lt;/code&gt;中对&lt;code&gt;MD_EXTENSIONS&lt;/code&gt;进行适当的赋值即可，我的配置如下：&lt;/p&gt;
+&lt;p&gt;我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在 &lt;code&gt;pelicanconf.py&lt;/code&gt; 中对 &lt;code&gt;MD_EXTENSIONS&lt;/code&gt; 进行适当的赋值即可，我的配置如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;MD_EXTENSIONS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'codehilite(css_class=highlight)'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'extra'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'toc(permalink=true)'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;总共三项：&lt;/p&gt;
@@ -481,17 +482,17 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;li&gt;第二个包含了一系列的小扩展，我主要是为了获得表格及代码块的支持。&lt;/li&gt;
 &lt;li&gt;第三个是为了生成目录，我的主题会提取文章的目录。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见&lt;a href="http://pythonhosted.org/Markdown/extensions/"&gt;Markdown模块官方文档&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见 &lt;a href="http://pythonhosted.org/Markdown/extensions/"&gt;Markdown模块官方文档&lt;/a&gt; 。&lt;/p&gt;
 &lt;h3 id="pelican-page"&gt;Pelican page&lt;a class="headerlink" href="#pelican-page" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。&lt;/p&gt;
-&lt;p&gt;page按照直面的翻译也就是&lt;strong&gt;页面&lt;/strong&gt;的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的&lt;code&gt;templates&lt;/code&gt;中拥有&lt;code&gt;article.html&lt;/code&gt;和&lt;code&gt;page.html&lt;/code&gt;，只是文章更倾向于内容，而页面可以很随意，所以一般可以拿来构造导航栏（比如about页面）。&lt;/p&gt;
-&lt;p&gt;页面和文章一样，都是Pelican根据你所编写的内容生成的，内容的格式同样可以是Markdown（或是支持的其他格式），并且也必须放到&lt;code&gt;content&lt;/code&gt;目录下，为了更好分辨，还可以在&lt;code&gt;pelicanconf.py&lt;/code&gt;中指定页面所在的文件夹以及页面生成相关的内容，我的配置如下：&lt;/p&gt;
+&lt;p&gt;page按照直面的翻译也就是 &lt;strong&gt;页面&lt;/strong&gt; 的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的 &lt;code&gt;templates&lt;/code&gt; 中拥有 &lt;code&gt;article.html&lt;/code&gt; 和 &lt;code&gt;page.html&lt;/code&gt; ，只是文章更倾向于内容，而页面可以很随意，所以一般可以拿来构造导航栏（比如about页面）。&lt;/p&gt;
+&lt;p&gt;页面和文章一样，都是Pelican根据你所编写的内容生成的，内容的格式同样可以是Markdown（或是支持的其他格式），并且也必须放到 &lt;code&gt;content&lt;/code&gt; 目录下，为了更好分辨，还可以在 &lt;code&gt;pelicanconf.py&lt;/code&gt; 中指定页面所在的文件夹以及页面生成相关的内容，我的配置如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;PAGE_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'pages'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;PAGE_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'{slug}.html'&lt;/span&gt;
 &lt;span class="n"&gt;PAGE_SAVE_AS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'{slug}.html'&lt;/span&gt;
 &lt;span class="n"&gt;DISPLAY_PAGES_ON_MENU&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt; &lt;span class="c"&gt;# 主题的模板可能会使用的值，一般用于导航栏&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;content&lt;/code&gt;的目录结构如下：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;content&lt;/code&gt; 的目录结构如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;|—— content
 |   |—— posts # 文章的目录
 |   |   |—— article1.md
@@ -501,14 +502,14 @@ POST example.com?name=xxx&amp;amp;age=18
 |   |—— images  # 图片（静态文件）
 |   |—— ...
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;我的&lt;code&gt;pages&lt;/code&gt;目录下只有一个&lt;code&gt;about.md&lt;/code&gt;，按照配置，Pelican会为我生成一个&lt;code&gt;about.html&lt;/code&gt;的页面。&lt;/p&gt;
+&lt;p&gt;我的 &lt;code&gt;pages&lt;/code&gt; 目录下只有一个 &lt;code&gt;about.md&lt;/code&gt; ，按照配置，Pelican会为我生成一个 &lt;code&gt;about.html&lt;/code&gt; 的页面。&lt;/p&gt;
 &lt;h3 id="_1"&gt;按需自定义&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;为了满足自己的需求，你可以任意的修改主题的内容（协议允许的话）或者Pelican的源码，以下为一些我的自己的修改。&lt;/p&gt;
 &lt;h4 id="bootstrap"&gt;设置生成的表格为Bootstrap风格&lt;a class="headerlink" href="#bootstrap" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;默认情况下，Pelican为我生成的HTML中的表格使用的是&lt;code&gt;&amp;lt;table&amp;gt;&amp;lt;/table&amp;gt;&lt;/code&gt;这样的标签，没有增加任何的样式，很难看。&lt;/p&gt;
-&lt;p&gt;在主题是基于Bootstrap的前提下，把表格改为Bootstrap风格就非常容易，只要改为&lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt;即可，两个方法。&lt;/p&gt;
+&lt;p&gt;默认情况下，Pelican为我生成的HTML中的表格使用的是 &lt;code&gt;&amp;lt;table&amp;gt;&amp;lt;/table&amp;gt;&lt;/code&gt; 这样的标签，没有增加任何的样式，很难看。&lt;/p&gt;
+&lt;p&gt;在主题是基于Bootstrap的前提下，把表格改为Bootstrap风格就非常容易，只要改为 &lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt; 即可，两个方法。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;(1) 修改生成的内容&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;前面提到过，Pelican的Markdown支持是依赖于Markdown模块的，因而本质上，它是利用了Markdown模块对输入进行了解析，然后对解析得到的结果进行生成。所以，一个简单的办法就是直接把生成的内容当成字符串进行搜索替换，把&lt;code&gt;&amp;lt;table&amp;gt;&lt;/code&gt;替换为&lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt;，这需要修改Pelican的源码，修改&lt;code&gt;reader.py&lt;/code&gt;中的&lt;code&gt;MarkdownReader&lt;/code&gt;的&lt;code&gt;read&lt;/code&gt;方法：&lt;/p&gt;
+&lt;p&gt;前面提到过，Pelican的Markdown支持是依赖于Markdown模块的，因而本质上，它是利用了Markdown模块对输入进行了解析，然后对解析得到的结果进行生成。所以，一个简单的办法就是直接把生成的内容当成字符串进行搜索替换，把 &lt;code&gt;&amp;lt;table&amp;gt;&lt;/code&gt; 替换为 &lt;code&gt;&amp;lt;table class="table"&amp;gt;&lt;/code&gt; ，这需要修改Pelican的源码，修改 &lt;code&gt;reader.py&lt;/code&gt; 中的 &lt;code&gt;MarkdownReader&lt;/code&gt; 的 &lt;code&gt;read&lt;/code&gt; 方法：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_source_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;source_path&lt;/span&gt;
 &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_md&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;extensions&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extensions&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pelican_open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source_path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
@@ -519,14 +520,14 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这种方法要改源码，迁移的时候有点麻烦。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;(2) 改主题&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;目的都是给table标签加上class，可以直接修改主题，插入相应的JS代码即可，未考虑兼容性的问题，我直接在主题的&lt;code&gt;base.html&lt;/code&gt;的末尾增加了如下代码：&lt;/p&gt;
+&lt;p&gt;目的都是给table标签加上class，可以直接修改主题，插入相应的JS代码即可，未考虑兼容性的问题，我直接在主题的 &lt;code&gt;base.html&lt;/code&gt; 的末尾增加了如下代码：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;script&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="c1"&gt;// Added by Goclis for rerendering table to bootstrap style&lt;/span&gt;
     &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"table"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;addClass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"table"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;/script&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h4 id="about"&gt;增加about页面&lt;a class="headerlink" href="#about" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;在&lt;code&gt;pages&lt;/code&gt;文件夹里增加了一个&lt;code&gt;about.md&lt;/code&gt;，但希望在导航栏上增加一个About比较麻烦，对主题的&lt;code&gt;base.html&lt;/code&gt;进行了小小的修改：&lt;/p&gt;
+&lt;p&gt;在 &lt;code&gt;pages&lt;/code&gt; 文件夹里增加了一个 &lt;code&gt;about.md&lt;/code&gt; ，但希望在导航栏上增加一个About比较麻烦，对主题的 &lt;code&gt;base.html&lt;/code&gt; 进行了小小的修改：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"nav-collapse collapse"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;lt;ul&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"nav pull-right top-menu"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
         &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;if&lt;/span&gt; &lt;span class="na"&gt;page_name =&lt;/span&gt;&lt;span class="s"&gt;=&lt;/span&gt; &lt;span class="err"&gt;'&lt;/span&gt;&lt;span class="na"&gt;index&lt;/span&gt;&lt;span class="err"&gt;'&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"active"&lt;/span&gt;&lt;span class="err"&gt;{%&lt;/span&gt; &lt;span class="na"&gt;endif&lt;/span&gt; &lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"/"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Home&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
@@ -544,9 +545,9 @@ POST example.com?name=xxx&amp;amp;age=18
     &lt;span class="nt"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;逻辑主要是下面这部分，通过判断slug，只为&lt;code&gt;about.md&lt;/code&gt;增加导航，其他页面忽略，这需要在&lt;code&gt;about.md&lt;/code&gt;的开头设置&lt;code&gt;Slug: about&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;逻辑主要是下面这部分，通过判断slug，只为 &lt;code&gt;about.md&lt;/code&gt; 增加导航，其他页面忽略，这需要在 &lt;code&gt;about.md&lt;/code&gt; 的开头设置 &lt;code&gt;Slug: about&lt;/code&gt; 。&lt;/p&gt;
 &lt;h3 id="_2"&gt;小结&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;总的来说，尽管Pelican是个静态博客，但能够玩出花样的地方还是很多的，&lt;a href="http://docs.getpelican.com/en/latest/faq.html#how-do-i-assign-custom-templates-on-a-per-page-basis"&gt;Pelican FAQ&lt;/a&gt;里有不少可以参考的问题。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 16 Jan 2016 13:58:00 +0800</pubDate><guid>tag:goclis.github.io,2016-01-16:posts/2016/01/16/advanced-pelican-configuration.html</guid><category>Pelican</category><category>Markdown</category></item><item><title>2015小结</title><link>http://goclis.github.io/posts/2016/01/06/summary-of-2015.html</link><description>&lt;p&gt;这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。&lt;/p&gt;
+&lt;p&gt;总的来说，尽管Pelican是个静态博客，但能够玩出花样的地方还是很多的， &lt;a href="http://docs.getpelican.com/en/latest/faq.html#how-do-i-assign-custom-templates-on-a-per-page-basis"&gt;Pelican FAQ&lt;/a&gt; 里有不少可以参考的问题。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Sat, 16 Jan 2016 13:58:00 +0800</pubDate><guid>tag:goclis.github.io,2016-01-16:posts/2016/01/16/advanced-pelican-configuration.html</guid><category>Pelican</category><category>Markdown</category></item><item><title>2015小结</title><link>http://goclis.github.io/posts/2016/01/06/summary-of-2015.html</link><description>&lt;p&gt;这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。&lt;/p&gt;
 &lt;h3 id="_1"&gt;回顾&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;现在细细回想了一下，对这段时间好像还是有那么点印象的，不过总的说起来也只是一直处于一个不断在学校和“创业”中切换的混沌状态。下面按照时间线大概理一下吧，流水账。&lt;/p&gt;
 &lt;p&gt;从“创业”开始说吧，加引号是因为有点伤，下面再说吧。大概来说是从大三下（14年6月）的时候开始的，那时候老师找了我和几个同学谈做一个分布式相关的产品，因为当时合伙的老师中有一个是以后读研的导师，想想觉得边读研边做项目还挺好的，而且许诺的期权及期限都还可以接受，就答应一起做了。&lt;/p&gt;
@@ -1569,7 +1570,7 @@ pip install markdown
 &lt;p&gt;按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Usage&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;make html # 将content中的markdown (or others) 生成为html
+&lt;div class="highlight"&gt;&lt;pre&gt;make html &lt;span class="c"&gt;# 将content中的markdown (or others) 生成为html&lt;/span&gt;
 
 make regenerate
 
@@ -1578,7 +1579,7 @@ make serve
 make devserver
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;make一般涉及到一些生成的操作，pelican自带了一个&lt;strong&gt;develop_server.sh&lt;/strong&gt;以供开发的时候调试：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;./develop_server.sh start  # http://localhost:8000
+&lt;div class="highlight"&gt;&lt;pre&gt;./develop_server.sh start  &lt;span class="c"&gt;# http://localhost:8000&lt;/span&gt;
 
 ./develop_server.sh stop
 &lt;/pre&gt;&lt;/div&gt;
@@ -1616,7 +1617,7 @@ Title: My first file        # 标题
 Date: 2014-5-25 20:30       # 时间
 Category: Python            # 类别
 Tags: pelican, publishing   # 分类标志
-Slug: my-super-post         # 
+Slug: my-super-post         #
 Author: Goclis Yao          # 作者
 Summary: Somethings         # 概要
 
@@ -1627,13 +1628,13 @@ Summary: Somethings         # 概要
 &lt;p&gt;静态文件路径（典型的是突破）是静态博客必须要指定好的一个东西。&lt;/p&gt;
 &lt;p&gt;pelican默认会在生成文章时拷贝content目录中的images文件夹到output的文件夹中。&lt;/p&gt;
 &lt;p&gt;如果你想要自己手动添加一个新的文件夹（比如pdfs）让其在生成文章时被拷贝到output中，可以在pelicanconf.py中添加：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;STATIC_PATHS = ['images', 'pdfs']  # 这意味着这两个文件夹都会被copy过去
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;STATIC_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'images'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'pdfs'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c"&gt;# 这意味着这两个文件夹都会被copy过去&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;theme settings&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;pelican的默认主题不是很好看。。所以得研究研究怎么换了。。&lt;/p&gt;
 &lt;p&gt;这有一些&lt;a href="https://github.com/getpelican/pelican-themes"&gt;主题&lt;/a&gt;，所以打算基于这些修改了。。&lt;/p&gt;
 &lt;p&gt;更换主题很容易，直接在配置文件里修改主题路径即可：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;THEME = "/home/user/pelican-themes/theme-folder"
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"/home/user/pelican-themes/theme-folder"&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;配置文件&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;在移植的时候需要注意主题的路径需要修改pelicanconf.py：&lt;/p&gt;
@@ -1831,4 +1832,11 @@ git commit --amend
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="7"&gt;7. 重命名当前分支&lt;a class="headerlink" href="#7" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;git branch -m new-name
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="8-githubfork"&gt;8. Github同步Fork仓库&lt;a class="headerlink" href="#8-githubfork" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;本质上就是在你fork下来的库中增加源库，然后merge，以&lt;code&gt;Wox&lt;/code&gt;为例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;git remote add upstream https://github.com/Wox-launcher/Wox.git
+git fetch upstream
+git checkout master
+git merge upstream/master &lt;span class="c"&gt;# 将源库的master合并到fork库的master&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Wed, 01 Jan 2014 00:00:00 +0800</pubDate><guid>tag:goclis.github.io,2014-01-01:posts/2014/01/01/Git.html</guid><category>Git</category></item></channel></rss>

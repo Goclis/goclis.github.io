@@ -63,4 +63,11 @@ git commit --amend
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="7"&gt;7. 重命名当前分支&lt;a class="headerlink" href="#7" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;git branch -m new-name
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="8-githubfork"&gt;8. Github同步Fork仓库&lt;a class="headerlink" href="#8-githubfork" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;本质上就是在你fork下来的库中增加源库，然后merge，以&lt;code&gt;Wox&lt;/code&gt;为例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;git remote add upstream https://github.com/Wox-launcher/Wox.git
+git fetch upstream
+git checkout master
+git merge upstream/master &lt;span class="c"&gt;# 将源库的master合并到fork库的master&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</summary><category term="Git"></category></entry></feed>

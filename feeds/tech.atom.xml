@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-09-25T15:31:00+08:00</updated><entry><title>MS Visual Studio对C++多继承的相关实现</title><link href="http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html" rel="alternate"></link><updated>2016-09-25T15:31:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-09-25:posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</id><summary type="html">&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-11-21T16:45:00+08:00</updated><entry><title>MS Visual Studio对C++多继承的相关实现</title><link href="http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html" rel="alternate"></link><updated>2016-09-25T15:31:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-09-25:posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</id><summary type="html">&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;首先，我们来明确一个观点：&lt;strong&gt;在类成员方法中，this指针是否一定要指向这个对象的内存起始处？&lt;/strong&gt;答案是不一定，指向起始处当然是很方便我们这些脑算成员变量偏移的，因为只用做加法就行了，但是对于编译器而言，它只需要确定好一个关于this指向的原则，随后基于这个原则，不管偏移要加法还是减法，对它来说都是没什么区别的。因此，this的指向实际上是编译器自己决定的，它可以遵照常规的想法，在进入成员方法代码前，把this调整至对象内存起始，或者是为了性能，采用它自己的原则。&lt;/p&gt;
 &lt;p&gt;显然，VS这样的编译器使用的是后者，它出于性能考虑，约定了自己的原则：&lt;strong&gt;this指针在一个类成员方法中的指向，取决于该方法的来源。&lt;/strong&gt;具体来说：&lt;/p&gt;
 &lt;ul&gt;
@@ -107,7 +107,7 @@
 &lt;li&gt;查看右边（p2f及p1f1）可以看到，对于虚函数，都是诸如&lt;code&gt;[thunk]:base_adjust_rule::P1::'vcall'{0, {flat}}&lt;/code&gt;这样的内容，而普通函数则无thunk。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;如果你仔细跟踪(pc-&amp;gt;*&amp;amp;P2::f1)()，你会发现，编译器在编译期把指针调整成了P2，而运行期，因为f1来自于P1，又要重新调整回去，很傻，但是没办法，利用成员函数指针来调用虚函数，在父类中存在同名时，就是会产生这样的一个代价。&lt;/p&gt;
-&lt;p&gt;这个实验至少告诉我们普通用户一点：尽量别让多个父类中出现同名方法，否则会导致一次额外的jmp。= =#这种看现象猜原则的过程也是蛮痛苦的，不过还好，总算是补完了。&lt;/p&gt;</summary><category term="多继承"></category><category term="C++编译器thunk"></category><category term="成员函数指针"></category><category term="this指针"></category></entry><entry><title>和Shadowsocks一起科学上网</title><link href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" rel="alternate"></link><updated>2016-05-27T09:50:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-05-27:posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html</id><summary type="html">
+&lt;p&gt;这个实验至少告诉我们普通用户一点：尽量别让多个父类中出现同名方法，否则会导致一次额外的jmp。= =#这种看现象猜原则的过程也是蛮痛苦的，不过还好，总算是补完了。&lt;/p&gt;</summary><category term="多继承"></category><category term="C++编译器thunk"></category><category term="成员函数指针"></category><category term="this指针"></category></entry><entry><title>和Shadowsocks一起科学上网</title><link href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" rel="alternate"></link><updated>2016-11-21T16:45:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-05-27:posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html</id><summary type="html">
 &lt;p&gt;拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
 这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。&lt;/p&gt;
 &lt;h3 id="vps"&gt;VPS搭建服务器&lt;a class="headerlink" href="#vps" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
@@ -121,7 +121,7 @@
 &lt;h4 id="ipv6"&gt;开启IPv6&lt;a class="headerlink" href="#ipv6" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg"/&gt;&lt;/p&gt;
-&lt;p&gt;接着需要到VPS上&lt;a href="http://4b3r.com/digitalocean-enable-ipv6/"&gt;配置IPv6&lt;/a&gt;，使用ssh连接，编辑&lt;code&gt;/etc/network/interfaces&lt;/code&gt;，在&lt;code&gt;auto eth0&lt;/code&gt;后加上下面的内容：&lt;/p&gt;
+&lt;p&gt;接着需要到VPS上&lt;a href="http://4b3r.com/digitalocean-enable-ipv6/"&gt;配置IPv6&lt;/a&gt;，使用ssh连接，编辑 &lt;code&gt;/etc/network/interfaces&lt;/code&gt;，在 &lt;code&gt;auto eth0&lt;/code&gt; 后加上下面的内容：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;iface eth0 inet6 static
         address primary_ipv6_address
         netmask 64
@@ -129,7 +129,7 @@
         autoconf 0
         dns-nameservers 2001:4860:4860::8844 2001:4860:4860::8888 209.244.0.3
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;其中&lt;code&gt;primary_ipv6_address&lt;/code&gt;和&lt;code&gt;ipv6_gateway&lt;/code&gt;换成上面那张图里DO分配给你的内容，保存后&lt;code&gt;service networking restart&lt;/code&gt;重启网络即可，实在不行重启VPS，可以使用&lt;code&gt;ifconfig&lt;/code&gt;来查看是否配置成功。&lt;/p&gt;
+&lt;p&gt;其中 &lt;code&gt;primary_ipv6_address&lt;/code&gt; 和 &lt;code&gt;ipv6_gateway&lt;/code&gt; 换成上面那张图里DO分配给你的内容，保存后 &lt;code&gt;service networking restart&lt;/code&gt; 重启网络即可，实在不行重启VPS，可以使用 &lt;code&gt;ifconfig&lt;/code&gt; 来查看是否配置成功。&lt;/p&gt;
 &lt;h3 id="vpsshadowsocks"&gt;在VPS上配置Shadowsocks服务&lt;a class="headerlink" href="#vpsshadowsocks" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;apt-get install python-pip
@@ -151,7 +151,7 @@ vim /etc/shadowsocks/config.json
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;稍微解释下：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;server: 指定SOCKS5服务监听的IP，指定为&lt;code&gt;::&lt;/code&gt;的话可以同时监听IPv4及IPv6。&lt;/li&gt;
+&lt;li&gt;server: 指定SOCKS5服务监听的IP，指定为 &lt;code&gt;::&lt;/code&gt; 的话可以同时监听IPv4及IPv6。&lt;/li&gt;
 &lt;li&gt;server_port: 指定监听的端口。&lt;/li&gt;
 &lt;li&gt;password: 客户端连接SOCKS5服务时的密码。&lt;/li&gt;
 &lt;/ul&gt;
@@ -175,11 +175,11 @@ lsof -i:port
 &lt;/ul&gt;
 &lt;h4 id="_1"&gt;代理模式&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Shadowsocks的客户端有两种代理模式：PAC及全局模式。PAC就是只代理部分网站，而全局模式是代理所有的网站。&lt;/p&gt;
-&lt;p&gt;Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默认监听端口为1080（可以通过配置修改）。之后所有的80及443端口的出境流量，都会经过&lt;code&gt;localhost:1080&lt;/code&gt;的过滤，Shadowsocks根据代理模式来判断如何处理流量，PAC模式的话则会查看PAC列表（只有在列表中的站点才会代理），而全局模式则全部代理。&lt;/p&gt;
-&lt;p&gt;在Windows上，Shadowsocks是通过修改&lt;code&gt;Internet选项-&amp;gt;连接-&amp;gt;局域网(LAN)设置&lt;/code&gt;中的内容实现的代理，如下图：&lt;/p&gt;
+&lt;p&gt;Shadowsocks客户端在本机运行了一个代理服务（实测不止SOCKS5，还有HTTP），默认监听端口为1080（可以通过配置修改）。有了代理服务器，剩下的问题就是将需要的流量转向代理。Shadowsocks根据代理模式来判断如何处理流量，PAC模式会根据PAC列表计算是否要代理，全局模式则全部代理，如果确定要代理，就将流量转向 &lt;code&gt;127.0.0.1:1080&lt;/code&gt; 的代理服务，代理服务根据配置连接目标服务器，从而实现科学上网。&lt;/p&gt;
+&lt;p&gt;在Windows上，Shadowsocks是通过修改 &lt;code&gt;Internet选项-&amp;gt;连接-&amp;gt;局域网(LAN)设置&lt;/code&gt; 中的内容实现流量转发（至本地代理服务），如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww3.sinaimg.cn/large/006y8lVagw1f86x0qp7gfj30cp0c5jst.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。&lt;/p&gt;
-&lt;p&gt;比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为&lt;code&gt;127.0.0.1:1080&lt;/code&gt;，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：&lt;/p&gt;
+&lt;p&gt;比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为 &lt;code&gt;127.0.0.1:1080&lt;/code&gt;，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x15ike6j30g308bwep.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;自己可以查看一下使用的软件是否要被代理，比如IDM、迅雷之类的下载软件就可以考虑设置代理。&lt;/p&gt;
 &lt;h4 id="ipv6_1"&gt;利用IPv6&lt;a class="headerlink" href="#ipv6_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
@@ -191,6 +191,7 @@ lsof -i:port
 &lt;li&gt;&lt;a href="https://shadowsocks.org"&gt;Shadowsocks官网&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/shadowsocks/"&gt;Shadowsocks on Github&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://blog.kunyu.li/digitalocean-ubuntu-vps-vpn.html"&gt;PPTP VPN搭建&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Proxy_auto-config"&gt;PAC&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;</summary><category term="Shadowsocks"></category><category term="VPS"></category><category term="VPN"></category><category term="Ubuntu"></category><category term="DigitalOcean"></category></entry><entry><title>C预处理器宏展开</title><link href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html" rel="alternate"></link><updated>2016-04-26T23:21:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-26:posts/2016/04/26/c-preprocessor-macro-expansion.html</id><summary type="html">&lt;p&gt;最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;

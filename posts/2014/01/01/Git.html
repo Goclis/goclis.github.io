@@ -97,6 +97,7 @@
 <li><a href="#5-git">5. Git补充提交内容</a></li>
 <li><a href="#6-git-clone">6. Git clone指定文件夹名</a></li>
 <li><a href="#7">7. 重命名当前分支</a></li>
+<li><a href="#8-githubfork">8. Github同步Fork仓库</a></li>
 </ul>
 </div>
                             </div>
@@ -165,6 +166,13 @@ git commit --amend
 </pre></div>
 <h3 id="7">7. 重命名当前分支<a class="headerlink" href="#7" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre>git branch -m new-name
+</pre></div>
+<h3 id="8-githubfork">8. Github同步Fork仓库<a class="headerlink" href="#8-githubfork" title="Permanent link">¶</a></h3>
+<p>本质上就是在你fork下来的库中增加源库，然后merge，以<code>Wox</code>为例：</p>
+<div class="highlight"><pre>git remote add upstream https://github.com/Wox-launcher/Wox.git
+git fetch upstream
+git checkout master
+git merge upstream/master <span class="c"># 将源库的master合并到fork库的master</span>
 </pre></div>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>

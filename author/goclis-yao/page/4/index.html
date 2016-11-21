@@ -115,8 +115,8 @@
 <p>这篇文章把一些我在改造过程中遇到的问题以及解决思路记录下来。</p>
 <h3 id="template-page">使用Template Page划分内容<a class="headerlink" href="#template-page" title="Permanent link">¶</a></h3>
 <p>博客的改造是希望把内容分成四块：技术、生活、笔记、琐碎。技术就是先前写的这些博文；生活记录一些小结或是感想的东西；笔记实质上是我平时针对一些具体技术记录的一些Tip，打算一并放上来；琐碎实际上就类似于微博，一些短的想法之类的。</p>
-<p>按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板<code>page.html</code>决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。</p>
-<p>因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在<code>pelicanconf.py</code>中对<code>TEMPLATE_PAGES</code>进行相关的设置即可，如下：</p>
+<p>按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板 <code>page.html</code> 决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。</p>
+<p>因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在 <code>pelicanconf.py</code> 中对 <code>TEMPLATE_PAGES</code> 进行相关的设置即可，如下：</p>
 <div class="highlight"><pre><span class="n">TEMPLATE_PAGES ...</span></pre></div>
                     </div>
                     <div class="post-permalink">
