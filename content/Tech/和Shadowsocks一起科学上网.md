@@ -2,6 +2,7 @@ Title: 和Shadowsocks一起科学上网
 Tags: Shadowsocks, VPS, VPN, Ubuntu, DigitalOcean  
 Slug: fuck-the-gfw-with-shadowsocks  
 Date: 2016-05-27 9:50  
+Modified: 2016-11-21 16:45  
 
 
 [TOC]
@@ -24,7 +25,7 @@ Date: 2016-05-27 9:50
 
 ![](http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg)
 
-接着需要到VPS上[配置IPv6][3]，使用ssh连接，编辑`/etc/network/interfaces`，在`auto eth0`后加上下面的内容：
+接着需要到VPS上[配置IPv6][3]，使用ssh连接，编辑 `/etc/network/interfaces`，在 `auto eth0` 后加上下面的内容：
 
 ```conf
 iface eth0 inet6 static
@@ -35,7 +36,7 @@ iface eth0 inet6 static
         dns-nameservers 2001:4860:4860::8844 2001:4860:4860::8888 209.244.0.3
 ```
 
-其中`primary_ipv6_address`和`ipv6_gateway`换成上面那张图里DO分配给你的内容，保存后`service networking restart`重启网络即可，实在不行重启VPS，可以使用`ifconfig`来查看是否配置成功。
+其中 `primary_ipv6_address` 和 `ipv6_gateway` 换成上面那张图里DO分配给你的内容，保存后 `service networking restart` 重启网络即可，实在不行重启VPS，可以使用 `ifconfig` 来查看是否配置成功。
 
 ### 在VPS上配置Shadowsocks服务
 在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：
@@ -67,7 +68,7 @@ vim /etc/shadowsocks/config.json
 
 稍微解释下：
 
-- server: 指定SOCKS5服务监听的IP，指定为`::`的话可以同时监听IPv4及IPv6。
+- server: 指定SOCKS5服务监听的IP，指定为 `::` 的话可以同时监听IPv4及IPv6。
 - server_port: 指定监听的端口。
 - password: 客户端连接SOCKS5服务时的密码。
 
@@ -101,15 +102,15 @@ kill xxx
 #### 代理模式
 Shadowsocks的客户端有两种代理模式：PAC及全局模式。PAC就是只代理部分网站，而全局模式是代理所有的网站。
 
-Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默认监听端口为1080（可以通过配置修改）。之后所有的80及443端口的出境流量，都会经过`localhost:1080`的过滤，Shadowsocks根据代理模式来判断如何处理流量，PAC模式的话则会查看PAC列表（只有在列表中的站点才会代理），而全局模式则全部代理。
+Shadowsocks客户端在本机运行了一个代理服务（实测不止SOCKS5，还有HTTP），默认监听端口为1080（可以通过配置修改）。有了代理服务器，剩下的问题就是将需要的流量转向代理。Shadowsocks根据代理模式来判断如何处理流量，PAC模式会根据PAC列表计算是否要代理，全局模式则全部代理，如果确定要代理，就将流量转向 `127.0.0.1:1080` 的代理服务，代理服务根据配置连接目标服务器，从而实现科学上网。
 
-在Windows上，Shadowsocks是通过修改`Internet选项->连接->局域网(LAN)设置`中的内容实现的代理，如下图：
+在Windows上，Shadowsocks是通过修改 `Internet选项->连接->局域网(LAN)设置` 中的内容实现流量转发（至本地代理服务），如下图：
 
 ![](http://ww3.sinaimg.cn/large/006y8lVagw1f86x0qp7gfj30cp0c5jst.jpg)
 
 当那个checkbox被勾上的时候，Windows会将它判定的LAN流量都经过Shadowsocks的脚本的过滤，这也就导致，你开启全局模式的时候，一些客户端中的浏览器（如QQ）也会被代理，这一定程度上会影响到使用。建议是不勾上，然后在需要的软件中自行设置HTTP代理。
 
-比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为`127.0.0.1:1080`，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：
+比如说，Chrome中可以安装SwitchSharp这样的插件，设置代理服务器地址为 `127.0.0.1:1080`，就可以比较灵活地使用Rule来控制代理了。同理，网易云音乐也可以在工具中设置相关的代理服务器，如下图：
 
 ![](http://ww1.sinaimg.cn/large/006y8lVagw1f86x15ike6j30g308bwep.jpg)
 
@@ -125,6 +126,7 @@ Shadowsocks客户端实质是在本机运行了一个HTTP(s)代理服务，默�
 1. [Shadowsocks官网](https://shadowsocks.org)
 2. [Shadowsocks on Github][4]
 3. [PPTP VPN搭建][6]
+4. [PAC](https://www.wikiwand.com/en/Proxy_auto-config)
 
 
 [1]: https://www.digitalocean.com

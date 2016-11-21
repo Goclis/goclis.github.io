@@ -103,4 +103,13 @@ git clone url your-folder-name
 git branch -m new-name
 ```
 
+### 8. Github同步Fork仓库
+本质上就是在你fork下来的库中增加源库，然后merge，以`Wox`为例：
+
+```bash
+git remote add upstream https://github.com/Wox-launcher/Wox.git
+git fetch upstream
+git checkout master
+git merge upstream/master # 将源库的master合并到fork库的master
+```
 
