@@ -72,6 +72,32 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="2016小结" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/12/31/2016小结.html">2016小结</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-12-31T00:54:30+08:00" title="2016-12-31T00:54:30+08:00">2016-12-31</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>今天是2016的倒数第二天了，过的真的是好快。昨天早上实验室要开年终总结会，所以前天晚上早早爬上了床，趴着想自己这一年到底做了啥，然而却想不起太多，稍微想到一点什么，仔细回想后发现并没有什么后续，懊恼一番后继续想。最后得出的结论是，又白费了一年，连个带成果的年终小结都写不出来，真是尴尬。没办法，就按时间线写流水吧。</p>
+<p>年前及过年的就不说了，也没啥印象了，一向觉得过年没太大意思，尤其是要见各种认不出来的亲戚，我是真的记不住有些亲戚该如何称呼，每年遇到这样的情况我都觉得自己是又一次进入到去年今日的循环中，大致都能猜出剧本的下一步会是周围的人来不断给你提示，最终在大家帮助下，猜出称呼，收获红包，结束。令我抓狂的地方在于，由于亲戚众多，这个过程往往要在同一天上演多次。过年最喜欢的还是在家里和家人吃火锅，吃完饭后唠唠嗑，然后边玩游戏边等春晚节目，现在脑子里还有这样的画面：在房间里玩着游戏，听到电视上某个小品演员的声音后光着脚放下任务啪嗒啪嗒跑出来，看完后顺手拿瓶饮料又啪嗒啪嗒跑回去接着做任务。</p>
+<p>年后并没有享受学生该有的假期，早早地回来实习，感觉自己的寒暑假生涯早在大三就没了，衰。回来过了没几天，一条消息宣告我又单身了2333，挺崩溃的，但好在我现在还能比较平静地写下这些。难受的感觉实在写不出来，只记得自己那些天完全控制不住泪腺，晚上在操场上一圈圈散心的时候莫名其妙就会哭。不过现在想起来，真的很感谢她愿意帮着渡过这段缓冲期，谢谢 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/12/31/2016小结.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="ms-visual-studio-implementation-of-cpp-multiple-inheritance" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -143,50 +169,9 @@
                         </div>
                     </footer>
                 </article>
-                <article id="fuck-the-gfw-with-shadowsocks" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html">和Shadowsocks一起科学上网</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00">2016-05-27</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
-这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
-<h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
-<p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
-<p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
-<p>额，毕竟不是软文也不是小白教程，就不截没必要的图了。Droplet选的Ubuntu 14.04，创建完毕后，DO会给你发邮件，里面有VPS的IP以及root用户的密码，用ssh工具（Windows下可以下载putty）连接上去进行如设置root密码等一系列基础的配置后即可：</p>
-<ul>
-<li>*unix: <code>ssh root@IP</code></li>
-<li>Windows: 在putty里填写IP，然后点击连接</li>
-</ul>
-<h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
-<p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/digitalocean/index.html">DigitalOcean</a>
-                            <a href="/tag/shadowsocks/index.html">Shadowsocks</a>
-                            <a href="/tag/ubuntu/index.html">Ubuntu</a>
-                            <a href="/tag/vpn/index.html">VPN</a>
-                            <a href="/tag/vps/index.html">VPS</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
 
 <nav class="pagination" role="navigation">
-    <span class="page-number">第 1 页 ⁄ 共 8 页</span>
+    <span class="page-number">第 1 页 ⁄ 共 9 页</span>
         <a class="older-posts" href="/author/goclis-yao/page/2/"><i class="fa fa-angle-right"></i></a>
 </nav>
             </main>
