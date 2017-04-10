@@ -1,5 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-11-21T16:45:00+08:00</updated><entry><title>MS Visual Studio对C++多继承的相关实现</title><link href="http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html" rel="alternate"></link><updated>2016-09-25T15:31:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-09-25:posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</id><summary type="html">&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-04-10T22:29:42+08:00</updated><entry><title>Call convention &amp; Name mangling</title><link href="http://goclis.github.io/posts/2017/04/10/Call%20convention%20&amp;%20Name%20mangling.html" rel="alternate"></link><updated>2017-04-10T22:29:42+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-04-10:posts/2017/04/10/Call convention &amp; Name mangling.html</id><summary type="html">&lt;p&gt;标题只是为了满足强迫症，文中对于 Call convention 还是使用中文翻译的&lt;strong&gt;调用约定&lt;/strong&gt;，但 Name mangling 因为不知道怎么翻译好，就保持吧。&lt;/p&gt;
+&lt;p&gt;之前同学在聊面试的时候提到被问过调用约定（Call convention）相关的问题，突然想起来自己虽然知道这个东西影响的是方法调用（比如参数如何传递、调用栈清理等），但是并不记得每个类型的调用约定存在的作用以及具体内容，于是查了一下。&lt;/p&gt;
+&lt;h2 id="call-convention"&gt;调用约定（Call convention）&lt;a class="headerlink" href="#call-convention" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;调用约定规定了一个方法在被调用的时候需要遵循的一些内容：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;参数如何传递，包括使用寄存器还是堆栈或是混合、从左到右压栈还是从右到左压栈。&lt;/li&gt;
+&lt;li&gt;调用栈最终由谁负责恢复？调用者（Caller）或被调用者（Callee）。&lt;/li&gt;
+&lt;li&gt;方法最终在链接时使用的符号名。&lt;/li&gt;
+&lt;li&gt;更多...&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;显然，调用约定是 &lt;a href="https://www.wikiwand.com/en/Application_binary_interface"&gt;ABI（Application binary interface）&lt;/a&gt; 层面的东西，而且这玩意有很多类型，历史原因在于以前提供机器的那波厂商没有顺带提供操作系统和编译器，而是把这两块交给了市场，于是各家自己玩自己的，弄出来各种自己的标准，所以 ABI 兼容就别想了。虽然也有如 stdcall 这样的标准出来让各家一起遵守，但是至今我好像也没怎么看到关于 ABI 兼容的实例（希望是我没看到吧）。&lt;/p&gt;
+&lt;p&gt;下面是常见的几种调用约定的规定：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;cdecl：广泛被 C 编译器使用（Visual Studio 2015 在 Win32 Debug 下默认使用这个），使用栈传递参数、从右到左压栈、栈由调用者清理、符号名如 &lt;code&gt;_func&lt;/code&gt;（方法名前加下划线）。&lt;/li&gt;
+&lt;li&gt;stdcall：使用栈传递参数、从右到左、栈由被调用者清理、符号名如 &lt;code&gt;_func@8&lt;/code&gt;（方法名前加下划线，后面使用 @ 拼接调用参数的总大小）。&lt;/li&gt;
+&lt;li&gt;fastcall：类似 stdcall，但会将前两个小于等于 DWORD 的参数使用寄存器 ECX 和 EDX 传递，剩余的使用栈，另外符号名如 &lt;code&gt;@func@8&lt;/code&gt;（相对于 stdcall，把前面的下划线换成 @）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;可以看到，调用约定对符号名也有一定的规定，这让我想起来 C++ 的 &lt;a href="https://www.wikiwand.com/en/Name_mangling"&gt;Name mangling&lt;/a&gt;，这个东西同样对符号名有规定，所以我当时好奇当它和调用约定结合起来后会怎么样？&lt;/p&gt;
+&lt;h2 id="name-mangling"&gt;Name mangling&lt;a class="headerlink" href="#name-mangling" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;调用约定在一定程度上告诉了编译器该如何生成一个方法的内容、如何生成调用了这个方法的代码的内容以及链接时该使用怎样的符号。&lt;/p&gt;
+&lt;p&gt;而 Name mangling 只做一件事，就是一个方法名对应的符号名该是什么，又名 Name decoration。我个人理解 C++ 引入这个是为了对付重载，毕竟允许方法同名后就没办法仅通过名字来在链接时像 C 那样区分各个符号了。不过，查了一些资料后发现，其实 C 的那种在方法名前面加下划线（就是 cdecl 的规定）就是它的 Name mangling，所以不能说 Name mangling 是 C++ 特有的。&lt;/p&gt;
+&lt;p&gt;瞎扯了一堆，做实验看看两个合起来会对符号名有什么样的影响吧（虽然我觉得这玩意应该又是一件完全由编译器决定的事，不过还是试试看吧）。&lt;/p&gt;
+&lt;h2 id="_1"&gt;实验&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;用的 Visual Studio 2015 Community Edition，Configuration 选择默认的 Win32 Debug，查看符号的方式也比较简单，看生成产生的链接错误即可。&lt;/p&gt;
+&lt;p&gt;代码如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// C++ name mangling &amp;amp; cdecl&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol "void __cdecl F(void)" (?F@@YAXXZ) referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// void F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C++ name mangling &amp;amp; stdcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol "void __stdcall F(void)" (?F@@YGXXZ) referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// void __stdcall F(); &lt;/span&gt;
+
+&lt;span class="c1"&gt;// C++ name mangling &amp;amp; fastcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol "void __fastcall F(void)" (?F@@YIXXZ) referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// void __fastcall F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C name mangling &amp;amp; cdecl&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol _F referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// extern "C" void F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C name mangling &amp;amp; stdcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol _F@0 referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// extern "C" void __stdcall F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C name mangling &amp;amp; fastcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol @F@0 referenced in function _main&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="s"&gt;"C"&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="kr"&gt;__fastcall&lt;/span&gt;  &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;代码大概的目的就是测试一下 cdecl、stdcall、fastcall 在混合 C 和 C++ 的 Name mangling 时，会生成怎样的符号，代码里使用 &lt;code&gt;extern "C"&lt;/code&gt; 来让编译器采用 C Name mangling。&lt;/p&gt;
+&lt;p&gt;从结果来看，两者会共同影响最终的符号，= =# 好像也没有更多的什么好解释了。如果还对调用栈的清理感兴趣的话，可以增加点参数，实现一下每个方法，然后反汇编看一下即可。&lt;/p&gt;
+&lt;h2 id="_2"&gt;写在最后&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;像这种 ABI 层面的一些规定，我们大多时候可能不会去在意，但是有些地方的开发可能会强制地要求你使用某种特定的规定（比如有个同学提到过他开发驱动的时候好像必须使用 cdecl），所以稍微了解下也没什么坏处吧。&lt;/p&gt;
+&lt;p&gt;至于 ABI 相关的内容，除了本文提到了两个，还有一个 type representations，大概是指与数据相关的内容，比如数据的大小、对齐等内容？这里就不展开了（懒。&lt;/p&gt;
+&lt;h2 id="_3"&gt;参考资料&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/X86_calling_conventions"&gt;x86 Call convention - Wikipedia&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://msdn.microsoft.com/en-us/library/984x0h58.aspx"&gt;Argument Passing and Naming Conventions - MSDN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://msdn.microsoft.com/en-us/library/zkwh89ks.aspx"&gt;cdecl - MSDN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.csdn.net/fly2k5/article/details/544112"&gt;cdecl、stdcall、fastcall 函数调用约定区别 - CSDN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Name_mangling"&gt;Name mangling - Wikipedia&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Application_binary_interface"&gt;Application binary interface - Wikipedia&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="Call convention"></category><category term="调用约定"></category><category term="Name mangling"></category><category term="ABI"></category></entry><entry><title>MS Visual Studio对C++多继承的相关实现</title><link href="http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html" rel="alternate"></link><updated>2016-09-25T15:31:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-09-25:posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</id><summary type="html">&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;首先，我们来明确一个观点：&lt;strong&gt;在类成员方法中，this指针是否一定要指向这个对象的内存起始处？&lt;/strong&gt;答案是不一定，指向起始处当然是很方便我们这些脑算成员变量偏移的，因为只用做加法就行了，但是对于编译器而言，它只需要确定好一个关于this指向的原则，随后基于这个原则，不管偏移要加法还是减法，对它来说都是没什么区别的。因此，this的指向实际上是编译器自己决定的，它可以遵照常规的想法，在进入成员方法代码前，把this调整至对象内存起始，或者是为了性能，采用它自己的原则。&lt;/p&gt;
 &lt;p&gt;显然，VS这样的编译器使用的是后者，它出于性能考虑，约定了自己的原则：&lt;strong&gt;this指针在一个类成员方法中的指向，取决于该方法的来源。&lt;/strong&gt;具体来说：&lt;/p&gt;
 &lt;ul&gt;

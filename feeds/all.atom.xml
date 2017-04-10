@@ -1,5 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2016-12-31T00:54:30+08:00</updated><entry><title>2016小结</title><link href="http://goclis.github.io/posts/2016/12/31/2016%E5%B0%8F%E7%BB%93.html" rel="alternate"></link><updated>2016-12-31T00:54:30+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-12-31:posts/2016/12/31/2016小结.html</id><summary type="html">&lt;p&gt;今天是2016的倒数第二天了，过的真的是好快。昨天早上实验室要开年终总结会，所以前天晚上早早爬上了床，趴着想自己这一年到底做了啥，然而却想不起太多，稍微想到一点什么，仔细回想后发现并没有什么后续，懊恼一番后继续想。最后得出的结论是，又白费了一年，连个带成果的年终小结都写不出来，真是尴尬。没办法，就按时间线写流水吧。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-04-10T22:29:42+08:00</updated><entry><title>Call convention &amp; Name mangling</title><link href="http://goclis.github.io/posts/2017/04/10/Call%20convention%20&amp;%20Name%20mangling.html" rel="alternate"></link><updated>2017-04-10T22:29:42+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-04-10:posts/2017/04/10/Call convention &amp; Name mangling.html</id><summary type="html">&lt;p&gt;标题只是为了满足强迫症，文中对于 Call convention 还是使用中文翻译的&lt;strong&gt;调用约定&lt;/strong&gt;，但 Name mangling 因为不知道怎么翻译好，就保持吧。&lt;/p&gt;
+&lt;p&gt;之前同学在聊面试的时候提到被问过调用约定（Call convention）相关的问题，突然想起来自己虽然知道这个东西影响的是方法调用（比如参数如何传递、调用栈清理等），但是并不记得每个类型的调用约定存在的作用以及具体内容，于是查了一下。&lt;/p&gt;
+&lt;h2 id="call-convention"&gt;调用约定（Call convention）&lt;a class="headerlink" href="#call-convention" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;调用约定规定了一个方法在被调用的时候需要遵循的一些内容：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;参数如何传递，包括使用寄存器还是堆栈或是混合、从左到右压栈还是从右到左压栈。&lt;/li&gt;
+&lt;li&gt;调用栈最终由谁负责恢复？调用者（Caller）或被调用者（Callee）。&lt;/li&gt;
+&lt;li&gt;方法最终在链接时使用的符号名。&lt;/li&gt;
+&lt;li&gt;更多...&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;显然，调用约定是 &lt;a href="https://www.wikiwand.com/en/Application_binary_interface"&gt;ABI（Application binary interface）&lt;/a&gt; 层面的东西，而且这玩意有很多类型，历史原因在于以前提供机器的那波厂商没有顺带提供操作系统和编译器，而是把这两块交给了市场，于是各家自己玩自己的，弄出来各种自己的标准，所以 ABI 兼容就别想了。虽然也有如 stdcall 这样的标准出来让各家一起遵守，但是至今我好像也没怎么看到关于 ABI 兼容的实例（希望是我没看到吧）。&lt;/p&gt;
+&lt;p&gt;下面是常见的几种调用约定的规定：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;cdecl：广泛被 C 编译器使用（Visual Studio 2015 在 Win32 Debug 下默认使用这个），使用栈传递参数、从右到左压栈、栈由调用者清理、符号名如 &lt;code&gt;_func&lt;/code&gt;（方法名前加下划线）。&lt;/li&gt;
+&lt;li&gt;stdcall：使用栈传递参数、从右到左、栈由被调用者清理、符号名如 &lt;code&gt;_func@8&lt;/code&gt;（方法名前加下划线，后面使用 @ 拼接调用参数的总大小）。&lt;/li&gt;
+&lt;li&gt;fastcall：类似 stdcall，但会将前两个小于等于 DWORD 的参数使用寄存器 ECX 和 EDX 传递，剩余的使用栈，另外符号名如 &lt;code&gt;@func@8&lt;/code&gt;（相对于 stdcall，把前面的下划线换成 @）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;可以看到，调用约定对符号名也有一定的规定，这让我想起来 C++ 的 &lt;a href="https://www.wikiwand.com/en/Name_mangling"&gt;Name mangling&lt;/a&gt;，这个东西同样对符号名有规定，所以我当时好奇当它和调用约定结合起来后会怎么样？&lt;/p&gt;
+&lt;h2 id="name-mangling"&gt;Name mangling&lt;a class="headerlink" href="#name-mangling" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;调用约定在一定程度上告诉了编译器该如何生成一个方法的内容、如何生成调用了这个方法的代码的内容以及链接时该使用怎样的符号。&lt;/p&gt;
+&lt;p&gt;而 Name mangling 只做一件事，就是一个方法名对应的符号名该是什么，又名 Name decoration。我个人理解 C++ 引入这个是为了对付重载，毕竟允许方法同名后就没办法仅通过名字来在链接时像 C 那样区分各个符号了。不过，查了一些资料后发现，其实 C 的那种在方法名前面加下划线（就是 cdecl 的规定）就是它的 Name mangling，所以不能说 Name mangling 是 C++ 特有的。&lt;/p&gt;
+&lt;p&gt;瞎扯了一堆，做实验看看两个合起来会对符号名有什么样的影响吧（虽然我觉得这玩意应该又是一件完全由编译器决定的事，不过还是试试看吧）。&lt;/p&gt;
+&lt;h2 id="_1"&gt;实验&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;用的 Visual Studio 2015 Community Edition，Configuration 选择默认的 Win32 Debug，查看符号的方式也比较简单，看生成产生的链接错误即可。&lt;/p&gt;
+&lt;p&gt;代码如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// C++ name mangling &amp;amp; cdecl&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol "void __cdecl F(void)" (?F@@YAXXZ) referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// void F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C++ name mangling &amp;amp; stdcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol "void __stdcall F(void)" (?F@@YGXXZ) referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// void __stdcall F(); &lt;/span&gt;
+
+&lt;span class="c1"&gt;// C++ name mangling &amp;amp; fastcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol "void __fastcall F(void)" (?F@@YIXXZ) referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// void __fastcall F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C name mangling &amp;amp; cdecl&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol _F referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// extern "C" void F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C name mangling &amp;amp; stdcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol _F@0 referenced in function _main&lt;/span&gt;
+&lt;span class="c1"&gt;// extern "C" void __stdcall F();&lt;/span&gt;
+
+&lt;span class="c1"&gt;// C name mangling &amp;amp; fastcall&lt;/span&gt;
+&lt;span class="c1"&gt;// unresolved external symbol @F@0 referenced in function _main&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="s"&gt;"C"&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="kr"&gt;__fastcall&lt;/span&gt;  &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;代码大概的目的就是测试一下 cdecl、stdcall、fastcall 在混合 C 和 C++ 的 Name mangling 时，会生成怎样的符号，代码里使用 &lt;code&gt;extern "C"&lt;/code&gt; 来让编译器采用 C Name mangling。&lt;/p&gt;
+&lt;p&gt;从结果来看，两者会共同影响最终的符号，= =# 好像也没有更多的什么好解释了。如果还对调用栈的清理感兴趣的话，可以增加点参数，实现一下每个方法，然后反汇编看一下即可。&lt;/p&gt;
+&lt;h2 id="_2"&gt;写在最后&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;像这种 ABI 层面的一些规定，我们大多时候可能不会去在意，但是有些地方的开发可能会强制地要求你使用某种特定的规定（比如有个同学提到过他开发驱动的时候好像必须使用 cdecl），所以稍微了解下也没什么坏处吧。&lt;/p&gt;
+&lt;p&gt;至于 ABI 相关的内容，除了本文提到了两个，还有一个 type representations，大概是指与数据相关的内容，比如数据的大小、对齐等内容？这里就不展开了（懒。&lt;/p&gt;
+&lt;h2 id="_3"&gt;参考资料&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/X86_calling_conventions"&gt;x86 Call convention - Wikipedia&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://msdn.microsoft.com/en-us/library/984x0h58.aspx"&gt;Argument Passing and Naming Conventions - MSDN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://msdn.microsoft.com/en-us/library/zkwh89ks.aspx"&gt;cdecl - MSDN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.csdn.net/fly2k5/article/details/544112"&gt;cdecl、stdcall、fastcall 函数调用约定区别 - CSDN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Name_mangling"&gt;Name mangling - Wikipedia&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Application_binary_interface"&gt;Application binary interface - Wikipedia&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="Call convention"></category><category term="调用约定"></category><category term="Name mangling"></category><category term="ABI"></category></entry><entry><title>2016小结</title><link href="http://goclis.github.io/posts/2016/12/31/2016%E5%B0%8F%E7%BB%93.html" rel="alternate"></link><updated>2016-12-31T00:54:30+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-12-31:posts/2016/12/31/2016小结.html</id><summary type="html">&lt;p&gt;今天是2016的倒数第二天了，过的真的是好快。昨天早上实验室要开年终总结会，所以前天晚上早早爬上了床，趴着想自己这一年到底做了啥，然而却想不起太多，稍微想到一点什么，仔细回想后发现并没有什么后续，懊恼一番后继续想。最后得出的结论是，又白费了一年，连个带成果的年终小结都写不出来，真是尴尬。没办法，就按时间线写流水吧。&lt;/p&gt;
 &lt;p&gt;年前及过年的就不说了，也没啥印象了，一向觉得过年没太大意思，尤其是要见各种认不出来的亲戚，我是真的记不住有些亲戚该如何称呼，每年遇到这样的情况我都觉得自己是又一次进入到去年今日的循环中，大致都能猜出剧本的下一步会是周围的人来不断给你提示，最终在大家帮助下，猜出称呼，收获红包，结束。令我抓狂的地方在于，由于亲戚众多，这个过程往往要在同一天上演多次。过年最喜欢的还是在家里和家人吃火锅，吃完饭后唠唠嗑，然后边玩游戏边等春晚节目，现在脑子里还有这样的画面：在房间里玩着游戏，听到电视上某个小品演员的声音后光着脚放下任务啪嗒啪嗒跑出来，看完后顺手拿瓶饮料又啪嗒啪嗒跑回去接着做任务。&lt;/p&gt;
 &lt;p&gt;年后并没有享受学生该有的假期，早早地回来实习，感觉自己的寒暑假生涯早在大三就没了，衰。回来过了没几天，一条消息宣告我又单身了2333，挺崩溃的，但好在我现在还能比较平静地写下这些。难受的感觉实在写不出来，只记得自己那些天完全控制不住泪腺，晚上在操场上一圈圈散心的时候莫名其妙就会哭。不过现在想起来，真的很感谢她愿意帮着渡过这段缓冲期，谢谢。&lt;/p&gt;
 &lt;p&gt;然而，现实并不会给你多少缓冲，没多久就被拉去北京出差，还待了一周多。好在那段时间北京的天气还行，加上她的帮助，半夜失眠的次数并不是很多，醒来更多是因为口渴= =#。这是第一次去北京，印象很差，可能是因为待的地方在西南边（听说东北边比较发达？），感觉到处都很脏。不过除了环境以外，北京吃的分量给我印象很深，我一个自认饭量很足的人，居然没有一顿吃光。周末瞎逛了一下，除了因为当时是两会，安检特严，去哪都排队以外，没啥额外的印象。总评：没啥意外的话，我是不会选择北京的。在北京的每一天，想南京。。。&lt;/p&gt;

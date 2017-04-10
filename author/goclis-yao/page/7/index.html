@@ -72,6 +72,43 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="pptp-vpn-process" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2014-08-19T14:41:00+08:00" title="2014-08-19T14:41:00+08:00">2014-08-19</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！ 但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？ 于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
+<p>以下文章中VPN如不特指皆为PPTP VPN。</p>
+<p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
+<p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
+<h3 id="vpn">VPN的两种架构<a class="headerlink" href="#vpn" title="Permanent link">¶</a></h3>
+<ul>
+<li>Remote access VPN</li>
+<li>Site-to-site VPN</li>
+</ul>
+<p>Remote access VPN是我们平时个人用的比较多的那种，也就是你在网上买了个VPN，然后拿着账号密码和服务器名连接上了的种，这种就只能保证你自己的那台设备是连上VPN的，而Site-to-site VPN则更像是，如果你用了路由这样的设备，在该设备上拨了VPN，这样路由的私有网络就是一个Site，而路由连上的VPN服务器又构成了另外一个Site，所以是Site-to-site，这种方式就能保证你私有网络中的所有设备都连上了VPN。</p>
+<p>个人感觉 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2014/08/19/pptp-vpn-process.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/pptp/index.html">PPTP</a>
+                            <a href="/tag/vpn/index.html">VPN</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="mov-with-memory" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -151,40 +188,6 @@
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/cao-zuo-xi-tong/index.html">操作系统</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="how-to-validate-certificate" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html">如何验证一个数字证书的有效性</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-06-21T15:43:00+08:00" title="2014-06-21T15:43:00+08:00">2014-06-21</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。</p>
-<p>好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧。</p>
-<p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
-<p>既然数字证书产生了，但它终究是个有格式的文件，我们下步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
-<p>用密码学表示一下大概就是：</p>
-<div class="highlight"><pre>// 设生成的中间数字证书为 MB，最终发放的为B
-则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
-</pre></div>
-<p>接下来，看看是如何验证的 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/06/21/how-to-validate-certificate.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/an-quan/index.html">安全</a>
-                            <a href="/tag/shu-zi-zheng-shu/index.html">数字证书</a>
                         </div>
                         <div class="pull-right share">
                         </div>
