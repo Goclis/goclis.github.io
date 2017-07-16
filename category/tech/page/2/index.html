@@ -78,9 +78,50 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 13 篇文章 
+				        共 14 篇文章 
 				    </div>
 				</div>
+                <article id="fuck-the-gfw-with-shadowsocks" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html">和Shadowsocks一起科学上网</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00">2016-05-27</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
+这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
+<h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
+<p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
+<p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
+<p>额，毕竟不是软文也不是小白教程，就不截没必要的图了。Droplet选的Ubuntu 14.04，创建完毕后，DO会给你发邮件，里面有VPS的IP以及root用户的密码，用ssh工具（Windows下可以下载putty）连接上去进行如设置root密码等一系列基础的配置后即可：</p>
+<ul>
+<li>*unix: <code>ssh root@IP</code></li>
+<li>Windows: 在putty里填写IP，然后点击连接</li>
+</ul>
+<h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
+<p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/digitalocean/index.html">DigitalOcean</a>
+                            <a href="/tag/shadowsocks/index.html">Shadowsocks</a>
+                            <a href="/tag/ubuntu/index.html">Ubuntu</a>
+                            <a href="/tag/vpn/index.html">VPN</a>
+                            <a href="/tag/vps/index.html">VPS</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="c-preprocessor-macro-expansion" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -163,46 +204,6 @@
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/httpqing-qiu/index.html">HTTP请求</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="openssl-rsa-basic-use" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html">Openssl-RSA简单使用</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2015-09-10T00:00:00+08:00" title="2015-09-10T00:00:00+08:00">2015-09-10</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>最近需要用到RSA的一些功能，出于方便，打算直接用openssl，但是在不同平台上使用openssl所需要做的工作还不一样，干脆就记个笔记整理一下。</p>
-<h3 id="windowsvs2013openssl">Windows下使用VS2013编译openssl源码<a class="headerlink" href="#windowsvs2013openssl" title="Permanent link">¶</a></h3>
-<p>源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。</p>
-<p>编译需要用到perl，去官网下个ActivePerl就可以了，为了往后在cmd中操作简单，最好安装时勾上加入PATH的选项。</p>
-<p>解压源码包，打开cmd进入该解压后的目录，执行如下命令：</p>
-<div class="highlight"><pre>perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
-</pre></div>
-<p>这是编译前必须执行的配置命令，可以自行根据所使用的编译工具以及平台的不同来选择不同的参数（具体可以查看解压后目录中的README以及一系列的INSTALL文件），稍微解释一下：</p>
-<ul>
-<li>VC-WIN32：表示希望使用VS来编译生成WIN32下使用的openssl库，还可以是其他的比如debug-VC-WIN32、VC-WIN64A等等。</li>
-<li>no-asm：表示编译不使用汇编语言文件，这样可以避免出现与NASM相关的错误。</li>
-<li>prefix：此参数后面的值用于指定编译结果的安装目录。</li>
-</ul>
-<p>使用VS编译会使用到VS的nmake、cl、link等工具，默认情况下这些工具是不在PATH里的，所以正常打开cmd是没法找到这些工具的 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2015/09/10/openssl-rsa-basic-use.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/openssl/index.html">Openssl</a>
-                            <a href="/tag/rsa/index.html">RSA</a>
                         </div>
                         <div class="pull-right share">
                         </div>

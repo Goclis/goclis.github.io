@@ -78,9 +78,49 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 13 篇文章 
+				        共 14 篇文章 
 				    </div>
 				</div>
+                <article id="同步请求响应的实现" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/07/16/同步请求响应的实现.html">同步请求响应的实现</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-07-16T18:11:00+08:00" title="2017-07-16T18:11:00+08:00">2017-07-16</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p><em>声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。</em></p>
+<p>最近在接手的工作中发现了一段很无语的代码，大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
+
+<span class="k">class</span> <span class="nc">Synchronizer</span> <span class="p">{};</span>
+
+<span class="kt">void</span> <span class="nf">SendRequest</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_req</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
+    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">thrdId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
+    <span class="n">network</span><span class="o">-&gt;</span><span class="n">SendData</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">_req</span><span class="p">);</span>
+
+    <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
+    <span class="n">Packet</span> <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">WaitThreadData</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>显然，WaitThreadData 的操作不能因为收不到对端响应就一直阻塞 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/07/16/同步请求响应的实现.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="Call convention & Name mangling" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -151,47 +191,6 @@
                             <a href="/tag/cheng-yuan-han-shu-zhi-zhen/index.html">成员函数指针</a>
                             <a href="/tag/duo-ji-cheng/index.html">多继承</a>
                             <a href="/tag/thiszhi-zhen/index.html">this指针</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="fuck-the-gfw-with-shadowsocks" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html">和Shadowsocks一起科学上网</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00">2016-05-27</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
-这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
-<h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
-<p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
-<p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
-<p>额，毕竟不是软文也不是小白教程，就不截没必要的图了。Droplet选的Ubuntu 14.04，创建完毕后，DO会给你发邮件，里面有VPS的IP以及root用户的密码，用ssh工具（Windows下可以下载putty）连接上去进行如设置root密码等一系列基础的配置后即可：</p>
-<ul>
-<li>*unix: <code>ssh root@IP</code></li>
-<li>Windows: 在putty里填写IP，然后点击连接</li>
-</ul>
-<h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
-<p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/digitalocean/index.html">DigitalOcean</a>
-                            <a href="/tag/shadowsocks/index.html">Shadowsocks</a>
-                            <a href="/tag/ubuntu/index.html">Ubuntu</a>
-                            <a href="/tag/vpn/index.html">VPN</a>
-                            <a href="/tag/vps/index.html">VPS</a>
                         </div>
                         <div class="pull-right share">
                         </div>

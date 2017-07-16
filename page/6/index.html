@@ -73,6 +73,47 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="advanced-pelican-configuration" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/01/16/advanced-pelican-configuration.html">Pelican进阶配置</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-01-16T13:58:00+08:00" title="2016-01-16T13:58:00+08:00">2016-01-16</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。</p>
+<h3 id="markdown">Markdown扩展<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h3>
+<p>我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在 <code>pelicanconf.py</code> 中对 <code>MD_EXTENSIONS</code> 进行适当的赋值即可，我的配置如下：</p>
+<div class="highlight"><pre><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s">'extra'</span><span class="p">,</span> <span class="s">'toc(permalink=true)'</span><span class="p">]</span>
+</pre></div>
+<p>总共三项：</p>
+<ul>
+<li>第一个是参考我所引用主题的作者的配置，应该是代码高亮的配置。</li>
+<li>第二个包含了一系列的小扩展，我主要是为了获得表格及代码块的支持。</li>
+<li>第三个是为了生成目录，我的主题会提取文章的目录。</li>
+</ul>
+<p>Pelican的Markdown支持是直接使用的其他人的模块，因此更多的扩展以及详细内容可以参见 <a href="http://pythonhosted.org/Markdown/extensions/">Markdown模块官方文档</a> 。</p>
+<h3 id="pelican-page">Pelican page<a class="headerlink" href="#pelican-page" title="Permanent link">¶</a></h3>
+<p>配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。</p>
+<p>page按照直面的翻译也就是 <strong>页面</strong> 的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的 <code>templates</code> 中拥有 <code>article.html ...</code></p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/01/16/advanced-pelican-configuration.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/markdown/index.html">Markdown</a>
+                            <a href="/tag/pelican/index.html">Pelican</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="summary-of-2015" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -137,48 +178,6 @@
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/openssl/index.html">Openssl</a>
                             <a href="/tag/rsa/index.html">RSA</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="data-linker-layer-authentication" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html">Data Linker Layer Authentication</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-08-21T16:21:00+08:00" title="2014-08-21T16:21:00+08:00">2014-08-21</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>标题可能不是很准确，这篇东东主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
-<p>下面列举下我自己平常的一些上网方式：</p>
-<ul>
-<li>宿舍网线拨号</li>
-<li>WIFI + 网页验证</li>
-</ul>
-<p>这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。</p>
-<h3 id="_1">拨号上网<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
-<p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
-<p>以下为个人猜想，错误请指出，谢谢！</p>
-<p>先来看看一般的ISP架构， ISP的每一个组成可能都不止一台主机 ：</p>
-<p><img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86y4uft4tj30p90fon0o.jpg"/></p>
-<p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
-<h4 id="1">1. 插上网线<a class="headerlink" href="#1" title="Permanent link">¶</a></h4>
-<p>插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。</p>
-<h4 id="2">2. 拨号认证<a class="headerlink" href="#2" title="Permanent link">¶</a></h4>
-<p>这里以PPPoE为例，但协议本身的内容不少 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/08/21/data-linker-layer-authentication.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/isp/index.html">ISP</a>
-                            <a href="/tag/pppoe/index.html">PPPoE</a>
                         </div>
                         <div class="pull-right share">
                         </div>

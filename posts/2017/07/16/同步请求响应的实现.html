@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+<meta name="keywords" content=", Tech, " />
+
+        <title>同步请求响应的实现  | Logging
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <div id="wrapper">
+            <header class="main-header" style="background-image: url(/images/background.png)" "=">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- start logo -->
+                            <a class="branding portrait" href="http://goclis.github.io" title="Logging">
+                                <img src="/images/panda.jpg" alt="Logging">
+                            </a>
+                            <!-- end logo -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <nav class="main-navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="navbar-header">
+                                <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                                </span>
+                            </div>
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="menu">
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                    <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                                </ul>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="同步请求响应的实现" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/07/16/同步请求响应的实现.html">同步请求响应的实现</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-07-16T18:11:00+08:00" title="2017-07-16T18:11:00+08:00"> 发布：2017-07-16</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <p><em>声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。</em></p>
+<p>最近在接手的工作中发现了一段很无语的代码，大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
+
+<span class="k">class</span> <span class="nc">Synchronizer</span> <span class="p">{};</span>
+
+<span class="kt">void</span> <span class="nf">SendRequest</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_req</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
+    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">thrdId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
+    <span class="n">network</span><span class="o">-&gt;</span><span class="n">SendData</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">_req</span><span class="p">);</span>
+
+    <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
+    <span class="n">Packet</span> <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">WaitThreadData</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>显然，WaitThreadData 的操作不能因为收不到对端响应就一直阻塞，需要引入超时等机制来应对对端崩溃或响应慢的情况，代码里直接利用了信号量所提供的参数来实现超时机制，可以满足条件。但是，向调用者返回超时并不意味着这个报文消失了，底层所用的网络库提供的是保证可靠的报文模式，所以这个报文最终一定会到来，因此，必须处理掉它以避免影响到后续请求。</p>
+<p>然而，接手的代码在实现上对这个问题没有考虑全面，它大致的伪代码如下：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">struct</span> <span class="n">ThreadLocalStorage</span>
+<span class="p">{</span>
+    <span class="n">Packet</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+    <span class="n">Semaphore</span> <span class="o">*</span><span class="n">semaphore</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Synchronizer</span>
+<span class="p">{</span>
+    <span class="n">Mutex</span> <span class="n">m_mutex</span><span class="p">;</span>
+    <span class="n">map</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">,</span> <span class="n">ThreaLocalStorage</span><span class="o">&gt;</span> <span class="n">m_threads</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">OnReceiveData</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+
+        <span class="k">auto</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_data</span><span class="o">-&gt;</span><span class="n">threadId</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">==</span> <span class="n">iter</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Bad data"</span><span class="p">);</span>
+            <span class="k">delete</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 检查残留</span>
+        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">delete</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">_data</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">POST_SEMAPHORE</span><span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">semaphore</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">RegisterThread</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">_threadId</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+        <span class="n">m_threads</span><span class="p">[</span><span class="n">_threadId</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="n">Packet</span><span class="o">*</span> <span class="n">WaitThreadData</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">_threadId</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">delctype</span><span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_threadId</span><span class="p">)</span> <span class="n">iter</span><span class="p">;</span>
+        <span class="p">{</span>
+            <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+            <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_threadId</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">==</span> <span class="n">iter</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Unregistered thread"</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ERROR</span> <span class="o">==</span> <span class="n">WAIT_SEMAPHORE</span><span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">))</span> <span class="c1">// 10000ms</span>
+        <span class="p">{</span>
+            <span class="c1">// 超时，会导致本次响应残留在 TLS 中</span>
+            <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Timeout"</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+        <span class="n">Packet</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+        <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+<p>稍微解释下代码：</p>
+<ol>
+<li>因为 Synchronizer 会被多个线程使用，所以使用了 TLS 的机制来维护各自的信号量及接收到的数据。</li>
+<li>OnReceiveData 是提供给底层网络库的回调函数，接收到数据后按照报文中的线程 ID 选择合适的 TLS 进行存储，<strong>这里加入了一定的检查残留机制</strong>。</li>
+<li>RegisterThread 其实没做什么，创建了该线程 ID 需要的 TLS。</li>
+<li>WaitThreadData 根据参数选择合适的 TLS，等待其中的信号量以同步异步的数据。</li>
+</ol>
+<p>这样的实现基本满足了同步的要求，数据异步到来，存储并通知信号量，信号量 WAIT 返回后得到数据。但是，当发生 WAIT 超时的时候，该请求对应的响应将残留在网络中，并且最终一定会被 Synchronizer 接收并 POST，从而导致此响应有可能会作为下一个请求的响应，即发生了<strong>报文错位</strong>。</p>
+<p>因为发送和接收实际上是两个队列，这种问题发生的概率还挺大的，以两个连续请求（Req1 和 Req2）为例：</p>
+<ol>
+<li>发送 Req1，由于网络原因没有收到 Res1，WaitThreadData 超时返回 nullptr；</li>
+<li>发送 Req2，调用 WaitThreadData 开始等待 Res2；</li>
+<li>此时 Res1 到来，OnReceiveData 存储到 TLS 中并 POST 信号量；</li>
+<li>Req2 调用的 WaitThreadData 中的 WAIT 返回，获取 TLS 中的数据，返回了 Res1；</li>
+<li><strong>错误：</strong>Res1 响应了 Req2。</li>
+</ol>
+<p>显然，这种错误有较大概率会一直继续下去。即使上层加入检查（比如该层的序列号）抛弃掉错误的 Res，依旧没办法主动帮助错位问题恢复。</p>
+<p>恢复完全看运气，一种自然恢复的情况（虽然我觉得概率不大）：</p>
+<ol>
+<li>前 3 步同上；</li>
+<li>Req2 的 WaitThreadData 所在线程虽然可能已经得到信号量的 POST，但由于 CPU 调度，还没有去访问 TLS 获取数据；</li>
+<li>Res2 到来，该线程恰巧被调度了 CPU，检查 TLS 时发现了残留（Res1），清理；</li>
+<li>Req2 的 WaitThreadData 所在线程得到 CPU 时间，访问 TLS，获取数据；</li>
+<li>正确：Res2 响应了 Req2。</li>
+</ol>
+<p>这种恢复有个副作用，信号量被 POST 了两次，却只有一次成功的 WAIT，从而导致其中的值增加了 1，
+但是，由于每次获取数据时都要调用 WaitThreadData，这个副作用不会影响到响应的正确性（如果还在信号量允许的值域范围内）。</p>
+<p>为了改进这个问题，需要在 WAIT 得到数据后进行检查，判断它是否是所需要的数据。而为了能够判断，我们可以给每个请求都增加上序列号，并要求响应在回复的数据中也设置对应的序列号。序列号由 TLS 维护，保证能够标识该线程内的各个请求即可，此处直接利用了 64 位无符号数来代表（这个数真的是大啊）。</p>
+<p>最终版本如下：</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span>
+<span class="p">{</span>
+    <span class="k">enum</span> <span class="n">Type</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+
+    <span class="n">Type</span> <span class="n">type</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">seqNum</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">ThreadLocalStorage</span>
+<span class="p">{</span>
+    <span class="n">Packet</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">Semaphore</span> <span class="o">*</span><span class="n">semaphore</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">curSeqNum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Synchronizer</span>
+<span class="p">{</span>
+    <span class="n">Mutex</span> <span class="n">m_mutex</span><span class="p">;</span>
+    <span class="n">map</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">,</span> <span class="n">ThreaLocalStorage</span><span class="o">&gt;</span> <span class="n">m_threads</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span> 
+    <span class="kt">void</span> <span class="n">OnReceiveData</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+
+        <span class="k">auto</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_data</span><span class="o">-&gt;</span><span class="n">threadId</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">==</span> <span class="n">iter</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Bad data"</span><span class="p">);</span>
+            <span class="k">delete</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 检查残留</span>
+        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">delete</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">_data</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">POST_SEMAPHORE</span><span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">semaphore</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">RegisterThread</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">_threadId</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+
+        <span class="k">auto</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_threadId</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">==</span> <span class="n">iter</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">_threadId</span><span class="p">,</span> <span class="n">ThreadLocalStorage</span><span class="p">())).</span><span class="n">first</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 检查是否有上一次请求的残留</span>
+        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">delete</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tls</span><span class="p">.</span><span class="n">curSeqNum</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">Packet</span><span class="o">*</span> <span class="n">WaitThreadData</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">_threadId</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">_seqNum</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">_timeout</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">delctype</span><span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_threadId</span><span class="p">)</span> <span class="n">iter</span><span class="p">;</span>
+        <span class="p">{</span>
+            <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+            <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_threadId</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">==</span> <span class="n">iter</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Unregistered thread"</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="k">do</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ERROR</span> <span class="o">==</span> <span class="n">WAIT_SEMAPHORE</span><span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">_timeout</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="c1">// 超时，会导致本次响应残留在 TLS 中</span>
+                <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Timeout"</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+            <span class="c1">// 正确的序列号</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">==</span> <span class="n">_seqNum</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">Packet</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+                <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="c1">// 序列号不相等，小于为正常情况，大于则为异常（因为此序列号是由发送端提供的）</span>
+            <span class="kt">bool</span> <span class="n">exceptionFlag</span> <span class="o">=</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">&gt;</span> <span class="n">_seqNum</span><span class="p">);</span>
+            <span class="k">delete</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">exceptionFlag</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Impossible sequence number"</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">SendRequest</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_req</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">seqNum</span> <span class="o">=</span> <span class="n">Synchonizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
+    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">thrdId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
+    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">=</span> <span class="n">seqNum</span><span class="p">;</span>
+    <span class="n">network</span><span class="o">-&gt;</span><span class="n">Send</span><span class="p">(</span><span class="n">_req</span><span class="p">);</span>
+
+    <span class="n">Packet</span> <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">Synchonizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">WaitThreadData</span><span class="p">(</span><span class="n">threadId</span><span class="p">,</span> <span class="n">seqNum</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">res</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>解释：</p>
+<ol>
+<li>RegisterThread 返回此报文应该附带的序列号。</li>
+<li>WaitThreadData 参数中指定了序列号，在获取数据后检查了得到的数据是否满足要求，不满足则继续 WAIT 直至满足。</li>
+</ol>
+<p>小小的总结下，这次改进主要是为了解决掉错位问题，并且追求最小的改动量，目前也只想到了这样的方法。如果要类比一个常见词汇的话，感觉这个问题的需求有点像同步 RPC。</p>
+<p>问了下实现过异步 RPC 的同学，其实也在请求中加入了 Request ID 这样的标识，从而在异步接收时才能判别该调用哪个回调方法。这期间我也猜了下浏览器可能的实现，觉得主流浏览器应该也是为每个 HTTP Request 分配相应标识（感觉可以用 SOCKET 句柄），在收到 Response 数据后，通过标识找到对应 Request，进而找到对应的 Tab，由 Tab 实例去负责处理数据。</p>
+<p><strong>如果这个问题有其他方式的实现可以解决的话，欢迎指教，谢谢！</strong></p>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2017/07/16/同步请求响应的实现.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2017/07/16/同步请求响应的实现.html';
+    var disqus_url = 'http://goclis.github.io/posts/2017/07/16/同步请求响应的实现.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2017/04/10/Call convention & Name mangling.html"><i class="fa fa-angle-left fa-fw"></i> Call convention & Name mangling</a>
+                    &nbsp;
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+            <p>
+                <a href="http://weibo.com/u/3312761102" title="My Weibo Profile" target="_blank"><i class="fa fa-weibo"></i> Weibo</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                    
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
+        
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
+        </script>
+    </body>
+</html>
