@@ -78,9 +78,61 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 15 篇文章 
+				        共 16 篇文章 
 				    </div>
 				</div>
+                <article id="c-preprocessor-macro-expansion" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html">C预处理器宏展开</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-04-26T23:21:20+08:00" title="2016-04-26T23:21:20+08:00">2016-04-26</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：</p>
+<div class="highlight"><pre><span class="c1">// macro.h</span>
+<span class="cp">#if defined(T)</span>
+<span class="kt">void</span> <span class="n">T</span> <span class="err">##</span> <span class="n">_func</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="c1">// ...</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</pre></div>
+<p>这段代码是不能用的，因为预处理符号<code>##</code>是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：</p>
+<div class="highlight"><pre><span class="c1">// 这段代码希望定义一个int_func方法</span>
+<span class="cp">#define T int</span>
+<span class="cp">#include "macro.h"</span>
+<span class="cp">#undef T</span>
+</pre></div>
+<p>上面提到了<code>##</code>是不能直接写在代码里的，所以我一开始是这样实现的：</p>
+<div class="highlight"><pre><span class="c1">// macro.h</span>
+<span class="cp">#if defined(T)</span>
+<span class="cp">#define func_m(TN) TN ## _func</span>
+<span class="cp">#define T_func func_m(T)</span>
+<span class="kt">void</span> <span class="nf">T_func</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="c1">// ...</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</pre></div>
+<p>但是，这样的写法并不能够正确的定义我们例子中想要的<code>int_func ...</code></p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/04/26/c-preprocessor-macro-expansion.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/hong/index.html">宏</a>
+                            <a href="/tag/yu-chu-li-qi/index.html">预处理器</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="data-in-http-request" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -156,52 +208,10 @@
                         </div>
                     </footer>
                 </article>
-                <article id="data-linker-layer-authentication" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html">Data Linker Layer Authentication</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-08-21T16:21:00+08:00" title="2014-08-21T16:21:00+08:00">2014-08-21</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>标题可能不是很准确，这篇东东主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。</p>
-<p>下面列举下我自己平常的一些上网方式：</p>
-<ul>
-<li>宿舍网线拨号</li>
-<li>WIFI + 网页验证</li>
-</ul>
-<p>这两种方式大家都挺常用的，这里只讨论非NAT网络的，也就是你直接连接到ISP而不是通过路由什么的，先说拨号吧。</p>
-<h3 id="_1">拨号上网<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
-<p>一般拨号的协议都是PPPoE，全称Point-to-point-on-Ethernet，顾名思义，在以太网上的PPP。PPP本身就是一个链路层的协议，不过我不大清楚用来连接它的线路应该是啥样的，而PPPoE的出现貌似就是为了保证在Ethernet上还能使用PPP的优势，因为Ethernet本身并不是点对对的，PPPoE就弄出了一个virtual point to point，这样，在用户的角度，和ISP之间的关系就好像是点对点了，ISP和用户都挺高兴，所以PPPoE广泛地被ISP们采用。</p>
-<p>以下为个人猜想，错误请指出，谢谢！</p>
-<p>先来看看一般的ISP架构， ISP的每一个组成可能都不止一台主机 ：</p>
-<p><img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86y4uft4tj30p90fon0o.jpg"/></p>
-<p>接下来就按照这个图来讲讲整个拨号的过程吧。</p>
-<h4 id="1">1. 插上网线<a class="headerlink" href="#1" title="Permanent link">¶</a></h4>
-<p>插上网线后，你应该只能访问ISP架构中的有限内容，准确来说，你应该只能访问用户认证这个部分，其他部分对你来说都是不通的。</p>
-<h4 id="2">2. 拨号认证<a class="headerlink" href="#2" title="Permanent link">¶</a></h4>
-<p>这里以PPPoE为例，但协议本身的内容不少 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/08/21/data-linker-layer-authentication.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/isp/index.html">ISP</a>
-                            <a href="/tag/pppoe/index.html">PPPoE</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
 
 <nav class="pagination" role="navigation">
         <a class="newer-posts" href="/category/tech/page/2/"><i class="fa fa-angle-left"></i></a>
-    <span class="page-number">第 3 页 ⁄ 共 5 页</span>
+    <span class="page-number">第 3 页 ⁄ 共 6 页</span>
         <a class="older-posts" href="/category/tech/page/4/"><i class="fa fa-angle-right"></i></a>
 </nav>
             </main>

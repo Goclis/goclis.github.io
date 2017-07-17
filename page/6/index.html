@@ -73,6 +73,39 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="reconstruction-of-pelican-blog" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/04/02/reconstruction-of-pelican-blog.html">Pelican博客结构改造</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-04-02T23:43:50+08:00" title="2016-04-02T23:43:50+08:00">2016-04-02</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>最近想要在博客里写一些生活相关的东西（也就是吃喝玩乐啦），同时还希望能够比较清晰地区分开技术文章和生活文章，所以这两天就在折腾着博客内容的改造，不得不提一下，这个折腾过程中看代码的感觉真的是让我找回了一丝大二时的感觉，很爽！</p>
+<p>这篇文章把一些我在改造过程中遇到的问题以及解决思路记录下来。</p>
+<h3 id="template-page">使用Template Page划分内容<a class="headerlink" href="#template-page" title="Permanent link">¶</a></h3>
+<p>博客的改造是希望把内容分成四块：技术、生活、笔记、琐碎。技术就是先前写的这些博文；生活记录一些小结或是感想的东西；笔记实质上是我平时针对一些具体技术记录的一些Tip，打算一并放上来；琐碎实际上就类似于微博，一些短的想法之类的。</p>
+<p>按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板 <code>page.html</code> 决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。</p>
+<p>因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在 <code>pelicanconf.py</code> 中对 <code>TEMPLATE_PAGES</code> 进行相关的设置即可，如下：</p>
+<div class="highlight"><pre><span class="n">TEMPLATE_PAGES ...</span></pre></div>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/04/02/reconstruction-of-pelican-blog.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/jinja2/index.html">Jinja2</a>
+                            <a href="/tag/pelican/index.html">Pelican</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="【吃点评】胖哥俩肉蟹煲" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -141,35 +174,6 @@
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/markdown/index.html">Markdown</a>
                             <a href="/tag/pelican/index.html">Pelican</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="summary-of-2015" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/01/06/summary-of-2015.html">2015小结</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-01-06T00:00:00+08:00" title="2016-01-06T00:00:00+08:00">2016-01-06</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。</p>
-<h3 id="_1">回顾<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
-<p>现在细细回想了一下，对这段时间好像还是有那么点印象的，不过总的说起来也只是一直处于一个不断在学校和“创业”中切换的混沌状态。下面按照时间线大概理一下吧，流水账。</p>
-<p>从“创业”开始说吧，加引号是因为有点伤，下面再说吧。大概来说是从大三下（14年6月）的时候开始的，那时候老师找了我和几个同学谈做一个分布式相关的产品，因为当时合伙的老师中有一个是以后读研的导师，想想觉得边读研边做项目还挺好的，而且许诺的期权及期限都还可以接受，就答应一起做了。</p>
-<p>然后暑假没回家就一直在公司做产品，刚开始的时候还是公司机器还是能够上网的，所以那段时间开发产生的一些问题也能随时弄到为知笔记里，然后晚上回去的时候可以查查资料补充一下，所以那个暑假偶尔还是会发一些东西到博客上。现在想想，主要原因还是因为项目刚开启，还在补充基本知识阶段，比较闲暇，到后面忙了而且公司进行了内外网隔离后就基本没什么时间去多想以及记录笔记了。说多了都是懒啊！！！</p>
-<p>暑假结束大四上开始，没课，就三个课设，操作系统课设暑假就自己抽空搞了，所以挺快的，网络课设拖得挺长但也不麻烦。蛋疼的也就是综合课设，要组队在FPGA板子上做个MIPS指令集的CPU，还要做编辑器、编译器、汇编器等工具来把C代码编译到MIPS的机器码 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/01/06/summary-of-2015.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
                         </div>
                         <div class="pull-right share">
                         </div>

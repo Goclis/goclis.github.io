@@ -9,7 +9,8 @@
 
 
 
-        <title>Logging - Authors</title>
+        <title>Visual Studio
+</title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
@@ -68,10 +69,54 @@
                 </div>
             </nav>
             
-    <h1>Authors on Logging</h1>
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-offset-1 col-md-10 main-content">
+            	<div class="cover tag-cover">
+				    <h3 class="tag-name">
+				        标签：Visual Studio
+				    </h3>
+				    <div class="post-count">
+				        共 1 篇文章 
+				    </div>
+				</div>
+                <article id="静态库与动态库的跨编译器兼容" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/05/26/静态库与动态库的跨编译器兼容.html">静态库与动态库的跨编译器兼容</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-05-26T20:49:28+08:00" title="2017-05-26T20:49:28+08:00">2017-05-26</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>由于当前项目维护的代码需要支持多个编译器，最近突然好奇为什么不直接在高版本的 VS 中直接使用低版本生成的库呢？起初以为是不可行，但是后面从理论上想了一下，感觉对于动态库来说应该可行，低版本生成的 DLL 依赖低版本的 C++ 运行时，高版本生成的可执行程序依赖高版本的 C++ 运行时，按照这样的设定应该没有任何问题才对。</p>
+<p>举个例子，VS2013 生成了动态库库 A.lib 和 A.dll，VS2015 中使用了 A.lib 生成 B.exe，让我们来看下最终的依赖情况（下面 C++ 运行时库的名字以 msvc 来代替）：</p>
+<ul>
+<li>B.exe 依赖于 A.dll 和 msvc2015.dll</li>
+<li>A.dll 依赖于 msvc2013.dll ...</li></ul>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/05/26/静态库与动态库的跨编译器兼容.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/dll/index.html">DLL</a>
+                            <a href="/tag/jing-tai-ku/index.html">静态库</a>
+                            <a href="/tag/visual-studio/index.html">Visual Studio</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
 
-    <ul>        <li><a href="http://goclis.github.io/author/goclis-yao/index.html">Goclis Yao</a> (29)</li>
-    </ul>
+            </main>
+        </div>
+    </div>
+</section>
                     
 <div class="copyright">
     <div class="container">

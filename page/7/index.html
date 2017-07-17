@@ -73,6 +73,35 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="summary-of-2015" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/01/06/summary-of-2015.html">2015小结</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-01-06T00:00:00+08:00" title="2016-01-06T00:00:00+08:00">2016-01-06</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>这几天逛Github的时候突然想起来自己的博客似乎很久没管过了，就跑去看了看，发现最新内容都是2014年8月份的，现在都2016年，顿感那篇文章之后的时间都被狗吃了么。。所以打算写个小结，希望能够理一理过去这段时间并给未来一点方向吧。</p>
+<h3 id="_1">回顾<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
+<p>现在细细回想了一下，对这段时间好像还是有那么点印象的，不过总的说起来也只是一直处于一个不断在学校和“创业”中切换的混沌状态。下面按照时间线大概理一下吧，流水账。</p>
+<p>从“创业”开始说吧，加引号是因为有点伤，下面再说吧。大概来说是从大三下（14年6月）的时候开始的，那时候老师找了我和几个同学谈做一个分布式相关的产品，因为当时合伙的老师中有一个是以后读研的导师，想想觉得边读研边做项目还挺好的，而且许诺的期权及期限都还可以接受，就答应一起做了。</p>
+<p>然后暑假没回家就一直在公司做产品，刚开始的时候还是公司机器还是能够上网的，所以那段时间开发产生的一些问题也能随时弄到为知笔记里，然后晚上回去的时候可以查查资料补充一下，所以那个暑假偶尔还是会发一些东西到博客上。现在想想，主要原因还是因为项目刚开启，还在补充基本知识阶段，比较闲暇，到后面忙了而且公司进行了内外网隔离后就基本没什么时间去多想以及记录笔记了。说多了都是懒啊！！！</p>
+<p>暑假结束大四上开始，没课，就三个课设，操作系统课设暑假就自己抽空搞了，所以挺快的，网络课设拖得挺长但也不麻烦。蛋疼的也就是综合课设，要组队在FPGA板子上做个MIPS指令集的CPU，还要做编辑器、编译器、汇编器等工具来把C代码编译到MIPS的机器码 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/01/06/summary-of-2015.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="openssl-rsa-basic-use" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -150,43 +179,6 @@
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/isp/index.html">ISP</a>
                             <a href="/tag/pppoe/index.html">PPPoE</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="pptp-vpn-process" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-08-19T14:41:00+08:00" title="2014-08-19T14:41:00+08:00">2014-08-19</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！ 但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？ 于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
-<p>以下文章中VPN如不特指皆为PPTP VPN。</p>
-<p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
-<p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
-<h3 id="vpn">VPN的两种架构<a class="headerlink" href="#vpn" title="Permanent link">¶</a></h3>
-<ul>
-<li>Remote access VPN</li>
-<li>Site-to-site VPN</li>
-</ul>
-<p>Remote access VPN是我们平时个人用的比较多的那种，也就是你在网上买了个VPN，然后拿着账号密码和服务器名连接上了的种，这种就只能保证你自己的那台设备是连上VPN的，而Site-to-site VPN则更像是，如果你用了路由这样的设备，在该设备上拨了VPN，这样路由的私有网络就是一个Site，而路由连上的VPN服务器又构成了另外一个Site，所以是Site-to-site，这种方式就能保证你私有网络中的所有设备都连上了VPN。</p>
-<p>个人感觉 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/08/19/pptp-vpn-process.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/pptp/index.html">PPTP</a>
-                            <a href="/tag/vpn/index.html">VPN</a>
                         </div>
                         <div class="pull-right share">
                         </div>
