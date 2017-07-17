@@ -9,7 +9,8 @@
 
 
 
-        <title>Logging - Articles by Goclis Yao</title>
+        <title>Logging - Page 10
+</title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
@@ -57,7 +58,7 @@
                             </div>
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
-                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li class="nav-current" role="presentation"><a href="http://goclis.github.io">首页</a></li>
                                     <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
@@ -72,92 +73,38 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
-                <article id="我的存在，不需要什么意义" class="post">
+                <article id="Git" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/20/我的存在，不需要什么意义.html">我的存在，不需要什么意义</a>
+                            <a href="http://goclis.github.io/posts/2014/01/01/Git.html">Git</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-20T09:40:00+08:00" title="2016-04-20T09:40:00+08:00">2016-04-20</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>很长的一段时间里，只要我闲下来，就会思考，自己存在的意义。好在自己闲下来的日子其实不多，而且正能量挺足时总能找到点意义，这事也没怎么困扰我。但上个月初恋分手后，突然就啥也不想做了，人又闲了，心情还负，这个问题又跳了出来。</p>
-<p>写下这篇东西，并不意味着我彻底想明白了，只能说暂时找到了更让自己信服的结论：我的存在，不需要什么意义。</p>
-<p>最近看了本小说，叫《我是个年轻人，我的心情不太好》，多看限免日的时候淘到的。主人公25岁，一个我即将到达的年龄，他却不知道自己该做什么，人生的一切都很没有意义，但他很幸运，处在挪威这样一个福利较好的国家，有大把的时间可以让他安静地思考思考；同样，他有个好哥哥，带他旅行，教他放空自己；似乎他的运气也不错，想做的事情基本都可以做做。相比之下，我没这些条件，但幸运的是，我有看这本书的时间，这段时间，我能和他一样。</p>
-<p>书中的观点多多少少影响了我现在的看法，但不全是，朋友也给出了一些不小的帮助。</p>
-<p>书中提到了宇宙，时间，两个好大同时可能也好复杂的概念。我是个不懂物理，对它的兴趣也不是特别大的人。但基本的常识说 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/04/20/我的存在，不需要什么意义.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="data-in-http-request" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html">HTTP请求中的数据</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-16T22:47:20+08:00" title="2016-04-16T22:47:20+08:00">2016-04-16</time>
+                            <time class="post-date" datetime="2014-01-01T00:00:00+08:00" title="2014-01-01T00:00:00+08:00">2014-01-01</time>
                         </div>
                     </div>
                     <div class="post-content">
                         
-<p>那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。</p>
-<h3 id="http">HTTP请求格式<a class="headerlink" href="#http" title="Permanent link">¶</a></h3>
-<p>先看看HTTP请求消息的格式 <a href="http://www.tutorialspoint.com/http/http_requests.htm">1</a>：</p>
-<ul>
-<li>A Request Line</li>
-<li>Zero or more header (General|Request|Entity) fields followed by CRLF</li>
-<li>An empty line (i.e., a line with nothing preceding the CRLF) indicating the end of the header fields</li>
-<li>Optionally a message-body</li>
-</ul>
-<p>从格式上来看，除了第三部分，都能够附带用户数据，但一般来说 ...</p>
+<h3 id="1-git">1. 本地初始化git项目并添加远程仓库<a class="headerlink" href="#1-git" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span class="nb">cd </span>newProject
+git init
+git remote add origin url <span class="c"># url为项目的远程仓库路径</span>
+git push master origin
+</pre></div>
+<h3 id="2-git">2. Git设置<a class="headerlink" href="#2-git" title="Permanent link">¶</a></h3>
+<p>全局设置（--global）：</p>
+<div class="highlight"><pre>git config --global user.name <span class="s2">"Goclis Yao"</span>
+git config --global user.email <span class="s2">"goclisyyh@gmail.com"</span>
+git config --global branch.master.remote origin
+git config --global branch.master.merge refs/heads ...</pre></div>
                     </div>
                     <div class="post-permalink">
-                        <a href="/posts/2016/04/16/data-in-http-request.html" class="btn btn-default">阅读全文</a>
+                        <a href="/posts/2014/01/01/Git.html" class="btn btn-default">阅读全文</a>
                     </div>
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/httpqing-qiu/index.html">HTTP请求</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="【吃点评】小红烤翅" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/12/【吃点评】小红烤翅.html">【吃点评】小红烤翅</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-12T23:05:00+08:00" title="2016-04-12T23:05:00+08:00">2016-04-12</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。</p>
-<p>价格方面，总共7个人，2个女生，吃了477，折扣后437（这个我真不知道咋算的，大众点评给的是100-9，会员价是9折，但这个数字应该是477-400/4*10，有点诡异），人均62吧，不是很贵。</p>
-<p>主打还是烤翅，挺好吃的！！一人吃了4串，一串两只，默认分辣和不辣两种，可能可以特别要变态辣吧。其他点了些羊肉串、脆骨、金针菇、韭菜等吧，都还行，韭菜有点咸。特别提下羊肉串，挺大串的，感觉这种7-8块一串的比那种3-4块两小串吃的过瘾多了（没错，就是黑的勿相忘那种小串串）。</p>
-<p>总得来说，下次再去这家店的话，我可能只点烤翅和羊肉串吧23333。没拍图，败笔。</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/04/12/【吃点评】小红烤翅.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/chi-dian-ping/index.html">吃点评</a>
+                            <a href="/tag/git/index.html">Git</a>
                         </div>
                         <div class="pull-right share">
                         </div>
@@ -165,9 +112,8 @@
                 </article>
 
 <nav class="pagination" role="navigation">
-        <a class="newer-posts" href="/author/goclis-yao/page/3/"><i class="fa fa-angle-left"></i></a>
-    <span class="page-number">第 4 页 ⁄ 共 10 页</span>
-        <a class="older-posts" href="/author/goclis-yao/page/5/"><i class="fa fa-angle-right"></i></a>
+        <a class="newer-posts" href="/page/9/"><i class="fa fa-angle-left"></i></a>
+    <span class="page-number">第 10 页 ⁄ 共 10 页</span>
 </nav>
             </main>
         </div>

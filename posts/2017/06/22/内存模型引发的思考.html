@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+<meta name="keywords" content="内存模型, volatile, CPU 缓存一致性, 多线程模型, Tech, " />
+
+        <title>内存模型引发的思考  | Logging
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <div id="wrapper">
+            <header class="main-header" style="background-image: url(/images/background.png)" "=">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- start logo -->
+                            <a class="branding portrait" href="http://goclis.github.io" title="Logging">
+                                <img src="/images/panda.jpg" alt="Logging">
+                            </a>
+                            <!-- end logo -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <nav class="main-navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="navbar-header">
+                                <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                                </span>
+                            </div>
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="menu">
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                    <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                                </ul>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="内存模型引发的思考" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/06/22/内存模型引发的思考.html">内存模型引发的思考</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-06-22T19:30:00+08:00" title="2017-06-22T19:30:00+08:00"> 发布：2017-06-22</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <p>昨天在看《深入理解 Java 虚拟机》，本来以为 12 章讲的内存模型指的是类似 C++ 对象模型的概念，可以在一个半小时内搞定，结果看到硬件上的一致性以及内存模型的概念时就发现触及自己的知识盲区了。</p>
+<h3 id="cpu">CPU 缓存一致性<a class="headerlink" href="#cpu" title="Permanent link">¶</a></h3>
+<p>首先是 CPU 缓存一致性，借一下书上的图。</p>
+<p><img alt="" src="https://ws1.sinaimg.cn/large/006tKfTcly1fgt3nsziz8j30tm0e0q4m.jpg"/></p>
+<p>现在的 CPU 基本上都是多核了，以 Intel i7 系列的处理器来说，每个核都有各自的寄存器组、L1 Cache、L2 Cache，多个核共享 L3 Cache，这里我们把 L1 和 L2 合起来统称为各个核的高速缓存。显然，各个核之间的高速缓存需要同步，否则如果两个核访问同一块内存时，就可能出现错误，因为它们对该内存的读写操作是直接作用于自己的高速缓存，而非主存，这就引入了 CPU 的缓存一致性协议。</p>
+<p>我对这块并没有了解过，在网上搜了一下，找到了一篇感觉还不错的文章：<a href="http://www.infoq.com/cn/articles/cache-coherency-primer">缓存一致性（Cache Coherency）入门</a>。里面有提到一个叫做 MESI 的协议（该协议有相应的一些衍生协议）用于保持多核的高速缓存间的一致。按照协议，各个缓存段（Cache Line，即缓存的最小单元）拥有四种状态：</p>
+<blockquote>
+<ul>
+<li>失效（Invalid）缓存段，要么已经不在缓存中，要么它的内容已经过时。为了达到缓存的目的，这种状态的段将会被忽略。一旦缓存段被标记为失效，那效果就等同于它从来没被加载到缓存中。</li>
+<li>共享（Shared）缓存段，它是和主内存内容保持一致的一份拷贝，在这种状态下的缓存段只能被读取，不能被写入。多组缓存可以同时拥有针对同一内存地址的共享缓存段，这就是名称的由来。</li>
+<li>独占（Exclusive）缓存段，和S状态一样，也是和主内存内容保持一致的一份拷贝。区别在于，如果一个处理器持有了某个E状态的缓存段，那其他处理器就不能同时持有它，所以叫“独占”。这意味着，如果其他处理器原本也持有同一缓存段，那么它会马上变成“失效”状态。</li>
+<li>已修改（Modified）缓存段，属于脏段，它们已经被所属的处理器修改了。如果一个段处于已修改状态，那么它在其他处理器缓存中的拷贝马上会变成失效状态，这个规律和E状态一样。此外，已修改缓存段如果被丢弃或标记为失效，那么先要把它的内容回写到内存中——这和回写模式下常规的脏段处理方式一样。</li>
+</ul>
+</blockquote>
+<p>多核情况下，各个 CPU 都需要窥探总线，尤其是想要写缓存段时，必须先获取独占状态，即告知其他核心此时不可修改该缓存段对应的内存，并且在此核完成后，其他核心的高速缓存中如果有对应该内存的缓存段，则需要被标识为失效。类似地情况还有一些，但是作为不研究及实现这块内容的我们只需要明白：<strong>多核 CPU 芯片内部有着相应的一致性协议来保证各个处理器的高速缓存对主存中的相同位置保持一致</strong>，不会出现核 A 及核 B 针对同一主存在各自的高速缓存中做独立修改而致使最终部分操作丢失的情况。</p>
+<p>唉，毕竟我也不是研究这方面的，虽然有兴趣，但是考虑到个人的精力问题，还是只能点到为知。</p>
+<h3 id="java">Java 内存模型<a class="headerlink" href="#java" title="Permanent link">¶</a></h3>
+<p>对于这块，我也不是很了解，只能按照自己的理解写些内容。</p>
+<p>首先抛开 Java，定义内存模型的目的是什么呢？我觉得是用于指导编译器（这里泛指 C/C++/Java）优化时需要注意的事情。这其实会有比较大的影响，假设内存模型的定义仅设定在单线程上（比如 C++0x），那么编译器的优化边界就限定在单线程上了，所有保证单线程正确的优化都是符合标准的，然而，这些优化放到多线程上可能就会出事了，类似地例子可以看看这篇文章：<a href="http://blog.csdn.net/pongba/article/details/1659952">《C++0x漫谈》系列之：多线程内存模型</a>。</p>
+<p>所以，Java 内存模型在定义上考虑了多线程的问题，并提出了<strong>工作内存</strong>的概念来建立多线程内存模型，屏蔽提供不同内存模型的硬件（对于这点我还是有点懵的，未来如果工作有机会的话，可以好好看看）。</p>
+<p>关于 C++ 内存模型的话，《C++ 并发编程实战》这本书的 5.1 节有提及相关内容，可以看看。</p>
+<h3 id="volatile">volatile 关键字<a class="headerlink" href="#volatile" title="Permanent link">¶</a></h3>
+<p>这个关键字在 C/C++ 和 Java 中都有，但是语义不太相同，具体的内容我觉得这篇文章讲的很棒了：<a href="http://hedengcheng.com/?p=725">C/C++ Volatile关键词深度剖析</a>。先前那篇讲 C++0x 的多线程内存模型的文章也提及了 volatile。</p>
+<p>说的明白点：在 C/C++ 中，volatile 就是让编译器访问此变量时，一律从内存中访问，并且要把结果即时写入内存，从而保证了多线程能够及时得知变化，而且，绝对不能因为优化而把和这个变量相关的语句给抹掉了。</p>
+<p>看完这两篇文章后，我是真觉得 C/C++ 里的这个关键字作用真的不大，纯粹是为了解决一些历史问题引入的（和 I/O 设备相关，本章开头说的那篇文章里有提及）。它在 C/C++ 中的鸡肋之处主要体现在只使用它无法提供我们经常需要的同步语义（Java 为它加了 Acquire 和 Relase 语义后使得它能表达一些基本的同步语义：如 happen-before），而如果引入锁这些东西来表达同步语义的话，加不加 volatile 的话其实没差。</p>
+<p>后面这点我在 VS2013 下做了点实验，我们知道编译器是可以利用寄存器进行一些优化的，比如下面的代码：</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">g_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">g_input</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">g_input</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">g_i</span> <span class="o">+=</span> <span class="n">j</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>在 VS2013 下开 Release 的话，<code>g_i += j</code> 这句会被优化成类似 <code>add ecx eax</code> 这样的代码，即将两个操作数放入各自的寄存器中，然后在循环结束后才将最终值写回内存。</p>
+<p>看到这儿，自然而然地想到如果这段代码在多线程下会怎么样？在多线程这种情景下，我们一般都会利用临界区之类的机制来保证同步，所以代码会变成下面这样：</p>
+<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">g_input</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Lock</span><span class="p">();</span>
+    <span class="n">g_i</span> <span class="o">+=</span> <span class="n">j</span><span class="p">;</span>
+    <span class="n">Unlock</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+<p>到这里就发现问题了，如果编译器依旧把 <code>g_i += j</code> 编译成 <code>add ecx eax</code> 这样的代码的话，即使我们利用了同步机制，依旧会得到不正确的结果。这很明显，因为多线程可能会运行在多个 CPU 上，操作的结果都存到了各 CPU 的寄存器上，最终写回内存的时候必然会丢失部分操作。</p>
+<p>所以，编译结果是 <code>add dword ptr [address], ecx</code> 这样的代码，这个指令好像是 Read-Add-Write，也就是从内存读、相加、写回内存，这个和加了 volatile 关键字的编译结果是一致的。因此，这样地编译结果配合上多核处理器中的 CPU 缓存一致性协议，保证了结果，最终得到了我们所能理解的多线程累加结果。</p>
+<p>还剩一个问题，编译器怎么区分这两种情况的？即何时允许优化成使用寄存器？我在实验中把代码中的 Lock() 替换成了一个随意的方法调用，在方法里打印了一句话，编译的结果和 Lock() 的情况一致。但是如果方法是空的话，就回到了第一种情况。</p>
+<p>对于这点，我不确定是否有标准定出的规则来告知编译器实现者哪些情况下可以使用寄存器优化，但是基本原则很显然：如果该操作周围的指令在编译时就能够断定不会影响到值的话（包括多线程），那么可以利用寄存器优化，但是遇到像 <code>call</code> 指令这样的存在，编译器是没法断定的，所以一律采用第二种方式生成机器码。</p>
+<h3 id="cc">C/C++ 多线程模型<a class="headerlink" href="#cc" title="Permanent link">¶</a></h3>
+<p>上面提及的那篇讲 C++0x 的文章中说 C++0x 的标准中定义的内存模型是单线程的，从而导致很多那个时候的优化在多线程时可能会出现问题。</p>
+<p>对 C++ 新标准中的这类型具体细节不是很清楚，但是 C++11 既然提供了自身的线程库，我想应该是已经把这块的定义理的比较清楚了吧。</p>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2017/06/22/内存模型引发的思考.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2017/06/22/内存模型引发的思考.html';
+    var disqus_url = 'http://goclis.github.io/posts/2017/06/22/内存模型引发的思考.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2017/04/10/Call convention & Name mangling.html"><i class="fa fa-angle-left fa-fw"></i> Call convention & Name mangling</a>
+                    &nbsp;
+                    <a class="btn btn-default" href="/posts/2017/07/16/同步请求响应的实现.html">同步请求响应的实现 <i class="fa fa-angle-right fa-fw"></i></a>
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/cpu-huan-cun-yi-zhi-xing/index.html">CPU 缓存一致性</a>
+                        <a href="/tag/duo-xian-cheng-mo-xing/index.html">多线程模型</a>
+                        <a href="/tag/nei-cun-mo-xing/index.html">内存模型</a>
+                        <a href="/tag/volatile/index.html">volatile</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+            <p>
+                <a href="http://weibo.com/u/3312761102" title="My Weibo Profile" target="_blank"><i class="fa fa-weibo"></i> Weibo</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                    
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
+        
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
+        </script>
+    </body>
+</html>
