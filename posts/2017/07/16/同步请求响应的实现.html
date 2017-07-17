@@ -82,6 +82,8 @@
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
                             <time class="post-date" datetime="2017-07-16T18:11:00+08:00" title="2017-07-16T18:11:00+08:00"> 发布：2017-07-16</time>
+                             •
+                            <time class="post-date" datetime="2017-07-17T10:06:00+08:00" title="2017-07-17T10:06:00+08:00"> 更新：2017-07-17</time> 
                         </div>
                     </header>
                     <div class="post-content">
@@ -201,8 +203,7 @@
 <li>Req2 的 WaitThreadData 所在线程得到 CPU 时间，访问 TLS，获取数据；</li>
 <li>正确：Res2 响应了 Req2。</li>
 </ol>
-<p>这种恢复有个副作用，信号量被 POST 了两次，却只有一次成功的 WAIT，从而导致其中的值增加了 1，
-但是，由于每次获取数据时都要调用 WaitThreadData，这个副作用不会影响到响应的正确性。</p>
+<p>这种恢复有个副作用，信号量被 POST 了两次，却只有一次成功的 WAIT，从而导致其中的值增加了 1，但是，由于每次获取数据时都要调用 WaitThreadData，这个副作用不会影响到响应的正确性。</p>
 <p>为了改进这个问题，需要在 WAIT 得到数据后进行检查，判断它是否是所需要的数据。而为了能够判断，我们可以给每个请求都增加上序列号，并要求响应在回复的数据中也设置对应的序列号。序列号由 TLS 维护，保证能够标识该线程内的各个请求即可，此处直接利用了 64 位无符号数来代表（这个数真的是大啊）。</p>
 <p>最终版本如下：</p>
 <div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span>
@@ -253,20 +254,7 @@
     <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">RegisterThread</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">_threadId</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
-
-        <span class="k">auto</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_threadId</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">m_threads</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">==</span> <span class="n">iter</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">iter</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">make_pair</span><span class="p">(</span><span class="n">_threadId</span><span class="p">,</span> <span class="n">ThreadLocalStorage</span><span class="p">())).</span><span class="n">first</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="c1">// 检查是否有上一次请求的残留</span>
-        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">delete</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
-            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">[</span><span class="n">_threadId</span><span class="p">];</span>
         <span class="k">return</span> <span class="n">tls</span><span class="p">.</span><span class="n">curSeqNum</span><span class="o">++</span><span class="p">;</span>
     <span class="p">}</span>
 
@@ -294,18 +282,17 @@
             <span class="p">}</span>
 
             <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+            <span class="n">Packet</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
             <span class="c1">// 正确的序列号</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">==</span> <span class="n">_seqNum</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">==</span> <span class="n">_seqNum</span><span class="p">)</span>
             <span class="p">{</span>
-                <span class="n">Packet</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
-                <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
                 <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
             <span class="p">}</span>
 
             <span class="c1">// 序列号不相等，小于为正常情况，大于则为异常（因为此序列号是由发送端提供的）</span>
             <span class="kt">bool</span> <span class="n">exceptionFlag</span> <span class="o">=</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">&gt;</span> <span class="n">_seqNum</span><span class="p">);</span>
-            <span class="k">delete</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
-            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+            <span class="k">delete</span> <span class="n">data</span><span class="p">;</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">exceptionFlag</span><span class="p">)</span>
             <span class="p">{</span>
                 <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Impossible sequence number"</span><span class="p">);</span>
@@ -332,7 +319,7 @@
 <p>解释：</p>
 <ol>
 <li>RegisterThread 返回此报文应该附带的序列号。</li>
-<li>WaitThreadData 参数中指定了序列号，在获取数据后检查了得到的数据是否满足要求，不满足则继续 WAIT 直至满足。</li>
+<li>WaitThreadData 参数中指定了序列号，在获取数据后检查了得到的数据是否满足要求，不满足则继续 WAIT 直至满足。同时，这个检查的过程也修复了之前提到的信号量值的副作用。</li>
 </ol>
 <p>小小的总结下，这次改进主要是为了解决掉错位问题，并且追求最小的改动量，目前也只想到了这样的方法。如果要类比一个常见词汇的话，感觉这个问题的需求有点像同步 RPC。</p>
 <p>问了下实现过异步 RPC 的同学，其实也在请求中加入了 Request ID 这样的标识，从而在异步接收时才能判别该调用哪个回调方法。这期间我也猜了下浏览器可能的实现，觉得主流浏览器应该也是为每个 HTTP Request 分配相应标识（感觉可以用 SOCKET 句柄），在收到 Response 数据后，通过标识找到对应 Request，进而找到对应的 Tab，由 Tab 实例去负责处理数据。</p>
