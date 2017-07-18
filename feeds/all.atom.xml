@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-07-17T10:06:00+08:00</updated><entry><title>同步请求响应的实现</title><link href="http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html" rel="alternate"></link><updated>2017-07-17T10:06:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</id><summary type="html">&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-07-18T11:19:00+08:00</updated><entry><title>同步请求响应的实现</title><link href="http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html" rel="alternate"></link><updated>2017-07-18T11:19:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</id><summary type="html">&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
 
@@ -8,7 +8,7 @@
 &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;SendRequest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Packet&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;threadId&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;GetCurrentThreadId&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-    &lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;thrdId&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;threadId&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;threadId&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;threadId&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;network&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;SendData&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
     &lt;span class="n"&gt;Synchronizer&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;GetInstance&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;RegisterThread&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;threadId&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -157,9 +157,10 @@
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="k"&gt;nullptr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="p"&gt;{&lt;/span&gt;
             &lt;span class="k"&gt;delete&lt;/span&gt; &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;_data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;nullptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
         &lt;span class="p"&gt;}&lt;/span&gt;
 
+        &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;_data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
         &lt;span class="n"&gt;POST_SEMAPHORE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;semaphore&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 
@@ -184,7 +185,7 @@
         &lt;span class="p"&gt;}&lt;/span&gt;
 
         &lt;span class="k"&gt;auto&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;iter&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;do&lt;/span&gt;
+        &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="p"&gt;{&lt;/span&gt;
             &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ERROR&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;WAIT_SEMAPHORE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;semaphore&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_timeout&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
             &lt;span class="p"&gt;{&lt;/span&gt;
@@ -196,21 +197,21 @@
             &lt;span class="n"&gt;MutexLocker&lt;/span&gt; &lt;span class="n"&gt;locker&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m_mutex&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
             &lt;span class="n"&gt;Packet&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
             &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;nullptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;nullptr&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;continue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
             &lt;span class="c1"&gt;// 正确的序列号&lt;/span&gt;
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;seqNum&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;_seqNum&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="p"&gt;}&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;seqNum&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;_seqNum&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
             &lt;span class="c1"&gt;// 序列号不相等，小于为正常情况，大于则为异常（因为此序列号是由发送端提供的）&lt;/span&gt;
-            &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;exceptionFlag&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;seqNum&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;_seqNum&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-            &lt;span class="k"&gt;delete&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;exceptionFlag&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;seqNum&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;_seqNum&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
             &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="n"&gt;LOG&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WARNING&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"Impossible sequence number"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-                &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;nullptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                &lt;span class="n"&gt;LOG&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ERROR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"Exception"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
             &lt;span class="p"&gt;}&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="k"&gt;else&lt;/span&gt;
+            &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="n"&gt;LOG&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WARNING&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"Wrong data"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+            &lt;span class="k"&gt;delete&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
 
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;nullptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
@@ -220,7 +221,7 @@
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;threadId&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;GetCurrentThreadId&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
     &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;seqNum&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Synchonizer&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;GetInstance&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;RegisterThread&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;threadId&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;thrdId&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;threadId&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;threadId&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;threadId&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;seqNum&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;seqNum&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;network&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;Send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_req&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
@@ -232,6 +233,7 @@
 &lt;ol&gt;
 &lt;li&gt;RegisterThread 返回此报文应该附带的序列号。&lt;/li&gt;
 &lt;li&gt;WaitThreadData 参数中指定了序列号，在获取数据后检查了得到的数据是否满足要求，不满足则继续 WAIT 直至满足。同时，这个检查的过程也修复了之前提到的信号量值的副作用。&lt;/li&gt;
+&lt;li&gt;WaitThreadData 接收数据后加入了空判断，这是由于信号量返回和锁获取存在间隔导致的一个必要检查。举个不检查可能引起问题的场景：连续两个请求 Req1 和 Req2 的响应被 Res1 和 Res2 被判定为超时，它们都仍在路上，此时 Req3 发起，Res1 到来，信号量的 WAIT 被通过，在 WaitThreadData 获取锁之前，Res2 到来，信号量再次变为可触发的，WaitThreadData 发现 Res2 的序列号不对，抛弃并置空，进入下一个循环，显然，此时的 WAIT 可直接通过，但 data 字段是空的。解决方法就是跳过空的情况，等待下一次触发，即 Res3 的到来。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;小小的总结下，这次改进主要是为了解决掉错位问题，并且追求最小的改动量，目前也只想到了这样的方法。如果要类比一个常见词汇的话，感觉这个问题的需求有点像同步 RPC。&lt;/p&gt;
 &lt;p&gt;问了下实现过异步 RPC 的同学，其实也在请求中加入了 Request ID 这样的标识，从而在异步接收时才能判别该调用哪个回调方法。这期间我也猜了下浏览器可能的实现，觉得主流浏览器应该也是为每个 HTTP Request 分配相应标识（感觉可以用 SOCKET 句柄），在收到 Response 数据后，通过标识找到对应 Request，进而找到对应的 Tab，由 Tab 实例去负责处理数据。&lt;/p&gt;

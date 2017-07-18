@@ -83,7 +83,7 @@
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
                             <time class="post-date" datetime="2017-07-16T18:11:00+08:00" title="2017-07-16T18:11:00+08:00"> 发布：2017-07-16</time>
                              •
-                            <time class="post-date" datetime="2017-07-17T10:06:00+08:00" title="2017-07-17T10:06:00+08:00"> 更新：2017-07-17</time> 
+                            <time class="post-date" datetime="2017-07-18T11:19:00+08:00" title="2017-07-18T11:19:00+08:00"> 更新：2017-07-18</time> 
                         </div>
                     </header>
                     <div class="post-content">
@@ -96,7 +96,7 @@
 <span class="kt">void</span> <span class="nf">SendRequest</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_req</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
-    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">thrdId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
+    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">threadId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
     <span class="n">network</span><span class="o">-&gt;</span><span class="n">SendData</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">_req</span><span class="p">);</span>
 
     <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
@@ -245,9 +245,10 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
         <span class="p">{</span>
             <span class="k">delete</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
-            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
         <span class="p">}</span>
 
+        <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">_data</span><span class="p">;</span>
         <span class="n">POST_SEMAPHORE</span><span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">semaphore</span><span class="p">);</span>
     <span class="p">}</span>
 
@@ -272,7 +273,7 @@
         <span class="p">}</span>
 
         <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
-        <span class="k">do</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span>
         <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">ERROR</span> <span class="o">==</span> <span class="n">WAIT_SEMAPHORE</span><span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">_timeout</span><span class="p">))</span>
             <span class="p">{</span>
@@ -284,21 +285,21 @@
             <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
             <span class="n">Packet</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
             <span class="n">tls</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">nullptr</span> <span class="o">==</span> <span class="n">data</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
             <span class="c1">// 正确的序列号</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">==</span> <span class="n">_seqNum</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">==</span> <span class="n">_seqNum</span><span class="p">)</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
 
             <span class="c1">// 序列号不相等，小于为正常情况，大于则为异常（因为此序列号是由发送端提供的）</span>
-            <span class="kt">bool</span> <span class="n">exceptionFlag</span> <span class="o">=</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">&gt;</span> <span class="n">_seqNum</span><span class="p">);</span>
-            <span class="k">delete</span> <span class="n">data</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">exceptionFlag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">tls</span><span class="p">.</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">&gt;</span> <span class="n">_seqNum</span><span class="p">)</span>
             <span class="p">{</span>
-                <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Impossible sequence number"</span><span class="p">);</span>
-                <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+                <span class="n">LOG</span><span class="p">(</span><span class="n">ERROR</span><span class="p">,</span> <span class="s">"Exception"</span><span class="p">);</span>
             <span class="p">}</span>
-        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">LOG</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span> <span class="s">"Wrong data"</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">delete</span> <span class="n">data</span><span class="p">;</span>
+        <span class="p">}</span>
 
         <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
     <span class="p">}</span>
@@ -308,7 +309,7 @@
 <span class="p">{</span>
     <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
     <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">seqNum</span> <span class="o">=</span> <span class="n">Synchonizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
-    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">thrdId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
+    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">threadId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
     <span class="n">_req</span><span class="o">-&gt;</span><span class="n">seqNum</span> <span class="o">=</span> <span class="n">seqNum</span><span class="p">;</span>
     <span class="n">network</span><span class="o">-&gt;</span><span class="n">Send</span><span class="p">(</span><span class="n">_req</span><span class="p">);</span>
 
@@ -320,6 +321,7 @@
 <ol>
 <li>RegisterThread 返回此报文应该附带的序列号。</li>
 <li>WaitThreadData 参数中指定了序列号，在获取数据后检查了得到的数据是否满足要求，不满足则继续 WAIT 直至满足。同时，这个检查的过程也修复了之前提到的信号量值的副作用。</li>
+<li>WaitThreadData 接收数据后加入了空判断，这是由于信号量返回和锁获取存在间隔导致的一个必要检查。举个不检查可能引起问题的场景：连续两个请求 Req1 和 Req2 的响应被 Res1 和 Res2 被判定为超时，它们都仍在路上，此时 Req3 发起，Res1 到来，信号量的 WAIT 被通过，在 WaitThreadData 获取锁之前，Res2 到来，信号量再次变为可触发的，WaitThreadData 发现 Res2 的序列号不对，抛弃并置空，进入下一个循环，显然，此时的 WAIT 可直接通过，但 data 字段是空的。解决方法就是跳过空的情况，等待下一次触发，即 Res3 的到来。</li>
 </ol>
 <p>小小的总结下，这次改进主要是为了解决掉错位问题，并且追求最小的改动量，目前也只想到了这样的方法。如果要类比一个常见词汇的话，感觉这个问题的需求有点像同步 RPC。</p>
 <p>问了下实现过异步 RPC 的同学，其实也在请求中加入了 Request ID 这样的标识，从而在异步接收时才能判别该调用哪个回调方法。这期间我也猜了下浏览器可能的实现，觉得主流浏览器应该也是为每个 HTTP Request 分配相应标识（感觉可以用 SOCKET 句柄），在收到 Response 数据后，通过标识找到对应 Request，进而找到对应的 Tab，由 Tab 实例去负责处理数据。</p>

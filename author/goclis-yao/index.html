@@ -92,7 +92,7 @@
 <span class="kt">void</span> <span class="nf">SendRequest</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_req</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
-    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">thrdId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
+    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">threadId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
     <span class="n">network</span><span class="o">-&gt;</span><span class="n">SendData</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">_req</span><span class="p">);</span>
 
     <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
