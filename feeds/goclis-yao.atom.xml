@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/goclis-yao.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-07-18T11:19:00+08:00</updated><entry><title>同步请求响应的实现</title><link href="http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html" rel="alternate"></link><updated>2017-07-18T11:19:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</id><summary type="html">&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/goclis-yao.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-08-24T17:44:00+08:00</updated><entry><title>同步请求响应的实现</title><link href="http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html" rel="alternate"></link><updated>2017-08-24T17:44:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</id><summary type="html">&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
 
@@ -167,6 +167,10 @@
     &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;RegisterThread&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;_threadId&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="n"&gt;MutexLocker&lt;/span&gt; &lt;span class="n"&gt;locker&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m_mutex&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="c1"&gt;// 实际实现的时候，请务必注意此处，因为对一个不存在的 key 取下标的话，在 map 里会先进行 insert，&lt;/span&gt;
+        &lt;span class="c1"&gt;// 随后返回的时候可能会涉及到拷贝，而 TLS 对象里如果有信号量这种句柄的话，拷贝就必须自己稍微&lt;/span&gt;
+        &lt;span class="c1"&gt;// 操心一下了（必须手写拷贝构造和拷贝赋值函数来确定语义）。当然更通用地方式是使用指针作为值类型，&lt;/span&gt;
+        &lt;span class="c1"&gt;// 并且将此处修改成 find 检查结合 insert 操作。&lt;/span&gt;
         &lt;span class="k"&gt;auto&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;m_threads&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;_threadId&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;curSeqNum&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;

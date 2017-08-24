@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>http://goclis.github.io/</link><description></description><atom:link href="http://goclis.github.io/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Tue, 18 Jul 2017 11:19:00 +0800</lastBuildDate><item><title>同步请求响应的实现</title><link>http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html</link><description>&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logging</title><link>http://goclis.github.io/</link><description></description><atom:link href="http://goclis.github.io/feeds/goclis-yao.rss.xml" rel="self"></atom:link><lastBuildDate>Thu, 24 Aug 2017 17:44:00 +0800</lastBuildDate><item><title>同步请求响应的实现</title><link>http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html</link><description>&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
 
@@ -167,6 +167,10 @@
     &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;RegisterThread&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;_threadId&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="n"&gt;MutexLocker&lt;/span&gt; &lt;span class="n"&gt;locker&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m_mutex&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="c1"&gt;// 实际实现的时候，请务必注意此处，因为对一个不存在的 key 取下标的话，在 map 里会先进行 insert，&lt;/span&gt;
+        &lt;span class="c1"&gt;// 随后返回的时候可能会涉及到拷贝，而 TLS 对象里如果有信号量这种句柄的话，拷贝就必须自己稍微&lt;/span&gt;
+        &lt;span class="c1"&gt;// 操心一下了（必须手写拷贝构造和拷贝赋值函数来确定语义）。当然更通用地方式是使用指针作为值类型，&lt;/span&gt;
+        &lt;span class="c1"&gt;// 并且将此处修改成 find 检查结合 insert 操作。&lt;/span&gt;
         &lt;span class="k"&gt;auto&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;tls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;m_threads&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;_threadId&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;curSeqNum&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
@@ -237,7 +241,7 @@
 &lt;/ol&gt;
 &lt;p&gt;小小的总结下，这次改进主要是为了解决掉错位问题，并且追求最小的改动量，目前也只想到了这样的方法。如果要类比一个常见词汇的话，感觉这个问题的需求有点像同步 RPC。&lt;/p&gt;
 &lt;p&gt;问了下实现过异步 RPC 的同学，其实也在请求中加入了 Request ID 这样的标识，从而在异步接收时才能判别该调用哪个回调方法。这期间我也猜了下浏览器可能的实现，觉得主流浏览器应该也是为每个 HTTP Request 分配相应标识（感觉可以用 SOCKET 句柄），在收到 Response 数据后，通过标识找到对应 Request，进而找到对应的 Tab，由 Tab 实例去负责处理数据。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;如果这个问题有其他方式的实现可以解决的话，欢迎指教，谢谢！&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Tue, 18 Jul 2017 11:19:00 +0800</pubDate><guid>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</guid></item><item><title>内存模型引发的思考</title><link>http://goclis.github.io/posts/2017/06/22/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83.html</link><description>&lt;p&gt;昨天在看《深入理解 Java 虚拟机》，本来以为 12 章讲的内存模型指的是类似 C++ 对象模型的概念，可以在一个半小时内搞定，结果看到硬件上的一致性以及内存模型的概念时就发现触及自己的知识盲区了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果这个问题有其他方式的实现可以解决的话，欢迎指教，谢谢！&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Goclis Yao</dc:creator><pubDate>Thu, 24 Aug 2017 17:44:00 +0800</pubDate><guid>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</guid></item><item><title>内存模型引发的思考</title><link>http://goclis.github.io/posts/2017/06/22/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83.html</link><description>&lt;p&gt;昨天在看《深入理解 Java 虚拟机》，本来以为 12 章讲的内存模型指的是类似 C++ 对象模型的概念，可以在一个半小时内搞定，结果看到硬件上的一致性以及内存模型的概念时就发现触及自己的知识盲区了。&lt;/p&gt;
 &lt;h3 id="cpu"&gt;CPU 缓存一致性&lt;a class="headerlink" href="#cpu" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;首先是 CPU 缓存一致性，借一下书上的图。&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="https://ws1.sinaimg.cn/large/006tKfTcly1fgt3nsziz8j30tm0e0q4m.jpg"/&gt;&lt;/p&gt;

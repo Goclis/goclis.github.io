@@ -83,7 +83,7 @@
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
                             <time class="post-date" datetime="2017-07-16T18:11:00+08:00" title="2017-07-16T18:11:00+08:00"> 发布：2017-07-16</time>
                              •
-                            <time class="post-date" datetime="2017-07-18T11:19:00+08:00" title="2017-07-18T11:19:00+08:00"> 更新：2017-07-18</time> 
+                            <time class="post-date" datetime="2017-08-24T17:44:00+08:00" title="2017-08-24T17:44:00+08:00"> 更新：2017-08-24</time> 
                         </div>
                     </header>
                     <div class="post-content">
@@ -255,6 +255,10 @@
     <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">RegisterThread</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">_threadId</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="n">MutexLocker</span> <span class="n">locker</span><span class="p">(</span><span class="n">m_mutex</span><span class="p">);</span>
+        <span class="c1">// 实际实现的时候，请务必注意此处，因为对一个不存在的 key 取下标的话，在 map 里会先进行 insert，</span>
+        <span class="c1">// 随后返回的时候可能会涉及到拷贝，而 TLS 对象里如果有信号量这种句柄的话，拷贝就必须自己稍微</span>
+        <span class="c1">// 操心一下了（必须手写拷贝构造和拷贝赋值函数来确定语义）。当然更通用地方式是使用指针作为值类型，</span>
+        <span class="c1">// 并且将此处修改成 find 检查结合 insert 操作。</span>
         <span class="k">auto</span> <span class="o">&amp;</span><span class="n">tls</span> <span class="o">=</span> <span class="n">m_threads</span><span class="p">[</span><span class="n">_threadId</span><span class="p">];</span>
         <span class="k">return</span> <span class="n">tls</span><span class="p">.</span><span class="n">curSeqNum</span><span class="o">++</span><span class="p">;</span>
     <span class="p">}</span>
