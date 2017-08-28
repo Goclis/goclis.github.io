@@ -78,9 +78,49 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 16 篇文章 
+				        共 17 篇文章 
 				    </div>
 				</div>
+                <article id="openssl-rsa-basic-use" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html">Openssl-RSA简单使用</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2015-09-10T00:00:00+08:00" title="2015-09-10T00:00:00+08:00">2015-09-10</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>最近需要用到RSA的一些功能，出于方便，打算直接用openssl，但是在不同平台上使用openssl所需要做的工作还不一样，干脆就记个笔记整理一下。</p>
+<h3 id="windowsvs2013openssl">Windows下使用VS2013编译openssl源码<a class="headerlink" href="#windowsvs2013openssl" title="Permanent link">¶</a></h3>
+<p>源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。</p>
+<p>编译需要用到perl，去官网下个ActivePerl就可以了，为了往后在cmd中操作简单，最好安装时勾上加入PATH的选项。</p>
+<p>解压源码包，打开cmd进入该解压后的目录，执行如下命令：</p>
+<div class="highlight"><pre>perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
+</pre></div>
+<p>这是编译前必须执行的配置命令，可以自行根据所使用的编译工具以及平台的不同来选择不同的参数（具体可以查看解压后目录中的README以及一系列的INSTALL文件），稍微解释一下：</p>
+<ul>
+<li>VC-WIN32：表示希望使用VS来编译生成WIN32下使用的openssl库，还可以是其他的比如debug-VC-WIN32、VC-WIN64A等等。</li>
+<li>no-asm：表示编译不使用汇编语言文件，这样可以避免出现与NASM相关的错误。</li>
+<li>prefix：此参数后面的值用于指定编译结果的安装目录。</li>
+</ul>
+<p>使用VS编译会使用到VS的nmake、cl、link等工具，默认情况下这些工具是不在PATH里的，所以正常打开cmd是没法找到这些工具的 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2015/09/10/openssl-rsa-basic-use.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/openssl/index.html">Openssl</a>
+                            <a href="/tag/rsa/index.html">RSA</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="data-linker-layer-authentication" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -155,46 +195,6 @@
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/pptp/index.html">PPTP</a>
                             <a href="/tag/vpn/index.html">VPN</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="mov-with-memory" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html">mov指令与内存</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-08-08T16:00:00+08:00" title="2014-08-08T16:00:00+08:00">2014-08-08</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
-<div class="highlight"><pre><span class="nf">movl</span> <span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">),</span> <span class="nv">%eax</span>
-<span class="nf">imull</span> <span class="mi">8</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>
-<span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
-<span class="nf">movl</span> <span class="nv">%edx</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
-</pre></div>
-<p>代码的作用就是将两个数的乘积存回栈顶。代码没有问题，让我疑惑的是书上这两句话：</p>
-<blockquote>
-<p>存储两个寄存器的位置对小端机器来说是对的——寄存器 %edx 中的高位存在相对于 %eax 的低位偏移量为 4 的地方。
-栈是向低地址方向增长的，也就是说低位在栈顶。</p>
-</blockquote>
-<p>在考虑这两句话的时候，突然发现自己对 mov 的操作并不是特别的清楚，就去查了查，大致搞明白了一些。</p>
-<h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">¶</a></h3>
-<p>我们知道 mov 在 IA32 中有基础的三类操作，即 b，w，l。
-而 mov 在使用时大致如下：</p>
-<div class="highlight"><pre><span class="nf">movb ...</span></pre></div>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/08/08/mov-with-memory.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/hui-bian/index.html">汇编</a>
                         </div>
                         <div class="pull-right share">
                         </div>

@@ -78,9 +78,40 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 16 篇文章 
+				        共 17 篇文章 
 				    </div>
 				</div>
+                <article id="静态库与动态库的跨编译器兼容" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/05/26/静态库与动态库的跨编译器兼容.html">静态库与动态库的跨编译器兼容</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-05-26T20:49:28+08:00" title="2017-05-26T20:49:28+08:00">2017-05-26</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>由于当前项目维护的代码需要支持多个编译器，最近突然好奇为什么不直接在高版本的 VS 中直接使用低版本生成的库呢？起初以为是不可行，但是后面从理论上想了一下，感觉对于动态库来说应该可行，低版本生成的 DLL 依赖低版本的 C++ 运行时，高版本生成的可执行程序依赖高版本的 C++ 运行时，按照这样的设定应该没有任何问题才对。</p>
+<p>举个例子，VS2013 生成了动态库库 A.lib 和 A.dll，VS2015 中使用了 A.lib 生成 B.exe，让我们来看下最终的依赖情况（下面 C++ 运行时库的名字以 msvc 来代替）：</p>
+<ul>
+<li>B.exe 依赖于 A.dll 和 msvc2015.dll</li>
+<li>A.dll 依赖于 msvc2013.dll ...</li></ul>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/05/26/静态库与动态库的跨编译器兼容.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/dll/index.html">DLL</a>
+                            <a href="/tag/jing-tai-ku/index.html">静态库</a>
+                            <a href="/tag/visual-studio/index.html">Visual Studio</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="Call convention & Name mangling" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -151,47 +182,6 @@
                             <a href="/tag/cheng-yuan-han-shu-zhi-zhen/index.html">成员函数指针</a>
                             <a href="/tag/duo-ji-cheng/index.html">多继承</a>
                             <a href="/tag/thiszhi-zhen/index.html">this指针</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="fuck-the-gfw-with-shadowsocks" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html">和Shadowsocks一起科学上网</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-05-27T09:50:00+08:00" title="2016-05-27T09:50:00+08:00">2016-05-27</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
-这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。</p>
-<h3 id="vps">VPS搭建服务器<a class="headerlink" href="#vps" title="Permanent link">¶</a></h3>
-<p>稍微讲讲VPS的选择吧，一句话，<strong>你选的VPS所在的网络必须能够访问你的目标网站</strong>，比如你想通过VPS上Google，那选阿里云你就只会一脸懵逼了。</p>
-<p>穷人表示我用的是<a href="https://www.digitalocean.com">DigitalOcean</a>，还是最便宜的$5一个月那种，不过也够用了，流量好像是不限制的，带宽貌似是百兆，以下简称DO。</p>
-<p>额，毕竟不是软文也不是小白教程，就不截没必要的图了。Droplet选的Ubuntu 14.04，创建完毕后，DO会给你发邮件，里面有VPS的IP以及root用户的密码，用ssh工具（Windows下可以下载putty）连接上去进行如设置root密码等一系列基础的配置后即可：</p>
-<ul>
-<li>*unix: <code>ssh root@IP</code></li>
-<li>Windows: 在putty里填写IP，然后点击连接</li>
-</ul>
-<h4 id="ipv6">开启IPv6<a class="headerlink" href="#ipv6" title="Permanent link">¶</a></h4>
-<p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/digitalocean/index.html">DigitalOcean</a>
-                            <a href="/tag/shadowsocks/index.html">Shadowsocks</a>
-                            <a href="/tag/ubuntu/index.html">Ubuntu</a>
-                            <a href="/tag/vpn/index.html">VPN</a>
-                            <a href="/tag/vps/index.html">VPS</a>
                         </div>
                         <div class="pull-right share">
                         </div>

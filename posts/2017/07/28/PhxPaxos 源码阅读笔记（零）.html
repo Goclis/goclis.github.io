@@ -8,8 +8,9 @@
         <meta name="copyright" content="Goclis Yao" />
 
 
+<meta name="keywords" content="PhxPaxos, 分布式, 一致性算法, Tech, " />
 
-        <title>Tech
+        <title>PhxPaxos 源码阅读笔记（零）  | Logging
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -72,25 +73,17 @@
 <section class="content-wrap">
     <div class="container">
         <div class="row">
-            <main class="col-md-offset-1 col-md-10 main-content">
-            	<div class="cover tag-cover">
-				    <h3 class="tag-name">
-				        分类：Tech
-				    </h3>
-				    <div class="post-count">
-				        共 17 篇文章 
-				    </div>
-				</div>
+            <main class="col-md-8 main-content">
                 <article id="PhxPaxos 源码阅读笔记（零）" class="post">
-                    <div class="post-head">
+                    <header class="post-head">
                         <h1 class="post-title">
                             <a href="http://goclis.github.io/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html">PhxPaxos 源码阅读笔记（零）</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-07-28T20:20:00+08:00" title="2017-07-28T20:20:00+08:00">2017-07-28</time>
+                            <time class="post-date" datetime="2017-07-28T20:20:00+08:00" title="2017-07-28T20:20:00+08:00"> 发布：2017-07-28</time>
                         </div>
-                    </div>
+                    </header>
                     <div class="post-content">
                         <h2 id="_1">前言<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <p>其实之前就很想阅读 PhxPaxos 的源码来加深一下自己对 Paxos 的理解，但因为中途出差一个月加上前前后后的相关准备就搁置了，对于 Paxos 的理解一直停留在纸面上。最近阿里的 X-Paxos 宣传的很火，而自己也稍微闲了一些，就准备把阅读源码这个坑给填了。</p>
@@ -101,101 +94,99 @@
 <p>PhxPaxos 作者之一对于 Paxos 的介绍，至少读完前两篇：</p>
 <ol>
 <li><a href="https://zhuanlan.zhihu.com/p/21438357">Paxos理论介绍(1): 朴素Paxos算法理论推导与证明</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/21466932">Paxos理论介绍(2 ...</a></li></ol>
+<li><a href="https://zhuanlan.zhihu.com/p/21466932">Paxos理论介绍(2): Multi-Paxos与Leader</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21540239">Paxos理论介绍(3): Master选举</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22148265">Paxos理论介绍(4): 动态成员变更</a></li>
+</ol>
+<p>PhxPaxos 架构相关，必读：</p>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;mid=2247483695&amp;idx=1&amp;sn=91ea422913fc62579e020e941d1d059e#rd">微信团队对 PhxPaxos 的介绍</a></li>
+</ol>
+<p>PhxPaxos 源码阅读系列（@chenneal），建议配合源码食用：</p>
+<ol>
+<li><a href="http://chenneal.github.io/2017/03/16/phxpaxos%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8B%E4%B8%80%EF%BC%9A%E8%B5%B0%E9%A9%AC%E8%A7%82%E8%8A%B1/">一：走马观花</a></li>
+<li><a href="http://chenneal.github.io/2017/03/18/phxpaxos%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8B%E4%BA%8C%EF%BC%9A%E7%B2%AE%E8%8D%89%E5%85%88%E8%A1%8C/">二：粮草先行</a></li>
+<li><a href="http://chenneal.github.io/2017/03/26/phxpaxos%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8B%E4%B8%89%EF%BC%9A%E7%B2%89%E5%A2%A8%E7%99%BB%E5%9C%BA/">三：粉墨登场</a></li>
+<li><a href="http://chenneal.github.io/2017/03/30/phxpaxos%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8B%E5%9B%9B%EF%BC%9A%E5%90%84%E4%B8%AA%E5%87%BB%E7%A0%B4/">四：各个击破</a></li>
+<li><a href="http://chenneal.github.io/2017/04/04/phxpaxos%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8B%E4%BA%94%EF%BC%9A%E6%9A%97%E5%BA%A6%E9%99%88%E4%BB%93/">五：暗度陈仓</a></li>
+<li><a href="http://chenneal.github.io/2017/04/05/phxpaxos%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B9%8B%E5%85%AD%EF%BC%9A%E5%AE%8C%E7%BB%93%E7%AF%87/">六：完结篇</a></li>
+</ol>
+<h2 id="_3">本系列主要内容<a class="headerlink" href="#_3" title="Permanent link">¶</a></h2>
+<p>前置内容里也提到了 chenneal 写的源码阅读系列，我个人觉得他的系列对 PhxPaxos 的核心算法部分有了很好的解读了，如果读者是对这部分感兴趣的话，建议直接去阅读。</p>
+<p>这个系列，我将尽量把整个PhxPaxos 中的各部分都写写，包括：</p>
+<ul>
+<li>网络 I/O 模型</li>
+<li>状态机</li>
+<li>存储层</li>
+<li>核心算法</li>
+<li>Checkpoint</li>
+<li>Maybe more...</li>
+</ul>
+<p>后面如果有空的话可能会自己基于 PhxPaxos 实现一些示例，也会贴上来。因为目前 PhxPaxos 给出的三个示例中都没有实现 Checkpoint 相关的东西（也可能是我看漏了），只能够自己实现下加深理解。</p>
+<p>坑大概就挖到这里，慢慢填了。</p>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html';
+    var disqus_url = 'http://goclis.github.io/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
                     </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/fen-bu-shi/index.html">分布式</a>
-                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
-                            <a href="/tag/yi-zhi-xing-suan-fa/index.html">一致性算法</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
                 </article>
-                <article id="同步请求响应的实现" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/07/16/同步请求响应的实现.html">同步请求响应的实现</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-07-16T18:11:00+08:00" title="2017-07-16T18:11:00+08:00">2017-07-16</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p><em>声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。</em></p>
-<p>最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
-
-<span class="k">class</span> <span class="nc">Synchronizer</span> <span class="p">{};</span>
-
-<span class="kt">void</span> <span class="nf">SendRequest</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_req</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
-    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">threadId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
-    <span class="n">network</span><span class="o">-&gt;</span><span class="n">SendData</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">_req</span><span class="p">);</span>
-
-    <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
-    <span class="n">Packet</span> <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">WaitThreadData</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-<p>显然，WaitThreadData 的操作不能因为收不到对端响应就一直阻塞 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/07/16/同步请求响应的实现.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="内存模型引发的思考" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/06/22/内存模型引发的思考.html">内存模型引发的思考</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-06-22T19:30:00+08:00" title="2017-06-22T19:30:00+08:00">2017-06-22</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>昨天在看《深入理解 Java 虚拟机》，本来以为 12 章讲的内存模型指的是类似 C++ 对象模型的概念，可以在一个半小时内搞定，结果看到硬件上的一致性以及内存模型的概念时就发现触及自己的知识盲区了。</p>
-<h3 id="cpu">CPU 缓存一致性<a class="headerlink" href="#cpu" title="Permanent link">¶</a></h3>
-<p>首先是 CPU 缓存一致性，借一下书上的图。</p>
-<p><img alt="" src="https://ws1.sinaimg.cn/large/006tKfTcly1fgt3nsziz8j30tm0e0q4m.jpg"/></p>
-<p>现在的 CPU 基本上都是多核了，以 Intel i7 系列的处理器来说，每个核都有各自的寄存器组、L1 Cache、L2 Cache，多个核共享 L3 Cache，这里我们把 L1 和 L2 合起来统称为各个核的高速缓存。显然，各个核之间的高速缓存需要同步，否则如果两个核访问同一块内存时，就可能出现错误，因为它们对该内存的读写操作是直接作用于自己的高速缓存，而非主存，这就引入了 CPU 的缓存一致性协议。</p>
-<p>我对这块并没有了解过，在网上搜了一下，找到了一篇感觉还不错的文章：<a href="http://www.infoq.com/cn/articles/cache-coherency-primer">缓存一致性 ...</a></p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/06/22/内存模型引发的思考.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/cpu-huan-cun-yi-zhi-xing/index.html">CPU 缓存一致性</a>
-                            <a href="/tag/duo-xian-cheng-mo-xing/index.html">多线程模型</a>
-                            <a href="/tag/nei-cun-mo-xing/index.html">内存模型</a>
-                            <a href="/tag/volatile/index.html">volatile</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-
-<nav class="pagination" role="navigation">
-    <span class="page-number">第 1 页 ⁄ 共 6 页</span>
-        <a class="older-posts" href="/category/tech/page/2/"><i class="fa fa-angle-right"></i></a>
-</nav>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2017/07/16/同步请求响应的实现.html"><i class="fa fa-angle-left fa-fw"></i> 同步请求响应的实现</a>
+                    &nbsp;
+                </div>
             </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/fen-bu-shi/index.html">分布式</a>
+                        <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                        <a href="/tag/yi-zhi-xing-suan-fa/index.html">一致性算法</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+            <p>
+                <a href="http://weibo.com/u/3312761102" title="My Weibo Profile" target="_blank"><i class="fa fa-weibo"></i> Weibo</a>
+            </p>
+    </div>
+</div>            </aside>
         </div>
     </div>
 </section>
@@ -214,7 +205,7 @@
 </div>            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
         </div>
         
-        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
         <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
         <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
         </script>
@@ -241,5 +232,52 @@
                 
         </script>
 
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
+        </script>
     </body>
 </html>

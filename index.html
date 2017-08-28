@@ -73,6 +73,42 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="PhxPaxos 源码阅读笔记（零）" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html">PhxPaxos 源码阅读笔记（零）</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-07-28T20:20:00+08:00" title="2017-07-28T20:20:00+08:00">2017-07-28</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <h2 id="_1">前言<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<p>其实之前就很想阅读 PhxPaxos 的源码来加深一下自己对 Paxos 的理解，但因为中途出差一个月加上前前后后的相关准备就搁置了，对于 Paxos 的理解一直停留在纸面上。最近阿里的 X-Paxos 宣传的很火，而自己也稍微闲了一些，就准备把阅读源码这个坑给填了。</p>
+<p>PhxPaxos 的整体代码量不是很大，注释虽然不多，但是可读性还是非常高的，配合着那些日志代码以及官方博客中的模型介绍，基本上可以很容易地理解它的大部分内容。</p>
+<p>利用零零碎碎的晚上休息时间，大概用了快一周把代码读完了，就想着反正自己从中也学到了不少内容，干脆写一个系列的阅读笔记吧。这是我第一次尝试写一个系列，希望能够写的稍微有点条理吧，这篇博客算是挖坑了。不过最近依旧比较忙，尽可能保持比较快的速度更新吧。</p>
+<h2 id="_2">前置内容<a class="headerlink" href="#_2" title="Permanent link">¶</a></h2>
+<p>我自己并不是一上来就试图通过阅读 PhxPaxos 来理解 Paxos 的，所以肯定是必须有前置内容的，希望对本系列感兴趣的读者能够先看完下面这些相关的内容（如果后续某篇文章与前置内容无关的话，我会在文章开头标注）。</p>
+<p>PhxPaxos 作者之一对于 Paxos 的介绍，至少读完前两篇：</p>
+<ol>
+<li><a href="https://zhuanlan.zhihu.com/p/21438357">Paxos理论介绍(1): 朴素Paxos算法理论推导与证明</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21466932">Paxos理论介绍(2 ...</a></li></ol>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/fen-bu-shi/index.html">分布式</a>
+                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                            <a href="/tag/yi-zhi-xing-suan-fa/index.html">一致性算法</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="同步请求响应的实现" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -141,37 +177,6 @@
                             <a href="/tag/duo-xian-cheng-mo-xing/index.html">多线程模型</a>
                             <a href="/tag/nei-cun-mo-xing/index.html">内存模型</a>
                             <a href="/tag/volatile/index.html">volatile</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="静态库与动态库的跨编译器兼容" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/05/26/静态库与动态库的跨编译器兼容.html">静态库与动态库的跨编译器兼容</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-05-26T20:49:28+08:00" title="2017-05-26T20:49:28+08:00">2017-05-26</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>由于当前项目维护的代码需要支持多个编译器，最近突然好奇为什么不直接在高版本的 VS 中直接使用低版本生成的库呢？起初以为是不可行，但是后面从理论上想了一下，感觉对于动态库来说应该可行，低版本生成的 DLL 依赖低版本的 C++ 运行时，高版本生成的可执行程序依赖高版本的 C++ 运行时，按照这样的设定应该没有任何问题才对。</p>
-<p>举个例子，VS2013 生成了动态库库 A.lib 和 A.dll，VS2015 中使用了 A.lib 生成 B.exe，让我们来看下最终的依赖情况（下面 C++ 运行时库的名字以 msvc 来代替）：</p>
-<ul>
-<li>B.exe 依赖于 A.dll 和 msvc2015.dll</li>
-<li>A.dll 依赖于 msvc2013.dll ...</li></ul>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/05/26/静态库与动态库的跨编译器兼容.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/dll/index.html">DLL</a>
-                            <a href="/tag/jing-tai-ku/index.html">静态库</a>
-                            <a href="/tag/visual-studio/index.html">Visual Studio</a>
                         </div>
                         <div class="pull-right share">
                         </div>
