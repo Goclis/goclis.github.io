@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+<meta name="keywords" content="PhxPaxos, Tech, " />
+
+        <title>PhxPaxos 源码阅读笔记（一）：网络层  | Logging
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <div id="wrapper">
+            <header class="main-header" style="background-image: url(/images/background.png)" "=">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- start logo -->
+                            <a class="branding portrait" href="http://goclis.github.io" title="Logging">
+                                <img src="/images/panda.jpg" alt="Logging">
+                            </a>
+                            <!-- end logo -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <nav class="main-navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="navbar-header">
+                                <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                                </span>
+                            </div>
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="menu">
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                    <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                                </ul>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="PhxPaxos 源码阅读笔记（一）：网络层" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html">PhxPaxos 源码阅读笔记（一）：网络层</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-08-30T21:59:30+08:00" title="2017-08-30T21:59:30+08:00"> 发布：2017-08-30</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <div class="widget">
+                            <h4 class="title">目录</h4>
+                            <div class="content toc">
+                                <div class="toc">
+<ul>
+<li><a href="#_1">接口</a></li>
+<li><a href="#dfnetwork">默认实现：DFNetwork</a><ul>
+<li><a href="#udp">UDP</a></li>
+<li><a href="#event-eventloop">Event &amp; EventLoop</a></li>
+<li><a href="#tcp">TCP</a><ul>
+<li><a href="#tcpwrite">TcpWrite</a></li>
+<li><a href="#tcpread">TcpRead</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#msgtransport-communicate">算法消息接口：MsgTransport &amp; Communicate</a></li>
+<li><a href="#_2">结语</a></li>
+</ul>
+</div>
+                            </div>
+                        </div>
+                        
+<p><strong>本篇不需要前置内容。</strong></p>
+<p>我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。</p>
+<h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<p>对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">NetWork</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">NetWork</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">NetWork</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="c1">//Network must not send/recieve any message before paxoslib called this funtion.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">RunNetWork</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//If paxoslib call this function, network need to stop receive any message.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">StopNetWork</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SendMessageTCP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SendMessageUDP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//When receive a message, call this funtion.</span>
+    <span class="c1">//This funtion is async, just enqueue an return.</span>
+    <span class="kt">int</span> <span class="nf">OnReceiveMessage</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pcMessage</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iMessageLen</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">friend</span> <span class="k">class</span> <span class="nc">Node</span><span class="p">;</span>
+    <span class="n">Node</span> <span class="o">*</span> <span class="n">m_poNode</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+<p>除了启动和停止的接口，另外三个接口你就当做：</p>
+<ul>
+<li>SendMessageTCP：保证可靠的消息发送接口。</li>
+<li>SendMessageUDP：不保证可靠的消息发送接口。</li>
+<li>OnReceiveMessage：收到了消息的回调接口。</li>
+</ul>
+<p>对于 OnReceiveMessage 接口，默认实现是调用 Node 成员的 OnReceiveMessage 接口进行消息传递。如果用户自行实现了网络层的话，利用 Options::poNetwork 去传递自定义的网络层对象即可。</p>
+<p>为了简化用户使用，PhxPaxos 提供了默认的网络层实现，和这部分相关的代码基本都在 src/communicate 下，下图为相关的类图，下面将依次展开来讲。</p>
+<p><img alt="" src="https://ws2.sinaimg.cn/large/006tKfTcly1fj249s86zsj317c0igjvj.jpg"/></p>
+<h2 id="dfnetwork">默认实现：DFNetwork<a class="headerlink" href="#dfnetwork" title="Permanent link">¶</a></h2>
+<p>该类定义在 dfnetwork.h 和 dfnetwork.cpp 中，是一个默认的网络层实现，不知道这个 DF 是不是 default 的意思。。</p>
+<p>整个类中比较关键的是它的三个成员变量，所有消息的发送和接收都是交由它们处理：</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">DFNetwork</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Network</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="p">...</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">UDPRecv</span> <span class="n">m_oUDPRecv</span><span class="p">;</span>
+    <span class="n">UDPSend</span> <span class="n">m_oUDPSend</span><span class="p">;</span>
+    <span class="n">TcpIOThread</span> <span class="n">m_oTcpIOThread</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+<p>通过名字就可以很直观地理解，前两个负责 UDP 的接收和发送，第三个负责 TCP 相关的操作。</p>
+<h3 id="udp">UDP<a class="headerlink" href="#udp" title="Permanent link">¶</a></h3>
+<p>实现很简单，主要就是对 Socket 的操作进行了封装，设置一些相关的 Socket 选项，比如 UDPRecv 的 SO_REUSEADDR。</p>
+<p>UDPRecv 和 UDPSend 都是独立的线程：</p>
+<ul>
+<li>接收线程利用 poll 进行阻塞，调用 recvfrom 接收数据，然后利用保存在成员变量下的 DFNetwork 指针将收到的消息向上回调。</li>
+<li>发送线程利用队列同步队列实现消息的异步发送，DFNetwork 利用 UDPSend::AddMessage 将消息拷贝到队列中，随后由发送线程取出消息进行发送。</li>
+</ul>
+<p>实现过程中涉及的线程、锁、同步队列等系统相关的内容，大多基于 C++11 STL 封装或直接使用。如果个人有需要的话，完全可以拿出去单独使用。（哎，不能用 C++11 的项目实在有点惨。</p>
+<h3 id="event-eventloop">Event &amp; EventLoop<a class="headerlink" href="#event-eventloop" title="Permanent link">¶</a></h3>
+<p>在介绍 TCP 部分前，先讲一下 PhxPaxos 内部基于 epoll 封装的一些与事件循环相关的类。它们的用途之一就是为 DFNetwork 中的 TCP 部分服务。</p>
+<p>如果用过 epoll 或者 libevent 的读者可能可以比较容易地理解 PhxPaxos 这块的设计。大致的流程就是把数据、通知这样的行为封装成 Event，然后交由 EventLoop 去执行。</p>
+<p>在实现上，PhxPaxos 为 Event 基类定义了两个具体的子类：MessageEvent 和 Notify。其中前者对应于数据的读写任务，内部逻辑较复杂。后者的用途是提供一个唤醒调用事件循环线程的接口，基于管道和 EPOLLIN 事件实现，通过源码很容易理解。</p>
+<p>关于 Event 的添加、移除和修改，因为基本上是封装 epoll 并记录一些上下文信息，出于篇幅，此处就忽略了。除了 Event 以外，EventLoop 还提供了设置定时器的接口，但这部分我们留到后头再去讲，此处暂时忽略。</p>
+<p>EventLoop 类本身不提供任何的执行线程，需要由外部线程去调用 EventLoop::StartLoop 开始进行事件循环处理。这里结合代码稍微讲一下事件循环相关的逻辑：</p>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">EventLoop</span> <span class="o">::</span> <span class="n">StartLoop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// 实际上和我们平时写 Thread::Run 的结构差不多，只是交由外部线程去调用而已。</span>
+    <span class="n">m_bIsEnd</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// BP 实际上是一个 PhxPaxos 提供的监控功能，为一些关键操作都提供了接口，</span>
+        <span class="c1">// 出于简洁，往后的代码中将不再贴出这些内容。</span>
+        <span class="n">BP</span><span class="o">-&gt;</span><span class="n">GetNetworkBP</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">TcpEpollLoop</span><span class="p">();</span>
+
+        <span class="c1">// 处理定时器的超时。</span>
+        <span class="kt">int</span> <span class="n">iNextTimeout</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+        <span class="n">DealwithTimeout</span><span class="p">(</span><span class="n">iNextTimeout</span><span class="p">);</span>
+
+        <span class="c1">// 事件循环主逻辑。</span>
+        <span class="n">OneLoop</span><span class="p">(</span><span class="n">iNextTimeout</span><span class="p">);</span>
+
+        <span class="c1">//deal with accept fds</span>
+        <span class="c1">// 与 TCP 接受连接和数据相关的逻辑。</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_poTcpAcceptor</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_poTcpAcceptor</span><span class="o">-&gt;</span><span class="n">CreateEvent</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="c1">// 与 TCP 数据发送相关的逻辑。</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_poTcpClient</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_poTcpClient</span><span class="o">-&gt;</span><span class="n">DealWithWrite</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_bIsEnd</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">PLHead</span><span class="p">(</span><span class="s">"TCP.EventLoop [END]"</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">EventLoop</span> <span class="o">::</span> <span class="n">OneLoop</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iTimeoutMs</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 利用 epoll_wait 去等待时间响应，最后一个参数指定了超时（1 ms）。</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">epoll_wait</span><span class="p">(</span><span class="n">m_iEpollFd</span><span class="p">,</span> <span class="n">m_EpollEvents</span><span class="p">,</span> <span class="n">MAX_EVENTS</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">EINTR</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">PLErr</span><span class="p">(</span><span class="s">"epoll_wait fail, errno %d"</span><span class="p">,</span> <span class="n">errno</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 存在可处理的 epoll 事件，进行处理。</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">iFd</span> <span class="o">=</span> <span class="n">m_EpollEvents</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">.</span><span class="n">fd</span><span class="p">;</span>
+        <span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_mapEvent</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">iFd</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">==</span> <span class="n">end</span><span class="p">(</span><span class="n">m_mapEvent</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// poEvent 是添加事件时加入的上下文对象。</span>
+        <span class="kt">int</span> <span class="n">iEvents</span> <span class="o">=</span> <span class="n">m_EpollEvents</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">events</span><span class="p">;</span>
+        <span class="n">Event</span> <span class="o">*</span> <span class="n">poEvent</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">m_poEvent</span><span class="p">;</span>
+
+        <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">iEvents</span> <span class="o">&amp;</span> <span class="n">EPOLLERR</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">OnError</span><span class="p">(</span><span class="n">iEvents</span><span class="p">,</span> <span class="n">poEvent</span><span class="p">);</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">try</span>
+        <span class="p">{</span>
+            <span class="c1">// 缓冲区有数据，调用 OnRead，由事件对象处理。</span>
+            <span class="c1">// 这里可能是数据到来，也可能是一个新的连接到来。</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">iEvents</span> <span class="o">&amp;</span> <span class="n">EPOLLIN</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">poEvent</span><span class="o">-&gt;</span><span class="n">OnRead</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="c1">// 缓冲区可写，调用 OnWrite，由事件对象处理。</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">iEvents</span> <span class="o">&amp;</span> <span class="n">EPOLLOUT</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">poEvent</span><span class="o">-&gt;</span><span class="n">OnWrite</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(...)</span>
+        <span class="p">{</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">OnError</span><span class="p">(</span><span class="n">iEvents</span><span class="p">,</span> <span class="n">poEvent</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>其中 EventLoop::StartLoop 中和 TCP 的发送和接收相关的逻辑，我们放到下一节。</p>
+<h3 id="tcp">TCP<a class="headerlink" href="#tcp" title="Permanent link">¶</a></h3>
+<p>TCP 稍微比较复杂，因为 Network 对于 TCP 接口的要求也是以消息为单位的，所以在实现的时候需要对 TCP 的流模式进行一些相应的封装。</p>
+<p>在类 TcpIOThread 中有 TcpRead 和 TcpWrite 两个成员变量，和 UDP 中提到的 UDPRecv 和 UDPSend 有些类似，它们也有着各自独立的线程，分别处理接收和发送的任务。</p>
+<p>TcpWrite 和 TcpRead 的成员变量中都包含了一个 EventLoop 对象，为了使用 EventLoop 进行事件循环，它们都继承了共同的 Thread 父类，重写了 run 函数来调用 EventLoop::StartLoop，进入事件循环状态。</p>
+<h4 id="tcpwrite">TcpWrite<a class="headerlink" href="#tcpwrite" title="Permanent link">¶</a></h4>
+<p>可能是为了简化 TcpWrite 中的逻辑，TcpWrite 的成员变量中包括了一个额外的 TcpClient 对象，将所有的操作（其实也就一个 AddMessage）都委托给该类负责，TcpClient 使用 TcpWrite 内部的 EventLoop 对象来进行初始化，同时 TcpWrite 对象在构造时将 TcpClient 对象利用 EventLoop::SetTcpClient 这个接口注册到 EventLoop 中。</p>
+<p>下面结合代码简述下 TcpClient 利用事件循环来发送数据的过程：</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">AddMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIP</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 将发送消息的任务转换为一个 MessageEvent，GetEvent 是内部函数。</span>
+    <span class="n">MessageEvent</span> <span class="o">*</span> <span class="n">poEvent</span> <span class="o">=</span> <span class="n">GetEvent</span><span class="p">(</span><span class="n">sIP</span><span class="p">,</span> <span class="n">iPort</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">poEvent</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PLErr</span><span class="p">(</span><span class="s">"no event created for this ip %s port %d"</span><span class="p">,</span> <span class="n">sIP</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">iPort</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 真正开始进行的发送任务入列。</span>
+    <span class="k">return</span> <span class="n">poEvent</span><span class="o">-&gt;</span><span class="n">AddMessage</span><span class="p">(</span><span class="n">sMessage</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">MessageEvent</span> <span class="o">*</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">GetEvent</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIP</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 根据消息的目标 IP 和端口号构建出一个 64 位的唯一事件 ID，从而保证每个目标（连接）</span>
+    <span class="c1">// 拥有唯一一个与之对应的 MessageEvent 对象。</span>
+    <span class="kt">uint32_t</span> <span class="n">iIP</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">inet_addr</span><span class="p">(</span><span class="n">sIP</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="kt">uint64_t</span> <span class="n">llNodeID</span> <span class="o">=</span> <span class="p">(((</span><span class="kt">uint64_t</span><span class="p">)</span><span class="n">iIP</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">iPort</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">oLockGuard</span><span class="p">(</span><span class="n">m_oMutex</span><span class="p">);</span>
+
+    <span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_mapEvent</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">llNodeID</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">end</span><span class="p">(</span><span class="n">m_mapEvent</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">CreateEvent</span><span class="p">(</span><span class="n">llNodeID</span><span class="p">,</span> <span class="n">sIP</span><span class="p">,</span> <span class="n">iPort</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">MessageEvent</span> <span class="o">*</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">CreateEvent</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llNodeID</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIP</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 创建 Socket 并连接目标，随后创建发送类型（MessageEventType_SEND）的 MessageEvent 对象。</span>
+    <span class="n">Socket</span> <span class="n">oSocket</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="n">oSocket</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="n">oAddr</span><span class="p">);</span>
+
+    <span class="n">MessageEvent</span> <span class="o">*</span> <span class="n">poEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MessageEvent</span><span class="p">(</span><span class="n">MessageEventType_SEND</span><span class="p">,</span> <span class="n">oSocket</span><span class="p">.</span><span class="n">detachSocketHandle</span><span class="p">(),</span> 
+            <span class="n">oAddr</span><span class="p">,</span> <span class="n">m_poEventLoop</span><span class="p">,</span> <span class="n">m_poNetWork</span><span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">poEvent</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+    <span class="n">m_mapEvent</span><span class="p">[</span><span class="n">llNodeID</span><span class="p">]</span> <span class="o">=</span> <span class="n">poEvent</span><span class="p">;</span>
+    <span class="n">m_vecEvent</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">poEvent</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">poEvent</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">AddMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 逻辑非常清楚：更新活动时间、检查队列状态、插入队列、尝试唤醒事件循环线程。</span>
+    <span class="n">m_llLastActiveTime</span> <span class="o">=</span> <span class="n">Time</span><span class="o">::</span><span class="n">GetSteadyClockMS</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">oLock</span><span class="p">(</span><span class="n">m_oMutex</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">m_oInQueue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">TCP_QUEUE_MAXLEN</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_iQueueMemSize</span> <span class="o">&gt;</span> <span class="n">MAX_QUEUE_MEM_SIZE</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">QueueData</span> <span class="n">tData</span><span class="p">;</span>
+    <span class="n">tData</span><span class="p">.</span><span class="n">llEnqueueAbsTime</span> <span class="o">=</span> <span class="n">Time</span><span class="o">::</span><span class="n">GetSteadyClockMS</span><span class="p">();</span>
+    <span class="n">tData</span><span class="p">.</span><span class="n">psValue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="n">sMessage</span><span class="p">);</span>
+    <span class="n">m_oInQueue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">tData</span><span class="p">);</span>
+
+    <span class="n">m_iQueueMemSize</span> <span class="o">+=</span> <span class="n">sMessage</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+    <span class="n">oLock</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+
+    <span class="c1">// 该调动向 EventLoop 中添加一个简单的 Notify 事件，以唤醒可能处于阻塞的事件循环线程。</span>
+    <span class="n">JumpoutEpollWait</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>感觉代码写的非常清楚了：TcpClient 中的主要逻辑是为根据消息的目标为待发送的消息选择对应的（不存在则创建）MessageEvent 对象，然后将消息加入到该对象中的发送队列（如果没超过长度或内存使用限制）中，随后利用 Notify 事件提供的接口唤醒可能处于阻塞状态的事件循环线程。</p>
+<p>介绍完消息是如何加入队列的，我们来看看队列中的内容如何发送出去的。前面我们提到了，TcpWrite 的线程是用于调用它关联的 EventLoop 对象的，所以核心就在于 EventLoop 的 StartLoop 中，上一节我们提到了 StartLoop 中的 while 循环通过不断地调用 OneLoop 来处理处于 Ready 状态的事件，将它们分发给各自对应的处理函数。所以关键就在于这些事件的来源了。</p>
+<p>对于 TcpWrite 的 EventLoop 而言，OneLoop 中的这些事件来源于 TcpClient，所以每次 StartLoop 在执行完 OneLoop 之后，都会调用 TcpClient::DealWithWrite 去检查是否需要往事件循环中添加新的事件，代码如下：</p>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">DealWithWrite</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// 逻辑很简单，调用各个 MessageEvent 的 OpenWrite，由它们自己去</span>
+    <span class="c1">// 添加所需要进行的写事件。</span>
+    <span class="kt">size_t</span> <span class="n">iSize</span> <span class="o">=</span> <span class="n">m_vecEvent</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">iSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m_vecEvent</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">OpenWrite</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">OpenWrite</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// 如果消息队列非空，添加 EPOLLOUT 事件表示有数据要发送，从而当发生缓冲区非满时，</span>
+    <span class="c1">// epoll_wait 会返回该事件并调用 MessageEvent::OnWrite 开始尝试数据发送。</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_oInQueue</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">IsDestroy</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">// 进行必要的重连。</span>
+            <span class="n">ReConnect</span><span class="p">();</span>
+            <span class="n">m_bIsDestroy</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">AddEvent</span><span class="p">(</span><span class="n">EPOLLOUT</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>在继续描述 OnWrite 中的发送逻辑前，看这段代码的时候我有一点奇怪：<strong>在这两个方法中访问 m_vecEvent 和 m_oInQueue 时，没有任何的同步操作，而在其他如 TcpClient::GetEvent 和 MessageEvent::AddMessage 中，我们是可以看到锁操作的</strong>。</p>
+<p>m_oInQueue 这个可能还好，empty 方法如果是直接根据 size 成员变量计算得到结果的话，这里至多因为 size 的更新没有同步而返回一个错误值，最多就是误添加了一个 EPOLLOUT 事件，后续的逻辑应该能够正确处理。</p>
+<p>但是 m_vecEvent 的话，这里是在 TcpWrite 的线程中进行访问，如果此时用户线程调用 AddMessage，是由可能会进入到 CreateEvent 中执行 <code>m_vecEvent.push_back(poEvent);</code> 这样一条语句的，这个操作是有可能导致 vector 扩容的，从而 TcpWrite 线程中的访问操作可能会发生异常。</p>
+<p><strong>不能确定这是否是个潜在 bug，截止我写这篇博客的时候，Github 仓库中的代码依旧是这样。</strong></p>
+<p>抛开上面那个，继续看看 MessageEvent 在被 epoll_wait 返回并回调 OnWrite 后是如何发送消息的：</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">OnWrite</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// while 循环的两个条件分别表示：发送队列非空、上一次的消息未发送完，</span>
+    <span class="c1">// 调用 DoOnWrite 进行真实的发送操作。</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m_oInQueue</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">m_iLeftWriteLen</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">DoOnWrite</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">//need break, wait next write</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">WriteDone</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">DoOnWrite</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// 上一次的消息未发送完毕。</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_iLeftWriteLen</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">WriteLeft</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 从队列中取出一条新消息来执行发送。</span>
+    <span class="n">m_oMutex</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_oInQueue</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">m_oMutex</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">QueueData</span> <span class="n">tData</span> <span class="o">=</span> <span class="n">m_oInQueue</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="n">m_oInQueue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="n">m_iQueueMemSize</span> <span class="o">-=</span> <span class="n">tData</span><span class="p">.</span><span class="n">psValue</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">m_oMutex</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+
+    <span class="c1">// 计算一下消息从入队列到被处理的延时，如果太长就抛弃掉。</span>
+    <span class="p">...</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">*</span> <span class="n">poMessage</span> <span class="o">=</span> <span class="n">tData</span><span class="p">.</span><span class="n">psValue</span><span class="p">;</span>
+    <span class="kt">uint64_t</span> <span class="n">llNowTime</span> <span class="o">=</span> <span class="n">Time</span><span class="o">::</span><span class="n">GetSteadyClockMS</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">iDelayMs</span> <span class="o">=</span> <span class="n">llNowTime</span> <span class="o">&gt;</span> <span class="n">tData</span><span class="p">.</span><span class="n">llEnqueueAbsTime</span> <span class="o">?</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">llNowTime</span> <span class="o">-</span> <span class="n">tData</span><span class="p">.</span><span class="n">llEnqueueAbsTime</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">BP</span><span class="o">-&gt;</span><span class="n">GetNetworkBP</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">TcpOutQueue</span><span class="p">(</span><span class="n">iDelayMs</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iDelayMs</span> <span class="o">&gt;</span> <span class="n">TCP_OUTQUEUE_DROP_TIMEMS</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">poMessage</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 计算所需的发送缓冲区长度，需要加入一个 4 字节放在头部表示消息长度，</span>
+    <span class="c1">// 随后申请缓冲区，并将长度和消息内容拷贝到缓冲区中。</span>
+    <span class="kt">int</span> <span class="n">iBuffLen</span> <span class="o">=</span> <span class="n">poMessage</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">niBuffLen</span> <span class="o">=</span> <span class="n">htonl</span><span class="p">(</span><span class="n">iBuffLen</span> <span class="o">+</span> <span class="mi">4</span><span class="p">);</span>
+
+    <span class="c1">// 第二次用户态拷贝，感觉可以优化成记录一个长度，并把 poMessage 的内存管理直接转移到本类。</span>
+    <span class="c1">// 不过这样实现的话代码可读性会下降，无法用同一段逻辑处理消息长度和消息内容。</span>
+    <span class="kt">int</span> <span class="n">iLen</span> <span class="o">=</span> <span class="n">iBuffLen</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">m_oWriteCacheBuffer</span><span class="p">.</span><span class="n">Ready</span><span class="p">(</span><span class="n">iLen</span><span class="p">);</span>
+    <span class="n">memcpy</span><span class="p">(</span><span class="n">m_oWriteCacheBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">niBuffLen</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">memcpy</span><span class="p">(</span><span class="n">m_oWriteCacheBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">()</span> <span class="o">+</span> <span class="mi">4</span><span class="p">,</span> <span class="n">poMessage</span><span class="o">-&gt;</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">iBuffLen</span><span class="p">);</span>
+
+    <span class="n">m_iLeftWriteLen</span> <span class="o">=</span> <span class="n">iLen</span><span class="p">;</span>
+    <span class="n">m_iLastWritePos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">delete</span> <span class="n">poMessage</span><span class="p">;</span>
+
+    <span class="c1">// 开始尝试发送消息，因为可能消息过大无法一次递交到内核缓冲区，下面的逻辑需要根据</span>
+    <span class="c1">// 返回值来更新相关的状态变量。</span>
+    <span class="kt">int</span> <span class="n">iWriteLen</span> <span class="o">=</span> <span class="n">m_oSocket</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">m_oWriteCacheBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">(),</span> <span class="n">iLen</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iWriteLen</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PLErr</span><span class="p">(</span><span class="s">"fail, write len %d ip %s port %d"</span><span class="p">,</span>
+                <span class="n">iWriteLen</span><span class="p">,</span> <span class="n">m_oAddr</span><span class="p">.</span><span class="n">getHost</span><span class="p">().</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">m_oAddr</span><span class="p">.</span><span class="n">getPort</span><span class="p">());</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 缓冲区满，添加 EPOLLOUT 等待缓冲区非满事件。</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iWriteLen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//need wait next write</span>
+        <span class="n">AddEvent</span><span class="p">(</span><span class="n">EPOLLOUT</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">iWriteLen</span> <span class="o">==</span> <span class="n">iLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m_iLeftWriteLen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">m_iLastWritePos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="c1">//write done</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">iWriteLen</span> <span class="o">&lt;</span> <span class="n">iLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m_iLastWritePos</span> <span class="o">=</span> <span class="n">iWriteLen</span><span class="p">;</span>
+        <span class="n">m_iLeftWriteLen</span> <span class="o">=</span> <span class="n">iLen</span> <span class="o">-</span> <span class="n">iWriteLen</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">WriteDone</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">RemoveEvent</span><span class="p">(</span><span class="n">EPOLLOUT</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">WriteLeft</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// 和 DoOnWrite 的后半段类似，向内核缓冲区中添加数据，并更新状态变量。</span>
+    <span class="kt">int</span> <span class="n">iWriteLen</span> <span class="o">=</span> <span class="n">m_oSocket</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">m_oWriteCacheBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">()</span> <span class="o">+</span> <span class="n">m_iLastWritePos</span><span class="p">,</span> <span class="n">m_iLeftWriteLen</span><span class="p">);</span>
+    <span class="c1">//PLImp("writelen %d", iWriteLen);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iWriteLen</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> 
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">iWriteLen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//no buffer to write, wait next epoll_wait</span>
+        <span class="c1">//need wait next write</span>
+        <span class="n">AddEvent</span><span class="p">(</span><span class="n">EPOLLOUT</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">m_iLeftWriteLen</span> <span class="o">-=</span> <span class="n">iWriteLen</span><span class="p">;</span>
+    <span class="n">m_iLastWritePos</span> <span class="o">+=</span> <span class="n">iWriteLen</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_iLeftWriteLen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m_iLeftWriteLen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">m_iLastWritePos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>看起来很复杂，实际上就是为了在 TCP 的流模式上封装得到消息模式：</p>
+<ul>
+<li>为了记录消息的长度，在每一个消息前都加入了 4 个字节的内容来表示消息的长度。</li>
+<li>因为发送的消息可能很大，所以 send 操作可能会导致内核的发送缓冲区满而返回 0，所以使用了 m_iLeftWriteLen 和 m_iLastWritePos 来记录当前消息的发送状态。</li>
+<li>在 DoOnWrite 和 WriteLeft 中也都有相应的处理缓冲区满操作：在返回长度为 0 时，添加一个 EPOLLOUT 事件等待下一次的事件循环并返回 1 表示本次不再尝试发送。</li>
+<li>WriteDone 方法中移除 EPOLLOUT 事件，如果还有下一个消息的话，会再次添加 EPOLLIN 事件的。</li>
+</ul>
+<h4 id="tcpread">TcpRead<a class="headerlink" href="#tcpread" title="Permanent link">¶</a></h4>
+<p>感觉 TcpWrite 写的有点多啊，都快把源码都贴上来了 = =#，这部分就稍微简化下吧。</p>
+<p>TcpRead 和 TcpWrite 很类似，成员变量除了 EventLoop 以外有一个与 TcpClient 对应的 TcpAcceptor，再看看 EventLoop 提供的 SetTcpAcceptor 和 StartLoop 方法中的 <code>m_poTcpAcceptor-&gt;CreateEvent();</code> 语句，就可以很容易想到了它和 TcpWrite 的整个路径是差不多的。</p>
+<p>但是，TcpAcceptor 不同于 TcpClient，因为作为 TCP 接收端，有一个很重要的点就是要先接受连接，所以 TcpAcceptor 继承至 Thread，在该线程中结合 poll 来接受对端发来的连接，并将它们构造成 AcceptData，插入到待处理的队列中。而这些数据将在事件循环线程调用 <strong>TcpAcceptor::CreateEvent</strong> 时被处理，过程和 TcpClient::AddMessage 类似：</p>
+<ol>
+<li>根据从队列中取出的 AcceptData，创建接收类型（MessageEventType_RECV）的 MessageEvent 对象。</li>
+<li>以该对象注册 EPOLLIN 事件到事件循环中，从而接收数据。</li>
+</ol>
+<p>显然，数据的接收过程也被放到了 MessageEvent 中，因为是 EPOLLIN 事件，EventLoop 会回调事件的 OnRead 方法，相似地，存在 ReadLeft 和 ReadDone 这两个方法。</p>
+<p>MessageEvent 中读取的过程大致如下（就不贴代码只写逻辑所属的方法名了）：</p>
+<ol>
+<li>OnRead：读取前 4 个字节以获取消息长度，这里可能会分多次读取，所以 MessageEvent 中使用了 m_iLastReadHeadPos 这样一个变量来应对这种情况。</li>
+<li>OnRead：当获取到长度后，准备读取缓冲区，并使用读取到的长度设置 m_iLeftReadLen 变量。</li>
+<li>OnRead：尝试进行一次读取，如果未读取完成的话，利用已读到的长度更新 m_iLeftReadLen 变量。</li>
+<li>ReadLeft：根据 m_iLeftReadLen 读取剩余的内容，如果未读完就等待下一次，如果已读完，调用 ReadDone。</li>
+<li>ReadDone：将完整的缓冲区通过 Network::OnReceiveMessage 接口回调给用户。</li>
+</ol>
+<p>不贴代码果然短了很多啊。</p>
+<h2 id="msgtransport-communicate">算法消息接口：MsgTransport &amp; Communicate<a class="headerlink" href="#msgtransport-communicate" title="Permanent link">¶</a></h2>
+<p>可能是出于屏蔽以及方便使用，PhxPaxos 并没有直接为算法层的角色提供网络层，而是通过一个叫 MsgTransport 的接口类提供了一些接口方法，如下：</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MsgTransport</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">MsgTransport</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SendMessage</span><span class="p">(</span><span class="k">const</span> <span class="kt">nodeid_t</span> <span class="n">iSendtoNodeID</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+            <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">BroadcastMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+            <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">BroadcastMessageFollower</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+            <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">BroadcastMessageTempNode</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+            <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+<p>显然，这些接口可以简化算法层的使用，不过对于 Broadcast 而言，像 Follower 和 TempNode 这些东西就需要由实现者去确定了。</p>
+<p>PhxPaxos 内部的 Communicate 类实现了这个接口，该类的构造需要接受一个 Config 对象，该类对象中包含了所有 Broadcast 操作所需要使用的节点信息，这块涉及到算法运行层面，此处就暂时忽略了。</p>
+<h2 id="_2">结语<a class="headerlink" href="#_2" title="Permanent link">¶</a></h2>
+<p>完全没想到这篇东西会花这么长时间，昨天晚上开始写的（囧因此忘掉了腾讯的模拟笔试），然后今晚补完了，前后大概用了快 5 个小时吧。可能一方面是因为在写的时候基本又重看了一遍源码来确保不出太大的问题，另一方面感觉是写的过于细了。。。</p>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html';
+    var disqus_url = 'http://goclis.github.io/posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html"><i class="fa fa-angle-left fa-fw"></i> PhxPaxos 源码阅读笔记（零）</a>
+                    &nbsp;
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+            <p>
+                <a href="http://weibo.com/u/3312761102" title="My Weibo Profile" target="_blank"><i class="fa fa-weibo"></i> Weibo</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                    
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
+        
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
+        </script>
+    </body>
+</html>
