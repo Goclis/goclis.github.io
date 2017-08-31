@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-08-30T21:59:30+08:00</updated><entry><title>PhxPaxos 源码阅读笔记（一）：网络层</title><link href="http://goclis.github.io/posts/2017/08/30/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82.html" rel="alternate"></link><updated>2017-08-30T21:59:30+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-08-30:posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html</id><summary type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/all.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-08-31T16:19:20+08:00</updated><entry><title>PhxPaxos 源码阅读笔记（一）：网络层</title><link href="http://goclis.github.io/posts/2017/08/30/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82.html" rel="alternate"></link><updated>2017-08-31T16:19:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-08-30:posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html</id><summary type="html">
 &lt;p&gt;&lt;strong&gt;本篇不需要前置内容。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。&lt;/p&gt;
 &lt;h2 id="_1"&gt;接口&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
@@ -285,8 +285,9 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在继续描述 OnWrite 中的发送逻辑前，看这段代码的时候我有一点奇怪：&lt;strong&gt;在这两个方法中访问 m_vecEvent 和 m_oInQueue 时，没有任何的同步操作，而在其他如 TcpClient::GetEvent 和 MessageEvent::AddMessage 中，我们是可以看到锁操作的&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;m_oInQueue 这个可能还好，empty 方法如果是直接根据 size 成员变量计算得到结果的话，这里至多因为 size 的更新没有同步而返回一个错误值，最多就是误添加了一个 EPOLLOUT 事件，后续的逻辑应该能够正确处理。&lt;/p&gt;
-&lt;p&gt;但是 m_vecEvent 的话，这里是在 TcpWrite 的线程中进行访问，如果此时用户线程调用 AddMessage，是由可能会进入到 CreateEvent 中执行 &lt;code&gt;m_vecEvent.push_back(poEvent);&lt;/code&gt; 这样一条语句的，这个操作是有可能导致 vector 扩容的，从而 TcpWrite 线程中的访问操作可能会发生异常。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;不能确定这是否是个潜在 bug，截止我写这篇博客的时候，Github 仓库中的代码依旧是这样。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;但是 m_vecEvent 的话，这里是在 TcpWrite 的线程中进行访问，如果此时用户线程调用 AddMessage，是由可能会进入到 CreateEvent 中执行 &lt;code&gt;m_vecEvent.push_back(poEvent)&lt;/code&gt; 这样一条语句的，这个操作是有可能导致 vector 扩容的，从而 TcpWrite 线程中的访问操作可能会发生异常。&lt;/p&gt;
+&lt;p&gt;~~不能确定这是否是个潜在 bug，截止我写这篇博客的时候，Github 仓库中的代码依旧是这样。~~&lt;/p&gt;
+&lt;p&gt;已提交 &lt;a href="https://github.com/Tencent/phxpaxos/issues/75"&gt;Issue&lt;/a&gt; 进行了讨论，m_oInQueue 的后续逻辑有二次加锁检查，所以可以正确处理，m_vecEvent 则可能由于插入时的扩容带来问题，简单的解决办法是初始化的时候使用 reserve 预留足够大的空间避免扩容行为（因为一般消息发送的目标数量也不会特别夸张）。&lt;/p&gt;
 &lt;p&gt;抛开上面那个，继续看看 MessageEvent 在被 epoll_wait 返回并回调 OnWrite 后是如何发送消息的：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;MessageEvent&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;OnWrite&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;

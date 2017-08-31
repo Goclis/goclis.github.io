@@ -82,6 +82,8 @@
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
                             <time class="post-date" datetime="2017-08-30T21:59:30+08:00" title="2017-08-30T21:59:30+08:00"> 发布：2017-08-30</time>
+                             •
+                            <time class="post-date" datetime="2017-08-31T16:19:20+08:00" title="2017-08-31T16:19:20+08:00"> 更新：2017-08-31</time> 
                         </div>
                     </header>
                     <div class="post-content">
@@ -393,8 +395,9 @@
 </pre></div>
 <p>在继续描述 OnWrite 中的发送逻辑前，看这段代码的时候我有一点奇怪：<strong>在这两个方法中访问 m_vecEvent 和 m_oInQueue 时，没有任何的同步操作，而在其他如 TcpClient::GetEvent 和 MessageEvent::AddMessage 中，我们是可以看到锁操作的</strong>。</p>
 <p>m_oInQueue 这个可能还好，empty 方法如果是直接根据 size 成员变量计算得到结果的话，这里至多因为 size 的更新没有同步而返回一个错误值，最多就是误添加了一个 EPOLLOUT 事件，后续的逻辑应该能够正确处理。</p>
-<p>但是 m_vecEvent 的话，这里是在 TcpWrite 的线程中进行访问，如果此时用户线程调用 AddMessage，是由可能会进入到 CreateEvent 中执行 <code>m_vecEvent.push_back(poEvent);</code> 这样一条语句的，这个操作是有可能导致 vector 扩容的，从而 TcpWrite 线程中的访问操作可能会发生异常。</p>
-<p><strong>不能确定这是否是个潜在 bug，截止我写这篇博客的时候，Github 仓库中的代码依旧是这样。</strong></p>
+<p>但是 m_vecEvent 的话，这里是在 TcpWrite 的线程中进行访问，如果此时用户线程调用 AddMessage，是由可能会进入到 CreateEvent 中执行 <code>m_vecEvent.push_back(poEvent)</code> 这样一条语句的，这个操作是有可能导致 vector 扩容的，从而 TcpWrite 线程中的访问操作可能会发生异常。</p>
+<p>~~不能确定这是否是个潜在 bug，截止我写这篇博客的时候，Github 仓库中的代码依旧是这样。~~</p>
+<p>已提交 <a href="https://github.com/Tencent/phxpaxos/issues/75">Issue</a> 进行了讨论，m_oInQueue 的后续逻辑有二次加锁检查，所以可以正确处理，m_vecEvent 则可能由于插入时的扩容带来问题，简单的解决办法是初始化的时候使用 reserve 预留足够大的空间避免扩容行为（因为一般消息发送的目标数量也不会特别夸张）。</p>
 <p>抛开上面那个，继续看看 MessageEvent 在被 epoll_wait 返回并回调 OnWrite 后是如何发送消息的：</p>
 <div class="highlight"><pre><span class="kt">int</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">OnWrite</span><span class="p">()</span>
 <span class="p">{</span>
