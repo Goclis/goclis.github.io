@@ -110,7 +110,7 @@
                         </div>
                         
 <p><strong>我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了。</strong></p>
-<p>类似网络层，PhxPaxos 也将存储层进行了抽象，给用户留了扩展的灵活性。本篇同样将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有需要自行实现的用户可以有个参考。我理了一遍大概的设计后，发现并不是太复杂，所以篇幅应该不会太长。</p>
+<p>类似网络层，PhxPaxos 对存储层也进行了抽象，给用户留下了自行扩展的能力。本篇将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有自行实现需求的用户可以将官方的设计作为参考。我大概理了一遍设计后，发现并不是太复杂，所以篇幅应该不会太长。</p>
 <h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <p>在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">LogStorage</span>
