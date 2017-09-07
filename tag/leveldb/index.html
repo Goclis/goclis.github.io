@@ -9,7 +9,7 @@
 
 
 
-        <title>Logging
+        <title>LevelDB
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -58,7 +58,7 @@
                             </div>
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
-                                    <li class="nav-current" role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
                                     <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
@@ -73,6 +73,14 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+            	<div class="cover tag-cover">
+				    <h3 class="tag-name">
+				        标签：LevelDB
+				    </h3>
+				    <div class="post-count">
+				        共 1 篇文章 
+				    </div>
+				</div>
                 <article id="PhxPaxos 源码阅读笔记（二）：存储层" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -112,86 +120,7 @@
                         </div>
                     </footer>
                 </article>
-                <article id="PhxPaxos 源码阅读笔记（一）：网络层" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html">PhxPaxos 源码阅读笔记（一）：网络层</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-08-30T21:59:30+08:00" title="2017-08-30T21:59:30+08:00">2017-08-30</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p><strong>本篇不需要前置内容。</strong></p>
-<p>我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。</p>
-<h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
-<p>对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">NetWork</span>
-<span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">NetWork</span><span class="p">();</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">NetWork</span><span class="p">()</span> <span class="p">{}</span>
 
-    <span class="c1">//Network must not send/recieve any message before paxoslib called this funtion.</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">RunNetWork</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">//If paxoslib call this function, network ...</span></pre></div>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="PhxPaxos 源码阅读笔记（零）" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html">PhxPaxos 源码阅读笔记（零）</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-07-28T20:20:00+08:00" title="2017-07-28T20:20:00+08:00">2017-07-28</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <h2 id="_1">前言<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
-<p>其实之前就很想阅读 PhxPaxos 的源码来加深一下自己对 Paxos 的理解，但因为中途出差一个月加上前前后后的相关准备就搁置了，对于 Paxos 的理解一直停留在纸面上。最近阿里的 X-Paxos 宣传的很火，而自己也稍微闲了一些，就准备把阅读源码这个坑给填了。</p>
-<p>PhxPaxos 的整体代码量不是很大，注释虽然不多，但是可读性还是非常高的，配合着那些日志代码以及官方博客中的模型介绍，基本上可以很容易地理解它的大部分内容。</p>
-<p>利用零零碎碎的晚上休息时间，大概用了快一周把代码读完了，就想着反正自己从中也学到了不少内容，干脆写一个系列的阅读笔记吧。这是我第一次尝试写一个系列，希望能够写的稍微有点条理吧，这篇博客算是挖坑了。不过最近依旧比较忙，尽可能保持比较快的速度更新吧。</p>
-<h2 id="_2">前置内容<a class="headerlink" href="#_2" title="Permanent link">¶</a></h2>
-<p>我自己并不是一上来就试图通过阅读 PhxPaxos 来理解 Paxos 的，所以肯定是必须有前置内容的，希望对本系列感兴趣的读者能够先看完下面这些相关的内容（如果后续某篇文章与前置内容无关的话，我会在文章开头标注）。</p>
-<p>PhxPaxos 作者之一对于 Paxos 的介绍，至少读完前两篇：</p>
-<ol>
-<li><a href="https://zhuanlan.zhihu.com/p/21438357">Paxos理论介绍(1): 朴素Paxos算法理论推导与证明</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/21466932">Paxos理论介绍(2 ...</a></li></ol>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/fen-bu-shi/index.html">分布式</a>
-                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
-                            <a href="/tag/yi-zhi-xing-suan-fa/index.html">一致性算法</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-
-<nav class="pagination" role="navigation">
-    <span class="page-number">第 1 页 ⁄ 共 11 页</span>
-        <a class="older-posts" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-</nav>
             </main>
         </div>
     </div>

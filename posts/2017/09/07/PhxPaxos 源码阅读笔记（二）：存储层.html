@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+<meta name="keywords" content="LevelDB, PhxPaxos, Tech, " />
+
+        <title>PhxPaxos 源码阅读笔记（二）：存储层  | Logging
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <div id="wrapper">
+            <header class="main-header" style="background-image: url(/images/background.png)" "=">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- start logo -->
+                            <a class="branding portrait" href="http://goclis.github.io" title="Logging">
+                                <img src="/images/panda.jpg" alt="Logging">
+                            </a>
+                            <!-- end logo -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <nav class="main-navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="navbar-header">
+                                <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                                </span>
+                            </div>
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="menu">
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                    <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                                </ul>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="PhxPaxos 源码阅读笔记（二）：存储层" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html">PhxPaxos 源码阅读笔记（二）：存储层</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-09-07T21:38:00+08:00" title="2017-09-07T21:38:00+08:00"> 发布：2017-09-07</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <div class="widget">
+                            <h4 class="title">目录</h4>
+                            <div class="content toc">
+                                <div class="toc">
+<ul>
+<li><a href="#_1">接口</a></li>
+<li><a href="#_2">存储层用来做啥？</a></li>
+<li><a href="#_3">存储层的设计</a><ul>
+<li><a href="#_4">文件系统</a></li>
+<li><a href="#_5">索引</a></li>
+</ul>
+</li>
+<li><a href="#_6">源码</a><ul>
+<li><a href="#logstorageput">LogStorage::Put</a></li>
+<li><a href="#logstorageget">LogStorage::Get</a></li>
+<li><a href="#_7">其他</a></li>
+</ul>
+</li>
+<li><a href="#_8">结语</a></li>
+</ul>
+</div>
+                            </div>
+                        </div>
+                        
+<p><strong>我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了。</strong></p>
+<p>类似网络层，PhxPaxos 也将存储层进行了抽象，给用户留了扩展的灵活性。本篇同样将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有需要自行实现的用户可以有个参考。我理了一遍大概的设计后，发现并不是太复杂，所以篇幅应该不会太长。</p>
+<h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<p>在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">LogStorage</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">LogStorage</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetLogStorageDirPath</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">Get</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">Put</span><span class="p">(</span><span class="k">const</span> <span class="n">WriteOptions</span> <span class="o">&amp;</span> <span class="n">oWriteOptions</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">Del</span><span class="p">(</span><span class="k">const</span> <span class="n">WriteOptions</span> <span class="o">&amp;</span> <span class="n">oWriteOptions</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">GetMaxInstanceID</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="kt">uint64_t</span> <span class="o">&amp;</span> <span class="n">llInstanceID</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SetMinChosenInstanceID</span><span class="p">(</span><span class="k">const</span> <span class="n">WriteOptions</span> <span class="o">&amp;</span> <span class="n">oWriteOptions</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llMinInstanceID</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">GetMinChosenInstanceID</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="kt">uint64_t</span> <span class="o">&amp;</span> <span class="n">llMinInstanceID</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// 清除指定组下的所有实例数据。</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">ClearAllLog</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// 设置/获取系统变量。</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SetSystemVariables</span><span class="p">(</span><span class="k">const</span> <span class="n">WriteOptions</span> <span class="o">&amp;</span> <span class="n">oWriteOptions</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">GetSystemVariables</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// 设置/获取 Master 变量。</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SetMasterVariables</span><span class="p">(</span><span class="k">const</span> <span class="n">WriteOptions</span> <span class="o">&amp;</span> <span class="n">oWriteOptions</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">GetMasterVariables</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>根据命名能够大概猜到相关的含义，这里简要补充下：</p>
+<ul>
+<li>GetLogStorageDirPath：获取存储的根目录。这个接口主要是为 Checkpoint 服务，PhxPaxos 会将一些临时文件存储到此目录中。</li>
+<li>Get/Put/Del：实例数据的相关持久化访问接口。<ul>
+<li>三个接口的参数基本一致，都包含<strong>组 ID、实例 ID 和实例值</strong>这三部分，组和实例是 PhxPaxos 引入的概念（这里不多介绍）。简单理解，在每个组内，我们可以把存储的实例数据当做<strong>一连串有序的键值对</strong>，可以把实例 ID 当作键，该实例对应的数据作为值。</li>
+<li>Put/Del 方法多了个 WriteOptions 参数，主要是用来控制修改操作时的一些行为，目前仅有 sync 这样一个标识用来指导本次修改操作是否要同步到磁盘（这里的同步是指磁盘缓冲到真正的落盘）。</li>
+</ul>
+</li>
+<li>GetMaxInstanceID：获取当前存储的最大实例 ID。实例数据是根据实例 ID 有序的，也就不难理解最大这个概念了。</li>
+<li>Set/GetMinChosenInstanceID：存储层允许 PhxPaxos 内部设置一个称为<strong>最小选择实例 ID</strong> 的概念，我还没有完全确定它的含义，目前猜测是和 Checkpoint 相关，在完成一次 Checkpoint 后，之前的实例数据对应的日志应该就可以删除，从而我们可以设置一个 MinChosenInstanceID 来告知 PhxPaxos 算法层本节点目前拥有的实例日志的范围。</li>
+<li>ClearAllLog：完全清除存储的所有日志。</li>
+<li>Set/GetSystemVariables：后文解释。</li>
+<li>Set/GetMasterVariables：后文解释。</li>
+</ul>
+<h2 id="_2">存储层用来做啥？<a class="headerlink" href="#_2" title="Permanent link">¶</a></h2>
+<p>在简单地过了一遍接口后，我们先来想一个问题：为什么 PhxPaxos 需要一个存储层，用它来存些什么？我个人的理解是，存储 Paxos 日志，更具体些，存储每一轮 Paxos（在 PhxPaxos 可以看成每一个实例）所确定下来的数据。而保存它们的原因也很简单：这些数据需要被其他的 Paxos 节点所学习以使得各个 Paxos 节点上的实例都尽量保持一致，按照 PhxPaxos 的设计，大多数落后的话可就没法继续推进实例了。</p>
+<p>除了最基本的实例数据外，各个实现可以按照自己的需要，存储一些额外的辅助信息。在 PhxPaxos 中，存储层负责了三类数据的存储：</p>
+<ol>
+<li>实例数据。对应于通过 Paxos 算法确定下来的值，包括实例 ID、此实例对应的数据等。<strong>可以当做是日志数据</strong>。</li>
+<li>System Variables：使用 Protobuf 定义（见 src/comm/paxos_msg.proto），应该是用来存储一些在节点间共享的内容的，更多需要去进一步了解内部的 SystemVSM。</li>
+<li>Master Variables：类似 System Variables，用于记录 Master 信息，相关的也有 MasterStateMachine。</li>
+</ol>
+<h2 id="_3">存储层的设计<a class="headerlink" href="#_3" title="Permanent link">¶</a></h2>
+<p>PhxPaxos 的存储层包括两部分：</p>
+<ol>
+<li>利用文件系统：以文件形式存储实例数据。</li>
+<li>利用 LevelDB：构建实例 ID 到其数据的索引。</li>
+</ol>
+<p>PhxPaxos 将每个组的存储内容进行了划分，分别对应于文件系统上的不同目录和 LevelDB 中的不同名数据库，后续内容我将只描述组内的存储情况。</p>
+<h3 id="_4">文件系统<a class="headerlink" href="#_4" title="Permanent link">¶</a></h3>
+<p>我们先抛开索引，当要为一个实例去维护日志时，很显然，需要保存至少两部分内容：该实例的 ID 以及该实例所确定下来的数据。实例 ID 是定长的，但是实例的数据可能是变长的，从而在将多个实例序列化存储到一个文件时，为了能够区分各个实例，我们至少还需要一个长度来表示每个实例所占用的文件范围。</p>
+<p>上面的推理基本就是 PhxPaxos 在文件中存储实例数据的格式，由三部分组成：</p>
+<ol>
+<li>四字节的长度，表示该实例后续数据的字节数。</li>
+<li>实例 ID，八字节。</li>
+<li>实例数据，变长。</li>
+</ol>
+<p>以实例 ID 为 1，实例数据为 Hello 为例，在文件中持久化成（小端机器）：</p>
+<div class="highlight"><pre>06 00 00 00 01 00 00 00 00 00 00 00 48 65 6c 6c 6f
+</pre></div>
+<p>PhxPaxos 在存储前并没有进行任何的端序转换，可能是因为生产环境基本都是小端机器或是这些数据只会被同一节点读取，不需要这种转换。</p>
+<p>PhxPaxos 采用了类似于 Kafka 段文件的存储方法，单个文件中存储多个实例数据，但每个文件有一个大小上限，当一个文件存不下时，创建一个新的文件进行存储。这些数据文件之间使用有序递增的<strong>文件 ID</strong>来进行命名。为了快速定位最大实例，PhxPaxos 增加了一个额外的 meta 文件，该文件中保存着存储层的最大实例以及该实例的索引信息，索引的结构我们放到下一节讲。</p>
+<h3 id="_5">索引<a class="headerlink" href="#_5" title="Permanent link">¶</a></h3>
+<p>从上一节的内容中我们得知，一个文件中是存储着多个实例数据的，这虽然提高了存储效率，但为我们定位特定实例的数据带来了麻烦，所以 PhxPaxos 引入了 LevelDB 来进行索引（了解过 Kafka 的读者可以将这样的设计与 Kafka 中的 .index 文件进行类比）。</p>
+<p>我们知道，LevelDB 是一个键值数据库，所以了解了 PhxPaxos 将什么作为键，什么作为值就可以明白这个索引的设计了。</p>
+<p>键，很明显是实例 ID，因为 Paxos 算法层面的大多数操作都要求按实例去存储或者获取数据。</p>
+<p>值，作为索引，值需要方便我们定位实例数据的位置，可以稍微想一下这个查找的过程：从一堆文件中找到该实例 ID 所在的文件，然后从该文件中找到实例数据。所以，很容易想到索引结构至少有<strong>文件 ID</strong>和<strong>文件内偏移</strong>这两个部分。为了避免磁盘错误，PhxPaxos 在索引中加入了额外的 CRC 校验码，即索引内容由三部分构成。这三部分都是定长的，PhxPaxos 将它们依次转换成字符串然后拼接在一起，就构成了 LevelDB 中的值。</p>
+<p><strong>索引键</strong></p>
+<p>这里额外提一下，PhxPaxos 中所有的实例 ID 均未自然数，顺序也自然是基于自然顺序的，实例 ID 也是各个实例 LevelDB 中的键值。</p>
+<p>在之前的内容中，我们曾经提到过 System Variables 和 Master Variables，它们两者并不存储文件系统中，而是以特殊的键存储在 LevelDB 中，这里的特殊体现在它们是负值，所以不会和 PhxPaxos 的实例 ID 发生冲突。类似地，MinChosenInstanceID 也是以特殊键的方式存储在 LevelDB 中。三者的定义如下：</p>
+<div class="highlight"><pre><span class="cp">#define MINCHOSEN_KEY ((uint64_t)-1)</span>
+<span class="cp">#define SYSTEMVARIABLES_KEY ((uint64_t)-2)</span>
+<span class="cp">#define MASTERVARIABLES_KEY ((uint64_t)-3)</span>
+</pre></div>
+<h2 id="_6">源码<a class="headerlink" href="#_6" title="Permanent link">¶</a></h2>
+<p>写了一堆，我们以 LogStorage::Put 和 LogStorage::Get 的流程为例来看一下相关的代码（src/logstorage）吧。</p>
+<p>先从大体上讲一下，PhxPaxos 内部的 LogStorage 接口实现类为 MultiDatabase，它负责管理所有 Group 的存储层，内部使用一个 vector 来为各个 Group 维护一个 Database 对象，对接口的实现也是简单的转发到 Database 类对象中。显然，Database 类内部需要维护文件系统和 LevelDB 这两部分的操作，PhxPaxos 将文件系统相关的操作封装到类 LogStore 中，LevelDB 的操作直接在 Database 中使用 LevelDB 的 API 完成。</p>
+<p>简单介绍完毕，后续的内容将从 Database 类开始。</p>
+<h3 id="logstorageput">LogStorage::Put<a class="headerlink" href="#logstorageput" title="Permanent link">¶</a></h3>
+<p>调用转发到 Database::Put，其中的内容分为两部操作：首先调用 ValueToFileID 将实例数据存储到文件中，并获取相应的索引信息；随后以实例 ID 作为键，上一步得到的索引信息作为值存储到 LevelDB 中。</p>
+<p>让我们来看看 ValueToFileID 的相关代码：</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">Database</span> <span class="o">::</span> <span class="n">ValueToFileID</span><span class="p">(</span><span class="k">const</span> <span class="n">WriteOptions</span> <span class="o">&amp;</span> <span class="n">oWriteOptions</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sFileID</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">m_poValueStore</span><span class="o">-&gt;</span><span class="n">Append</span><span class="p">(</span><span class="n">oWriteOptions</span><span class="p">,</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">sValue</span><span class="p">,</span> <span class="n">sFileID</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">LogStore</span> <span class="o">::</span> <span class="n">Append</span><span class="p">(</span><span class="k">const</span> <span class="n">WriteOptions</span> <span class="o">&amp;</span> <span class="n">oWriteOptions</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sFileID</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">m_oTimeStat</span><span class="p">.</span><span class="n">Point</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">oLock</span><span class="p">(</span><span class="n">m_oMutex</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">iFd</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iFileID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iOffset</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">iLen</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="o">+</span> <span class="n">sBuffer</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">iTmpBufferLen</span> <span class="o">=</span> <span class="n">iLen</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+
+    <span class="c1">// 获取存储此实例数据的文件信息，因为当前文件不一定放的下此实例数据，</span>
+    <span class="c1">// 所以本方法中包含着开启一个新文件的逻辑。</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">GetFileFD</span><span class="p">(</span><span class="n">iTmpBufferLen</span><span class="p">,</span> <span class="n">iFd</span><span class="p">,</span> <span class="n">iFileID</span><span class="p">,</span> <span class="n">iOffset</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">m_oTmpAppendBuffer</span><span class="p">.</span><span class="n">Ready</span><span class="p">(</span><span class="n">iTmpBufferLen</span><span class="p">);</span>
+
+    <span class="c1">// 每条实例数据在文件中由三部分组成：</span>
+    <span class="c1">// 1. 4 字节长度（包括实例 ID 的 8 字节和数据内容两部分）。</span>
+    <span class="c1">// 2. 实例 ID。</span>
+    <span class="c1">// 3. 数据内容。</span>
+    <span class="n">memcpy</span><span class="p">(</span><span class="n">m_oTmpAppendBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">iLen</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="n">memcpy</span><span class="p">(</span><span class="n">m_oTmpAppendBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">()</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">llInstanceID</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint64_t</span><span class="p">));</span>
+    <span class="n">memcpy</span><span class="p">(</span><span class="n">m_oTmpAppendBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">()</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint64_t</span><span class="p">),</span> <span class="n">sBuffer</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">sBuffer</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+    <span class="kt">size_t</span> <span class="n">iWriteLen</span> <span class="o">=</span> <span class="n">write</span><span class="p">(</span><span class="n">iFd</span><span class="p">,</span> <span class="n">m_oTmpAppendBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">(),</span> <span class="n">iTmpBufferLen</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">iWriteLen</span> <span class="o">!=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">iTmpBufferLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">oWriteOptions</span><span class="p">.</span><span class="n">bSync</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">fdatasync_ret</span> <span class="o">=</span> <span class="n">fdatasync</span><span class="p">(</span><span class="n">iFd</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fdatasync_ret</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">PLG1Err</span><span class="p">(</span><span class="s">"fdatasync fail, writelen %zu errno %d"</span><span class="p">,</span> <span class="n">iWriteLen</span><span class="p">,</span> <span class="n">errno</span><span class="p">);</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">m_iNowFileOffset</span> <span class="o">+=</span> <span class="n">iWriteLen</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">iUseTimeMs</span> <span class="o">=</span> <span class="n">m_oTimeStat</span><span class="p">.</span><span class="n">Point</span><span class="p">();</span>
+    <span class="n">BP</span><span class="o">-&gt;</span><span class="n">GetLogStorageBP</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">AppendDataOK</span><span class="p">(</span><span class="n">iWriteLen</span><span class="p">,</span> <span class="n">iUseTimeMs</span><span class="p">);</span>
+
+    <span class="c1">// checksum 只包含数据内容部分，忽略实例数据开头的 4 字节长度部分。</span>
+    <span class="kt">uint32_t</span> <span class="n">iCheckSum</span> <span class="o">=</span> <span class="n">crc32</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">m_oTmpAppendBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">()</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)),</span> <span class="n">iTmpBufferLen</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">CRC32SKIP</span><span class="p">);</span>
+
+    <span class="c1">// 根据实例数据存储的文件 ID、在该文件中的 offset 以及数据内容的 checksum 生成作为 LevelDB 值，以</span>
+    <span class="c1">// out 参数的形式返回给调用者。</span>
+    <span class="n">GenFileID</span><span class="p">(</span><span class="n">iFileID</span><span class="p">,</span> <span class="n">iOffset</span><span class="p">,</span> <span class="n">iCheckSum</span><span class="p">,</span> <span class="n">sFileID</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>可以看到，ValueToFileID 也仅仅是将调用转换到 LogStore::Append 中，后者中的逻辑主要分为几部分：</p>
+<ol>
+<li>GetFileFD：获取一个<strong>可以放的下</strong>本实例数据的文件描述符。回想一下前面的设计，我们曾提到每一个文件的大小是有限制的，所以此方法内部是需要考虑当前文件的剩余空间是否能够放的下本实例数据的，如果不能的话，需要打开一个新的文件。总之，该方法会返回一个文件描述符供后续操作写入数据，一个文件 ID 以及偏移量。</li>
+<li>序列化：准备空间并紧跟一系列的 memcpy，通过 memcpy 我们可以确定实例数据在文件中的存储格式正如之前设计中所述。</li>
+<li>写入：注意此处会根据 WriteOptions 来决定是否要 sync。</li>
+<li>GenFileID：最后这部分计算了内容的 CRC 校验码，随后结合文件 ID 和偏移量生成了最终存储到 LevelDB 中的 sFileID。</li>
+</ol>
+<h3 id="logstorageget">LogStorage::Get<a class="headerlink" href="#logstorageget" title="Permanent link">¶</a></h3>
+<p>调用转发到 Database::Get，其中的内容同样分为两部分，不过和 Put 的相反：首先根据实例 ID 从 LevelDB 中查询实例数据的索引信息；随后根据索引信息，调用 FileIDToValue 从文件系统中获取实例数据。</p>
+<p>从 LevelDB 中取值的过程就略过了，我们来看看 FileIDToValue 的相关代码：</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">Database</span> <span class="o">::</span> <span class="n">FileIDToValue</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sFileID</span><span class="p">,</span> <span class="kt">uint64_t</span> <span class="o">&amp;</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">m_poValueStore</span><span class="o">-&gt;</span><span class="n">Read</span><span class="p">(</span><span class="n">sFileID</span><span class="p">,</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">sValue</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">LogStore</span> <span class="o">::</span> <span class="n">Read</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sFileID</span><span class="p">,</span> <span class="kt">uint64_t</span> <span class="o">&amp;</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 从索引信息中提取文件 ID、偏移量和校验码</span>
+    <span class="kt">int</span> <span class="n">iFileID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">iOffset</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">iCheckSum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">ParseFileID</span><span class="p">(</span><span class="n">sFileID</span><span class="p">,</span> <span class="n">iFileID</span><span class="p">,</span> <span class="n">iOffset</span><span class="p">,</span> <span class="n">iCheckSum</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">iFd</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">OpenFile</span><span class="p">(</span><span class="n">iFileID</span><span class="p">,</span> <span class="n">iFd</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">off_t</span> <span class="n">iSeekPos</span> <span class="o">=</span> <span class="n">lseek</span><span class="p">(</span><span class="n">iFd</span><span class="p">,</span> <span class="n">iOffset</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iSeekPos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">iLen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">ssize_t</span> <span class="n">iReadLen</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">iFd</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">iLen</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iReadLen</span> <span class="o">!=</span> <span class="p">(</span><span class="kt">ssize_t</span><span class="p">)</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">close</span><span class="p">(</span><span class="n">iFd</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">oLock</span><span class="p">(</span><span class="n">m_oReadMutex</span><span class="p">);</span>
+
+    <span class="n">m_oTmpBuffer</span><span class="p">.</span><span class="n">Ready</span><span class="p">(</span><span class="n">iLen</span><span class="p">);</span>
+    <span class="n">iReadLen</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">iFd</span><span class="p">,</span> <span class="n">m_oTmpBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">(),</span> <span class="n">iLen</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iReadLen</span> <span class="o">!=</span> <span class="n">iLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">close</span><span class="p">(</span><span class="n">iFd</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">close</span><span class="p">(</span><span class="n">iFd</span><span class="p">);</span>
+
+    <span class="c1">// 重新计算校验码，比较是否出错</span>
+    <span class="kt">uint32_t</span> <span class="n">iFileCheckSum</span> <span class="o">=</span> <span class="n">crc32</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="p">)</span><span class="n">m_oTmpBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">(),</span> <span class="n">iLen</span><span class="p">,</span> <span class="n">CRC32SKIP</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">iFileCheckSum</span> <span class="o">!=</span> <span class="n">iCheckSum</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">llInstanceID</span><span class="p">,</span> <span class="n">m_oTmpBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">(),</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint64_t</span><span class="p">));</span>
+    <span class="n">sBuffer</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">m_oTmpBuffer</span><span class="p">.</span><span class="n">GetPtr</span><span class="p">()</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint64_t</span><span class="p">),</span> <span class="n">iLen</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">uint64_t</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>可以看到，FileIDToValue 也仅仅是将调用转换到 LogStore::Read 中，后者的逻辑主要分为以下几部分：</p>
+<ol>
+<li>ParseFileID：根据传入的索引信息，提取文件 ID、文件内偏移以及校验码。</li>
+<li>读取：打开上一步得到的文件，利用偏移定位到指定位置，根据格式读取长度以及内容。</li>
+<li>校验：根据读取的内容重新计算校验码，检查是否存在磁盘错误。</li>
+<li>反序列化：从读取到的内容中提取实例 ID 和实例数据，赋值给返回参数。</li>
+</ol>
+<h3 id="_7">其他<a class="headerlink" href="#_7" title="Permanent link">¶</a></h3>
+<p>其他的操作的实现都类似，都或多或少利用了 LevelDB 的一些特性，比如 GetMaxInstanceID 的实现中使用了 leveldb::Iterator::SeekToLast 方法来快速定位到最大的键。</p>
+<h2 id="_8">结语<a class="headerlink" href="#_8" title="Permanent link">¶</a></h2>
+<p>这篇基本写完了，不长，但是因为加班，空闲时间略少，所以一直托到很晚才开始写。开始写的时候发现已经快把源码忘光了，又花了一些时间来重新过一遍。</p>
+<p>内容中有些略过了，待我把整个系列写完（如果没太监 = =#）后再回过头来看看，尽量补的详实些。</p>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html';
+    var disqus_url = 'http://goclis.github.io/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html"><i class="fa fa-angle-left fa-fw"></i> PhxPaxos 源码阅读笔记（一）：网络层</a>
+                    &nbsp;
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/leveldb/index.html">LevelDB</a>
+                        <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+            <p>
+                <a href="http://weibo.com/u/3312761102" title="My Weibo Profile" target="_blank"><i class="fa fa-weibo"></i> Weibo</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                    
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
+        
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
+        </script>
+    </body>
+</html>
