@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/goclis-yao.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-09-07T21:38:00+08:00</updated><entry><title>PhxPaxos 源码阅读笔记（二）：存储层</title><link href="http://goclis.github.io/posts/2017/09/07/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E5%AD%98%E5%82%A8%E5%B1%82.html" rel="alternate"></link><updated>2017-09-07T21:38:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-09-07:posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html</id><summary type="html">
-&lt;p&gt;&lt;strong&gt;我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了，所以建议还是先补充前置内容。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;类似网络层，PhxPaxos 对存储层也进行了抽象，给用户留下了自行扩展的能力。本篇将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有自行实现需求的用户可以将官方的设计作为参考。我大概理了一遍设计后，发现并不是太复杂，所以篇幅应该不会太长。&lt;/p&gt;
 &lt;h2 id="_1"&gt;接口&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：&lt;/p&gt;
@@ -88,7 +88,8 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id="_6"&gt;源码&lt;a class="headerlink" href="#_6" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;写了一堆，我们以 LogStorage::Put 和 LogStorage::Get 的流程为例来看一下相关的代码（src/logstorage）吧。&lt;/p&gt;
-&lt;p&gt;先从大体上讲一下，PhxPaxos 内部的 LogStorage 接口实现类为 MultiDatabase，它负责管理所有 Group 的存储层，内部使用一个 vector 来为各个 Group 维护一个 Database 对象，对接口的实现也是简单的转发到 Database 类对象中。显然，Database 类内部需要维护文件系统和 LevelDB 这两部分的操作，PhxPaxos 将文件系统相关的操作封装到类 LogStore 中，LevelDB 的操作直接在 Database 中使用 LevelDB 的 API 完成。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjbfpvp74lj30oe0gkabb.jpg"/&gt;&lt;/p&gt;
+&lt;p&gt;先参照类图大体上讲一下，PhxPaxos 内部的 LogStorage 接口实现类为 MultiDatabase，它负责管理所有 Group 的存储层，内部使用一个 vector 来为各个 Group 维护一个 Database 对象，对接口的实现也是简单的转发到 Database 类对象中。显然，Database 类内部需要维护文件系统和 LevelDB 这两部分的操作，PhxPaxos 将文件系统相关的操作封装到类 LogStore 中，LevelDB 的操作直接在 Database 中使用 LevelDB 的 API 完成。&lt;/p&gt;
 &lt;p&gt;简单介绍完毕，后续的内容将从 Database 类开始。&lt;/p&gt;
 &lt;h3 id="logstorageput"&gt;LogStorage::Put&lt;a class="headerlink" href="#logstorageput" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;调用转发到 Database::Put，其中的内容分为两部操作：首先调用 ValueToFileID 将实例数据存储到文件中，并获取相应的索引信息；随后以实例 ID 作为键，上一步得到的索引信息作为值存储到 LevelDB 中。&lt;/p&gt;
