@@ -9,7 +9,7 @@
 
 
 
-        <title>Logging - Page 6
+        <title>Geo-distributed storage systems
 </title>
 
         <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
@@ -58,7 +58,7 @@
                             </div>
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
-                                    <li class="nav-current" role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
                                     <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
@@ -73,102 +73,49 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
-                <article id="data-in-http-request" class="post">
+            	<div class="cover tag-cover">
+				    <h3 class="tag-name">
+				        标签：Geo-distributed storage systems
+				    </h3>
+				    <div class="post-count">
+				        共 1 篇文章 
+				    </div>
+				</div>
+                <article id="论文阅读笔记（MeteorShower）" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html">HTTP请求中的数据</a>
+                            <a href="http://goclis.github.io/posts/2017/09/18/论文阅读笔记（MeteorShower）.html">论文阅读笔记（MeteorShower）</a>
                         </h1>
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-16T22:47:20+08:00" title="2016-04-16T22:47:20+08:00">2016-04-16</time>
+                            <time class="post-date" datetime="2017-09-18T18:00:00+08:00" title="2017-09-18T18:00:00+08:00">2017-09-18</time>
                         </div>
                     </div>
                     <div class="post-content">
-                        
-<p>那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。</p>
-<h3 id="http">HTTP请求格式<a class="headerlink" href="#http" title="Permanent link">¶</a></h3>
-<p>先看看HTTP请求消息的格式 <a href="http://www.tutorialspoint.com/http/http_requests.htm">1</a>：</p>
-<ul>
-<li>A Request Line</li>
-<li>Zero or more header (General|Request|Entity) fields followed by CRLF</li>
-<li>An empty line (i.e., a line with nothing preceding the CRLF) indicating the end of the header fields</li>
-<li>Optionally a message-body</li>
-</ul>
-<p>从格式上来看，除了第三部分，都能够附带用户数据，但一般来说 ...</p>
+                        <p>哎，拖更了，PhxPaxos 系列本来是打算一周一篇的，结果周中偷懒了一会儿，想着干脆拖到周末再写吧，但周四的时候收到邮件说下周二要例会做报告（= =# 为啥每学期都是第一个），于是这周基本就无法更新了，写篇论文阅读笔记做交代吧。这类型的笔记之前也会写，但基本不发，这次试试看吧。内容可能会偏翻译性质，但是水平有限，尽量避免渣翻。<strong>理解有误的话很正常，望交流。</strong></p>
+<p>原文来自 IPDCS 2017：MeteorShower: Minimizing Request Latency for Majority Quorum-based Data Consistency Algorithms in Multiple Data Centers。</p>
+<h2 id="_1">介绍<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<h3 id="_2">背景<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
+<p>目前很多的存储系统都有跨数据中心部署的需求，具体表现就是同一份数据的多个副本会分散在多个数据中心，并且，副本的数量一般都可以根据工作负载的情况来进行调整。这种多副本位于多数据中心的形式可以很好地实现位置相关的访问，为用户提供就近访问，从而降低时延。但是，在为一份数据提供多副本时，由于需要<strong>维护数据一致性</strong>，会引入额外的代价。</p>
+<p>不同的系统出于各自的设计 ...</p>
                     </div>
                     <div class="post-permalink">
-                        <a href="/posts/2016/04/16/data-in-http-request.html" class="btn btn-default">阅读全文</a>
+                        <a href="/posts/2017/09/18/论文阅读笔记（MeteorShower）.html" class="btn btn-default">阅读全文</a>
                     </div>
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/httpqing-qiu/index.html">HTTP请求</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="【吃点评】小红烤翅" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/12/【吃点评】小红烤翅.html">【吃点评】小红烤翅</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-12T23:05:00+08:00" title="2016-04-12T23:05:00+08:00">2016-04-12</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>之前在朋友圈看的转的，马了一下，今天和几个小伙伴去尝了尝。在南京有几家分店，去的洪武路长发银座边上那家（新街口分店）。在微信上看到说要预约，但到了之后发现人不是很多，没排队，不过店也不大，我们进去后也就差不多满了，可能是今天周二吧。</p>
-<p>价格方面，总共7个人，2个女生，吃了477，折扣后437（这个我真不知道咋算的，大众点评给的是100-9，会员价是9折，但这个数字应该是477-400/4*10，有点诡异），人均62吧，不是很贵。</p>
-<p>主打还是烤翅，挺好吃的！！一人吃了4串，一串两只，默认分辣和不辣两种，可能可以特别要变态辣吧。其他点了些羊肉串、脆骨、金针菇、韭菜等吧，都还行，韭菜有点咸。特别提下羊肉串，挺大串的，感觉这种7-8块一串的比那种3-4块两小串吃的过瘾多了（没错，就是黑的勿相忘那种小串串）。</p>
-<p>总得来说，下次再去这家店的话，我可能只点烤翅和羊肉串吧23333。没拍图，败笔。</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/04/12/【吃点评】小红烤翅.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/chi-dian-ping/index.html">吃点评</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="享受孤独，真不容易" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/04/10/享受孤独，真不容易.html">享受孤独，真不容易</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-04-10T00:00:00+08:00" title="2016-04-10T00:00:00+08:00">2016-04-10</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>最近算是一直在体会独处带来的孤独，说真的，挺不好受的。一个多月了，顶多是缓解吧，这种心理感受的问题还是没法解决。</p>
-<p>我记得高中的时候写过一篇作文，材料不记得了，但我取的标题好像叫“身寂而心不寂”，大概就是即使独处也要享受孤独，当时举的例证也比较简单，李白寄情于酒，曹操志在天下，均不感孤独。当时的我以为，只要专注于做一些喜爱的事情，我将不会感到孤独，这个认识从现在来看，还是有些浅薄了。</p>
-<p>独处是一种物理状态，孤独是一种感受及心理状态，所以也被称为孤独感。有一个观点，我想对于很多人都比较适用，包括我自己，即独处会让人产生孤独感。我并不想讨论孤独感带给人的好与坏，只想写写自己的感受。</p>
-<p>我原以为，我是能够忍受孤独的。但这一个多月的经历让我明白，自己还是太年轻。细细一想，除了最近这段时间，自己并未体会过真正的独处，更说不上忍受孤独了。高中以前，天天回家，父母总在身旁；高中三年，同学及舍友常伴；本科四年，如高中一般。研究生，舍友基本也不待在宿舍，每次自己独自一人呆在宿舍的时候就会比较的沉闷，但好在那段刚开始的日子有ex陪伴，尽管她出国在外，但聊天总能缓解那种独处产生的孤独感 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/04/10/享受孤独，真不容易.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/data-consistency/index.html">Data consistency</a>
+                            <a href="/tag/distributed-time/index.html">Distributed time</a>
+                            <a href="/tag/geo-distributed-storage-systems/index.html">Geo-distributed storage systems</a>
+                            <a href="/tag/majority-quorum/index.html">Majority quorum</a>
+                            <a href="/tag/synchronized-clocks/index.html">Synchronized clocks</a>
                         </div>
                         <div class="pull-right share">
                         </div>
                     </footer>
                 </article>
 
-<nav class="pagination" role="navigation">
-        <a class="newer-posts" href="/page/5/"><i class="fa fa-angle-left"></i></a>
-    <span class="page-number">第 6 页 ⁄ 共 11 页</span>
-        <a class="older-posts" href="/page/7/"><i class="fa fa-angle-right"></i></a>
-</nav>
             </main>
         </div>
     </div>

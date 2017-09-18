@@ -72,6 +72,37 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="静态库与动态库的跨编译器兼容" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/05/26/静态库与动态库的跨编译器兼容.html">静态库与动态库的跨编译器兼容</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-05-26T20:49:28+08:00" title="2017-05-26T20:49:28+08:00">2017-05-26</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>由于当前项目维护的代码需要支持多个编译器，最近突然好奇为什么不直接在高版本的 VS 中直接使用低版本生成的库呢？起初以为是不可行，但是后面从理论上想了一下，感觉对于动态库来说应该可行，低版本生成的 DLL 依赖低版本的 C++ 运行时，高版本生成的可执行程序依赖高版本的 C++ 运行时，按照这样的设定应该没有任何问题才对。</p>
+<p>举个例子，VS2013 生成了动态库库 A.lib 和 A.dll，VS2015 中使用了 A.lib 生成 B.exe，让我们来看下最终的依赖情况（下面 C++ 运行时库的名字以 msvc 来代替）：</p>
+<ul>
+<li>B.exe 依赖于 A.dll 和 msvc2015.dll</li>
+<li>A.dll 依赖于 msvc2013.dll ...</li></ul>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/05/26/静态库与动态库的跨编译器兼容.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/dll/index.html">DLL</a>
+                            <a href="/tag/jing-tai-ku/index.html">静态库</a>
+                            <a href="/tag/visual-studio/index.html">Visual Studio</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="Call convention & Name mangling" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -131,43 +162,6 @@
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="ms-visual-studio-implementation-of-cpp-multiple-inheritance" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html">MS Visual Studio对C++多继承的相关实现</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2016-09-25T15:31:00+08:00" title="2016-09-25T15:31:00+08:00">2016-09-25</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p><em>本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。</em></p>
-<p>首先，我们来明确一个观点：<strong>在类成员方法中，this指针是否一定要指向这个对象的内存起始处？</strong>答案是不一定，指向起始处当然是很方便我们这些脑算成员变量偏移的，因为只用做加法就行了，但是对于编译器而言，它只需要确定好一个关于this指向的原则，随后基于这个原则，不管偏移要加法还是减法，对它来说都是没什么区别的。因此，this的指向实际上是编译器自己决定的，它可以遵照常规的想法，在进入成员方法代码前，把this调整至对象内存起始，或者是为了性能，采用它自己的原则。</p>
-<p>显然，VS这样的编译器使用的是后者，它出于性能考虑，约定了自己的原则：<strong>this指针在一个类成员方法中的指向，取决于该方法的来源。</strong>具体来说：</p>
-<ul>
-<li>如果该方法首次声明在本类中，那么this指向本类对象的内存起始位置。</li>
-<li>如果该方法首次声明不在本类中，即来自于父类，那么this应指向第一个声明此方法的父类，也就是多继承的情况下，在子类的视角中，顺序靠前的父类覆盖靠后的父类。</li>
-</ul>
-<p>由于类成员方法是可以在继承关系中调用的，即子类对象可以调用父类的public成员方法。那么，按照这个原则中的第2条，编译器需要做一些调整工作。</p>
-<p>下面举个例子，并结合例子来讲讲<strong>this调整</strong>的过程：</p>
-<div class="highlight"><pre><span class="k">namespace</span> <span class="n">base_adjust_rule ...</span></pre></div>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/cbian-yi-qi-thunk/index.html">C++编译器thunk</a>
-                            <a href="/tag/cheng-yuan-han-shu-zhi-zhen/index.html">成员函数指针</a>
-                            <a href="/tag/duo-ji-cheng/index.html">多继承</a>
-                            <a href="/tag/thiszhi-zhen/index.html">this指针</a>
                         </div>
                         <div class="pull-right share">
                         </div>
