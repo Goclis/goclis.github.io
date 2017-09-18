@@ -85,7 +85,60 @@
                         </div>
                     </header>
                     <div class="post-content">
-                        <p>哎，拖更了，PhxPaxos 系列本来是打算一周一篇的，结果周中偷懒了一会儿，想着干脆拖到周末再写吧，但周四的时候收到邮件说下周二要例会做报告（= =# 为啥每学期都是第一个），于是这周基本就无法更新了，写篇论文阅读笔记做交代吧。这类型的笔记之前也会写，但基本不发，这次试试看吧。内容可能会偏翻译性质，但是水平有限，尽量避免渣翻。<strong>理解有误的话很正常，望交流。</strong></p>
+                        <div class="widget">
+                            <h4 class="title">目录</h4>
+                            <div class="content toc">
+                                <div class="toc">
+<ul>
+<li><a href="#_1">介绍</a><ul>
+<li><a href="#_2">背景</a></li>
+<li><a href="#_3">问题描述及改进思路</a></li>
+<li><a href="#_4">主要贡献</a></li>
+</ul>
+</li>
+<li><a href="#_5">算法设计</a><ul>
+<li><a href="#_6">系统模型</a></li>
+<li><a href="#_7">算法描述</a><ul>
+<li><a href="#_8">写</a></li>
+<li><a href="#_9">状态更新</a></li>
+<li><a href="#_10">读</a></li>
+</ul>
+</li>
+<li><a href="#_11">算法证明</a><ul>
+<li><a href="#1">引理 1</a></li>
+<li><a href="#2">引理 2</a></li>
+<li><a href="#_12">证明</a></li>
+</ul>
+</li>
+<li><a href="#_13">关键参数</a><ul>
+<li><a href="#t">θt</a></li>
+<li><a href="#_14">同步时钟</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#meteorshower">MeteorShower 设计</a><ul>
+<li><a href="#_15">消息</a><ul>
+<li><a href="#writenotification">WriteNotification</a></li>
+<li><a href="#status-message">状态消息（Status message）</a></li>
+</ul>
+</li>
+<li><a href="#_16">实现</a></li>
+</ul>
+</li>
+<li><a href="#_17">性能评估</a><ul>
+<li><a href="#_18">实验设置</a></li>
+<li><a href="#_19">参数可调环境</a></li>
+<li><a href="#_20">真实环境</a></li>
+</ul>
+</li>
+<li><a href="#_21">总结</a></li>
+</ul>
+</div>
+                            </div>
+                        </div>
+                        
+<p>哎，拖更了，PhxPaxos 系列本来是打算一周一篇的，结果周中偷懒了一会儿，想着干脆拖到周末再写吧，但周四的时候收到邮件说下周二要例会做报告（= =# 为啥每学期都是第一个），于是这周基本就无法更新了，写篇论文阅读笔记做交代吧。这类型的笔记之前也会写，但基本不发，这次试试看吧。内容可能会偏翻译性质，但是水平有限，尽量避免渣翻。<strong>理解有误的话很正常，望交流。</strong></p>
 <p>原文来自 IPDCS 2017：MeteorShower: Minimizing Request Latency for Majority Quorum-based Data Consistency Algorithms in Multiple Data Centers。</p>
 <h2 id="_1">介绍<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <h3 id="_2">背景<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
