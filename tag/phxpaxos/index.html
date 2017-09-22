@@ -78,9 +78,40 @@
 				        标签：PhxPaxos
 				    </h3>
 				    <div class="post-count">
-				        共 3 篇文章 
+				        共 4 篇文章 
 				    </div>
 				</div>
+                <article id="PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html">PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-09-22T20:01:27+08:00" title="2017-09-22T20:01:27+08:00">2017-09-22</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p><strong>前置内容：建议对 Paxos 有基本理解后再阅读。</strong></p>
+<p>本篇主要是为了后续几篇讲算法实现做些铺垫，个人觉得在看代码之前对设计进行基本的了解是必须的，否则会是一头雾水。</p>
+<p>因为只是简介，我只会把 PhxPaxos 中的一些概念稍微讲讲，更为详细的内容还是建议大家阅读微信团队的<a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;mid=2247483695&amp;idx=1&amp;sn=91ea422913fc62579e020e941d1d059e#rd">原文</a>。</p>
+<p>我个人感觉 PhxPaxos 的<strong>实例-日志-状态机</strong>这样的设计是常见的一种实现思路，之前也有向同学请教了一下 X-Paxos 的设计，发现确实很类似，但是各个库出于各自对性能的要求，有着不同的优化取舍罢了（比如 X-Paxos 需要服务一些跨数据中心的高时延场景，所以 Pipelining 是个很好的优化手段）。</p>
+<h2 id="_1">实例<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<p>相信了解过 Paxos 算法的读者都应该知道它最基本的能力：让多个进程（或节点）间达成一致，即它们均确定出同一个值。在确定值后，Paxos 组的成员中只要仍旧有多数派存活，该值将会一直被保持，从而能够容忍部分成员临时断线、掉线重启甚至丢失了该值。</p>
+<p>我们知道，由于 Paxos 组内可能有多个 Proposer 同时提案 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="PhxPaxos 源码阅读笔记（二）：存储层" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -158,43 +189,11 @@
                         </div>
                     </footer>
                 </article>
-                <article id="PhxPaxos 源码阅读笔记（零）" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html">PhxPaxos 源码阅读笔记（零）</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-07-28T20:20:00+08:00" title="2017-07-28T20:20:00+08:00">2017-07-28</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <h2 id="_1">前言<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
-<p>其实之前就很想阅读 PhxPaxos 的源码来加深一下自己对 Paxos 的理解，但因为中途出差一个月加上前前后后的相关准备就搁置了，对于 Paxos 的理解一直停留在纸面上。最近阿里的 X-Paxos 宣传的很火，而自己也稍微闲了一些，就准备把阅读源码这个坑给填了。</p>
-<p>PhxPaxos 的整体代码量不是很大，注释虽然不多，但是可读性还是非常高的，配合着那些日志代码以及官方博客中的模型介绍，基本上可以很容易地理解它的大部分内容。</p>
-<p>利用零零碎碎的晚上休息时间，大概用了快一周把代码读完了，就想着反正自己从中也学到了不少内容，干脆写一个系列的阅读笔记吧。这是我第一次尝试写一个系列，希望能够写的稍微有点条理吧，这篇博客算是挖坑了。不过最近依旧比较忙，尽可能保持比较快的速度更新吧。</p>
-<h2 id="_2">前置内容<a class="headerlink" href="#_2" title="Permanent link">¶</a></h2>
-<p>我自己并不是一上来就试图通过阅读 PhxPaxos 来理解 Paxos 的，所以肯定是必须有前置内容的，希望对本系列感兴趣的读者能够先看完下面这些相关的内容（如果后续某篇文章与前置内容无关的话，我会在文章开头标注）。</p>
-<p>PhxPaxos 作者之一对于 Paxos 的介绍，至少读完前两篇：</p>
-<ol>
-<li><a href="https://zhuanlan.zhihu.com/p/21438357">Paxos理论介绍(1): 朴素Paxos算法理论推导与证明</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/21466932">Paxos理论介绍(2 ...</a></li></ol>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/fen-bu-shi/index.html">分布式</a>
-                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
-                            <a href="/tag/yi-zhi-xing-suan-fa/index.html">一致性算法</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
 
+<nav class="pagination" role="navigation">
+    <span class="page-number">第 1 页 ⁄ 共 2 页</span>
+        <a class="older-posts" href="/tag/phxpaxos/page/2/"><i class="fa fa-angle-right"></i></a>
+</nav>
             </main>
         </div>
     </div>

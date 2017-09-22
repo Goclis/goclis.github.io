@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="author" content="Goclis Yao" />
+        <meta name="copyright" content="Goclis Yao" />
+
+
+<meta name="keywords" content="PhxPaxos, Tech, " />
+
+        <title>PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介  | Logging
+</title>
+
+        <link rel="stylesheet" href="http://goclis.github.io/theme/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://goclis.github.io/theme/css/friendly.css" />
+        <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="//cdn.bootcss.com/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
+
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="http://goclis.github.io/theme/images/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="http://goclis.github.io/theme/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="http://goclis.github.io/theme/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="http://goclis.github.io/theme/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link rel="icon" href="http://goclis.github.io/theme/images/apple-touch-icon-144x144.png" />
+        <link href="http://goclis.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Full Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Life.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Life Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Note.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Note Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Python.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Python Category Atom Feed" />
+        <link href="http://goclis.github.io/feeds/Tech.atom.xml" type="application/atom+xml" rel="alternate" title="Logging - Tech Category Atom Feed" />
+    </head>
+    <body class="home-template">
+        <div id="wrapper">
+            <header class="main-header" style="background-image: url(/images/background.png)" "=">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- start logo -->
+                            <a class="branding portrait" href="http://goclis.github.io" title="Logging">
+                                <img src="/images/panda.jpg" alt="Logging">
+                            </a>
+                            <!-- end logo -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <nav class="main-navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="navbar-header">
+                                <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                                </span>
+                            </div>
+                            <div class="collapse navbar-collapse" id="main-menu">
+                                <ul class="menu">
+                                    <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
+                                    <li><a href="http://goclis.github.io/about.html">关于</a></li>
+                                </ul>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介" class="post">
+                    <header class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html">PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-09-22T20:01:27+08:00" title="2017-09-22T20:01:27+08:00"> 发布：2017-09-22</time>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <p><strong>前置内容：建议对 Paxos 有基本理解后再阅读。</strong></p>
+<p>本篇主要是为了后续几篇讲算法实现做些铺垫，个人觉得在看代码之前对设计进行基本的了解是必须的，否则会是一头雾水。</p>
+<p>因为只是简介，我只会把 PhxPaxos 中的一些概念稍微讲讲，更为详细的内容还是建议大家阅读微信团队的<a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;mid=2247483695&amp;idx=1&amp;sn=91ea422913fc62579e020e941d1d059e#rd">原文</a>。</p>
+<p>我个人感觉 PhxPaxos 的<strong>实例-日志-状态机</strong>这样的设计是常见的一种实现思路，之前也有向同学请教了一下 X-Paxos 的设计，发现确实很类似，但是各个库出于各自对性能的要求，有着不同的优化取舍罢了（比如 X-Paxos 需要服务一些跨数据中心的高时延场景，所以 Pipelining 是个很好的优化手段）。</p>
+<h2 id="_1">实例<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<p>相信了解过 Paxos 算法的读者都应该知道它最基本的能力：让多个进程（或节点）间达成一致，即它们均确定出同一个值。在确定值后，Paxos 组的成员中只要仍旧有多数派存活，该值将会一直被保持，从而能够容忍部分成员临时断线、掉线重启甚至丢失了该值。</p>
+<p>我们知道，由于 Paxos 组内可能有多个 Proposer 同时提案，在达成一致前可能会运行多轮的 Paxos 两阶段协议。PhxPaxos 使用<strong>实例</strong>来代替了这其中的多轮协议，将多轮 Paxos 协议确定的值称为<strong>实例的值</strong>。</p>
+<p>虽然作为一个 Paxos 库，像 PhxPaxos 这样提供确定一个实例值的能力似乎已经完成基本任务了：它实现了 Paxos 算法，能够确定一个值。</p>
+<p>然而，对于一个实际应用而言，光有一个值根本没太多作用，我们往往需要多个值，并且值之间一般也得有关联。因此，PhxPaxos 加入了这种确定多个值的功能，思路很简单，利用多个实例，并且为它们定义很简单的顺序关系，即为每个实例指定一个递增的 ID，依次推进。就如下图所示。</p>
+<p><img alt="" src="http://ww1.sinaimg.cn/large/c574b90ely1fiowp2x4mkj20h7085dfv.jpg"/></p>
+<p>当然，因为网络或者一些其他原因，Paxos 组内的各个成员的实例的进度可能会不同。<strong>PhxPaxos 不允许空洞</strong>，简单来说就是如果当前多数派的 Acceptor 的实例落后的话，实例将无法被继续推进，必须等到这些落后的实例通过<strong>学习</strong>机制追赶上来之后，才能够继续推进。我个人感觉这种限制实例递增推进的设计和 Raft 非常类似。</p>
+<p>这里略微补充一点关于<strong>实例学习</strong>的概念。我们知道经典的 Paxos 三角色是 Proposer、Acceptor 以及 Learner。其中的 Learner 就是负责学习追赶它所落后的实例值的，具体我们放到系列的后续篇幅去讲。</p>
+<h2 id="_2">日志<a class="headerlink" href="#_2" title="Permanent link">¶</a></h2>
+<p>这里稍微提一下日志是因为这是比实例值更通用的一个说法，尤其在存储系统中。换句话说，在存储系统中，我们通过 Paxos 确定的值实际就是日志，这些日志格式由存储系统设计，并由存储系统去处理。比如说 X-Cluster 是基于 X-Paxos 实现的，它利用 X-Paxos 所确定的就是 MySQL 的 binlog，通过将 Leader 上执行事务得到的 binlog 通过 Paxos 发送到多个副本上应用来实现高可用（<strong>这段是个人理解，我对 MySQL 底层并不熟悉，可能会有误，但是思想应该是这样的</strong>）。</p>
+<h2 id="_3">状态机<a class="headerlink" href="#_3" title="Permanent link">¶</a></h2>
+<p>按照上面所述的设计，现在我们在每个 Paxos 组成员节点上都有了一系列相同并连续有序的日志，下一步就是将这些日志变得更加有意义了，于是引入了<strong>状态机</strong>。</p>
+<p>状态机的作用是应用日志，通过输入日志，不断地进行状态转换。下图是一个 Key-Value 状态机以及它应用日志的过程。</p>
+<p><img alt="" src="http://ww1.sinaimg.cn/large/c574b90ely1fiowqn3hskj20bn0axjrh.jpg"/></p>
+<p>左边是一个个状态，右边是通过日志进行的状态转换，显然，只要各个节点的日志是一致的，它们得到的状态机最终也会是相同的。</p>
+<h2 id="_4">检查点<a class="headerlink" href="#_4" title="Permanent link">¶</a></h2>
+<p>在实际场景中，日志是很占空间的，稍微试想一下，存储内容是通过日志确认得到的，那么完全可能有这样的情况：日志比最终应用日志后得到的存储状态还要占用空间的。比如说利用 Paxos 来实现一个文件系统，那么添加 N 个不同文件产生的日志大小基本上是会大于存储这 N 个文件的空间的，这大概也是 Paxos 很少直接应用在文件系统的存储节点之间的原因（更多用于协调节点）。</p>
+<p>总之，日志会占用空间并且可能还不小。而从之前描述的设计可以看到，如果 Paxos 组内加入一个全新的成员，它想到追赶到和大家一致的状态的话，是需要所有的日志的。所以，检查点被引入以解决这种不留日志没法恢复、留了日志空间占用过大的问题。</p>
+<p>检查点实质上就是对状态机做快照，因为快照表现的是当前状态，所以相比于为了达到此状态需要应用的所有日志，它可能是不大的。比如说 Redis 的 RDB 文件就可以视作是对 Redis 的一个检查点，它其中就成功地压缩了很多针对同一个键值的操作。</p>
+<p>在检查点的帮助下，一个新成员的追赶就变成了应用检查点加上应用该检查点之后的日志。</p>
+<h2 id="_5">结语<a class="headerlink" href="#_5" title="Permanent link">¶</a></h2>
+<p>我个人感觉 PhxPaxos 基本上改成了 Raft，起码在理解难度上差不太多了，虽然像 Leader 选举这样的功能对 PhxPaxos 而言是可选的。不过也可能是我的错觉，毕竟没细看过 Raft 的所有内容。</p>
+<p>在对设计进行简单的介绍后，接下来就是对 PhxPaxos 的算法实现部分进行剖析了，不过后面好像会更忙，更新嘛。。尽量一周能出一篇。</p>
+<div class="widget">
+    <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
+    <div id="disqus_thread"
+            data-disqus-identifier="disqus-posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html"
+>
+        <div class="accordion-inner">
+            <div class="comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+        var disqus_identifier = 'disqus-posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html';
+    var disqus_url = 'http://goclis.github.io/posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>            </div>
+        </div>
+    </div>
+</div>
+                    </div>
+                </article>
+                <div class="prev-next-wrap clearfix">
+                    <a class="btn btn-default" href="/posts/2017/09/18/论文阅读笔记（MeteorShower）.html"><i class="fa fa-angle-left fa-fw"></i> 论文阅读笔记（MeteorShower）</a>
+                    &nbsp;
+                </div>
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title">分类</h4>
+                    <div class="content tag-cloud">
+                        <a href="/category/tech/index.html">Tech</a>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title">标签</h4>
+                    <div class="content tag-cloud">
+                        <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                    </div>
+                </div>
+<div class="widget">
+    <h4 class="title">联系我</h4>
+    <div class="content community">
+            <p>
+                <a href="https://github.com/Goclis/" title="My Github Profile" target="_blank"><i class="fa fa-github"></i> Github</a>
+            </p>
+            <p>
+                <a href="https://twitter.com/Goclis" title="My Twitter Profile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
+            </p>
+            <p>
+                <a href="mailto:goclisyyh@gmail.com" title="My Email Address" target="_blank"><i class="fa fa-envelope"></i> Email</a>
+            </p>
+            <p>
+                <a href="http://weibo.com/u/3312761102" title="My Weibo Profile" target="_blank"><i class="fa fa-weibo"></i> Weibo</a>
+            </p>
+    </div>
+</div>            </aside>
+        </div>
+    </div>
+</section>
+                    
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://goclis.github.io">Logging</a></span> | 
+                <span>Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a></span> | 
+                <span>主题基于<a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a></span> | 
+                <span>设计来源于<a href="http://www.ghostchina.com">Ghost中文网</a></span>
+            </div>
+        </div>
+    </div>
+</div>            <a href="#" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
+        
+            <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://goclis.github.io/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1258477177'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1258477177' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+            $("table").addClass("table"); // Added by Goclis
+
+            // 隐藏CNZZ统计
+            $("[title='站长统计']").hide();
+
+            // Back to top
+            $(document).ready(function () {
+                $(window).scroll(function(){
+                    if ($(this).scrollTop() > 200) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+            });
+                
+        </script>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'goclis';
+
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+        <script  language="javascript" type="text/javascript">
+            function uncollapse() {
+                var hash_str = window.location.hash;
+                if (window.location.hash.match(/^#comment-\d+$/))
+                {
+                    var hash_str = '#disqus_thread';
+                }
+                $(hash_str).collapse({
+                    toggle: true
+                    })
+            }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+            uncollapse(); 
+        </script>
+
+        <script type="text/javascript" lang="javascript">
+            function closeModal () {
+                $(this).parent('.modal').hide();
+            }
+
+            function showModal () {
+                $(this).siblings('.modal').show();
+            }
+
+            // 为图片增加模态放大的功能
+            $('.post-content').find('img').each(function (index, iv) {
+                $(iv)
+                    .after($('<div class="modal">')
+                        .append($('<span class="modal-close">x<span>').click(closeModal))
+                        .append('<img style="margin: 0 auto" class="modal-content" src="' + $(iv).attr('src') + '">'))
+                    .addClass('modal-img')
+                    .click(showModal);
+            });
+        </script>
+    </body>
+</html>

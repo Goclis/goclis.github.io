@@ -78,9 +78,48 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 20 篇文章 
+				        共 21 篇文章 
 				    </div>
 				</div>
+                <article id="PhxPaxos 源码阅读笔记（一）：网络层" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html">PhxPaxos 源码阅读笔记（一）：网络层</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-08-30T21:59:30+08:00" title="2017-08-30T21:59:30+08:00">2017-08-30</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p><strong>本篇不需要前置内容。</strong></p>
+<p>我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。</p>
+<h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<p>对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">NetWork</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">NetWork</span><span class="p">();</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">NetWork</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="c1">//Network must not send/recieve any message before paxoslib called this funtion.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">RunNetWork</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">//If paxoslib call this function, network ...</span></pre></div>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="PhxPaxos 源码阅读笔记（零）" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -152,39 +191,6 @@
                     <footer class="post-footer clearfix">
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="内存模型引发的思考" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/06/22/内存模型引发的思考.html">内存模型引发的思考</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-06-22T19:30:00+08:00" title="2017-06-22T19:30:00+08:00">2017-06-22</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p>昨天在看《深入理解 Java 虚拟机》，本来以为 12 章讲的内存模型指的是类似 C++ 对象模型的概念，可以在一个半小时内搞定，结果看到硬件上的一致性以及内存模型的概念时就发现触及自己的知识盲区了。</p>
-<h3 id="cpu">CPU 缓存一致性<a class="headerlink" href="#cpu" title="Permanent link">¶</a></h3>
-<p>首先是 CPU 缓存一致性，借一下书上的图。</p>
-<p><img alt="" src="https://ws1.sinaimg.cn/large/006tKfTcly1fgt3nsziz8j30tm0e0q4m.jpg"/></p>
-<p>现在的 CPU 基本上都是多核了，以 Intel i7 系列的处理器来说，每个核都有各自的寄存器组、L1 Cache、L2 Cache，多个核共享 L3 Cache，这里我们把 L1 和 L2 合起来统称为各个核的高速缓存。显然，各个核之间的高速缓存需要同步，否则如果两个核访问同一块内存时，就可能出现错误，因为它们对该内存的读写操作是直接作用于自己的高速缓存，而非主存，这就引入了 CPU 的缓存一致性协议。</p>
-<p>我对这块并没有了解过，在网上搜了一下，找到了一篇感觉还不错的文章：<a href="http://www.infoq.com/cn/articles/cache-coherency-primer">缓存一致性 ...</a></p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/06/22/内存模型引发的思考.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/cpu-huan-cun-yi-zhi-xing/index.html">CPU 缓存一致性</a>
-                            <a href="/tag/duo-xian-cheng-mo-xing/index.html">多线程模型</a>
-                            <a href="/tag/nei-cun-mo-xing/index.html">内存模型</a>
-                            <a href="/tag/volatile/index.html">volatile</a>
                         </div>
                         <div class="pull-right share">
                         </div>

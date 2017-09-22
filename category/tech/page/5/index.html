@@ -78,9 +78,44 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 20 篇文章 
+				        共 21 篇文章 
 				    </div>
 				</div>
+                <article id="data-in-http-request" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html">HTTP请求中的数据</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2016-04-16T22:47:20+08:00" title="2016-04-16T22:47:20+08:00">2016-04-16</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。</p>
+<h3 id="http">HTTP请求格式<a class="headerlink" href="#http" title="Permanent link">¶</a></h3>
+<p>先看看HTTP请求消息的格式 <a href="http://www.tutorialspoint.com/http/http_requests.htm">1</a>：</p>
+<ul>
+<li>A Request Line</li>
+<li>Zero or more header (General|Request|Entity) fields followed by CRLF</li>
+<li>An empty line (i.e., a line with nothing preceding the CRLF) indicating the end of the header fields</li>
+<li>Optionally a message-body</li>
+</ul>
+<p>从格式上来看，除了第三部分，都能够附带用户数据，但一般来说 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2016/04/16/data-in-http-request.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/httpqing-qiu/index.html">HTTP请求</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="openssl-rsa-basic-use" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -158,43 +193,6 @@
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/isp/index.html">ISP</a>
                             <a href="/tag/pppoe/index.html">PPPoE</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="pptp-vpn-process" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html">PPTP VPN Process</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2014-08-19T14:41:00+08:00" title="2014-08-19T14:41:00+08:00">2014-08-19</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！ 但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？ 于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。</p>
-<p>以下文章中VPN如不特指皆为PPTP VPN。</p>
-<p>首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。</p>
-<p>以前只是大概了解了一下VPN的原理，也没有去细究到协议的层次，这次就借着这个机会去好好了解了一下。</p>
-<h3 id="vpn">VPN的两种架构<a class="headerlink" href="#vpn" title="Permanent link">¶</a></h3>
-<ul>
-<li>Remote access VPN</li>
-<li>Site-to-site VPN</li>
-</ul>
-<p>Remote access VPN是我们平时个人用的比较多的那种，也就是你在网上买了个VPN，然后拿着账号密码和服务器名连接上了的种，这种就只能保证你自己的那台设备是连上VPN的，而Site-to-site VPN则更像是，如果你用了路由这样的设备，在该设备上拨了VPN，这样路由的私有网络就是一个Site，而路由连上的VPN服务器又构成了另外一个Site，所以是Site-to-site，这种方式就能保证你私有网络中的所有设备都连上了VPN。</p>
-<p>个人感觉 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2014/08/19/pptp-vpn-process.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/pptp/index.html">PPTP</a>
-                            <a href="/tag/vpn/index.html">VPN</a>
                         </div>
                         <div class="pull-right share">
                         </div>
