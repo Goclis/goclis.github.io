@@ -56,6 +56,7 @@ docs/_build/
 # my conf
 *.pid
 cache/
+output/
 unposts/
 drafts/
 .DS_store
