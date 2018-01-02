@@ -55,9 +55,8 @@ docs/_build/
 
 # my conf
 *.pid
-output/
 cache/
 unposts/
 drafts/
 .DS_store
-
+Thumbs.db

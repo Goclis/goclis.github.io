@@ -113,3 +113,36 @@ git checkout master
 git merge upstream/master # 将源库的master合并到fork库的master
 ```
 
+### 9. 获取一个分支的修改但是不要推进该分支上的任何 commit
+在节点间同步的时候想用，A 节点写到一半切换到 B，希望能够通过 Git 来同步一下代码：
+
+```bash
+# A 节点上，假设当前正在 master 上
+git checkout -b tempSync # 创建一个临时分支
+git add . && git commit -m "temp" # 添加并提交所有变更
+git push --set-upstream origin tempSync # 推到服务器上
+git checkout master
+git checkout -b oldMaster
+git checkout master
+git merge tempSync
+git reset --mixed oldMaster # 重置 master 的位置，但保留这之上的所有修改
+git branch -d tempSync
+git branch -d oldMaster
+
+# B 节点上，获取变更，rebase 合并改变，重置 master（--mixed 表示重置 index 但保留更改），删除本地临时分支
+git pull
+git checkout -b oldMaster
+git checkout master
+git merge origin/tempSync
+git checkout master
+git reset --mixed oldMaster
+git branch -d oldMaster
+
+# 清理远程分支
+git push origin :tempSync
+git branch -d -r origin/tempSync
+```
+
+这样操作之后，A 和 B 上都得到了一致的内容，并且都处于修改状态。
+
+注意：命令中使用的是 merge 来合并临时分支，对于有多次提交的临时分支，可以采用 rebase 来操作。

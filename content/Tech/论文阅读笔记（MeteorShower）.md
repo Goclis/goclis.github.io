@@ -193,7 +193,9 @@ using ReplicaList = list<ReplicaAddress>;
 ### 参数可调环境
 在单个 GCP 的数据中心中模拟多数据中心以便利用 GCP 提供的参数控制功能来调整存储实例之间的时延。
 
-![](https://ws3.sinaimg.cn/large/006tNc79gy1fjnte5t1coj30pc0vsdkh.jpg)
+![](https://ws2.sinaimg.cn/large/006tNc79gy1fjnzlubm87j30pa0f8acj.jpg)
+
+![](https://ws4.sinaimg.cn/large/006tNc79gy1fjnzm5gof5j30p40fa76d.jpg)
 
 上图为不同时延（RTT）情况下，各种算法配置以及读写模式下的读写时延。
 
