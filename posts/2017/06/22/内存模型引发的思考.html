@@ -8,7 +8,7 @@
         <meta name="copyright" content="Goclis Yao" />
 
 
-<meta name="keywords" content="内存模型, volatile, CPU 缓存一致性, 多线程模型, Tech, " />
+<meta name="keywords" content="内存模型, volatile, CPU 缓存一致性, 多线程模型, Lock-Free, Tech, " />
 
         <title>内存模型引发的思考  | Logging
 </title>
@@ -82,6 +82,8 @@
                         <div class="post-meta">
                             <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
                             <time class="post-date" datetime="2017-06-22T19:30:00+08:00" title="2017-06-22T19:30:00+08:00"> 发布：2017-06-22</time>
+                             •
+                            <time class="post-date" datetime="2017-12-27T13:57:00+08:00" title="2017-12-27T13:57:00+08:00"> 更新：2017-12-27</time> 
                         </div>
                     </header>
                     <div class="post-content">
@@ -111,7 +113,7 @@
 <p>说的明白点：在 C/C++ 中，volatile 就是让编译器访问此变量时，一律从内存中访问，并且要把结果即时写入内存，从而保证了多线程能够及时得知变化，而且，绝对不能因为优化而把和这个变量相关的语句给抹掉了。</p>
 <p>看完这两篇文章后，我是真觉得 C/C++ 里的这个关键字作用真的不大，纯粹是为了解决一些历史问题引入的（和 I/O 设备相关，本章开头说的那篇文章里有提及）。它在 C/C++ 中的鸡肋之处主要体现在只使用它无法提供我们经常需要的同步语义（Java 为它加了 Acquire 和 Relase 语义后使得它能表达一些基本的同步语义：如 happen-before），而如果引入锁这些东西来表达同步语义的话，加不加 volatile 的话其实没差。</p>
 <p>后面这点我在 VS2013 下做了点实验，我们知道编译器是可以利用寄存器进行一些优化的，比如下面的代码：</p>
-<div class="highlight"><pre><span class="kt">int</span> <span class="n">g_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">g_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="kt">int</span> <span class="n">g_input</span><span class="p">;</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -124,7 +126,7 @@
 </pre></div>
 <p>在 VS2013 下开 Release 的话，<code>g_i += j</code> 这句会被优化成类似 <code>add ecx eax</code> 这样的代码，即将两个操作数放入各自的寄存器中，然后在循环结束后才将最终值写回内存。</p>
 <p>看到这儿，自然而然地想到如果这段代码在多线程下会怎么样？在多线程这种情景下，我们一般都会利用临界区之类的机制来保证同步，所以代码会变成下面这样：</p>
-<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">g_input</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">g_input</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">Lock</span><span class="p">();</span>
     <span class="n">g_i</span> <span class="o">+=</span> <span class="n">j</span><span class="p">;</span>
@@ -138,6 +140,13 @@
 <h3 id="cc">C/C++ 多线程模型<a class="headerlink" href="#cc" title="Permanent link">¶</a></h3>
 <p>上面提及的那篇讲 C++0x 的文章中说 C++0x 的标准中定义的内存模型是单线程的，从而导致很多那个时候的优化在多线程时可能会出现问题。</p>
 <p>对 C++ 新标准中的这类型具体细节不是很清楚，但是 C++11 既然提供了自身的线程库，我想应该是已经把这块的定义理的比较清楚了吧。</p>
+<h3 id="lock-free">Lock-Free<a class="headerlink" href="#lock-free" title="Permanent link">¶</a></h3>
+<p>本部分属于更新内容。</p>
+<p>今天看了下关于 <a href="http://www.cnblogs.com/gaochundong/p/lock_free_programming.html">Lock-Free Programming</a> 的一篇博客，里面提及了内存模型的问题，加深了我对它的理解。在前文中我有提到说 C++ 编译器在代码中遇到 Lock 之类的操作时就会取消掉寄存器读的优化，而强制去访问内存，这实际上是和内存模型相关的。</p>
+<p>借一张博客中描述 .Net 内存读写操作的表：</p>
+<p><img alt="" src="http://ww1.sinaimg.cn/large/c574b90egy1fmva2hx3pij20h00d23yz.jpg"/></p>
+<p>倒数第二行对于 Lock Acquire 是定义了必须得在访问前刷线程缓存的，实质上就是要求 CPU 必须到内存中重新去访问该值，以避免访问 CPU Cache 中的值是旧的，这和 C++ 编译器进行的优化原则是差不多的，可能是因为 C++11 也遵循了这样的内存模型。</p>
+<p>再注意一点，表中第三行提及了 Volatile Read，可以看到，它也有和 Lock Acquire 同样的要求，因为这个变量被声明为了 volatile，所以编译器不能认为它在 CPU 缓存中的内容是可靠的，从而需要访问内存刷新缓存。</p>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
     <div id="disqus_thread"
@@ -182,6 +191,7 @@
                     <div class="content tag-cloud">
                         <a href="/tag/cpu-huan-cun-yi-zhi-xing/index.html">CPU 缓存一致性</a>
                         <a href="/tag/duo-xian-cheng-mo-xing/index.html">多线程模型</a>
+                        <a href="/tag/lock-free/index.html">Lock-Free</a>
                         <a href="/tag/nei-cun-mo-xing/index.html">内存模型</a>
                         <a href="/tag/volatile/index.html">volatile</a>
                     </div>

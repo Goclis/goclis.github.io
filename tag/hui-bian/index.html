@@ -93,7 +93,7 @@
                     </div>
                     <div class="post-content">
                         <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
-<div class="highlight"><pre><span class="nf">movl</span> <span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">),</span> <span class="nv">%eax</span>
+<div class="highlight"><pre><span></span><span class="nf">movl</span> <span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">),</span> <span class="nv">%eax</span>
 <span class="nf">imull</span> <span class="mi">8</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>
 <span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
 <span class="nf">movl</span> <span class="nv">%edx</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
@@ -107,7 +107,7 @@
 <h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">¶</a></h3>
 <p>我们知道 mov 在 IA32 中有基础的三类操作，即 b，w，l。
 而 mov 在使用时大致如下：</p>
-<div class="highlight"><pre><span class="nf">movb ...</span></pre></div>
+<div class="highlight"><pre><span></span><span class="nf">movb ...</span></pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2014/08/08/mov-with-memory.html" class="btn btn-default">阅读全文</a>

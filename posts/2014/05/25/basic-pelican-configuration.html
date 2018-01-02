@@ -89,18 +89,18 @@
 <h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
 <p><strong>Install</strong></p>
-<div class="highlight"><pre>pip install pelican
+<div class="highlight"><pre><span></span>pip install pelican
 
 pip install markdown
 </pre></div>
 <p><strong>Quick-Start</strong></p>
 <p>自己新建一个文件夹，然后：</p>
-<div class="highlight"><pre>pelican-quickstart
+<div class="highlight"><pre><span></span>pelican-quickstart
 </pre></div>
 <p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
 <p><strong>Usage</strong></p>
 <p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
-<div class="highlight"><pre>make html <span class="c"># 将content中的markdown (or others) 生成为html</span>
+<div class="highlight"><pre><span></span>make html <span class="c1"># 将content中的markdown (or others) 生成为html</span>
 
 make regenerate
 
@@ -109,7 +109,7 @@ make serve
 make devserver
 </pre></div>
 <p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
-<div class="highlight"><pre>./develop_server.sh start  <span class="c"># http://localhost:8000</span>
+<div class="highlight"><pre><span></span>./develop_server.sh start  <span class="c1"># http://localhost:8000</span>
 
 ./develop_server.sh stop
 </pre></div>
@@ -123,7 +123,7 @@ make devserver
 </ul>
 <p>接下来一个个处理吧。</p>
 <p>pelican的content目录结构：</p>
-<div class="highlight"><pre>|—— content
+<div class="highlight"><pre><span></span>|—— content
 |   |—— articles  # blog或者其他按日期排序的文本
 |   |   |—— article1.md
 |   |   |—— article2.md
@@ -141,7 +141,7 @@ make devserver
 <p>总之，articles下放各种文章就对了。。</p>
 <p><strong>file metadata</strong></p>
 <p>pelican会从你的文件的开头获取一些关于这个文件的信息，比如标题、日期等，下面以markdown为例：</p>
-<div class="highlight"><pre># your file xxx.md
+<div class="highlight"><pre><span></span># your file xxx.md
 
 Title: My first file        # 标题
 Date: 2014-5-25 20:30       # 时间
@@ -158,86 +158,86 @@ Summary: Somethings         # 概要
 <p>静态文件路径（典型的是突破）是静态博客必须要指定好的一个东西。</p>
 <p>pelican默认会在生成文章时拷贝content目录中的images文件夹到output的文件夹中。</p>
 <p>如果你想要自己手动添加一个新的文件夹（比如pdfs）让其在生成文章时被拷贝到output中，可以在pelicanconf.py中添加：</p>
-<div class="highlight"><pre><span class="n">STATIC_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'images'</span><span class="p">,</span> <span class="s">'pdfs'</span><span class="p">]</span>  <span class="c"># 这意味着这两个文件夹都会被copy过去</span>
+<div class="highlight"><pre><span></span><span class="n">STATIC_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'images'</span><span class="p">,</span> <span class="s1">'pdfs'</span><span class="p">]</span>  <span class="c1"># 这意味着这两个文件夹都会被copy过去</span>
 </pre></div>
 <p><strong>theme settings</strong></p>
 <p>pelican的默认主题不是很好看。。所以得研究研究怎么换了。。</p>
 <p>这有一些<a href="https://github.com/getpelican/pelican-themes">主题</a>，所以打算基于这些修改了。。</p>
 <p>更换主题很容易，直接在配置文件里修改主题路径即可：</p>
-<div class="highlight"><pre><span class="n">THEME</span> <span class="o">=</span> <span class="s">"/home/user/pelican-themes/theme-folder"</span>
+<div class="highlight"><pre><span></span><span class="n">THEME</span> <span class="o">=</span> <span class="s2">"/home/user/pelican-themes/theme-folder"</span>
 </pre></div>
 <p><strong>配置文件</strong></p>
 <p>在移植的时候需要注意主题的路径需要修改pelicanconf.py：</p>
-<div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
-<span class="n">AUTHOR</span> <span class="o">=</span> <span class="s">u'Goclis Yao'</span>
-<span class="n">SITENAME</span> <span class="o">=</span> <span class="s">u'Logging'</span>
-<span class="n">SITEURL</span> <span class="o">=</span> <span class="s">''</span>
+<span class="n">AUTHOR</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">'Goclis Yao'</span>
+<span class="n">SITENAME</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">'Logging'</span>
+<span class="n">SITEURL</span> <span class="o">=</span> <span class="s1">''</span>
 
-<span class="n">TIMEZONE</span> <span class="o">=</span> <span class="s">'Asia/Shanghai'</span>
+<span class="n">TIMEZONE</span> <span class="o">=</span> <span class="s1">'Asia/Shanghai'</span>
 <span class="n">DATE_FORMATS</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">'zh_CN'</span><span class="p">:</span> <span class="s">'%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S'</span><span class="p">,</span>
+        <span class="s1">'zh_CN'</span><span class="p">:</span> <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">DEFAULT_DATE_FORMAT</span> <span class="o">=</span> <span class="s">'%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S'</span>
-<span class="n">DEFAULT_DATE</span> <span class="o">=</span> <span class="s">'fs'</span>  <span class="c"># use filesystem's mtime</span>
-<span class="c"># LOCALE = ('zh_CN.utf8',)</span>
-<span class="n">DEFAULT_LANG</span> <span class="o">=</span> <span class="s">u'zh_CN'</span>
-<span class="n">FILENAME_METADATA</span> <span class="o">=</span> <span class="s">'(?P&lt;slug&gt;.*)'</span>
+<span class="n">DEFAULT_DATE_FORMAT</span> <span class="o">=</span> <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span>
+<span class="n">DEFAULT_DATE</span> <span class="o">=</span> <span class="s1">'fs'</span>  <span class="c1"># use filesystem's mtime</span>
+<span class="c1"># LOCALE = ('zh_CN.utf8',)</span>
+<span class="n">DEFAULT_LANG</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">'zh_CN'</span>
+<span class="n">FILENAME_METADATA</span> <span class="o">=</span> <span class="s1">'(?P&lt;slug&gt;.*)'</span>
 
-<span class="c"># Feed generation is usually not desired when developing</span>
+<span class="c1"># Feed generation is usually not desired when developing</span>
 <span class="n">FEED_ALL_ATOM</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="n">CATEGORY_FEED_ATOM</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="n">TRANSLATION_FEED_ATOM</span> <span class="o">=</span> <span class="bp">None</span>
 
-<span class="c"># Blogroll</span>
-<span class="n">LINKS</span> <span class="o">=</span>  <span class="p">((</span><span class="s">'Pelican'</span><span class="p">,</span> <span class="s">'http://getpelican.com/'</span><span class="p">),</span>
-          <span class="p">(</span><span class="s">'Python.org'</span><span class="p">,</span> <span class="s">'http://python.org/'</span><span class="p">),</span>
-          <span class="p">(</span><span class="s">'Jinja2'</span><span class="p">,</span> <span class="s">'http://jinja.pocoo.org/'</span><span class="p">),)</span>
+<span class="c1"># Blogroll</span>
+<span class="n">LINKS</span> <span class="o">=</span>  <span class="p">((</span><span class="s1">'Pelican'</span><span class="p">,</span> <span class="s1">'http://getpelican.com/'</span><span class="p">),</span>
+          <span class="p">(</span><span class="s1">'Python.org'</span><span class="p">,</span> <span class="s1">'http://python.org/'</span><span class="p">),</span>
+          <span class="p">(</span><span class="s1">'Jinja2'</span><span class="p">,</span> <span class="s1">'http://jinja.pocoo.org/'</span><span class="p">),)</span>
 
-<span class="c"># Social widget</span>
-<span class="n">SOCIAL</span> <span class="o">=</span> <span class="p">((</span><span class="s">'Github'</span><span class="p">,</span> <span class="s">'https://github.com/Goclis/'</span><span class="p">),)</span>
+<span class="c1"># Social widget</span>
+<span class="n">SOCIAL</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'Github'</span><span class="p">,</span> <span class="s1">'https://github.com/Goclis/'</span><span class="p">),)</span>
 
 <span class="n">DEFAULT_PAGINATION</span> <span class="o">=</span> <span class="bp">False</span>
 
-<span class="c"># Uncomment following line if you want document-relative URLs when developing</span>
-<span class="c">#RELATIVE_URLS = True</span>
+<span class="c1"># Uncomment following line if you want document-relative URLs when developing</span>
+<span class="c1">#RELATIVE_URLS = True</span>
 
-<span class="n">STATIC_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'images'</span><span class="p">,</span> <span class="s">'pdfs'</span><span class="p">,</span> <span class="s">'src'</span><span class="p">]</span>  <span class="c"># images and pdf files</span>
+<span class="n">STATIC_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'images'</span><span class="p">,</span> <span class="s1">'pdfs'</span><span class="p">,</span> <span class="s1">'src'</span><span class="p">]</span>  <span class="c1"># images and pdf files</span>
 
-<span class="n">THEME</span> <span class="o">=</span> <span class="s">"/home/goclis/SHARE/Blog/themes/pelican-bootstrap3"</span>
-<span class="c"># THEME = "/home/goclis/niu-x2-sidebar"</span>
+<span class="n">THEME</span> <span class="o">=</span> <span class="s2">"/home/goclis/SHARE/Blog/themes/pelican-bootstrap3"</span>
+<span class="c1"># THEME = "/home/goclis/niu-x2-sidebar"</span>
 </pre></div>
 <h3 id="nginx">结合nginx<a class="headerlink" href="#nginx" title="Permanent link">¶</a></h3>
 <p>修改nginx.conf，添加server如下：</p>
-<div class="highlight"><pre><span class="nt">server</span> <span class="p">{</span>
-        <span class="n">listen</span> <span class="cp">[</span><span class="p">::</span><span class="cp">]</span><span class="o">:</span><span class="m">80</span><span class="p">;</span>
-        <span class="n">listen</span> <span class="m">80</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="nt">server</span> <span class="p">{</span>
+        <span class="n">listen</span> <span class="cp">[</span><span class="p">::</span><span class="cp">]</span><span class="p">:</span><span class="mi">80</span><span class="p">;</span>
+        <span class="err">listen</span> <span class="err">80</span><span class="p">;</span>
 
-        <span class="n">server_name</span> <span class="n">localhost</span><span class="p">;</span>
-        <span class="n">root</span> <span class="n">C</span><span class="o">:/</span><span class="n">Users</span><span class="o">/</span><span class="n">Goclis</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">VMSHARE</span><span class="o">/</span><span class="n">Blog</span><span class="o">/</span><span class="n">output</span><span class="p">;</span>
+        <span class="err">server_name</span> <span class="err">localhost</span><span class="p">;</span>
+        <span class="err">root</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">Goclis</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">VMSHARE</span><span class="o">/</span><span class="n">Blog</span><span class="o">/</span><span class="n">output</span><span class="p">;</span>
 
-        <span class="n">location</span> <span class="o">=</span> <span class="o">/</span> <span class="err">{</span>
-            <span class="err">#</span> <span class="n">Instead</span> <span class="n">of</span> <span class="n">handling</span> <span class="n">the</span> <span class="n">index</span><span class="o">,</span> <span class="n">just</span>
-            <span class="err">#</span> <span class="n">rewrite</span> <span class="o">/</span> <span class="n">to</span> <span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
-            <span class="n">rewrite</span> <span class="o">^</span> <span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span><span class="p">;</span>
+        <span class="err">location</span> <span class="err">=</span> <span class="err">/</span> <span class="err">{</span>
+            <span class="err">#</span> <span class="err">Instead</span> <span class="err">of</span> <span class="err">handling</span> <span class="err">the</span> <span class="err">index,</span> <span class="err">just</span>
+            <span class="err">#</span> <span class="err">rewrite</span> <span class="err">/</span> <span class="err">to</span> <span class="err">/index.html</span>
+            <span class="err">rewrite</span> <span class="err">^</span> <span class="err">/index.html</span><span class="p">;</span>
         <span class="p">}</span>
 
         <span class="nt">location</span> <span class="o">/</span> <span class="p">{</span>
-            <span class="err">#</span> <span class="n">Serve</span> <span class="n">a</span> <span class="o">.</span><span class="n">gz</span> <span class="n">version</span> <span class="n">if</span> <span class="n">it</span> <span class="n">exists</span>
-            <span class="n">gzip_static</span> <span class="n">on</span><span class="p">;</span>
-            <span class="err">#</span> <span class="n">Try</span> <span class="n">to</span> <span class="n">serve</span> <span class="n">the</span> <span class="n">clean</span> <span class="k">url</span> <span class="n">version</span> <span class="n">first</span>
-            <span class="n">try_files</span> <span class="err">$</span><span class="n">uri</span><span class="o">.</span><span class="n">htm</span> <span class="err">$</span><span class="n">uri</span><span class="o">.</span><span class="n">html</span> <span class="err">$</span><span class="n">uri</span> <span class="o">=</span><span class="m">404</span><span class="p">;</span>
+            <span class="err">#</span> <span class="err">Serve</span> <span class="err">a</span> <span class="err">.gz</span> <span class="err">version</span> <span class="err">if</span> <span class="err">it</span> <span class="err">exists</span>
+            <span class="err">gzip_static</span> <span class="err">on</span><span class="p">;</span>
+            <span class="err">#</span> <span class="err">Try</span> <span class="err">to</span> <span class="err">serve</span> <span class="err">the</span> <span class="err">clean</span> <span class="err">url</span> <span class="err">version</span> <span class="err">first</span>
+            <span class="err">try_files</span> <span class="err">$uri.htm</span> <span class="err">$uri.html</span> <span class="err">$uri</span> <span class="err">=404</span><span class="p">;</span>
         <span class="p">}</span>
 
-        <span class="nt">location</span> <span class="o">=</span> <span class="o">/</span><span class="nt">favicon</span><span class="nc">.ico</span> <span class="p">{</span>
-            <span class="err">#</span> <span class="n">This</span> <span class="n">never</span> <span class="n">changes</span><span class="o">,</span> <span class="n">so</span> <span class="n">don</span><span class="err">'</span><span class="n">t</span> <span class="n">let</span> <span class="n">it</span> <span class="n">expire</span>
-            <span class="n">expires</span> <span class="n">max</span><span class="p">;</span>
+        <span class="nt">location</span> <span class="o">=</span> <span class="o">/</span><span class="nt">favicon</span><span class="p">.</span><span class="nc">ico</span> <span class="p">{</span>
+            <span class="err">#</span> <span class="err">This</span> <span class="err">never</span> <span class="err">changes,</span> <span class="err">so</span> <span class="err">don't</span> <span class="err">let</span> <span class="err">it</span> <span class="err">expire</span>
+            <span class="err">expires</span> <span class="err">max</span><span class="p">;</span>
         <span class="p">}</span>
 
         <span class="nt">location</span> <span class="o">^~</span> <span class="o">/</span><span class="nt">theme</span> <span class="p">{</span>
-            <span class="err">#</span> <span class="n">This</span> <span class="k">content</span> <span class="n">should</span> <span class="n">very</span> <span class="n">rarely</span><span class="o">,</span> <span class="n">if</span> <span class="n">ever</span><span class="o">,</span> <span class="n">change</span>
-            <span class="n">expires</span> <span class="m">1</span><span class="n">y</span><span class="p">;</span>
+            <span class="err">#</span> <span class="err">This</span> <span class="err">content</span> <span class="err">should</span> <span class="err">very</span> <span class="err">rarely,</span> <span class="err">if</span> <span class="err">ever,</span> <span class="err">change</span>
+            <span class="err">expires</span> <span class="err">1y</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="err">}</span>
 </pre></div>

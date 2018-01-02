@@ -72,6 +72,44 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="PhxPaxos 源码阅读笔记（二）：存储层" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html">PhxPaxos 源码阅读笔记（二）：存储层</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2017-09-07T21:38:00+08:00" title="2017-09-07T21:38:00+08:00">2017-09-07</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p><strong>我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了，所以建议还是先补充前置内容。</strong></p>
+<p>类似网络层，PhxPaxos 对存储层也进行了抽象，给用户留下了自行扩展的能力。本篇将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有自行实现需求的用户可以将官方的设计作为参考。我大概理了一遍设计后，发现并不是太复杂，所以篇幅应该不会太长。</p>
+<h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<p>在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LogStorage</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">LogStorage</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetLogStorageDirPath</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">Get</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0 ...</span></pre></div>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/leveldb/index.html">LevelDB</a>
+                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="PhxPaxos 源码阅读笔记（一）：网络层" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -88,7 +126,7 @@
 <p>我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。</p>
 <h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <p>对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">NetWork</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NetWork</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">NetWork</span><span class="p">();</span>
@@ -142,46 +180,6 @@
                             <a href="/tag/fen-bu-shi/index.html">分布式</a>
                             <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
                             <a href="/tag/yi-zhi-xing-suan-fa/index.html">一致性算法</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="同步请求响应的实现" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/07/16/同步请求响应的实现.html">同步请求响应的实现</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-07-16T18:11:00+08:00" title="2017-07-16T18:11:00+08:00">2017-07-16</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <p><em>声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。</em></p>
-<p>最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
-
-<span class="k">class</span> <span class="nc">Synchronizer</span> <span class="p">{};</span>
-
-<span class="kt">void</span> <span class="nf">SendRequest</span><span class="p">(</span><span class="n">Packet</span> <span class="o">*</span><span class="n">_req</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span> <span class="o">=</span> <span class="o">::</span><span class="n">GetCurrentThreadId</span><span class="p">();</span>
-    <span class="n">_req</span><span class="o">-&gt;</span><span class="n">threadId</span> <span class="o">=</span> <span class="n">threadId</span><span class="p">;</span>
-    <span class="n">network</span><span class="o">-&gt;</span><span class="n">SendData</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">_req</span><span class="p">);</span>
-
-    <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterThread</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
-    <span class="n">Packet</span> <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">Synchronizer</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">WaitThreadData</span><span class="p">(</span><span class="n">threadId</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-<p>显然，WaitThreadData 的操作不能因为收不到对端响应就一直阻塞 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/07/16/同步请求响应的实现.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
                         </div>
                         <div class="pull-right share">
                         </div>

@@ -97,7 +97,7 @@
 <p>我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。</p>
 <h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <p>对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">NetWork</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NetWork</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">NetWork</span><span class="p">();</span>
@@ -169,7 +169,7 @@
                     <div class="post-content">
                         <p><em>声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。</em></p>
 <p>最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
+<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
 
 <span class="k">class</span> <span class="nc">Synchronizer</span> <span class="p">{};</span>
 

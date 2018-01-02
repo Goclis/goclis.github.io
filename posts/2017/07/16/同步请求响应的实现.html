@@ -89,7 +89,7 @@
                     <div class="post-content">
                         <p><em>声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。</em></p>
 <p>最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
+<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
 
 <span class="k">class</span> <span class="nc">Synchronizer</span> <span class="p">{};</span>
 
@@ -105,7 +105,7 @@
 </pre></div>
 <p>显然，WaitThreadData 的操作不能因为收不到对端响应就一直阻塞，需要引入超时等机制来应对对端崩溃或响应慢的情况，代码里直接利用了信号量所提供的参数来实现超时机制，可以满足条件。但是，向调用者返回超时并不意味着这个报文消失了，底层所用的网络库提供的是保证可靠的报文模式，所以这个报文最终一定会到来，因此，必须处理掉它以避免影响到后续请求。</p>
 <p>然而，接手的代码在实现上对这个问题没有考虑全面，它大致的伪代码如下：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span>
+<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Packet</span>
 <span class="p">{</span>
     <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">threadId</span><span class="p">;</span>
 <span class="p">};</span>
@@ -206,7 +206,7 @@
 <p>这种恢复有个副作用，信号量被 POST 了两次，却只有一次成功的 WAIT，从而导致其中的值增加了 1，但是，由于每次获取数据时都要调用 WaitThreadData，这个副作用不会影响到响应的正确性。</p>
 <p>为了改进这个问题，需要在 WAIT 得到数据后进行检查，判断它是否是所需要的数据。而为了能够判断，我们可以给每个请求都增加上序列号，并要求响应在回复的数据中也设置对应的序列号。序列号由 TLS 维护，保证能够标识该线程内的各个请求即可，此处直接利用了 64 位无符号数来代表（这个数真的是大啊）。</p>
 <p>最终版本如下：</p>
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span>
+<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Packet</span>
 <span class="p">{</span>
     <span class="k">enum</span> <span class="n">Type</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
 

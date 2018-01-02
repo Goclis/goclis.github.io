@@ -187,7 +187,7 @@
 <p>下图为算法描述中所使用到的一系列数据结构。</p>
 <p><img alt="" src="https://ws2.sinaimg.cn/large/006tNc79gy1fjnjk4n5wqj31cq08878d.jpg"/></p>
 <p>用 C++ 进行一下定义：</p>
-<div class="highlight"><pre><span class="c1">// 用于收集两次状态消息汇报之间的状态更新操作。</span>
+<div class="highlight"><pre><span></span><span class="c1">// 用于收集两次状态消息汇报之间的状态更新操作。</span>
 <span class="k">using</span> <span class="n">Status</span> <span class="o">=</span> <span class="n">list</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">key</span><span class="p">,</span> <span class="n">wts</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 <span class="c1">// 本地的 KV 存储，比如 LevelDB 等。</span>
 <span class="k">using</span> <span class="n">LocalStore</span> <span class="o">=</span> <span class="p">...;</span>
@@ -298,7 +298,8 @@
 </ul>
 <h3 id="_19">参数可调环境<a class="headerlink" href="#_19" title="Permanent link">¶</a></h3>
 <p>在单个 GCP 的数据中心中模拟多数据中心以便利用 GCP 提供的参数控制功能来调整存储实例之间的时延。</p>
-<p><img alt="" src="https://ws3.sinaimg.cn/large/006tNc79gy1fjnte5t1coj30pc0vsdkh.jpg"/></p>
+<p><img alt="" src="https://ws2.sinaimg.cn/large/006tNc79gy1fjnzlubm87j30pa0f8acj.jpg"/></p>
+<p><img alt="" src="https://ws4.sinaimg.cn/large/006tNc79gy1fjnzm5gof5j30p40fa76d.jpg"/></p>
 <p>上图为不同时延（RTT）情况下，各种算法配置以及读写模式下的读写时延。</p>
 <p>在读方面，很明显，在低时延（0）的情况下，Cassandra 表示更好，因为它无论是 READ_ALL 还是 READ_QUORUM 都只需要简单的一次 RTT 即可；而配置了 M1 的算法，因为 θt 下界为 0，所以需要等待一次状态消息的到来（最差是 10 ms 加上半个 RTT）后才能返回，所以带来了时延；相较之下，M2 有接近于 Cassandra 的性能。</p>
 <p>因为 Cassandra 是简单的 RTT，所以基本上时延就随着配置的时延变化而变化。而在时延增加后，本文提出的算法在 M1 和 M2 配置下都体现出了一些优势，一般来说，M1 最差只要等待 10 ms 和半个 RTT，所以表现比 Cassandra 要好；而 M2 在有些情况下是可以直接返回的，所以表现更佳。</p>

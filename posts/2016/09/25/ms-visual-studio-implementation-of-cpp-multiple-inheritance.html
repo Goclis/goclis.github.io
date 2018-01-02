@@ -94,7 +94,7 @@
 </ul>
 <p>由于类成员方法是可以在继承关系中调用的，即子类对象可以调用父类的public成员方法。那么，按照这个原则中的第2条，编译器需要做一些调整工作。</p>
 <p>下面举个例子，并结合例子来讲讲<strong>this调整</strong>的过程：</p>
-<div class="highlight"><pre><span class="k">namespace</span> <span class="n">base_adjust_rule</span>
+<div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">base_adjust_rule</span>
 <span class="p">{</span>
 <span class="k">class</span> <span class="nc">P1</span>
 <span class="p">{</span>
@@ -146,7 +146,7 @@
 <p>结合示例代码及反汇编图，可以明确，VS确实是在遵守我们一开始所说的原则的，并且，即使你使用的是类对象而非对象指针去调用方法，原则依旧保持。如果感兴趣且想做进一步验证的话，可以在方法中加入一些访问成员变量的代码，然后在方法内部反汇编，查看它访问变量时的偏移计算，从而确定this指向。</p>
 <p>上面的示例代码比较简单，都是使用pc去访问方法，而对于编译器来说，从类C的角度它可以在编译期就完全确定如何调整，所以才能生成一系列的add代码。但如果从P2的角度去分析的话，编译器将无法在编译期确定这些偏移量，下面将说明这一点并讲讲编译器如何处理这种情况。</p>
 <p>继承结构不变，测试代码更换如下：</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">test2</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">test2</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">P2</span> <span class="o">*</span><span class="n">p21</span> <span class="o">=</span> <span class="k">new</span> <span class="n">C</span><span class="p">;</span>
     <span class="n">P2</span> <span class="o">*</span><span class="n">p22</span> <span class="o">=</span> <span class="k">new</span> <span class="n">P2</span><span class="p">;</span>
@@ -161,7 +161,7 @@
 <p><img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f85rv1ytbbj30fc03lq32.jpg"/></p>
 <p>注意，这里thunk是为类C生成的，因为C的父类中出现了同名的virtual方法。</p>
 <p>提到了thunk，就顺便讲讲另外一种情况下的多态访问，即利用成员函数指针。这里的多态访问是指：使用指针或者引用去调用成员函数指针，需要保持多态语义。按照上面示例的继承结构，下面的代码中的调用都等价（子类指针是可以调用父类成员函数指针的）：</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">test3</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">test3</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">C</span> <span class="o">*</span><span class="n">pc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">C</span><span class="p">;</span>
     <span class="n">P1</span> <span class="o">*</span><span class="n">pp1</span> <span class="o">=</span> <span class="n">pc</span><span class="p">;</span>

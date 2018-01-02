@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/note.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2014-01-01T00:00:00+08:00</updated><entry><title>Git</title><link href="http://goclis.github.io/posts/2014/01/01/Git.html" rel="alternate"></link><updated>2014-01-01T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-01-01:posts/2014/01/01/Git.html</id><summary type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/note.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2014-01-01T00:00:00+08:00</updated><entry><title>Git</title><link href="http://goclis.github.io/posts/2014/01/01/Git.html" rel="alternate"></link><published>2014-01-01T00:00:00+08:00</published><updated>2014-01-01T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-01-01:posts/2014/01/01/Git.html</id><summary type="html">
 &lt;h3 id="1-git"&gt;1. 本地初始化git项目并添加远程仓库&lt;a class="headerlink" href="#1-git" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;newProject
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; newProject
 git init
-git remote add origin url &lt;span class="c"&gt;# url为项目的远程仓库路径&lt;/span&gt;
+git remote add origin url &lt;span class="c1"&gt;# url为项目的远程仓库路径&lt;/span&gt;
 git push master origin
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="2-git"&gt;2. Git设置&lt;a class="headerlink" href="#2-git" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;全局设置（--global）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git config --global user.name &lt;span class="s2"&gt;"Goclis Yao"&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git config --global user.name &lt;span class="s2"&gt;"Goclis Yao"&lt;/span&gt;
 git config --global user.email &lt;span class="s2"&gt;"goclisyyh@gmail.com"&lt;/span&gt;
 git config --global branch.master.remote origin
 git config --global branch.master.merge refs/heads/master
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;本地设置：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git config branch.master.remote origin
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git config branch.master.remote origin
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;查看设置：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git config --list
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git config --list
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="3-git-bashgit"&gt;3. Git Bash生成公私钥访问内网git仓库&lt;a class="headerlink" href="#3-git-bashgit" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;打开Git Bash，输入如下命令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;ssh-keygen -t rsa -C &lt;span class="s2"&gt;"goclisyyh@gmail.com"&lt;/span&gt;  &lt;span class="c"&gt;# -C后的参数为注释，一般为开发者的email，后面有个步骤会让你输入密码&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ssh-keygen -t rsa -C &lt;span class="s2"&gt;"goclisyyh@gmail.com"&lt;/span&gt;  &lt;span class="c1"&gt;# -C后的参数为注释，一般为开发者的email，后面有个步骤会让你输入密码&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;将 ~/.ssh/id_rsa.pub 交给管理员，就可以clone服务器的仓库了。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git clone user@hostname:gitname.git  &lt;span class="c"&gt;# ssh仓库&lt;/span&gt;
-git clone git@192.168.1.1:Blog.git  &lt;span class="c"&gt;# eg&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone user@hostname:gitname.git  &lt;span class="c1"&gt;# ssh仓库&lt;/span&gt;
+git clone git@192.168.1.1:Blog.git  &lt;span class="c1"&gt;# eg&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="4-git-subtree"&gt;4. git subtree&lt;a class="headerlink" href="#4-git-subtree" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;当一个项目需要用到另一个项目，并且可能会修改那个项目时，用此命令即可实现。&lt;/p&gt;
@@ -35,39 +35,68 @@ git clone git@192.168.1.1:Blog.git  &lt;span class="c"&gt;# eg&lt;/span&gt;
 &lt;li&gt;pro：服务器上的新项目仓库。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;下面的操作在本地进行：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git clone url1 pro    &lt;span class="c"&gt;# 将pro项目拷贝到本地，url1为服务器上pro仓库的地址&lt;/span&gt;
-&lt;span class="nb"&gt;cd &lt;/span&gt;pro
-git remote add -f remote-lib url2    &lt;span class="c"&gt;# 从服务器上把要引入的仓库加入进来，命名为remote-lib，url2为服务器上some-lib仓库的地址&lt;/span&gt;
-git subtree add -P lib remote-lib master    &lt;span class="c"&gt;# 将外部仓库的master分支变为本地的文件夹，-P指定文件夹名&lt;/span&gt;
-&lt;span class="nb"&gt;cd &lt;/span&gt;lib
-...    &lt;span class="c"&gt;# 修改了外部仓库lib的内容，准备提交&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone url1 pro    &lt;span class="c1"&gt;# 将pro项目拷贝到本地，url1为服务器上pro仓库的地址&lt;/span&gt;
+&lt;span class="nb"&gt;cd&lt;/span&gt; pro
+git remote add -f remote-lib url2    &lt;span class="c1"&gt;# 从服务器上把要引入的仓库加入进来，命名为remote-lib，url2为服务器上some-lib仓库的地址&lt;/span&gt;
+git subtree add -P lib remote-lib master    &lt;span class="c1"&gt;# 将外部仓库的master分支变为本地的文件夹，-P指定文件夹名&lt;/span&gt;
+&lt;span class="nb"&gt;cd&lt;/span&gt; lib
+...    &lt;span class="c1"&gt;# 修改了外部仓库lib的内容，准备提交&lt;/span&gt;
 git add .
 git commit -m &lt;span class="s2"&gt;"modify lib"&lt;/span&gt;
-git subtree push -P lib remote-lib master    &lt;span class="c"&gt;# 将修改提交到外部仓库的远程仓库的master分支&lt;/span&gt;
-git subtree pull -P lib remote-lib master    &lt;span class="c"&gt;# 如果服务器上的some-lib修改了，用这句命令进行修改，拉下来会设计到合并问题。&lt;/span&gt;
+git subtree push -P lib remote-lib master    &lt;span class="c1"&gt;# 将修改提交到外部仓库的远程仓库的master分支&lt;/span&gt;
+git subtree pull -P lib remote-lib master    &lt;span class="c1"&gt;# 如果服务器上的some-lib修改了，用这句命令进行修改，拉下来会设计到合并问题。&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Over，服务器上的some-lib已经被修改了，其他引用了some-lib的地方pull下来即可发现。&lt;/p&gt;
 &lt;p&gt;git subtree的本质上是将另一个仓库的某个commit与本仓库进行合并，所以会产生commit提交，而在选择对方的commit的时候可以使用branch、tag等来指代，比如将对方的develop分支合（或更新）进来，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git subtree add -P remote-develop remote-lib/develop  &lt;span class="c"&gt;# 假设先前已remote add了remote-lib&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git subtree add -P remote-develop remote-lib/develop  &lt;span class="c1"&gt;# 假设先前已remote add了remote-lib&lt;/span&gt;
 git subtree pull -P remote-develop remote-lib/develop
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="5-git"&gt;5. Git补充提交内容&lt;a class="headerlink" href="#5-git" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;有时候在提交的时候会遗漏一些文件，可以通过命令来弥补，以下假设遗漏&lt;code&gt;todo.txt&lt;/code&gt;。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git add todo.txt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git add todo.txt
 git commit --amend
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;重新修改commit message后提交即可。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend"&gt;git commit --amend&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="6-git-clone"&gt;6. Git clone指定文件夹名&lt;a class="headerlink" href="#6-git-clone" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git clone url your-folder-name
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone url your-folder-name
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="7"&gt;7. 重命名当前分支&lt;a class="headerlink" href="#7" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git branch -m new-name
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git branch -m new-name
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="8-githubfork"&gt;8. Github同步Fork仓库&lt;a class="headerlink" href="#8-githubfork" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;本质上就是在你fork下来的库中增加源库，然后merge，以&lt;code&gt;Wox&lt;/code&gt;为例：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git remote add upstream https://github.com/Wox-launcher/Wox.git
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git remote add upstream https://github.com/Wox-launcher/Wox.git
 git fetch upstream
 git checkout master
-git merge upstream/master &lt;span class="c"&gt;# 将源库的master合并到fork库的master&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="Git"></category></entry></feed>
+git merge upstream/master &lt;span class="c1"&gt;# 将源库的master合并到fork库的master&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="9-commit"&gt;9. 获取一个分支的修改但是不要推进该分支上的任何 commit&lt;a class="headerlink" href="#9-commit" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;在节点间同步的时候想用，A 节点写到一半切换到 B，希望能够通过 Git 来同步一下代码：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# A 节点上，假设当前正在 master 上&lt;/span&gt;
+git checkout -b tempSync &lt;span class="c1"&gt;# 创建一个临时分支&lt;/span&gt;
+git add . &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git commit -m &lt;span class="s2"&gt;"temp"&lt;/span&gt; &lt;span class="c1"&gt;# 添加并提交所有变更&lt;/span&gt;
+git push --set-upstream origin tempSync &lt;span class="c1"&gt;# 推到服务器上&lt;/span&gt;
+git checkout master
+git checkout -b oldMaster
+git checkout master
+git merge tempSync
+git reset --mixed oldMaster &lt;span class="c1"&gt;# 重置 master 的位置，但保留这之上的所有修改&lt;/span&gt;
+git branch -d tempSync
+git branch -d oldMaster
+
+&lt;span class="c1"&gt;# B 节点上，获取变更，rebase 合并改变，重置 master（--mixed 表示重置 index 但保留更改），删除本地临时分支&lt;/span&gt;
+git pull
+git checkout -b oldMaster
+git checkout master
+git merge origin/tempSync
+git checkout master
+git reset --mixed oldMaster
+git branch -d oldMaster
+
+&lt;span class="c1"&gt;# 清理远程分支&lt;/span&gt;
+git push origin :tempSync
+git branch -d -r origin/tempSync
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这样操作之后，A 和 B 上都得到了一致的内容，并且都处于修改状态。&lt;/p&gt;
+&lt;p&gt;注意：命令中使用的是 merge 来合并临时分支，对于有多次提交的临时分支，可以采用 rebase 来操作。&lt;/p&gt;</summary><category term="Git"></category></entry></feed>

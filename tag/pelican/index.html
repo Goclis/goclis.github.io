@@ -99,7 +99,7 @@
 <p>博客的改造是希望把内容分成四块：技术、生活、笔记、琐碎。技术就是先前写的这些博文；生活记录一些小结或是感想的东西；笔记实质上是我平时针对一些具体技术记录的一些Tip，打算一并放上来；琐碎实际上就类似于微博，一些短的想法之类的。</p>
 <p>按照上面的想法，在内容呈现上也就自然而然地希望每类对应一个单独的页面了，先前用过Pelican中的Page的功能来做过“关于我”的页面，但是这个功能并不能满足我的需求。因为Page对应的模板 <code>page.html</code> 决定了所有的页面必须得遵循一样的格式，然而，这四块内容对应的页面的格式是不同的，比如说，技术和生活的页面就只显示最近的数篇文章，而笔记页面会显示所有的，更不一样的是，琐碎页面可能会显示文章的内容而非标题。</p>
 <p>因此，需要使用到Template Page的功能。这个功能用起来其实挺简单的，只需要在 <code>pelicanconf.py</code> 中对 <code>TEMPLATE_PAGES</code> 进行相关的设置即可，如下：</p>
-<div class="highlight"><pre><span class="n">TEMPLATE_PAGES ...</span></pre></div>
+<div class="highlight"><pre><span></span><span class="n">TEMPLATE_PAGES ...</span></pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2016/04/02/reconstruction-of-pelican-blog.html" class="btn btn-default">阅读全文</a>
@@ -129,7 +129,7 @@
 <p>上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。</p>
 <h3 id="markdown">Markdown扩展<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h3>
 <p>我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在 <code>pelicanconf.py</code> 中对 <code>MD_EXTENSIONS</code> 进行适当的赋值即可，我的配置如下：</p>
-<div class="highlight"><pre><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s">'extra'</span><span class="p">,</span> <span class="s">'toc(permalink=true)'</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s1">'extra'</span><span class="p">,</span> <span class="s1">'toc(permalink=true)'</span><span class="p">]</span>
 </pre></div>
 <p>总共三项：</p>
 <ul>
@@ -170,18 +170,18 @@
 <h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
 <p><strong>Install</strong></p>
-<div class="highlight"><pre>pip install pelican
+<div class="highlight"><pre><span></span>pip install pelican
 
 pip install markdown
 </pre></div>
 <p><strong>Quick-Start</strong></p>
 <p>自己新建一个文件夹，然后：</p>
-<div class="highlight"><pre>pelican-quickstart
+<div class="highlight"><pre><span></span>pelican-quickstart
 </pre></div>
 <p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
 <p><strong>Usage</strong></p>
 <p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
-<div class="highlight"><pre>make html <span class="c"># 将content中的markdown (or others) 生成为html</span>
+<div class="highlight"><pre><span></span>make html <span class="c1"># 将content中的markdown (or others) 生成为html</span>
 
 make regenerate
 
@@ -190,7 +190,7 @@ make serve
 make devserver
 </pre></div>
 <p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
-<div class="highlight"><pre>./develop_server.sh ...</pre></div>
+<div class="highlight"><pre><span></span>./develop_server.sh ...</pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2014/05/25/basic-pelican-configuration.html" class="btn btn-default">阅读全文</a>

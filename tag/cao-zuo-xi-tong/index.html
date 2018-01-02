@@ -105,10 +105,10 @@
 <p>纯粹照着书搞。。</p>
 <h4 id="_1">实验过程<a class="headerlink" href="#_1" title="Permanent link">¶</a></h4>
 <p>以下操作假设用户为root，目录自行决定。</p>
-<div class="highlight"><pre>% tar -zxvf linux-2.6.21.tar.gz
-% <span class="nb">cd </span>linux-2.6.21
-% make mrproper  <span class="c"># 清楚掉之前编译产生的垃圾</span>
-% make oldconfig  <span class="c"># 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可</span>
+<div class="highlight"><pre><span></span>% tar -zxvf linux-2.6.21.tar.gz
+% <span class="nb">cd</span> linux-2.6.21
+% make mrproper  <span class="c1"># 清楚掉之前编译产生的垃圾</span>
+% make oldconfig  <span class="c1"># 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可</span>
 % vim Makefile
 </pre></div>
 <p>修改<code>EXTARVERSION ...</code></p>
@@ -142,7 +142,7 @@
 </blockquote>
 <p>那么，额外工作指的是？ 在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
 <p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）：</p>
-<div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
+<div class="highlight"><pre><span></span><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// load it here</span>
 <span class="p">}</span>

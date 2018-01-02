@@ -117,22 +117,22 @@
 </ul>
 <h3 id="query-string">Query String<a class="headerlink" href="#query-string" title="Permanent link">¶</a></h3>
 <p>这个实际上就是HTTP请求消息的第一部分URL中?后面的那部分信息，因此，它与请求的类型无关，只和URL相关，下面是个例子：</p>
-<div class="highlight"><pre># 附带数据为name: xxx, age: 18
+<div class="highlight"><pre><span></span># 附带数据为name: xxx, age: 18
 GET example.com?name=xxx&amp;age=18
 POST example.com?name=xxx&amp;age=18
 </pre></div>
 <p>用python的requests库来实现这个请求的话就是下面这样：</p>
-<div class="highlight"><pre><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'example.com'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="s">'xxx'</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
-<span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'example.com'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="s">'xxx'</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'example.com'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="s1">'xxx'</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">'example.com'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="s1">'xxx'</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
 </pre></div>
 <p>即这些数据会当做参数被编码到请求的URL中，而服务器端会解析这些参数。</p>
 <h3 id="form-data">Form Data<a class="headerlink" href="#form-data" title="Permanent link">¶</a></h3>
 <p>一般来说，form data是指html中form标签提交的数据：</p>
-<div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"xxx"</span> <span class="na">method=</span><span class="s">"GET"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"first"</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"second"</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;/form&gt;</span>
+<div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">"xxx"</span> <span class="na">method</span><span class="o">=</span><span class="s">"GET"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"text"</span> <span class="na">name</span><span class="o">=</span><span class="s">"first"</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"text"</span> <span class="na">name</span><span class="o">=</span><span class="s">"second"</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"submit</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
 </pre></div>
 <p>但是，form data是放在HTTP请求报文中的哪呢？？这个得看提交的方法：</p>
 <ul>

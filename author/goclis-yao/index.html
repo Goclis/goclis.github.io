@@ -72,6 +72,35 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="2017 小结" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2018/01/01/2017 小结.html">2017 小结</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2018-01-01T21:36:00+08:00" title="2018-01-01T21:36:00+08:00">2018-01-01</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>本来是打算 31 号写年终总结的，但是汗蒸完吃火锅实在是太爽了，完全没有翻开电脑的动力，只好拖到新年的第一天来补了。</p>
+<p>昨天在车上的时候也和妹子聊了一下今年最大的收获，可能是对自己未来工作的方向提前有了一丝明确吧。说实在的，因为研究生时间基本在公司度过，更多还是把精力花在解决实际项目中遇到的问题，对于自己的具体研究或是工作方向还是很迷糊。身处一个分布计算与系统集成实验室，我更熟悉的是一些偏系统架构（可能只是自认为了解）的工作，而不清楚诸如分布式计算、分布式存储等主流的研究方向，现在想来实在有些过于迷糊了，但好在醒悟的不算太晚吧。</p>
+<p>今年年初刚回公司的时候被告知组长要走，当时想着这个项目除了他以外貌似就我知道整体的情况，而且剩余的工作可能更多偏维护，就同意接手继续完成后续的工作了。还天真地以为可以在年中的时候结束项目然后安心找工作并回校做毕设。结果，剩余的工作并不仅仅是维护，在已实现的系统中有很多的问题以及无法满足需求的设计，这也使得我必须去细致阅读源码并进行改进。</p>
+<p>现在想来，这段日子过得还挺郁闷的，因为感觉整个系统一开始的设计就不足以满足用户最终的需求，而时间和人手又不足以推到重来，整个改进的过程就像在不停地填坑，无法彻底地解决一些潜在的隐患。但也由于需要接手这块，迫使我必须去了解更多主流的分布式研究方向，比如分布式存储及分布式一致性等。之后就是各种改进、出差压测、回来集中修复以及再次出差等等了。</p>
+<p>Anyway，结果还行，项目成功验收，我也对分布式存储有了基本的认识，也觉得这个方向未来仍有工作可以进行，并且属于那种半研究半工程（甚至工程更多一些），所以也决定去从事这个方向的工作。</p>
+<p>今年另一件重要的事就是参加秋招了 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2018/01/01/2017 小结.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -133,44 +162,6 @@
                             <a href="/tag/geo-distributed-storage-systems/index.html">Geo-distributed storage systems</a>
                             <a href="/tag/majority-quorum/index.html">Majority quorum</a>
                             <a href="/tag/synchronized-clocks/index.html">Synchronized clocks</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="PhxPaxos 源码阅读笔记（二）：存储层" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html">PhxPaxos 源码阅读笔记（二）：存储层</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-09-07T21:38:00+08:00" title="2017-09-07T21:38:00+08:00">2017-09-07</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p><strong>我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了，所以建议还是先补充前置内容。</strong></p>
-<p>类似网络层，PhxPaxos 对存储层也进行了抽象，给用户留下了自行扩展的能力。本篇将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有自行实现需求的用户可以将官方的设计作为参考。我大概理了一遍设计后，发现并不是太复杂，所以篇幅应该不会太长。</p>
-<h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
-<p>在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">LogStorage</span>
-<span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">LogStorage</span><span class="p">()</span> <span class="p">{}</span>
-
-    <span class="k">virtual</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetLogStorageDirPath</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">Get</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0 ...</span></pre></div>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/leveldb/index.html">LevelDB</a>
-                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
                         </div>
                         <div class="pull-right share">
                         </div>
