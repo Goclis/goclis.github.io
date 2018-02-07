@@ -3239,7 +3239,7 @@ git checkout master
 git merge upstream/master &lt;span class="c1"&gt;# 将源库的master合并到fork库的master&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="9-commit"&gt;9. 获取一个分支的修改但是不要推进该分支上的任何 commit&lt;a class="headerlink" href="#9-commit" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;在节点间同步的时候想用，A 节点写到一半切换到 B，希望能够通过 Git 来同步一下代码：&lt;/p&gt;
+&lt;p&gt;在节点间同步的时候用，A 节点写到一半切换到 B，希望能够通过 Git 来同步一下代码：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# A 节点上，假设当前正在 master 上&lt;/span&gt;
 git checkout -b tempSync &lt;span class="c1"&gt;# 创建一个临时分支&lt;/span&gt;
 git add . &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git commit -m &lt;span class="s2"&gt;"temp"&lt;/span&gt; &lt;span class="c1"&gt;# 添加并提交所有变更&lt;/span&gt;
@@ -3252,7 +3252,7 @@ git reset --mixed oldMaster &lt;span class="c1"&gt;# 重置 master 的位置，�
 git branch -d tempSync
 git branch -d oldMaster
 
-&lt;span class="c1"&gt;# B 节点上，获取变更，rebase 合并改变，重置 master（--mixed 表示重置 index 但保留更改），删除本地临时分支&lt;/span&gt;
+&lt;span class="c1"&gt;# B 节点上，获取变更，合并改变，重置 master（--mixed 表示重置 index 但保留更改），删除本地临时分支&lt;/span&gt;
 git pull
 git checkout -b oldMaster
 git checkout master
@@ -3265,5 +3265,4 @@ git branch -d oldMaster
 git push origin :tempSync
 git branch -d -r origin/tempSync
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;这样操作之后，A 和 B 上都得到了一致的内容，并且都处于修改状态。&lt;/p&gt;
-&lt;p&gt;注意：命令中使用的是 merge 来合并临时分支，对于有多次提交的临时分支，可以采用 rebase 来操作。&lt;/p&gt;</summary><category term="Git"></category></entry></feed>
+&lt;p&gt;这样操作之后，A 和 B 上都得到了一致的内容，并且都处于修改状态。&lt;/p&gt;</summary><category term="Git"></category></entry></feed>

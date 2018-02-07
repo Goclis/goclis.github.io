@@ -5,28 +5,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://goclis.github.io/</loc>
-<lastmod>2018-01-02T12:39:27-00:00</lastmod>
+<lastmod>2018-02-07T13:25:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://goclis.github.io/archives.html</loc>
-<lastmod>2018-01-02T12:39:27-00:00</lastmod>
+<lastmod>2018-02-07T13:25:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://goclis.github.io/tags.html</loc>
-<lastmod>2018-01-02T12:39:27-00:00</lastmod>
+<lastmod>2018-02-07T13:25:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://goclis.github.io/categories.html</loc>
-<lastmod>2018-01-02T12:39:27-00:00</lastmod>
+<lastmod>2018-02-07T13:25:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
