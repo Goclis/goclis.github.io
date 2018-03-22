@@ -59,7 +59,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -128,14 +128,14 @@
 <p>类似网络层，PhxPaxos 对存储层也进行了抽象，给用户留下了自行扩展的能力。本篇将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有自行实现需求的用户可以将官方的设计作为参考。我大概理了一遍设计后，发现并不是太复杂，所以篇幅应该不会太长。</p>
 <h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <p>在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LogStorage</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">LogStorage</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">LogStorage</span><span class="p">()</span> <span class="p">{}</span>
 
     <span class="k">virtual</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetLogStorageDirPath</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">Get</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0 ...</span></pre></div>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">Get</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0 ...</span></pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html" class="btn btn-default">阅读全文</a>
@@ -166,7 +166,7 @@
 <p>我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。</p>
 <h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <p>对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NetWork</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">NetWork</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">NetWork</span><span class="p">();</span>

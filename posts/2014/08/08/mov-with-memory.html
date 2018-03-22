@@ -60,7 +60,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -86,7 +86,7 @@
                     </header>
                     <div class="post-content">
                         <p>今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：</p>
-<div class="highlight"><pre><span></span><span class="nf">movl</span> <span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">),</span> <span class="nv">%eax</span>
+<div class="highlight"><pre><span class="nf">movl</span> <span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">),</span> <span class="nv">%eax</span>
 <span class="nf">imull</span> <span class="mi">8</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>
 <span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
 <span class="nf">movl</span> <span class="nv">%edx</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="nv">%esp</span><span class="p">)</span>
@@ -100,51 +100,51 @@
 <h3 id="mov">mov指令<a class="headerlink" href="#mov" title="Permanent link">¶</a></h3>
 <p>我们知道 mov 在 IA32 中有基础的三类操作，即 b，w，l。
 而 mov 在使用时大致如下：</p>
-<div class="highlight"><pre><span></span><span class="nf">movb</span> <span class="nv">%al</span><span class="p">,</span> <span class="p">(</span><span class="nv">%edx</span><span class="p">)</span>  <span class="c"># 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域</span>
+<div class="highlight"><pre><span class="nf">movb</span> <span class="nv">%al</span><span class="p">,</span> <span class="p">(</span><span class="nv">%edx</span><span class="p">)</span>  <span class="c"># 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域</span>
 </pre></div>
 <p>这里因为是 b 类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。然而对于 w 和 l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：</p>
-<div class="highlight"><pre><span></span><span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%edx</span><span class="p">)</span>
+<div class="highlight"><pre><span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">(</span><span class="nv">%edx</span><span class="p">)</span>
 </pre></div>
 <p>我们知道内存是按字节整理的，也就是说 edx 代表的那个地址也就只有 1 个字节，而源操作数 eax 却是 4 个字节，因而，需要多个地址进行存放，我们假设下 %eax = 0x0A0B0C0D，%edx = 4，则内存图如下表：</p>
 <table>
 <thead>
 <tr>
-<th align="center">地址</th>
-<th align="center">内容</th>
+<th>地址</th>
+<th>内容</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center">0</td>
-<td align="center">...</td>
+<td>0</td>
+<td>...</td>
 </tr>
 <tr>
-<td align="center">1</td>
-<td align="center">...</td>
+<td>1</td>
+<td>...</td>
 </tr>
 <tr>
-<td align="center">2</td>
-<td align="center">...</td>
+<td>2</td>
+<td>...</td>
 </tr>
 <tr>
-<td align="center">3</td>
-<td align="center">...</td>
+<td>3</td>
+<td>...</td>
 </tr>
 <tr>
-<td align="center">4</td>
-<td align="center">0D</td>
+<td>4</td>
+<td>0D</td>
 </tr>
 <tr>
-<td align="center">5</td>
-<td align="center">0C</td>
+<td>5</td>
+<td>0C</td>
 </tr>
 <tr>
-<td align="center">6</td>
-<td align="center">0B</td>
+<td>6</td>
+<td>0B</td>
 </tr>
 <tr>
-<td align="center">7</td>
-<td align="center">0A</td>
+<td>7</td>
+<td>0A</td>
 </tr>
 </tbody>
 </table>
@@ -154,41 +154,41 @@
 <table>
 <thead>
 <tr>
-<th align="center">地址</th>
-<th align="center">0-7</th>
-<th align="center">8-15</th>
-<th align="center">16-23</th>
-<th align="center">24-31</th>
+<th>地址</th>
+<th>0-7</th>
+<th>8-15</th>
+<th>16-23</th>
+<th>24-31</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">..</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>..</td>
 </tr>
 <tr>
-<td align="center">104</td>
-<td align="center">0D</td>
-<td align="center">0B</td>
-<td align="center">0C</td>
-<td align="center">0A</td>
+<td>104</td>
+<td>0D</td>
+<td>0B</td>
+<td>0C</td>
+<td>0A</td>
 </tr>
 <tr>
-<td align="center">108</td>
-<td align="center">04</td>
-<td align="center">03</td>
-<td align="center">02</td>
-<td align="center">01</td>
+<td>108</td>
+<td>04</td>
+<td>03</td>
+<td>02</td>
+<td>01</td>
 </tr>
 <tr>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
 </tr>
 </tbody>
 </table>

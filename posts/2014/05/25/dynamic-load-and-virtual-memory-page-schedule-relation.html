@@ -60,7 +60,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -91,7 +91,7 @@
 </blockquote>
 <p>那么，额外工作指的是？ 在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
 <p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）：</p>
-<div class="highlight"><pre><span></span><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
+<div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// load it here</span>
 <span class="p">}</span>

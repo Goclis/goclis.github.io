@@ -60,7 +60,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -113,7 +113,7 @@
 <p>说的明白点：在 C/C++ 中，volatile 就是让编译器访问此变量时，一律从内存中访问，并且要把结果即时写入内存，从而保证了多线程能够及时得知变化，而且，绝对不能因为优化而把和这个变量相关的语句给抹掉了。</p>
 <p>看完这两篇文章后，我是真觉得 C/C++ 里的这个关键字作用真的不大，纯粹是为了解决一些历史问题引入的（和 I/O 设备相关，本章开头说的那篇文章里有提及）。它在 C/C++ 中的鸡肋之处主要体现在只使用它无法提供我们经常需要的同步语义（Java 为它加了 Acquire 和 Relase 语义后使得它能表达一些基本的同步语义：如 happen-before），而如果引入锁这些东西来表达同步语义的话，加不加 volatile 的话其实没差。</p>
 <p>后面这点我在 VS2013 下做了点实验，我们知道编译器是可以利用寄存器进行一些优化的，比如下面的代码：</p>
-<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">g_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">g_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="kt">int</span> <span class="n">g_input</span><span class="p">;</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -126,7 +126,7 @@
 </pre></div>
 <p>在 VS2013 下开 Release 的话，<code>g_i += j</code> 这句会被优化成类似 <code>add ecx eax</code> 这样的代码，即将两个操作数放入各自的寄存器中，然后在循环结束后才将最终值写回内存。</p>
 <p>看到这儿，自然而然地想到如果这段代码在多线程下会怎么样？在多线程这种情景下，我们一般都会利用临界区之类的机制来保证同步，所以代码会变成下面这样：</p>
-<div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">g_input</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">g_input</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">Lock</span><span class="p">();</span>
     <span class="n">g_i</span> <span class="o">+=</span> <span class="n">j</span><span class="p">;</span>

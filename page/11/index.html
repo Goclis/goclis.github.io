@@ -59,7 +59,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li class="nav-current" role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -89,7 +89,7 @@
 <p>对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。</p>
 <p>既然数字证书产生了，但它终究是个有格式的文件，我们下步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。</p>
 <p>用密码学表示一下大概就是：</p>
-<div class="highlight"><pre><span></span>// 设生成的中间数字证书为 MB，最终发放的为B
+<div class="highlight"><pre>// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 </pre></div>
 <p>接下来，看看是如何验证的 ...</p>
@@ -122,18 +122,18 @@
 <h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
 <p><strong>Install</strong></p>
-<div class="highlight"><pre><span></span>pip install pelican
+<div class="highlight"><pre>pip install pelican
 
 pip install markdown
 </pre></div>
 <p><strong>Quick-Start</strong></p>
 <p>自己新建一个文件夹，然后：</p>
-<div class="highlight"><pre><span></span>pelican-quickstart
+<div class="highlight"><pre>pelican-quickstart
 </pre></div>
 <p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
 <p><strong>Usage</strong></p>
 <p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
-<div class="highlight"><pre><span></span>make html <span class="c1"># 将content中的markdown (or others) 生成为html</span>
+<div class="highlight"><pre>make html <span class="c"># 将content中的markdown (or others) 生成为html</span>
 
 make regenerate
 
@@ -142,7 +142,7 @@ make serve
 make devserver
 </pre></div>
 <p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
-<div class="highlight"><pre><span></span>./develop_server.sh ...</pre></div>
+<div class="highlight"><pre>./develop_server.sh ...</pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2014/05/25/basic-pelican-configuration.html" class="btn btn-default">阅读全文</a>
@@ -174,7 +174,7 @@ make devserver
 </blockquote>
 <p>那么，额外工作指的是？ 在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于<strong>动态载入不需要操作系统提供特别支持</strong>这一事实。</p>
 <p>动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的<strong>编码</strong>就是所谓的额外开销。比如下面这段代码（我不确定是否正确）：</p>
-<div class="highlight"><pre><span></span><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
+<div class="highlight"><pre><span class="c1">// so_obj是一个变量标识是否导入了某个.so</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">so_obj</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// load it here</span>
 <span class="p">}</span>

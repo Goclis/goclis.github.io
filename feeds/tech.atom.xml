@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-12-27T13:57:00+08:00</updated><entry><title>PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介</title><link href="http://goclis.github.io/posts/2017/09/22/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APhxPaxos%20%E8%AE%BE%E8%AE%A1%E7%AE%80%E4%BB%8B.html" rel="alternate"></link><published>2017-09-22T20:01:27+08:00</published><updated>2017-09-22T20:01:27+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-09-22:posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html</id><summary type="html">&lt;p&gt;&lt;strong&gt;前置内容：建议对 Paxos 有基本理解后再阅读。&lt;/strong&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logging</title><link href="http://goclis.github.io/" rel="alternate"></link><link href="http://goclis.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://goclis.github.io/</id><updated>2017-12-27T13:57:00+08:00</updated><entry><title>PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介</title><link href="http://goclis.github.io/posts/2017/09/22/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APhxPaxos%20%E8%AE%BE%E8%AE%A1%E7%AE%80%E4%BB%8B.html" rel="alternate"></link><updated>2017-09-22T20:01:27+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-09-22:posts/2017/09/22/PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介.html</id><summary type="html">&lt;p&gt;&lt;strong&gt;前置内容：建议对 Paxos 有基本理解后再阅读。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;本篇主要是为了后续几篇讲算法实现做些铺垫，个人觉得在看代码之前对设计进行基本的了解是必须的，否则会是一头雾水。&lt;/p&gt;
 &lt;p&gt;因为只是简介，我只会把 PhxPaxos 中的一些概念稍微讲讲，更为详细的内容还是建议大家阅读微信团队的&lt;a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;amp;mid=2247483695&amp;amp;idx=1&amp;amp;sn=91ea422913fc62579e020e941d1d059e#rd"&gt;原文&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;我个人感觉 PhxPaxos 的&lt;strong&gt;实例-日志-状态机&lt;/strong&gt;这样的设计是常见的一种实现思路，之前也有向同学请教了一下 X-Paxos 的设计，发现确实很类似，但是各个库出于各自对性能的要求，有着不同的优化取舍罢了（比如 X-Paxos 需要服务一些跨数据中心的高时延场景，所以 Pipelining 是个很好的优化手段）。&lt;/p&gt;
@@ -25,7 +25,7 @@
 &lt;p&gt;在检查点的帮助下，一个新成员的追赶就变成了应用检查点加上应用该检查点之后的日志。&lt;/p&gt;
 &lt;h2 id="_5"&gt;结语&lt;a class="headerlink" href="#_5" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;我个人感觉 PhxPaxos 基本上改成了 Raft，起码在理解难度上差不太多了，虽然像 Leader 选举这样的功能对 PhxPaxos 而言是可选的。不过也可能是我的错觉，毕竟没细看过 Raft 的所有内容。&lt;/p&gt;
-&lt;p&gt;在对设计进行简单的介绍后，接下来就是对 PhxPaxos 的算法实现部分进行剖析了，不过后面好像会更忙，更新嘛。。尽量一周能出一篇。&lt;/p&gt;</summary><category term="PhxPaxos"></category></entry><entry><title>论文阅读笔记（MeteorShower）</title><link href="http://goclis.github.io/posts/2017/09/18/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88MeteorShower%EF%BC%89.html" rel="alternate"></link><published>2017-09-18T18:00:00+08:00</published><updated>2017-09-18T18:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-09-18:posts/2017/09/18/论文阅读笔记（MeteorShower）.html</id><summary type="html">
+&lt;p&gt;在对设计进行简单的介绍后，接下来就是对 PhxPaxos 的算法实现部分进行剖析了，不过后面好像会更忙，更新嘛。。尽量一周能出一篇。&lt;/p&gt;</summary><category term="PhxPaxos"></category></entry><entry><title>论文阅读笔记（MeteorShower）</title><link href="http://goclis.github.io/posts/2017/09/18/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88MeteorShower%EF%BC%89.html" rel="alternate"></link><updated>2017-09-18T18:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-09-18:posts/2017/09/18/论文阅读笔记（MeteorShower）.html</id><summary type="html">
 &lt;p&gt;哎，拖更了，PhxPaxos 系列本来是打算一周一篇的，结果周中偷懒了一会儿，想着干脆拖到周末再写吧，但周四的时候收到邮件说下周二要例会做报告（= =# 为啥每学期都是第一个），于是这周基本就无法更新了，写篇论文阅读笔记做交代吧。这类型的笔记之前也会写，但基本不发，这次试试看吧。内容可能会偏翻译性质，但是水平有限，尽量避免渣翻。&lt;strong&gt;理解有误的话很正常，望交流。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;原文来自 IPDCS 2017：MeteorShower: Minimizing Request Latency for Majority Quorum-based Data Consistency Algorithms in Multiple Data Centers。&lt;/p&gt;
 &lt;h2 id="_1"&gt;介绍&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
@@ -75,7 +75,7 @@
 &lt;p&gt;下图为算法描述中所使用到的一系列数据结构。&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="https://ws2.sinaimg.cn/large/006tNc79gy1fjnjk4n5wqj31cq08878d.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;用 C++ 进行一下定义：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 用于收集两次状态消息汇报之间的状态更新操作。&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 用于收集两次状态消息汇报之间的状态更新操作。&lt;/span&gt;
 &lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;pair&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;wts&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="c1"&gt;// 本地的 KV 存储，比如 LevelDB 等。&lt;/span&gt;
 &lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;LocalStore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;...;&lt;/span&gt;
@@ -225,37 +225,37 @@
 &lt;p&gt;上图按数据中心进行了聚合：结果还是因为类似的原因。&lt;/p&gt;
 &lt;h2 id="_21"&gt;总结&lt;a class="headerlink" href="#_21" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;论文主要的思路就在于引入周期性的状态消息，去除了读请求时的请求延时（Lreq），但为了仍旧保证顺序一致性，必须增加 θt 来进行限制。&lt;/p&gt;
-&lt;p&gt;哎，完全理解论文讲给别人听和理解论文要点就好这两种情况的难度差的好多，毕竟后者不用扣细节（捂脸）。&lt;/p&gt;</summary><category term="Geo-distributed storage systems"></category><category term="Majority quorum"></category><category term="Data consistency"></category><category term="Synchronized clocks"></category><category term="Distributed time"></category></entry><entry><title>PhxPaxos 源码阅读笔记（二）：存储层</title><link href="http://goclis.github.io/posts/2017/09/07/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E5%AD%98%E5%82%A8%E5%B1%82.html" rel="alternate"></link><published>2017-09-07T21:38:00+08:00</published><updated>2017-09-07T21:38:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-09-07:posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html</id><summary type="html">
+&lt;p&gt;哎，完全理解论文讲给别人听和理解论文要点就好这两种情况的难度差的好多，毕竟后者不用扣细节（捂脸）。&lt;/p&gt;</summary><category term="Geo-distributed storage systems"></category><category term="Majority quorum"></category><category term="Data consistency"></category><category term="Synchronized clocks"></category><category term="Distributed time"></category></entry><entry><title>PhxPaxos 源码阅读笔记（二）：存储层</title><link href="http://goclis.github.io/posts/2017/09/07/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E5%AD%98%E5%82%A8%E5%B1%82.html" rel="alternate"></link><updated>2017-09-07T21:38:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-09-07:posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html</id><summary type="html">
 &lt;p&gt;&lt;strong&gt;我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了，所以建议还是先补充前置内容。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;类似网络层，PhxPaxos 对存储层也进行了抽象，给用户留下了自行扩展的能力。本篇将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有自行实现需求的用户可以将官方的设计作为参考。我大概理了一遍设计后，发现并不是太复杂，所以篇幅应该不会太长。&lt;/p&gt;
 &lt;h2 id="_1"&gt;接口&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;LogStorage&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;LogStorage&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;LogStorage&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
 
     &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="n"&gt;GetLogStorageDirPath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;Get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;Put&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;Del&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;Get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;Put&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;Del&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;GetMaxInstanceID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;GetMaxInstanceID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;SetMinChosenInstanceID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llMinInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;GetMinChosenInstanceID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;llMinInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SetMinChosenInstanceID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llMinInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;GetMinChosenInstanceID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;llMinInstanceID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
     &lt;span class="c1"&gt;// 清除指定组下的所有实例数据。&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;ClearAllLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ClearAllLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
     &lt;span class="c1"&gt;// 设置/获取系统变量。&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;SetSystemVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;GetSystemVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SetSystemVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;GetSystemVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
     &lt;span class="c1"&gt;// 设置/获取 Master 变量。&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;SetMasterVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;GetMasterVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SetMasterVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;GetMasterVariables&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iGroupIdx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;根据命名能够大概猜到相关的含义，这里简要补充下：&lt;/p&gt;
@@ -296,7 +296,7 @@
 &lt;li&gt;实例数据，变长。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;以实例 ID 为 1，实例数据为 Hello 为例，在文件中持久化成（小端机器）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;06 00 00 00 01 00 00 00 00 00 00 00 48 65 6c 6c 6f
+&lt;div class="highlight"&gt;&lt;pre&gt;06 00 00 00 01 00 00 00 00 00 00 00 48 65 6c 6c 6f
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;PhxPaxos 在存储前并没有进行任何的端序转换，可能是因为生产环境基本都是小端机器或是这些数据只会被同一节点读取，不需要这种转换。&lt;/p&gt;
 &lt;p&gt;PhxPaxos 采用了类似于 Kafka 段文件的存储方法，单个文件中存储多个实例数据，但每个文件有一个大小上限，当一个文件存不下时，创建一个新的文件进行存储。这些数据文件之间使用有序递增的&lt;strong&gt;文件 ID&lt;/strong&gt;来进行命名。为了快速定位最大实例，PhxPaxos 增加了一个额外的 meta 文件，该文件中保存着存储层的最大实例以及该实例的索引信息，索引的结构我们放到下一节讲。&lt;/p&gt;
@@ -308,7 +308,7 @@
 &lt;p&gt;&lt;strong&gt;索引键&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;这里额外提一下，PhxPaxos 中所有的实例 ID 均未自然数，顺序也自然是基于自然顺序的，实例 ID 也是各个实例 LevelDB 中的键值。&lt;/p&gt;
 &lt;p&gt;在之前的内容中，我们曾经提到过 System Variables 和 Master Variables，它们两者并不存储文件系统中，而是以特殊的键存储在 LevelDB 中，这里的特殊体现在它们是负值，所以不会和 PhxPaxos 的实例 ID 发生冲突。类似地，MinChosenInstanceID 也是以特殊键的方式存储在 LevelDB 中。三者的定义如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define MINCHOSEN_KEY ((uint64_t)-1)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define MINCHOSEN_KEY ((uint64_t)-1)&lt;/span&gt;
 &lt;span class="cp"&gt;#define SYSTEMVARIABLES_KEY ((uint64_t)-2)&lt;/span&gt;
 &lt;span class="cp"&gt;#define MASTERVARIABLES_KEY ((uint64_t)-3)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -320,7 +320,7 @@
 &lt;h3 id="logstorageput"&gt;LogStorage::Put&lt;a class="headerlink" href="#logstorageput" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;调用转发到 Database::Put，其中的内容分为两部操作：首先调用 ValueToFileID 将实例数据存储到文件中，并获取相应的索引信息；随后以实例 ID 作为键，上一步得到的索引信息作为值存储到 LevelDB 中。&lt;/p&gt;
 &lt;p&gt;让我们来看看 ValueToFileID 的相关代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;Database&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;ValueToFileID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sFileID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;Database&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;ValueToFileID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;WriteOptions&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sFileID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ret&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;m_poValueStore&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;Append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;oWriteOptions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sFileID&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;...&lt;/span&gt;
@@ -398,7 +398,7 @@
 &lt;h3 id="logstorageget"&gt;LogStorage::Get&lt;a class="headerlink" href="#logstorageget" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;调用转发到 Database::Get，其中的内容同样分为两部分，不过和 Put 的相反：首先根据实例 ID 从 LevelDB 中查询实例数据的索引信息；随后根据索引信息，调用 FileIDToValue 从文件系统中获取实例数据。&lt;/p&gt;
 &lt;p&gt;从 LevelDB 中取值的过程就略过了，我们来看看 FileIDToValue 的相关代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;Database&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;FileIDToValue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sFileID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;Database&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;FileIDToValue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sFileID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ret&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;m_poValueStore&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;Read&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sFileID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;llInstanceID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sValue&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;...&lt;/span&gt;
@@ -470,12 +470,12 @@
 &lt;p&gt;其他的操作的实现都类似，都或多或少利用了 LevelDB 的一些特性，比如 GetMaxInstanceID 的实现中使用了 leveldb::Iterator::SeekToLast 方法来快速定位到最大的键。&lt;/p&gt;
 &lt;h2 id="_8"&gt;结语&lt;a class="headerlink" href="#_8" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;这篇基本写完了，不长，但是因为加班，空闲时间略少，所以一直托到很晚才开始写。开始写的时候发现已经快把源码忘光了，又花了一些时间来重新过一遍。&lt;/p&gt;
-&lt;p&gt;内容中有些略过了，待我把整个系列写完（如果没太监 = =#）后再回过头来看看，尽量补的详实些。&lt;/p&gt;</summary><category term="LevelDB"></category><category term="PhxPaxos"></category></entry><entry><title>PhxPaxos 源码阅读笔记（一）：网络层</title><link href="http://goclis.github.io/posts/2017/08/30/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82.html" rel="alternate"></link><published>2017-08-31T16:19:20+08:00</published><updated>2017-08-31T16:19:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-08-30:posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html</id><summary type="html">
+&lt;p&gt;内容中有些略过了，待我把整个系列写完（如果没太监 = =#）后再回过头来看看，尽量补的详实些。&lt;/p&gt;</summary><category term="LevelDB"></category><category term="PhxPaxos"></category></entry><entry><title>PhxPaxos 源码阅读笔记（一）：网络层</title><link href="http://goclis.github.io/posts/2017/08/30/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82.html" rel="alternate"></link><updated>2017-08-31T16:19:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-08-30:posts/2017/08/30/PhxPaxos 源码阅读笔记（一）：网络层.html</id><summary type="html">
 &lt;p&gt;&lt;strong&gt;本篇不需要前置内容。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。&lt;/p&gt;
 &lt;h2 id="_1"&gt;接口&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NetWork&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NetWork&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;NetWork&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
@@ -485,11 +485,11 @@
     &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;RunNetWork&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
     &lt;span class="c1"&gt;//If paxoslib call this function, network need to stop receive any message.&lt;/span&gt;
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;StopNetWork&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;StopNetWork&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;SendMessageTCP&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sIp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iPort&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sMessage&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SendMessageTCP&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sIp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iPort&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sMessage&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;SendMessageUDP&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sIp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iPort&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sMessage&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SendMessageUDP&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sIp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iPort&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sMessage&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
     &lt;span class="c1"&gt;//When receive a message, call this funtion.&lt;/span&gt;
     &lt;span class="c1"&gt;//This funtion is async, just enqueue an return.&lt;/span&gt;
@@ -512,7 +512,7 @@
 &lt;h2 id="dfnetwork"&gt;默认实现：DFNetwork&lt;a class="headerlink" href="#dfnetwork" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;该类定义在 dfnetwork.h 和 dfnetwork.cpp 中，是一个默认的网络层实现，不知道这个 DF 是不是 default 的意思。。&lt;/p&gt;
 &lt;p&gt;整个类中比较关键的是它的三个成员变量，所有消息的发送和接收都是交由它们处理：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DFNetwork&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Network&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DFNetwork&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Network&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
     &lt;span class="p"&gt;...&lt;/span&gt;
@@ -537,7 +537,7 @@
 &lt;p&gt;在实现上，PhxPaxos 为 Event 基类定义了两个具体的子类：MessageEvent 和 Notify。其中前者对应于数据的读写任务，内部逻辑较复杂。后者的用途是提供一个唤醒调用事件循环线程的接口，基于管道和 EPOLLIN 事件实现，通过源码很容易理解。&lt;/p&gt;
 &lt;p&gt;关于 Event 的添加、移除和修改，因为基本上是封装 epoll 并记录一些上下文信息，出于篇幅，此处就忽略了。除了 Event 以外，EventLoop 还提供了设置定时器的接口，但这部分我们留到后头再去讲，此处暂时忽略。&lt;/p&gt;
 &lt;p&gt;EventLoop 类本身不提供任何的执行线程，需要由外部线程去调用 EventLoop::StartLoop 开始进行事件循环处理。这里结合代码稍微讲一下事件循环相关的逻辑：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;EventLoop&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;StartLoop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;EventLoop&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;StartLoop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// 实际上和我们平时写 Thread::Run 的结构差不多，只是交由外部线程去调用而已。&lt;/span&gt;
     &lt;span class="n"&gt;m_bIsEnd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;false&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -608,7 +608,7 @@
             &lt;span class="k"&gt;continue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
         &lt;span class="p"&gt;}&lt;/span&gt;
 
-        &lt;span class="k"&gt;try&lt;/span&gt;
+        &lt;span class="n"&gt;try&lt;/span&gt;
         &lt;span class="p"&gt;{&lt;/span&gt;
             &lt;span class="c1"&gt;// 缓冲区有数据，调用 OnRead，由事件对象处理。&lt;/span&gt;
             &lt;span class="c1"&gt;// 这里可能是数据到来，也可能是一个新的连接到来。&lt;/span&gt;
@@ -643,7 +643,7 @@
 &lt;h4 id="tcpwrite"&gt;TcpWrite&lt;a class="headerlink" href="#tcpwrite" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;可能是为了简化 TcpWrite 中的逻辑，TcpWrite 的成员变量中包括了一个额外的 TcpClient 对象，将所有的操作（其实也就一个 AddMessage）都委托给该类负责，TcpClient 使用 TcpWrite 内部的 EventLoop 对象来进行初始化，同时 TcpWrite 对象在构造时将 TcpClient 对象利用 EventLoop::SetTcpClient 这个接口注册到 EventLoop 中。&lt;/p&gt;
 &lt;p&gt;下面结合代码简述下 TcpClient 利用事件循环来发送数据的过程：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;TcpClient&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;AddMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sIP&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iPort&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sMessage&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;TcpClient&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;AddMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sIP&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iPort&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sMessage&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// 将发送消息的任务转换为一个 MessageEvent，GetEvent 是内部函数。&lt;/span&gt;
     &lt;span class="n"&gt;MessageEvent&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;poEvent&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;GetEvent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sIP&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;iPort&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -724,7 +724,7 @@
 &lt;p&gt;感觉代码写的非常清楚了：TcpClient 中的主要逻辑是为根据消息的目标为待发送的消息选择对应的（不存在则创建）MessageEvent 对象，然后将消息加入到该对象中的发送队列（如果没超过长度或内存使用限制）中，随后利用 Notify 事件提供的接口唤醒可能处于阻塞状态的事件循环线程。&lt;/p&gt;
 &lt;p&gt;介绍完消息是如何加入队列的，我们来看看队列中的内容如何发送出去的。前面我们提到了，TcpWrite 的线程是用于调用它关联的 EventLoop 对象的，所以核心就在于 EventLoop 的 StartLoop 中，上一节我们提到了 StartLoop 中的 while 循环通过不断地调用 OneLoop 来处理处于 Ready 状态的事件，将它们分发给各自对应的处理函数。所以关键就在于这些事件的来源了。&lt;/p&gt;
 &lt;p&gt;对于 TcpWrite 的 EventLoop 而言，OneLoop 中的这些事件来源于 TcpClient，所以每次 StartLoop 在执行完 OneLoop 之后，都会调用 TcpClient::DealWithWrite 去检查是否需要往事件循环中添加新的事件，代码如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;TcpClient&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;DealWithWrite&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;TcpClient&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;DealWithWrite&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// 逻辑很简单，调用各个 MessageEvent 的 OpenWrite，由它们自己去&lt;/span&gt;
     &lt;span class="c1"&gt;// 添加所需要进行的写事件。&lt;/span&gt;
@@ -760,7 +760,7 @@
 &lt;p&gt;~~不能确定这是否是个潜在 bug，截止我写这篇博客的时候，Github 仓库中的代码依旧是这样。~~&lt;/p&gt;
 &lt;p&gt;已提交 &lt;a href="https://github.com/Tencent/phxpaxos/issues/75"&gt;Issue&lt;/a&gt; 进行了讨论，m_oInQueue 的后续逻辑有二次加锁检查，所以可以正确处理，m_vecEvent 则可能由于插入时的扩容带来问题，简单的解决办法是初始化的时候使用 reserve 预留足够大的空间避免扩容行为（因为一般消息发送的目标数量也不会特别夸张）。&lt;/p&gt;
 &lt;p&gt;抛开上面那个，继续看看 MessageEvent 在被 epoll_wait 返回并回调 OnWrite 后是如何发送消息的：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;MessageEvent&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;OnWrite&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;MessageEvent&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;OnWrite&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// while 循环的两个条件分别表示：发送队列非空、上一次的消息未发送完，&lt;/span&gt;
     &lt;span class="c1"&gt;// 调用 DoOnWrite 进行真实的发送操作。&lt;/span&gt;
@@ -929,28 +929,28 @@
 &lt;p&gt;不贴代码果然短了很多啊。&lt;/p&gt;
 &lt;h2 id="msgtransport-communicate"&gt;算法消息接口：MsgTransport &amp;amp; Communicate&lt;a class="headerlink" href="#msgtransport-communicate" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;可能是出于屏蔽以及方便使用，PhxPaxos 并没有直接为算法层的角色提供网络层，而是通过一个叫 MsgTransport 的接口类提供了一些接口方法，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MsgTransport&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MsgTransport&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;MsgTransport&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SendMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;nodeid_t&lt;/span&gt; &lt;span class="n"&gt;iSendtoNodeID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;SendMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;nodeid_t&lt;/span&gt; &lt;span class="n"&gt;iSendtoNodeID&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
             &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iSendType&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Message_SendType_UDP&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;BroadcastMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;BroadcastMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
             &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iSendType&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Message_SendType_UDP&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;BroadcastMessageFollower&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;BroadcastMessageFollower&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
             &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iSendType&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Message_SendType_UDP&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;BroadcastMessageTempNode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+    &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;BroadcastMessageTempNode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sBuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
             &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;iSendType&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Message_SendType_UDP&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;显然，这些接口可以简化算法层的使用，不过对于 Broadcast 而言，像 Follower 和 TempNode 这些东西就需要由实现者去确定了。&lt;/p&gt;
 &lt;p&gt;PhxPaxos 内部的 Communicate 类实现了这个接口，该类的构造需要接受一个 Config 对象，该类对象中包含了所有 Broadcast 操作所需要使用的节点信息，这块涉及到算法运行层面，此处就暂时忽略了。&lt;/p&gt;
 &lt;h2 id="_2"&gt;结语&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;完全没想到这篇东西会花这么长时间，昨天晚上开始写的（囧因此忘掉了腾讯的模拟笔试），然后今晚补完了，前后大概用了快 5 个小时吧。可能一方面是因为在写的时候基本又重看了一遍源码来确保不出太大的问题，另一方面感觉是写的过于细了。。。&lt;/p&gt;</summary><category term="PhxPaxos"></category></entry><entry><title>PhxPaxos 源码阅读笔记（零）</title><link href="http://goclis.github.io/posts/2017/07/28/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E9%9B%B6%EF%BC%89.html" rel="alternate"></link><published>2017-07-28T20:20:00+08:00</published><updated>2017-07-28T20:20:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-28:posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html</id><summary type="html">&lt;h2 id="_1"&gt;前言&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;完全没想到这篇东西会花这么长时间，昨天晚上开始写的（囧因此忘掉了腾讯的模拟笔试），然后今晚补完了，前后大概用了快 5 个小时吧。可能一方面是因为在写的时候基本又重看了一遍源码来确保不出太大的问题，另一方面感觉是写的过于细了。。。&lt;/p&gt;</summary><category term="PhxPaxos"></category></entry><entry><title>PhxPaxos 源码阅读笔记（零）</title><link href="http://goclis.github.io/posts/2017/07/28/PhxPaxos%20%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E9%9B%B6%EF%BC%89.html" rel="alternate"></link><updated>2017-07-28T20:20:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-28:posts/2017/07/28/PhxPaxos 源码阅读笔记（零）.html</id><summary type="html">&lt;h2 id="_1"&gt;前言&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;其实之前就很想阅读 PhxPaxos 的源码来加深一下自己对 Paxos 的理解，但因为中途出差一个月加上前前后后的相关准备就搁置了，对于 Paxos 的理解一直停留在纸面上。最近阿里的 X-Paxos 宣传的很火，而自己也稍微闲了一些，就准备把阅读源码这个坑给填了。&lt;/p&gt;
 &lt;p&gt;PhxPaxos 的整体代码量不是很大，注释虽然不多，但是可读性还是非常高的，配合着那些日志代码以及官方博客中的模型介绍，基本上可以很容易地理解它的大部分内容。&lt;/p&gt;
 &lt;p&gt;利用零零碎碎的晚上休息时间，大概用了快一周把代码读完了，就想着反正自己从中也学到了不少内容，干脆写一个系列的阅读笔记吧。这是我第一次尝试写一个系列，希望能够写的稍微有点条理吧，这篇博客算是挖坑了。不过最近依旧比较忙，尽可能保持比较快的速度更新吧。&lt;/p&gt;
@@ -988,9 +988,9 @@
 &lt;li&gt;Maybe more...&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;后面如果有空的话可能会自己基于 PhxPaxos 实现一些示例，也会贴上来。因为目前 PhxPaxos 给出的三个示例中都没有实现 Checkpoint 相关的东西（也可能是我看漏了），只能够自己实现下加深理解。&lt;/p&gt;
-&lt;p&gt;坑大概就挖到这里，慢慢填了。&lt;/p&gt;</summary><category term="PhxPaxos"></category><category term="分布式"></category><category term="一致性算法"></category></entry><entry><title>同步请求响应的实现</title><link href="http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html" rel="alternate"></link><published>2017-08-24T17:44:00+08:00</published><updated>2017-08-24T17:44:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</id><summary type="html">&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;坑大概就挖到这里，慢慢填了。&lt;/p&gt;</summary><category term="PhxPaxos"></category><category term="分布式"></category><category term="一致性算法"></category></entry><entry><title>同步请求响应的实现</title><link href="http://goclis.github.io/posts/2017/07/16/%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0.html" rel="alternate"></link><updated>2017-08-24T17:44:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-07-16:posts/2017/07/16/同步请求响应的实现.html</id><summary type="html">&lt;p&gt;&lt;em&gt;声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Synchronizer&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
 
@@ -1006,7 +1006,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;显然，WaitThreadData 的操作不能因为收不到对端响应就一直阻塞，需要引入超时等机制来应对对端崩溃或响应慢的情况，代码里直接利用了信号量所提供的参数来实现超时机制，可以满足条件。但是，向调用者返回超时并不意味着这个报文消失了，底层所用的网络库提供的是保证可靠的报文模式，所以这个报文最终一定会到来，因此，必须处理掉它以避免影响到后续请求。&lt;/p&gt;
 &lt;p&gt;然而，接手的代码在实现上对这个问题没有考虑全面，它大致的伪代码如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;threadId&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
@@ -1107,7 +1107,7 @@
 &lt;p&gt;这种恢复有个副作用，信号量被 POST 了两次，却只有一次成功的 WAIT，从而导致其中的值增加了 1，但是，由于每次获取数据时都要调用 WaitThreadData，这个副作用不会影响到响应的正确性。&lt;/p&gt;
 &lt;p&gt;为了改进这个问题，需要在 WAIT 得到数据后进行检查，判断它是否是所需要的数据。而为了能够判断，我们可以给每个请求都增加上序列号，并要求响应在回复的数据中也设置对应的序列号。序列号由 TLS 维护，保证能够标识该线程内的各个请求即可，此处直接利用了 64 位无符号数来代表（这个数真的是大啊）。&lt;/p&gt;
 &lt;p&gt;最终版本如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;Packet&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;enum&lt;/span&gt; &lt;span class="n"&gt;Type&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
 
@@ -1230,7 +1230,7 @@
 &lt;/ol&gt;
 &lt;p&gt;小小的总结下，这次改进主要是为了解决掉错位问题，并且追求最小的改动量，目前也只想到了这样的方法。如果要类比一个常见词汇的话，感觉这个问题的需求有点像同步 RPC。&lt;/p&gt;
 &lt;p&gt;问了下实现过异步 RPC 的同学，其实也在请求中加入了 Request ID 这样的标识，从而在异步接收时才能判别该调用哪个回调方法。这期间我也猜了下浏览器可能的实现，觉得主流浏览器应该也是为每个 HTTP Request 分配相应标识（感觉可以用 SOCKET 句柄），在收到 Response 数据后，通过标识找到对应 Request，进而找到对应的 Tab，由 Tab 实例去负责处理数据。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;如果这个问题有其他方式的实现可以解决的话，欢迎指教，谢谢！&lt;/strong&gt;&lt;/p&gt;</summary></entry><entry><title>内存模型引发的思考</title><link href="http://goclis.github.io/posts/2017/06/22/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83.html" rel="alternate"></link><published>2017-12-27T13:57:00+08:00</published><updated>2017-12-27T13:57:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-06-22:posts/2017/06/22/内存模型引发的思考.html</id><summary type="html">&lt;p&gt;昨天在看《深入理解 Java 虚拟机》，本来以为 12 章讲的内存模型指的是类似 C++ 对象模型的概念，可以在一个半小时内搞定，结果看到硬件上的一致性以及内存模型的概念时就发现触及自己的知识盲区了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果这个问题有其他方式的实现可以解决的话，欢迎指教，谢谢！&lt;/strong&gt;&lt;/p&gt;</summary></entry><entry><title>内存模型引发的思考</title><link href="http://goclis.github.io/posts/2017/06/22/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83.html" rel="alternate"></link><updated>2017-12-27T13:57:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-06-22:posts/2017/06/22/内存模型引发的思考.html</id><summary type="html">&lt;p&gt;昨天在看《深入理解 Java 虚拟机》，本来以为 12 章讲的内存模型指的是类似 C++ 对象模型的概念，可以在一个半小时内搞定，结果看到硬件上的一致性以及内存模型的概念时就发现触及自己的知识盲区了。&lt;/p&gt;
 &lt;h3 id="cpu"&gt;CPU 缓存一致性&lt;a class="headerlink" href="#cpu" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;首先是 CPU 缓存一致性，借一下书上的图。&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="https://ws1.sinaimg.cn/large/006tKfTcly1fgt3nsziz8j30tm0e0q4m.jpg"/&gt;&lt;/p&gt;
@@ -1256,7 +1256,7 @@
 &lt;p&gt;说的明白点：在 C/C++ 中，volatile 就是让编译器访问此变量时，一律从内存中访问，并且要把结果即时写入内存，从而保证了多线程能够及时得知变化，而且，绝对不能因为优化而把和这个变量相关的语句给抹掉了。&lt;/p&gt;
 &lt;p&gt;看完这两篇文章后，我是真觉得 C/C++ 里的这个关键字作用真的不大，纯粹是为了解决一些历史问题引入的（和 I/O 设备相关，本章开头说的那篇文章里有提及）。它在 C/C++ 中的鸡肋之处主要体现在只使用它无法提供我们经常需要的同步语义（Java 为它加了 Acquire 和 Relase 语义后使得它能表达一些基本的同步语义：如 happen-before），而如果引入锁这些东西来表达同步语义的话，加不加 volatile 的话其实没差。&lt;/p&gt;
 &lt;p&gt;后面这点我在 VS2013 下做了点实验，我们知道编译器是可以利用寄存器进行一些优化的，比如下面的代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;g_i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;g_i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;g_input&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -1269,7 +1269,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在 VS2013 下开 Release 的话，&lt;code&gt;g_i += j&lt;/code&gt; 这句会被优化成类似 &lt;code&gt;add ecx eax&lt;/code&gt; 这样的代码，即将两个操作数放入各自的寄存器中，然后在循环结束后才将最终值写回内存。&lt;/p&gt;
 &lt;p&gt;看到这儿，自然而然地想到如果这段代码在多线程下会怎么样？在多线程这种情景下，我们一般都会利用临界区之类的机制来保证同步，所以代码会变成下面这样：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;g_input&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;g_input&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;Lock&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
     &lt;span class="n"&gt;g_i&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -1289,7 +1289,7 @@
 &lt;p&gt;借一张博客中描述 .Net 内存读写操作的表：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/c574b90egy1fmva2hx3pij20h00d23yz.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;倒数第二行对于 Lock Acquire 是定义了必须得在访问前刷线程缓存的，实质上就是要求 CPU 必须到内存中重新去访问该值，以避免访问 CPU Cache 中的值是旧的，这和 C++ 编译器进行的优化原则是差不多的，可能是因为 C++11 也遵循了这样的内存模型。&lt;/p&gt;
-&lt;p&gt;再注意一点，表中第三行提及了 Volatile Read，可以看到，它也有和 Lock Acquire 同样的要求，因为这个变量被声明为了 volatile，所以编译器不能认为它在 CPU 缓存中的内容是可靠的，从而需要访问内存刷新缓存。&lt;/p&gt;</summary><category term="内存模型"></category><category term="volatile"></category><category term="CPU 缓存一致性"></category><category term="多线程模型"></category><category term="Lock-Free"></category></entry><entry><title>静态库与动态库的跨编译器兼容</title><link href="http://goclis.github.io/posts/2017/05/26/%E9%9D%99%E6%80%81%E5%BA%93%E4%B8%8E%E5%8A%A8%E6%80%81%E5%BA%93%E7%9A%84%E8%B7%A8%E7%BC%96%E8%AF%91%E5%99%A8%E5%85%BC%E5%AE%B9.html" rel="alternate"></link><published>2017-05-26T20:49:28+08:00</published><updated>2017-05-26T20:49:28+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-05-26:posts/2017/05/26/静态库与动态库的跨编译器兼容.html</id><summary type="html">&lt;p&gt;由于当前项目维护的代码需要支持多个编译器，最近突然好奇为什么不直接在高版本的 VS 中直接使用低版本生成的库呢？起初以为是不可行，但是后面从理论上想了一下，感觉对于动态库来说应该可行，低版本生成的 DLL 依赖低版本的 C++ 运行时，高版本生成的可执行程序依赖高版本的 C++ 运行时，按照这样的设定应该没有任何问题才对。&lt;/p&gt;
+&lt;p&gt;再注意一点，表中第三行提及了 Volatile Read，可以看到，它也有和 Lock Acquire 同样的要求，因为这个变量被声明为了 volatile，所以编译器不能认为它在 CPU 缓存中的内容是可靠的，从而需要访问内存刷新缓存。&lt;/p&gt;</summary><category term="内存模型"></category><category term="volatile"></category><category term="CPU 缓存一致性"></category><category term="多线程模型"></category><category term="Lock-Free"></category></entry><entry><title>静态库与动态库的跨编译器兼容</title><link href="http://goclis.github.io/posts/2017/05/26/%E9%9D%99%E6%80%81%E5%BA%93%E4%B8%8E%E5%8A%A8%E6%80%81%E5%BA%93%E7%9A%84%E8%B7%A8%E7%BC%96%E8%AF%91%E5%99%A8%E5%85%BC%E5%AE%B9.html" rel="alternate"></link><updated>2017-05-26T20:49:28+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-05-26:posts/2017/05/26/静态库与动态库的跨编译器兼容.html</id><summary type="html">&lt;p&gt;由于当前项目维护的代码需要支持多个编译器，最近突然好奇为什么不直接在高版本的 VS 中直接使用低版本生成的库呢？起初以为是不可行，但是后面从理论上想了一下，感觉对于动态库来说应该可行，低版本生成的 DLL 依赖低版本的 C++ 运行时，高版本生成的可执行程序依赖高版本的 C++ 运行时，按照这样的设定应该没有任何问题才对。&lt;/p&gt;
 &lt;p&gt;举个例子，VS2013 生成了动态库库 A.lib 和 A.dll，VS2015 中使用了 A.lib 生成 B.exe，让我们来看下最终的依赖情况（下面 C++ 运行时库的名字以 msvc 来代替）：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;B.exe 依赖于 A.dll 和 msvc2015.dll&lt;/li&gt;
@@ -1303,7 +1303,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;无法解析的外部符号：x（referenced in xxx_fun from A.lib）&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;我们上面讨论的这些内容都没有考虑到 VS 本身提供的 MD、MT 这些选项，但仔细想想的话会发现，道理都是一样的，不管哪个选项，都有 msvcVersion.lib，不同版本中就有可能不一样，谁让静态库把链接推迟到了最终编译器呢。&lt;/p&gt;</summary><category term="静态库"></category><category term="DLL"></category><category term="Visual Studio"></category></entry><entry><title>Call convention &amp; Name mangling</title><link href="http://goclis.github.io/posts/2017/04/10/Call%20convention%20&amp;%20Name%20mangling.html" rel="alternate"></link><published>2017-04-10T22:29:42+08:00</published><updated>2017-04-10T22:29:42+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-04-10:posts/2017/04/10/Call convention &amp; Name mangling.html</id><summary type="html">&lt;p&gt;标题只是为了满足强迫症，文中对于 Call convention 还是使用中文翻译的&lt;strong&gt;调用约定&lt;/strong&gt;，但 Name mangling 因为不知道怎么翻译好，就保持吧。&lt;/p&gt;
+&lt;p&gt;我们上面讨论的这些内容都没有考虑到 VS 本身提供的 MD、MT 这些选项，但仔细想想的话会发现，道理都是一样的，不管哪个选项，都有 msvcVersion.lib，不同版本中就有可能不一样，谁让静态库把链接推迟到了最终编译器呢。&lt;/p&gt;</summary><category term="静态库"></category><category term="DLL"></category><category term="Visual Studio"></category></entry><entry><title>Call convention &amp; Name mangling</title><link href="http://goclis.github.io/posts/2017/04/10/Call%20convention%20&amp;%20Name%20mangling.html" rel="alternate"></link><updated>2017-04-10T22:29:42+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2017-04-10:posts/2017/04/10/Call convention &amp; Name mangling.html</id><summary type="html">&lt;p&gt;标题只是为了满足强迫症，文中对于 Call convention 还是使用中文翻译的&lt;strong&gt;调用约定&lt;/strong&gt;，但 Name mangling 因为不知道怎么翻译好，就保持吧。&lt;/p&gt;
 &lt;p&gt;之前同学在聊面试的时候提到被问过调用约定（Call convention）相关的问题，突然想起来自己虽然知道这个东西影响的是方法调用（比如参数如何传递、调用栈清理等），但是并不记得每个类型的调用约定存在的作用以及具体内容，于是查了一下。&lt;/p&gt;
 &lt;h2 id="call-convention"&gt;调用约定（Call convention）&lt;a class="headerlink" href="#call-convention" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;调用约定规定了一个方法在被调用的时候需要遵循的一些内容：&lt;/p&gt;
@@ -1328,7 +1328,7 @@
 &lt;h2 id="_1"&gt;实验&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;用的 Visual Studio 2015 Community Edition，Configuration 选择默认的 Win32 Debug，查看符号的方式也比较简单，看生成产生的链接错误即可。&lt;/p&gt;
 &lt;p&gt;代码如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// C++ name mangling &amp;amp; cdecl&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// C++ name mangling &amp;amp; cdecl&lt;/span&gt;
 &lt;span class="c1"&gt;// unresolved external symbol "void __cdecl F(void)" (?F@@YAXXZ) referenced in function _main&lt;/span&gt;
 &lt;span class="c1"&gt;// void F();&lt;/span&gt;
 
@@ -1370,7 +1370,7 @@
 &lt;li&gt;&lt;a href="http://blog.csdn.net/fly2k5/article/details/544112"&gt;cdecl、stdcall、fastcall 函数调用约定区别 - CSDN&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Name_mangling"&gt;Name mangling - Wikipedia&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Application_binary_interface"&gt;Application binary interface - Wikipedia&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="Call convention"></category><category term="调用约定"></category><category term="Name mangling"></category><category term="ABI"></category></entry><entry><title>MS Visual Studio对C++多继承的相关实现</title><link href="http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html" rel="alternate"></link><published>2016-09-25T15:31:00+08:00</published><updated>2016-09-25T15:31:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-09-25:posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</id><summary type="html">&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="Call convention"></category><category term="调用约定"></category><category term="Name mangling"></category><category term="ABI"></category></entry><entry><title>MS Visual Studio对C++多继承的相关实现</title><link href="http://goclis.github.io/posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html" rel="alternate"></link><updated>2016-09-25T15:31:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-09-25:posts/2016/09/25/ms-visual-studio-implementation-of-cpp-multiple-inheritance.html</id><summary type="html">&lt;p&gt;&lt;em&gt;本文的内容来自于在VS2013中的实验，只能说明一种可行的实现途径，不代表编译器必须这样实现。后续内容中如未特殊提及，编译器代指VS2013。&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;首先，我们来明确一个观点：&lt;strong&gt;在类成员方法中，this指针是否一定要指向这个对象的内存起始处？&lt;/strong&gt;答案是不一定，指向起始处当然是很方便我们这些脑算成员变量偏移的，因为只用做加法就行了，但是对于编译器而言，它只需要确定好一个关于this指向的原则，随后基于这个原则，不管偏移要加法还是减法，对它来说都是没什么区别的。因此，this的指向实际上是编译器自己决定的，它可以遵照常规的想法，在进入成员方法代码前，把this调整至对象内存起始，或者是为了性能，采用它自己的原则。&lt;/p&gt;
 &lt;p&gt;显然，VS这样的编译器使用的是后者，它出于性能考虑，约定了自己的原则：&lt;strong&gt;this指针在一个类成员方法中的指向，取决于该方法的来源。&lt;/strong&gt;具体来说：&lt;/p&gt;
 &lt;ul&gt;
@@ -1379,7 +1379,7 @@
 &lt;/ul&gt;
 &lt;p&gt;由于类成员方法是可以在继承关系中调用的，即子类对象可以调用父类的public成员方法。那么，按照这个原则中的第2条，编译器需要做一些调整工作。&lt;/p&gt;
 &lt;p&gt;下面举个例子，并结合例子来讲讲&lt;strong&gt;this调整&lt;/strong&gt;的过程：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="n"&gt;base_adjust_rule&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="n"&gt;base_adjust_rule&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;P1&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1431,7 +1431,7 @@
 &lt;p&gt;结合示例代码及反汇编图，可以明确，VS确实是在遵守我们一开始所说的原则的，并且，即使你使用的是类对象而非对象指针去调用方法，原则依旧保持。如果感兴趣且想做进一步验证的话，可以在方法中加入一些访问成员变量的代码，然后在方法内部反汇编，查看它访问变量时的偏移计算，从而确定this指向。&lt;/p&gt;
 &lt;p&gt;上面的示例代码比较简单，都是使用pc去访问方法，而对于编译器来说，从类C的角度它可以在编译期就完全确定如何调整，所以才能生成一系列的add代码。但如果从P2的角度去分析的话，编译器将无法在编译期确定这些偏移量，下面将说明这一点并讲讲编译器如何处理这种情况。&lt;/p&gt;
 &lt;p&gt;继承结构不变，测试代码更换如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;test2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;test2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;P2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p21&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;P2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p22&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;P2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -1446,7 +1446,7 @@
 &lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f85rv1ytbbj30fc03lq32.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;注意，这里thunk是为类C生成的，因为C的父类中出现了同名的virtual方法。&lt;/p&gt;
 &lt;p&gt;提到了thunk，就顺便讲讲另外一种情况下的多态访问，即利用成员函数指针。这里的多态访问是指：使用指针或者引用去调用成员函数指针，需要保持多态语义。按照上面示例的继承结构，下面的代码中的调用都等价（子类指针是可以调用父类成员函数指针的）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;test3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;test3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;C&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;P1&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pp1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -1478,7 +1478,7 @@
 &lt;li&gt;查看右边（p2f及p1f1）可以看到，对于虚函数，都是诸如&lt;code&gt;[thunk]:base_adjust_rule::P1::'vcall'{0, {flat}}&lt;/code&gt;这样的内容，而普通函数则无thunk。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;如果你仔细跟踪(pc-&amp;gt;*&amp;amp;P2::f1)()，你会发现，编译器在编译期把指针调整成了P2，而运行期，因为f1来自于P1，又要重新调整回去，很傻，但是没办法，利用成员函数指针来调用虚函数，在父类中存在同名时，就是会产生这样的一个代价。&lt;/p&gt;
-&lt;p&gt;这个实验至少告诉我们普通用户一点：尽量别让多个父类中出现同名方法，否则会导致一次额外的jmp。= =#这种看现象猜原则的过程也是蛮痛苦的，不过还好，总算是补完了。&lt;/p&gt;</summary><category term="多继承"></category><category term="C++编译器thunk"></category><category term="成员函数指针"></category><category term="this指针"></category></entry><entry><title>和Shadowsocks一起科学上网</title><link href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" rel="alternate"></link><published>2016-11-21T16:45:00+08:00</published><updated>2016-11-21T16:45:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-05-27:posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html</id><summary type="html">
+&lt;p&gt;这个实验至少告诉我们普通用户一点：尽量别让多个父类中出现同名方法，否则会导致一次额外的jmp。= =#这种看现象猜原则的过程也是蛮痛苦的，不过还好，总算是补完了。&lt;/p&gt;</summary><category term="多继承"></category><category term="C++编译器thunk"></category><category term="成员函数指针"></category><category term="this指针"></category></entry><entry><title>和Shadowsocks一起科学上网</title><link href="http://goclis.github.io/posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html" rel="alternate"></link><updated>2016-11-21T16:45:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-05-27:posts/2016/05/27/fuck-the-gfw-with-shadowsocks.html</id><summary type="html">
 &lt;p&gt;拖延症晚期，本来上上个月把新机器折腾好了之后就想写这个内容的，丢到Todo里后就没理它了，今天发现还有一个更早前想写的内容至今也没开始码。
 这篇东西呢，没什么干货，只是一个整理，记下如何利用Shadowsocks来科学上网，包括VPS相关的内容。因此，对于不同的VPS提供商、不同的OS可能不适用，可以自行搜索。&lt;/p&gt;
 &lt;h3 id="vps"&gt;VPS搭建服务器&lt;a class="headerlink" href="#vps" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
@@ -1493,7 +1493,7 @@
 &lt;p&gt;默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg"/&gt;&lt;/p&gt;
 &lt;p&gt;接着需要到VPS上&lt;a href="http://4b3r.com/digitalocean-enable-ipv6/"&gt;配置IPv6&lt;/a&gt;，使用ssh连接，编辑 &lt;code&gt;/etc/network/interfaces&lt;/code&gt;，在 &lt;code&gt;auto eth0&lt;/code&gt; 后加上下面的内容：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;iface eth0 inet6 static
+&lt;div class="highlight"&gt;&lt;pre&gt;iface eth0 inet6 static
         address primary_ipv6_address
         netmask 64
         gateway ipv6_gateway
@@ -1503,15 +1503,15 @@
 &lt;p&gt;其中 &lt;code&gt;primary_ipv6_address&lt;/code&gt; 和 &lt;code&gt;ipv6_gateway&lt;/code&gt; 换成上面那张图里DO分配给你的内容，保存后 &lt;code&gt;service networking restart&lt;/code&gt; 重启网络即可，实在不行重启VPS，可以使用 &lt;code&gt;ifconfig&lt;/code&gt; 来查看是否配置成功。&lt;/p&gt;
 &lt;h3 id="vpsshadowsocks"&gt;在VPS上配置Shadowsocks服务&lt;a class="headerlink" href="#vpsshadowsocks" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;apt-get install python-pip
+&lt;div class="highlight"&gt;&lt;pre&gt;apt-get install python-pip
 pip install shadowsocks
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;安装完后还需要对Shadowsocks进行配置，找个地方创建一个配置文件即可，比如：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mkdir /etc/shadowsocks
+&lt;div class="highlight"&gt;&lt;pre&gt;mkdir /etc/shadowsocks
 vim /etc/shadowsocks/config.json
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;配置文件的基本内容：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="nt"&gt;"server"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;"::"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="nt"&gt;"server_port"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;8382&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="nt"&gt;"local_port"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1080&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
@@ -1528,13 +1528,13 @@ vim /etc/shadowsocks/config.json
 &lt;/ul&gt;
 &lt;p&gt;更多的配置可以到&lt;a href="https://shadowsocks.org/en/config/quick-guide.html"&gt;Shadowsocks官网&lt;/a&gt;查看。&lt;/p&gt;
 &lt;p&gt;关于服务的启动，ssh连上服务器然后执行下面这个命令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# 注意配置文件的路径&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# 注意配置文件的路径&lt;/span&gt;
 nohup ssserver -c /etc/shadowsocks/config.json &amp;gt;&amp;gt; /var/log/shadowsocks.log&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;关闭服务的话。。不大优雅：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# 利用lsof通过端口号找到pid&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# 利用lsof通过端口号找到pid&lt;/span&gt;
 lsof -i:port
-&lt;span class="nb"&gt;kill&lt;/span&gt; xxx
+&lt;span class="nb"&gt;kill &lt;/span&gt;xxx
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="shadowsocks"&gt;使用Shadowsocks客户端&lt;a class="headerlink" href="#shadowsocks" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;这里只讲Windows的，OSX上的也基本一样。&lt;/p&gt;
@@ -1563,8 +1563,8 @@ lsof -i:port
 &lt;li&gt;&lt;a href="https://github.com/shadowsocks/"&gt;Shadowsocks on Github&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://blog.kunyu.li/digitalocean-ubuntu-vps-vpn.html"&gt;PPTP VPN搭建&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.wikiwand.com/en/Proxy_auto-config"&gt;PAC&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="Shadowsocks"></category><category term="VPS"></category><category term="VPN"></category><category term="Ubuntu"></category><category term="DigitalOcean"></category></entry><entry><title>C预处理器宏展开</title><link href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html" rel="alternate"></link><published>2016-04-26T23:21:20+08:00</published><updated>2016-04-26T23:21:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-26:posts/2016/04/26/c-preprocessor-macro-expansion.html</id><summary type="html">&lt;p&gt;最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
+&lt;/ol&gt;</summary><category term="Shadowsocks"></category><category term="VPS"></category><category term="VPN"></category><category term="Ubuntu"></category><category term="DigitalOcean"></category></entry><entry><title>C预处理器宏展开</title><link href="http://goclis.github.io/posts/2016/04/26/c-preprocessor-macro-expansion.html" rel="alternate"></link><updated>2016-04-26T23:21:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-26:posts/2016/04/26/c-preprocessor-macro-expansion.html</id><summary type="html">&lt;p&gt;最近在写一个用于简化生成代码的宏，该宏大致希望达到如下功能：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
 &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="err"&gt;##&lt;/span&gt; &lt;span class="n"&gt;_func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1573,13 +1573,13 @@ lsof -i:port
 &lt;span class="cp"&gt;#endif&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这段代码是不能用的，因为预处理符号&lt;code&gt;##&lt;/code&gt;是不能用在代码中的，这里只是用来表示下宏希望实现的目的，即定义一个T，就为之定义一个对应的方法，比如说：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 这段代码希望定义一个int_func方法&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 这段代码希望定义一个int_func方法&lt;/span&gt;
 &lt;span class="cp"&gt;#define T int&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"macro.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include "macro.h"&lt;/span&gt;
 &lt;span class="cp"&gt;#undef T&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;上面提到了&lt;code&gt;##&lt;/code&gt;是不能直接写在代码里的，所以我一开始是这样实现的：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
 &lt;span class="cp"&gt;#define func_m(TN) TN ## _func&lt;/span&gt;
 &lt;span class="cp"&gt;#define T_func func_m(T)&lt;/span&gt;
@@ -1590,7 +1590,7 @@ lsof -i:port
 &lt;span class="cp"&gt;#endif&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;但是，这样的写法并不能够正确的定义我们例子中想要的&lt;code&gt;int_func&lt;/code&gt;方法，而是会定义一个&lt;code&gt;T_func&lt;/code&gt;方法（这一点可以通过查看VS生成的obj文件中的符号确定，或是设置选项让编译器保留预处理产生的.i文件），下面给出正确的写法：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// macro.h&lt;/span&gt;
 &lt;span class="cp"&gt;#if defined(T)&lt;/span&gt;
 &lt;span class="cp"&gt;#define concate(A, B) A ## B&lt;/span&gt;
 &lt;span class="cp"&gt;#define func_m(TN) concate(TN, _func)&lt;/span&gt;
@@ -1607,10 +1607,10 @@ lsof -i:port
 &lt;/blockquote&gt;
 &lt;p&gt;token-pasting运算符就是&lt;code&gt;##&lt;/code&gt;。结合我原先的实现以及这段话，当预处理器在处理&lt;code&gt;T_func&lt;/code&gt;时，它会替换为&lt;code&gt;func_m(T)&lt;/code&gt;，这类似于一个函数调用，预处理器查看了一下&lt;code&gt;func_m&lt;/code&gt;这个宏的内容，发现其中有&lt;code&gt;##&lt;/code&gt;符号，所以，它直接将形参（即TN）替换成了未扩展的实参（即T），替换前并没有对T进行宏展开，从而导致无论T是什么，&lt;code&gt;T_func&lt;/code&gt;都是最终结果。
 这点通过修改一下代码也可以验证：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define T_func func_m(B)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define T_func func_m(B)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这里改成了B，所以最后定义的符号是&lt;code&gt;B_func&lt;/code&gt;，因为不管是啥，预处理器都不会对它展开。&lt;/p&gt;
-&lt;p&gt;本来想结合生成的obj文件来写的，但写这个的时候不是用的Windows，所以就算了，懒23333。&lt;/p&gt;</summary><category term="预处理器"></category><category term="宏"></category></entry><entry><title>HTTP请求中的数据</title><link href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" rel="alternate"></link><published>2016-04-16T22:47:20+08:00</published><updated>2016-04-16T22:47:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-16:posts/2016/04/16/data-in-http-request.html</id><summary type="html">
+&lt;p&gt;本来想结合生成的obj文件来写的，但写这个的时候不是用的Windows，所以就算了，懒23333。&lt;/p&gt;</summary><category term="预处理器"></category><category term="宏"></category></entry><entry><title>HTTP请求中的数据</title><link href="http://goclis.github.io/posts/2016/04/16/data-in-http-request.html" rel="alternate"></link><updated>2016-04-16T22:47:20+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2016-04-16:posts/2016/04/16/data-in-http-request.html</id><summary type="html">
 &lt;p&gt;那天在帮同学调代码的时候发现自己对于HTTP Request的细节很模糊，对于各种形式的数据是如何被处理封装成HTTP报文的、在报文中的哪个位置，并不是非常的清楚，因此，查了查资料后写了这篇东西。&lt;/p&gt;
 &lt;h3 id="http"&gt;HTTP请求格式&lt;a class="headerlink" href="#http" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;先看看HTTP请求消息的格式 &lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;1&lt;/a&gt;：&lt;/p&gt;
@@ -1628,22 +1628,22 @@ lsof -i:port
 &lt;/ul&gt;
 &lt;h3 id="query-string"&gt;Query String&lt;a class="headerlink" href="#query-string" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;这个实际上就是HTTP请求消息的第一部分URL中?后面的那部分信息，因此，它与请求的类型无关，只和URL相关，下面是个例子：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# 附带数据为name: xxx, age: 18
+&lt;div class="highlight"&gt;&lt;pre&gt;# 附带数据为name: xxx, age: 18
 GET example.com?name=xxx&amp;amp;age=18
 POST example.com?name=xxx&amp;amp;age=18
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;用python的requests库来实现这个请求的话就是下面这样：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'example.com'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;'xxx'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;即这些数据会当做参数被编码到请求的URL中，而服务器端会解析这些参数。&lt;/p&gt;
 &lt;h3 id="form-data"&gt;Form Data&lt;a class="headerlink" href="#form-data" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;一般来说，form data是指html中form标签提交的数据：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt; &lt;span class="na"&gt;action&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"xxx"&lt;/span&gt; &lt;span class="na"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"GET"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"first"&lt;/span&gt; &lt;span class="p"&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"second"&lt;/span&gt; &lt;span class="p"&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"submit&lt;/span&gt; &lt;span class="p"&gt;/&amp;gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;action=&lt;/span&gt;&lt;span class="s"&gt;"xxx"&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;"GET"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"first"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"second"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"submit&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;但是，form data是放在HTTP请求报文中的哪呢？？这个得看提交的方法：&lt;/p&gt;
 &lt;ul&gt;
@@ -1665,13 +1665,13 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;li&gt;&lt;a href="http://www.tutorialspoint.com/http/http_requests.htm"&gt;HTTP Requests&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://homakov.blogspot.com/2012/06/x-www-form-urlencoded-vs-json-pros-and.html"&gt;x-www-form-urlencoded vs json&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://www.iana.org/assignments/media-types/media-types.xhtml"&gt;IANA Media Types&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="HTTP请求"></category></entry><entry><title>Openssl-RSA简单使用</title><link href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html" rel="alternate"></link><published>2015-12-26T00:00:00+08:00</published><updated>2015-12-26T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</id><summary type="html">
+&lt;/ol&gt;</summary><category term="HTTP请求"></category></entry><entry><title>Openssl-RSA简单使用</title><link href="http://goclis.github.io/posts/2015/09/10/openssl-rsa-basic-use.html" rel="alternate"></link><updated>2015-12-26T00:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2015-09-10:posts/2015/09/10/openssl-rsa-basic-use.html</id><summary type="html">
 &lt;p&gt;最近需要用到RSA的一些功能，出于方便，打算直接用openssl，但是在不同平台上使用openssl所需要做的工作还不一样，干脆就记个笔记整理一下。&lt;/p&gt;
 &lt;h3 id="windowsvs2013openssl"&gt;Windows下使用VS2013编译openssl源码&lt;a class="headerlink" href="#windowsvs2013openssl" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;源码可以去官网下载，先前下过1.0.2d的源码，但是编译老失败，后面换成1.0.1p的就成功了，原因未知。&lt;/p&gt;
 &lt;p&gt;编译需要用到perl，去官网下个ActivePerl就可以了，为了往后在cmd中操作简单，最好安装时勾上加入PATH的选项。&lt;/p&gt;
 &lt;p&gt;解压源码包，打开cmd进入该解压后的目录，执行如下命令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
+&lt;div class="highlight"&gt;&lt;pre&gt;perl Configure VC-WIN32 no-asm --prefix=C:\openssl-1.0.1p\VC-WIN32
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这是编译前必须执行的配置命令，可以自行根据所使用的编译工具以及平台的不同来选择不同的参数（具体可以查看解压后目录中的README以及一系列的INSTALL文件），稍微解释一下：&lt;/p&gt;
 &lt;ul&gt;
@@ -1686,18 +1686,18 @@ POST example.com?name=xxx&amp;amp;age=18
 &lt;/ol&gt;
 &lt;p&gt;简单的配置完毕后开始进行编译。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;静态库&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ms\do_ms
+&lt;div class="highlight"&gt;&lt;pre&gt;ms\do_ms
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;动态库&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ms\do_ms
+&lt;div class="highlight"&gt;&lt;pre&gt;ms\do_ms
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;install&lt;/code&gt; 表示将生成的内容（头文件及库）安装到使用perl进行配置时指定的目录中。&lt;/p&gt;
 &lt;p&gt;就我而言，我需要生成debug及release的库，整个过程如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;perl Configure debug-VC-WIN32 no-asm --prefix=c:\openssl-1.0.1p\debug-VC-WIN32
+&lt;div class="highlight"&gt;&lt;pre&gt;perl Configure debug-VC-WIN32 no-asm --prefix=c:\openssl-1.0.1p\debug-VC-WIN32
 ms\do_ms
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
@@ -1709,7 +1709,7 @@ nmake -f ms\nt.mak install
 &lt;p&gt;经过简单的测试，发现使用VS的08、10、13来进行编译产生的内容是一样的。&lt;/p&gt;
 &lt;h3 id="linuxopenssl"&gt;Linux下安装openssl库&lt;a class="headerlink" href="#linuxopenssl" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;我的发行版是Ubuntu 14.04，但是默认安装的好像只有一个openssl的可执行程序，没有头文件及库文件，需要另外安装 &lt;code&gt;libssl&lt;/code&gt; ，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install libssl-dev
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install libssl-dev
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在编译你的目标文件时指定 &lt;code&gt;-lssl&lt;/code&gt; 及 &lt;code&gt;-lcrypto&lt;/code&gt; 选项即可使用相关的功能，如果只用到加密库的话，只需要使用后者即可。&lt;/p&gt;
 &lt;p&gt;暂时没有去研究如何静态链接openssl。&lt;/p&gt;
@@ -1717,18 +1717,18 @@ nmake -f ms\nt.mak install
 &lt;p&gt;openssl除了提供编程相关的头文件及库文件外，还有一个应用程序直接提供了相关的功能，这里简单的罗列一些。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;RSA密钥生成&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;使用该程序可以直接生成RSA的公私钥：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;openssl genrsa -out private.pem &lt;span class="m"&gt;2048&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; openssl rsa -in private.pem -pubout &amp;gt; public.pem
+&lt;div class="highlight"&gt;&lt;pre&gt;openssl genrsa -out private.pem &lt;span class="m"&gt;2048&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; openssl rsa -in private.pem -pubout &amp;gt; public.pem
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;但是需要注意的是，这里的生成是按照PEM格式进行的，所以如果在编程时需要读取这些文件，要使用PEM相关的API。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;提取RSA公钥内容&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;我们知道RSA的公钥是由(n,e)组成的，但是openssl生成的公钥为了可读进行了BASE64编码，可以使用如下命令进行提取：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;openssl rsa -pubin -inform PEM -text -noout &amp;lt; public.pem
+&lt;div class="highlight"&gt;&lt;pre&gt;openssl rsa -pubin -inform PEM -text -noout &amp;lt; public.pem
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="rsa"&gt;RSA相关编程&lt;a class="headerlink" href="#rsa" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;h4 id="rsa_1"&gt;RSA结构体&lt;a class="headerlink" href="#rsa_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;RSA结构体在编程中代表RSA的密钥（公钥或私钥），在描述RSA操作之前，先说说RSA的结构体如何构建，也就两种方式：从文件构建或从内存构建。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;文件&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithFilename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithFilename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;BIO&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BIO_new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BIO_s_file&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
@@ -1757,7 +1757,7 @@ nmake -f ms\nt.mak install
 &lt;p&gt;PS：对于从文件构建密钥，有一组方法 &lt;code&gt;PEM_read_RSA_PUBKEY&lt;/code&gt; 和 &lt;code&gt;PEM_read_RSAPrivateKey&lt;/code&gt; 可以直接根据打开的文件构建出对应的RSA结构体，但是在Windows上使用前面那个方法的时候，编译通过，但运行时会提示 &lt;code&gt;Openssl Uplink&lt;/code&gt; ，所以改用了openssl内置的BIO。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;内存&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;同样利用BIO，代码类似：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithMemory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;bufLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;RSA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;createRSAWithMemory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;bufLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;isPub&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;BIO&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BIO_new_mem_buf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bufLen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -1785,7 +1785,7 @@ nmake -f ms\nt.mak install
 &lt;/ul&gt;
 &lt;p&gt;以下代码省略构造RSA的部分，公钥的RSA为 &lt;code&gt;pubRSA&lt;/code&gt; ，私钥的RSA为 &lt;code&gt;priRSA&lt;/code&gt; ，处理的内容为 &lt;code&gt;content&lt;/code&gt; ，长度为 &lt;code&gt;contentLen&lt;/code&gt; ，忽略一些强制转换。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;公钥加密 &amp;amp; 私钥解密&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;encrypted&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="c1"&gt;// 返回值表示密文的长度，由于Padding，应该等于size&lt;/span&gt;
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ecRet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_public_encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;contentLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;RSA_PKCS1_PADDING&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -1806,7 +1806,7 @@ nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;私钥签名 &amp;amp; 公钥验签&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;代码类似，如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pubRSA&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;encrypted&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ecRet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RSA_private_encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;contentLen&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;priRSA&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;RSA_PKCS1_PADDING&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ecRet&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1825,7 +1825,7 @@ nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h4 id="rsa_3"&gt;大数操作替换RSA&lt;a class="headerlink" href="#rsa_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;&lt;strong&gt;公钥验签&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 公钥使用(n,e)表示, 验签的内容使用c表示&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 公钥使用(n,e)表示, 验签的内容使用c表示&lt;/span&gt;
 &lt;span class="n"&gt;BigInteger&lt;/span&gt; &lt;span class="nf"&gt;n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nbuf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nlen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="n"&gt;BigInteger&lt;/span&gt; &lt;span class="nf"&gt;e&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ebuf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;elen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="n"&gt;BigInteger&lt;/span&gt; &lt;span class="nf"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cbuf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;clen&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -1839,7 +1839,7 @@ nmake -f ms\nt.mak install
 &lt;li&gt;&lt;a href="http://blog.csdn.net/rabbit729/article/details/3886984"&gt;Openssl Uplink&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;http://developer.covenanteyes.com/building-openssl-for-visual-studio/&lt;/li&gt;
 &lt;li&gt;http://linux.die.net/man/3/bio_new_mem_buf&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="Openssl"></category><category term="RSA"></category></entry><entry><title>Data Linker Layer Authentication</title><link href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html" rel="alternate"></link><published>2014-08-21T16:21:00+08:00</published><updated>2014-08-21T16:21:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-21:posts/2014/08/21/data-linker-layer-authentication.html</id><summary type="html">&lt;p&gt;标题可能不是很准确，这篇东东主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。&lt;/p&gt;
+&lt;/ol&gt;</summary><category term="Openssl"></category><category term="RSA"></category></entry><entry><title>Data Linker Layer Authentication</title><link href="http://goclis.github.io/posts/2014/08/21/data-linker-layer-authentication.html" rel="alternate"></link><updated>2014-08-21T16:21:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-21:posts/2014/08/21/data-linker-layer-authentication.html</id><summary type="html">&lt;p&gt;标题可能不是很准确，这篇东东主要是想研究一下日常的上网中，ISP对我们的用户名和密码的验证的这个过程，发生了一些什么。由于查了不少资料发现这个过程大多是在链路层协议负责的，所以标题就先这样啦@_@。&lt;/p&gt;
 &lt;p&gt;下面列举下我自己平常的一些上网方式：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;宿舍网线拨号&lt;/li&gt;
@@ -1897,7 +1897,7 @@ nmake -f ms\nt.mak install
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://baike.baidu.com/view/3246.htm#2_2"&gt;PPPoE&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://whatismyipaddress.com/ppp-pppoe"&gt;What is PPP and PPPoE?&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="PPPoE"></category><category term="ISP"></category></entry><entry><title>PPTP VPN Process</title><link href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html" rel="alternate"></link><published>2014-08-19T14:41:00+08:00</published><updated>2014-08-19T14:41:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-19:posts/2014/08/19/pptp-vpn-process.html</id><summary type="html">
+&lt;/ul&gt;</summary><category term="PPPoE"></category><category term="ISP"></category></entry><entry><title>PPTP VPN Process</title><link href="http://goclis.github.io/posts/2014/08/19/pptp-vpn-process.html" rel="alternate"></link><updated>2014-08-19T14:41:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-19:posts/2014/08/19/pptp-vpn-process.html</id><summary type="html">
 &lt;p&gt;不久前因为StackOverflow上不去的缘故，找人借了下云梯VPN来用了一下，感觉很爽！ 但是自己脑抽，随之而来的伴随了一个问题，云梯VPN的限制设备数量能否区分同一个私有网络下的不同设备，是如何区分的？ 于是乎，就开始去各种找PPTP VPN的资料了，终于有点搞懂了，就通过这篇博文记下来吧。&lt;/p&gt;
 &lt;p&gt;以下文章中VPN如不特指皆为PPTP VPN。&lt;/p&gt;
 &lt;p&gt;首先找了个免费的VPN试了下，确认了在同一私有网络下不同设备用同一账号是可以连接上同一台VPN Server的，如果不能的话，我的问题也就没啥意义了。虽然这问题确实没啥意义，私有网络要实现共享VPN可以在出口的机器或者路由上建立Site to Site VPN就可以了，但是纯粹好奇，勿喷。。。&lt;/p&gt;
@@ -1998,8 +1998,8 @@ nmake -f ms\nt.mak install
 &lt;li&gt;&lt;a href="http://technet.microsoft.com/en-us/library/cc958006.aspx"&gt;PPP Connection Process&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://technet.microsoft.com/zh-cn/library/cc779919(v=ws.10).aspx"&gt;How VPN Works: Virtual Private Network (VPN)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://technet.microsoft.com/en-us/library/cc957992.aspx"&gt; PPP Link Negotiation with LCP&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="VPN"></category><category term="PPTP"></category></entry><entry><title>mov指令与内存</title><link href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html" rel="alternate"></link><published>2014-08-08T16:00:00+08:00</published><updated>2014-08-08T16:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-08:posts/2014/08/08/mov-with-memory.html</id><summary type="html">&lt;p&gt;今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;movl&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%ebp&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nv"&gt;%eax&lt;/span&gt;
+&lt;/ol&gt;</summary><category term="VPN"></category><category term="PPTP"></category></entry><entry><title>mov指令与内存</title><link href="http://goclis.github.io/posts/2014/08/08/mov-with-memory.html" rel="alternate"></link><updated>2014-08-08T16:00:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-08-08:posts/2014/08/08/mov-with-memory.html</id><summary type="html">&lt;p&gt;今天在啃《深入理解计算机系统》的时候遇到了下面这段代码：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;movl&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%ebp&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nv"&gt;%eax&lt;/span&gt;
 &lt;span class="nf"&gt;imull&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%ebp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="nf"&gt;movl&lt;/span&gt; &lt;span class="nv"&gt;%eax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%esp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="nf"&gt;movl&lt;/span&gt; &lt;span class="nv"&gt;%edx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%esp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -2013,51 +2013,51 @@ nmake -f ms\nt.mak install
 &lt;h3 id="mov"&gt;mov指令&lt;a class="headerlink" href="#mov" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;我们知道 mov 在 IA32 中有基础的三类操作，即 b，w，l。
 而 mov 在使用时大致如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;movb&lt;/span&gt; &lt;span class="nv"&gt;%al&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%edx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c"&gt;# 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;movb&lt;/span&gt; &lt;span class="nv"&gt;%al&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%edx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c"&gt;# 将 al 寄存器的内容放到以 %edx 的值为地址的内存区域&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这里因为是 b 类型的，只有一个字节，所以直接将该字节放到那个地址对应的地方即可。然而对于 w 和 l，源不止一个字节，这个时候，一个内存地址只能表示存放开始的地方，想要存储源操作数，需要多个地址，表达可能不清楚，用代码来说明：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;movl&lt;/span&gt; &lt;span class="nv"&gt;%eax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%edx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;movl&lt;/span&gt; &lt;span class="nv"&gt;%eax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;%edx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;我们知道内存是按字节整理的，也就是说 edx 代表的那个地址也就只有 1 个字节，而源操作数 eax 却是 4 个字节，因而，需要多个地址进行存放，我们假设下 %eax = 0x0A0B0C0D，%edx = 4，则内存图如下表：&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th align="center"&gt;地址&lt;/th&gt;
-&lt;th align="center"&gt;内容&lt;/th&gt;
+&lt;th&gt;地址&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;0&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;1&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;2&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;3&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;4&lt;/td&gt;
-&lt;td align="center"&gt;0D&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;0D&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;5&lt;/td&gt;
-&lt;td align="center"&gt;0C&lt;/td&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0C&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;6&lt;/td&gt;
-&lt;td align="center"&gt;0B&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;0B&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;7&lt;/td&gt;
-&lt;td align="center"&gt;0A&lt;/td&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -2067,41 +2067,41 @@ nmake -f ms\nt.mak install
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th align="center"&gt;地址&lt;/th&gt;
-&lt;th align="center"&gt;0-7&lt;/th&gt;
-&lt;th align="center"&gt;8-15&lt;/th&gt;
-&lt;th align="center"&gt;16-23&lt;/th&gt;
-&lt;th align="center"&gt;24-31&lt;/th&gt;
+&lt;th&gt;地址&lt;/th&gt;
+&lt;th&gt;0-7&lt;/th&gt;
+&lt;th&gt;8-15&lt;/th&gt;
+&lt;th&gt;16-23&lt;/th&gt;
+&lt;th&gt;24-31&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;..&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;..&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;104&lt;/td&gt;
-&lt;td align="center"&gt;0D&lt;/td&gt;
-&lt;td align="center"&gt;0B&lt;/td&gt;
-&lt;td align="center"&gt;0C&lt;/td&gt;
-&lt;td align="center"&gt;0A&lt;/td&gt;
+&lt;td&gt;104&lt;/td&gt;
+&lt;td&gt;0D&lt;/td&gt;
+&lt;td&gt;0B&lt;/td&gt;
+&lt;td&gt;0C&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;108&lt;/td&gt;
-&lt;td align="center"&gt;04&lt;/td&gt;
-&lt;td align="center"&gt;03&lt;/td&gt;
-&lt;td align="center"&gt;02&lt;/td&gt;
-&lt;td align="center"&gt;01&lt;/td&gt;
+&lt;td&gt;108&lt;/td&gt;
+&lt;td&gt;04&lt;/td&gt;
+&lt;td&gt;03&lt;/td&gt;
+&lt;td&gt;02&lt;/td&gt;
+&lt;td&gt;01&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
-&lt;td align="center"&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -2113,7 +2113,7 @@ nmake -f ms\nt.mak install
 &lt;blockquote&gt;
 &lt;p&gt;%edx 的高位存在相对于 %eax 的低位偏移量为 4 的地方&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;这句话还是没法解释。。%edx 的高位 (01) 相对于 %eax 的低位 (0D)，偏移量好像不是 4 啊。。&lt;/p&gt;</summary><category term="汇编"></category></entry><entry><title>操作系统课设笔记</title><link href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html" rel="alternate"></link><published>2014-07-30T17:22:00+08:00</published><updated>2014-07-30T17:22:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-07-30:posts/2014/07/30/os-experiment-note.html</id><summary type="html">
+&lt;p&gt;这句话还是没法解释。。%edx 的高位 (01) 相对于 %eax 的低位 (0D)，偏移量好像不是 4 啊。。&lt;/p&gt;</summary><category term="汇编"></category></entry><entry><title>操作系统课设笔记</title><link href="http://goclis.github.io/posts/2014/07/30/os-experiment-note.html" rel="alternate"></link><updated>2014-07-30T17:22:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-07-30:posts/2014/07/30/os-experiment-note.html</id><summary type="html">
 &lt;p&gt;因为实习，没法一次性把课设做完，就干脆些把笔记写成博文方便自己查阅吧，持续更新，直至完成。&lt;/p&gt;
 &lt;p&gt;这课设的设计基本上是依赖于一本书的，大概是怕我们遇到太多的坑吧。。而OS上的坑又不是那么容易解决的，总之以下操作不带有普遍性。&lt;/p&gt;
 &lt;p&gt;课设平台：&lt;/p&gt;
@@ -2126,15 +2126,15 @@ nmake -f ms\nt.mak install
 &lt;p&gt;纯粹照着书搞。。&lt;/p&gt;
 &lt;h4 id="_1"&gt;实验过程&lt;a class="headerlink" href="#_1" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;以下操作假设用户为root，目录自行决定。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% tar -zxvf linux-2.6.21.tar.gz
-% &lt;span class="nb"&gt;cd&lt;/span&gt; linux-2.6.21
-% make mrproper  &lt;span class="c1"&gt;# 清楚掉之前编译产生的垃圾&lt;/span&gt;
-% make oldconfig  &lt;span class="c1"&gt;# 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;% tar -zxvf linux-2.6.21.tar.gz
+% &lt;span class="nb"&gt;cd &lt;/span&gt;linux-2.6.21
+% make mrproper  &lt;span class="c"&gt;# 清楚掉之前编译产生的垃圾&lt;/span&gt;
+% make oldconfig  &lt;span class="c"&gt;# 如果自己有配置文件的话，直接 copy 进来命名为 .config 即可&lt;/span&gt;
 % vim Makefile
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;修改&lt;code&gt;EXTARVERSION =&lt;/code&gt;，改为&lt;code&gt;EXTRAVERSION = .7-custom-version&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;这样的话你生成的内核版本号就为2.6.21.7-custom-version（前面有几个参数是指定 2,6,21 的，这里没给出），继续：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% make all
+&lt;div class="highlight"&gt;&lt;pre&gt;% make all
 % make modules_install
 % make install
 &lt;/pre&gt;&lt;/div&gt;
@@ -2145,21 +2145,21 @@ nmake -f ms\nt.mak install
 &lt;p&gt;这里只是添加一个最简单的系统调用，无参数，无实际操作！加复杂的系统调用的时候可能会遇到各种坑，在做往后几个实验的时候再去解决吧。&lt;/p&gt;
 &lt;h4 id="_2"&gt;实验过程&lt;a class="headerlink" href="#_2" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;假设要添加的系统调用名为goclis，则内核对应的实现函数名一般为&lt;code&gt;sys_goclis&lt;/code&gt;，现在开始实现。目录和用户假设同实验1。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% &lt;span class="nb"&gt;cd&lt;/span&gt; linux-2.6.21
+&lt;div class="highlight"&gt;&lt;pre&gt;% &lt;span class="nb"&gt;cd &lt;/span&gt;linux-2.6.21
 % vim arch/i386/kernel/syscall_table.S
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;往系统调用表的末尾添加要新增的系统调用：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_tee&lt;/span&gt;       &lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="p"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;315&lt;/span&gt; &lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_tee&lt;/span&gt;       &lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="p"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;315&lt;/span&gt; &lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;
 &lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_vmsplice&lt;/span&gt;
 &lt;span class="c"&gt;# 省略几个。。&lt;/span&gt;
 
 &lt;span class="na"&gt;.long&lt;/span&gt; &lt;span class="no"&gt;sys_goclis&lt;/span&gt;    &lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="p"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;320&lt;/span&gt; &lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;添加头文件goclis.h（这里其实非必要）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% vim include/linux/goclis.h
+&lt;div class="highlight"&gt;&lt;pre&gt;% vim include/linux/goclis.h
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;正如我所说，这个系统调用非常简单，所以。。头文件除了宏保护就是空：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// goclis.h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// goclis.h&lt;/span&gt;
 
 &lt;span class="cp"&gt;#ifndef _LINUX_GOCLIS_H&lt;/span&gt;
 &lt;span class="cp"&gt;#define _LINUX_GOCLIS_H&lt;/span&gt;
@@ -2167,12 +2167,12 @@ nmake -f ms\nt.mak install
 &lt;span class="cp"&gt;#endif&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;添加实现文件goclis.c，在里面要加入我们指定的系统调用的实现，宏&lt;code&gt;asmlinkage&lt;/code&gt;表示该函数的参数通过栈传递：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 
 &lt;span class="c1"&gt;// goclis.c&lt;/span&gt;
 
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;
 
 &lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;sys_goclis&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -2180,28 +2180,28 @@ nmake -f ms\nt.mak install
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;实现很简单的系统调用，继续，为该系统调用添加支持：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;vim kernel/Makefile
+&lt;div class="highlight"&gt;&lt;pre&gt;vim kernel/Makefile
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;找到如下内容：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;obj-y = sched.o fork.o exec_domain.o \
+&lt;div class="highlight"&gt;&lt;pre&gt;obj-y = sched.o fork.o exec_domain.o \
         ...
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;加入goclis.o：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;obj-y = goclis.o sched.o ...
+&lt;div class="highlight"&gt;&lt;pre&gt;obj-y = goclis.o sched.o ...
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这样才能保证goclis.c在内核编译链接的时候是可见的。但其实这个调用的实现也不一定要写在goclis.c中，完全可以放在一个已经存在的.c中即可，只要保证这个.c对应的.o能被编译链接。&lt;/p&gt;
 &lt;p&gt;接着为这个系统调用定义系统调用，我们之前那个320只是个注释：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% vim include/asm-i386/unistd.h
+&lt;div class="highlight"&gt;&lt;pre&gt;% vim include/asm-i386/unistd.h
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;是i386不是ia64，因为我们是32位的系统。接着找到：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
 
 &lt;span class="cp"&gt;#ifdef __KERNEL__&lt;/span&gt;
 
 &lt;span class="cp"&gt;#define NR_syscalls         320&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;修改为：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#define __NR_epoll_wait     319&lt;/span&gt;
 &lt;span class="cp"&gt;#define __NR_goclis         320&lt;/span&gt;
 
 &lt;span class="cp"&gt;#ifdef __KERNEL__&lt;/span&gt;
@@ -2210,20 +2210,20 @@ nmake -f ms\nt.mak install
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;很显然吧，用&lt;code&gt;__NR_goclis&lt;/code&gt;来命名我们的系统调用，然后把它定义为320，这样就真的 320了。。&lt;/p&gt;
 &lt;p&gt;最后，还得把你的这个系统调用加入到统一的系统调用头文件中：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% vim include/linux/syscalls.h
+&lt;div class="highlight"&gt;&lt;pre&gt;% vim include/linux/syscalls.h
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;加入头文件：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;linux/goclis.h&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;加入声明：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;sys_goclis&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;sys_goclis&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;OK，重新编译内核然后reboot，就ok了！&lt;/p&gt;
 &lt;p&gt;关于编译内核，因为之前已经编译过产生了很多的.o 了，节省时间的话，直接make就可以接着编译了，否则重头编译超级浪费时间。。&lt;/p&gt;
 &lt;p&gt;重启后测试下我们的系统调用是否生效，注意得重启为我们创的这个内核！&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// test.c&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// test.c&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;unistd.h&amp;gt;&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -2233,17 +2233,17 @@ nmake -f ms\nt.mak install
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;编译后运行：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% gcc test.c
+&lt;div class="highlight"&gt;&lt;pre&gt;% gcc test.c
 % ./a.out
 
-&lt;span class="m"&gt;320&lt;/span&gt;
+320
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;ok~，打印出 320 了。&lt;/p&gt;
 &lt;h3 id="3"&gt;实验3 进程隐藏&lt;a class="headerlink" href="#3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;实验的本质目的应该是修改一系列与/proc目录相关的方法，从而实现“隐藏”的要求。&lt;/p&gt;
 &lt;h4 id="_3"&gt;思路分析&lt;a class="headerlink" href="#_3" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;ls /proc及ps aux引起的系统调用层次如下：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% ls /proc (or ps aux)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% ls /proc (or ps aux)&lt;/span&gt;
 &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proc_root_readdir&lt;/span&gt;
     &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proc_readdir&lt;/span&gt;
     &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;proc_pid_readdir&lt;/span&gt;
@@ -2262,17 +2262,17 @@ nmake -f ms\nt.mak install
 &lt;h4 id="_4"&gt;实验过程&lt;a class="headerlink" href="#_4" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;添加系统调用，过程类似于实验2。&lt;/p&gt;
 &lt;p&gt;修改系统调用表：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;% vim arch/i386/kernel/syscall_table.S&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;% vim arch/i386/kernel/syscall_table.S&lt;/span&gt;
 &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;syscall_table&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;S&lt;/span&gt;
 &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;long&lt;/span&gt; &lt;span class="n"&gt;sys_hide&lt;/span&gt;
 &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;long&lt;/span&gt; &lt;span class="n"&gt;sys_hide_user_processes&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;增加系统调用实现：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// hide.c&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;asm/current.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;asm/current.h&amp;gt;&lt;/span&gt;
 
 &lt;span class="cm"&gt;/*&lt;/span&gt;
 &lt;span class="cm"&gt; * set the attribute hide of task with pid,&lt;/span&gt;
@@ -2305,9 +2305,9 @@ nmake -f ms\nt.mak install
 
 &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;hide_user_processes&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// hide_user_processes.c&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;asm/current.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;linux/linkage.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;linux/sched.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;asm/current.h&amp;gt;&lt;/span&gt;
 
 &lt;span class="cm"&gt;/*&lt;/span&gt;
 &lt;span class="cm"&gt; * hide processes with uid, accroing to binname, hide one or all.&lt;/span&gt;
@@ -2346,11 +2346,11 @@ nmake -f ms\nt.mak install
 &lt;p&gt;接着，&lt;code&gt;hide.c&lt;/code&gt;通过方法查找到对应pid的&lt;code&gt;task_struct&lt;/code&gt;指针，修改其内部的hide的值，这个hide是为了实验添加的，后面讲。&lt;/p&gt;
 &lt;p&gt;而&lt;code&gt;hide_user_processes.c&lt;/code&gt;则通过&lt;code&gt;for_each_process&lt;/code&gt;遍历所有的&lt;code&gt;task_struct&lt;/code&gt;，将符合条件的修改hide进行隐藏。这里使用到的&lt;code&gt;p-&amp;gt;comm&lt;/code&gt;代表的是该&lt;code&gt;task_struct&lt;/code&gt;的二进制映像名称。&lt;/p&gt;
 &lt;p&gt;继续完善系统调用的添加，修改&lt;code&gt;kernel/Makefile&lt;/code&gt;，&lt;code&gt;unistd.h&lt;/code&gt;，&lt;code&gt;syscalls.h&lt;/code&gt;：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Makefile&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Makefile&lt;/span&gt;
 &lt;span class="c1"&gt;// Makefile&lt;/span&gt;
 &lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;hide_user_processes&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;goclis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
 
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;asm&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;i386&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;unistd&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;asm&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;i386&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;unistd&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
 &lt;span class="c1"&gt;// unistd.h&lt;/span&gt;
 &lt;span class="cp"&gt;#define __NR_hide                                  321&lt;/span&gt;
 &lt;span class="cp"&gt;#define __NR_hide_user_processes        322&lt;/span&gt;
@@ -2363,7 +2363,7 @@ nmake -f ms\nt.mak install
 &lt;span class="n"&gt;asmlinkage&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;sys_hide_user_processes&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;uid_t&lt;/span&gt; &lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;binname&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;注意，要保持&lt;code&gt;NR_syscalls&lt;/code&gt;最大！系统调用添加完毕，下面修改&lt;code&gt;task_struct&lt;/code&gt;，添加hide属性：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sched&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sched&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;
 &lt;span class="c1"&gt;// sched.h&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;task_struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -2373,7 +2373,7 @@ nmake -f ms\nt.mak install
 &lt;span class="p"&gt;};&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;既然为&lt;code&gt;task_struct&lt;/code&gt;添加了属性，就得为该属性进行初始化，而它的初始化发生在fork的时候，所以要进行相应修改：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// fork.c&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;do_fork&lt;/span&gt;&lt;span class="p"&gt;(...)&lt;/span&gt;
@@ -2388,7 +2388,7 @@ nmake -f ms\nt.mak install
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;接下来，实现一下&lt;code&gt;/proc/hidden&lt;/code&gt;和&lt;code&gt;/proc/hidden_process&lt;/code&gt;的功能，显然，可以通过添加一个模块来实现它，但是，麻烦的是那样我们还得手动加载，不如修改现有模块来的方便，所以，下面通过修改&lt;code&gt;fs/proc/proc_misc.c&lt;/code&gt;这个模块来实现功能：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc_misc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc_misc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// proc_misc.c&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="cp"&gt;#define BUFSIZE 1024&lt;/span&gt;
@@ -2469,7 +2469,7 @@ nmake -f ms\nt.mak install
 &lt;li&gt;&lt;code&gt;proc_pid_readdir&lt;/code&gt;：让其过滤掉隐藏的&lt;code&gt;task_struct&lt;/code&gt;，不返回给用户缓冲区。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;proc_pid_lookup&lt;/code&gt;：让其过滤掉隐藏的&lt;code&gt;task_struct&lt;/code&gt;，使得open不能解析类似&lt;code&gt;/proc/pid/xxx&lt;/code&gt;的路径名。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;base&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;fs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;base&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="c1"&gt;// base.c&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;hidden_flag&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -2494,7 +2494,7 @@ nmake -f ms\nt.mak install
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;proc_pid_readdir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;filp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;dirent&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;filldir_t&lt;/span&gt; &lt;span class="n"&gt;filldir&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;proc_pid_readdir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;filp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;dirent&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;filldir_t&lt;/span&gt; &lt;span class="n"&gt;filldir&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="p"&gt;...&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;task&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;next_tgid&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tgid&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -2515,10 +2515,10 @@ nmake -f ms\nt.mak install
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;基本完成了，下面添加两个基础的程序用于测试：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;stdio.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;stdlib.h&amp;gt;&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -2545,10 +2545,10 @@ nmake -f ms\nt.mak install
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="n"&gt;hide_all&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;sys/syscall.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;stdio.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;stdlib.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;string.h&amp;gt;&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
@@ -2579,38 +2579,38 @@ nmake -f ms\nt.mak install
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;基于这两个程序进行测试：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;% cat /proc/hidden  &lt;span class="c1"&gt;# 0&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c1"&gt;# No hide process.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;% cat /proc/hidden  &lt;span class="c"&gt;# 0&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# No hide process.&lt;/span&gt;
 % gcc -o hide hide.c
 % gcc -o hide_all hide_all.c
 
-% ps aux &lt;span class="c1"&gt;# all process&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c1"&gt;# hide pid 1&lt;/span&gt;
-% ps aux &lt;span class="c1"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
+% ps aux &lt;span class="c"&gt;# all process&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c"&gt;# hide pid 1&lt;/span&gt;
+% ps aux &lt;span class="c"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
 % &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"1"&lt;/span&gt; &amp;gt; /proc/hidden
-% ps aux &lt;span class="c1"&gt;# pid 1 is hided.&lt;/span&gt;
-% ls /proc &lt;span class="c1"&gt;# can not find directory 1&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c1"&gt;# 1&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c1"&gt;# hide pid 3&lt;/span&gt;
-% ps aux &lt;span class="c1"&gt;# pid 1 and 3 is hided.&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c1"&gt;# 1 3&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c1"&gt;# show pid 1&lt;/span&gt;
-% ps aux &lt;span class="c1"&gt;# pid 3 is hided.&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c1"&gt;# 3&lt;/span&gt;
+% ps aux &lt;span class="c"&gt;# pid 1 is hided.&lt;/span&gt;
+% ls /proc &lt;span class="c"&gt;# can not find directory 1&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# 1&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="c"&gt;# hide pid 3&lt;/span&gt;
+% ps aux &lt;span class="c"&gt;# pid 1 and 3 is hided.&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# 1 3&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c"&gt;# show pid 1&lt;/span&gt;
+% ps aux &lt;span class="c"&gt;# pid 3 is hided.&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# 3&lt;/span&gt;
 % &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"0"&lt;/span&gt; &amp;gt; /proc/hidden
-% ps aux &lt;span class="c1"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
-% cat /proc/hidden_process &lt;span class="c1"&gt;# No hide process.&lt;/span&gt;
+% ps aux &lt;span class="c"&gt;# no hide process because of hidden_flag == 0&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# No hide process.&lt;/span&gt;
 
 % &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"1"&lt;/span&gt; &amp;gt; /proc/hidden
-% ./hide_all -1 NULL &lt;span class="c1"&gt;# hide all root processes&lt;/span&gt;
+% ./hide_all -1 NULL &lt;span class="c"&gt;# hide all root processes&lt;/span&gt;
 % ps aux
-% cat /proc/hidden_process &lt;span class="c1"&gt;# 1 2 3 ....&lt;/span&gt;
-% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c1"&gt;# show pid 1&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# 1 2 3 ....&lt;/span&gt;
+% ./hide &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="c"&gt;# show pid 1&lt;/span&gt;
 % ps aux
-% cat /proc/hidden_process &lt;span class="c1"&gt;# 2 3...&lt;/span&gt;
-% ./hide_all -1 init &lt;span class="c1"&gt;# hide root process with binname 'init'&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# 2 3...&lt;/span&gt;
+% ./hide_all -1 init &lt;span class="c"&gt;# hide root process with binname 'init'&lt;/span&gt;
 % ps aux
-% cat /proc/hidden_process &lt;span class="c1"&gt;# 1 2 3 ....&lt;/span&gt;
+% cat /proc/hidden_process &lt;span class="c"&gt;# 1 2 3 ....&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="4-shell"&gt;实验4 实现Shell&lt;a class="headerlink" href="#4-shell" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;用户态编程，使用lex进行前端的词法分析，然后结合系统调用即可实现。&lt;/p&gt;
@@ -2620,12 +2620,12 @@ nmake -f ms\nt.mak install
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://stackoverflow.com/questions/18686114/cd-command-not-working-with-execvp"&gt;cd command not working with execvp&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://lxr.free-electrons.com/ident?v=2.6.24&amp;amp;i=uid_t"&gt;Linux Cross Reference&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="操作系统"></category></entry><entry><title>如何验证一个数字证书的有效性</title><link href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html" rel="alternate"></link><published>2014-06-21T15:43:00+08:00</published><updated>2014-06-21T15:43:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-06-21:posts/2014/06/21/how-to-validate-certificate.html</id><summary type="html">&lt;p&gt;首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="操作系统"></category></entry><entry><title>如何验证一个数字证书的有效性</title><link href="http://goclis.github.io/posts/2014/06/21/how-to-validate-certificate.html" rel="alternate"></link><updated>2014-06-21T15:43:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-06-21:posts/2014/06/21/how-to-validate-certificate.html</id><summary type="html">&lt;p&gt;首先，设要验证的这个数字证书为B，则它必然由某个CA发放。这里假设该CA的数字证书是存在你的电脑上的或从B到根CA的数字证书都存放在你的电脑上（对于层次结构CA）。出于简单考虑，这里取单层CA做分析，即根CA的数字证书在你的电脑上，设为A，待验证的证书B是由其发放的。&lt;/p&gt;
 &lt;p&gt;好了，假设完毕。首先看看这个待验证的证书包含哪些消息吧。&lt;/p&gt;
 &lt;p&gt;对于一个RA（Registration Authority）的请求，CA会产生一对公私钥，公钥会被放在对应产生的数字证书中，私钥交给RA自己保管（怎么交的暂不考虑）。所以数字证书里必须包含的就是这个公钥。除此之外，还得有一系列的比如CA的名字，RA的信息等等。总之，这些信息会被包含成一个数字证书。&lt;/p&gt;
 &lt;p&gt;既然数字证书产生了，但它终究是个有格式的文件，我们下步需要做的就是，保证它没有被篡改！所以，就需要颁发者对证书进行签名了，也就是对生成的数字证书进行摘要后，再用颁发者的私钥对其签名，然后将签名后的内容连同证书一起打包，这样才得到了一个可验证的完整的数字证书。&lt;/p&gt;
 &lt;p&gt;用密码学表示一下大概就是：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;// 设生成的中间数字证书为 MB，最终发放的为B
+&lt;div class="highlight"&gt;&lt;pre&gt;// 设生成的中间数字证书为 MB，最终发放的为B
 则B = MB || E(HASH(MB))  // 这里E是用CA的私钥加密， || 表示拼接
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;接下来，看看是如何验证的（往下我们称MB为&lt;strong&gt;内部证书&lt;/strong&gt;，B为证书）：&lt;/p&gt;
@@ -2636,20 +2636,20 @@ nmake -f ms\nt.mak install
 &lt;li&gt;直至最后一个证书，如果摘要都匹配，说明这个证书是有效的，没被人篡改。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;&lt;img alt="" src="http://ww2.sinaimg.cn/large/006y8lVagw1f86xyp8lupj30s009ygok.jpg"/&gt;&lt;/p&gt;
-&lt;p&gt;当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。&lt;/p&gt;</summary><category term="安全"></category><category term="数字证书"></category></entry><entry><title>动态载入和虚拟内存的按需调页的关联</title><link href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" rel="alternate"></link><published>2014-05-25T17:20:00+08:00</published><updated>2014-05-25T17:20:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-25:posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html</id><summary type="html">&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：&lt;/p&gt;
+&lt;p&gt;当然！这一切成立的前提都是根证书没有问题！！所以，对自己PC上根证书的管理千万不能松懈。&lt;/p&gt;</summary><category term="安全"></category><category term="数字证书"></category></entry><entry><title>动态载入和虚拟内存的按需调页的关联</title><link href="http://goclis.github.io/posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html" rel="alternate"></link><updated>2014-05-25T17:20:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-25:posts/2014/05/25/dynamic-load-and-virtual-memory-page-schedule-relation.html</id><summary type="html">&lt;p&gt;《操作系统概念》（第七版）第九章虚拟内存那章有如下这样一句话：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;动态载入能够帮助减轻这一限制（将整个进程放入内存才能执行的限制），但是它需要程序员特别小心并且需要一些额外的工作。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;那么，额外工作指的是？ 在网上基本上已经搜不到书上所说的动态载入了，基本上都是.dll或者.so之类的。 以下为个人理解，理解基于&lt;strong&gt;动态载入不需要操作系统提供特别支持&lt;/strong&gt;这一事实。&lt;/p&gt;
 &lt;p&gt;动态载入是以子程序为单元的，也就将一个程序写成了许多的子程序。在使用到了某个子程序时，程序员需要在程序中编码以检查该子程序是否已在内存中，不在内存中时，需要编码将其动态载入，这里的程序员的&lt;strong&gt;编码&lt;/strong&gt;就是所谓的额外开销。比如下面这段代码（我不确定是否正确）：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// so_obj是一个变量标识是否导入了某个.so&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// so_obj是一个变量标识是否导入了某个.so&lt;/span&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;so_obj&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// load it here&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;而虚拟内存是以页为单元的，一个程序被分放到了一些页上。而按需调页做到的是，当你在访问某一行代码，该代码在某一个不在内存中的页上时，操作系统会trap然后调页，从而将该代码所在页调入内存，从而看起来像是在“动态载入”了代码，但程序员没做任何事~&lt;/p&gt;
 &lt;h3 id="update-at-2014-05-26"&gt;Update at 2014-05-26&lt;a class="headerlink" href="#update-at-2014-05-26" title="Permanent link"&gt;¶&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解是正确的。&lt;/p&gt;</summary><category term="操作系统"></category><category term="动态加载"></category><category term="虚拟内存换页"></category></entry><entry><title>动态链接和动态载入的区别</title><link href="http://goclis.github.io/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html" rel="alternate"></link><published>2014-05-21T15:32:00+08:00</published><updated>2014-05-21T15:32:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-21:posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html</id><summary type="html">&lt;p&gt;大致的理解如下，不一定正确，确认后会更新：&lt;/p&gt;
+&lt;p&gt;因为动态加载和动态链接在操作系统的实现上已经模糊了，所以此处的动态加载要做的工作实际上差不多和动态链接做的工作是一样的了，因此上面的理解是正确的。&lt;/p&gt;</summary><category term="操作系统"></category><category term="动态加载"></category><category term="虚拟内存换页"></category></entry><entry><title>动态链接和动态载入的区别</title><link href="http://goclis.github.io/posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html" rel="alternate"></link><updated>2014-05-21T15:32:00+08:00</updated><author><name>Goclis Yao</name></author><id>tag:goclis.github.io,2014-05-21:posts/2014/05/21/difference-between-dynamic-link-and-dynamic-load.html</id><summary type="html">&lt;p&gt;大致的理解如下，不一定正确，确认后会更新：&lt;/p&gt;
 &lt;p&gt;按照一般的步骤，用户程序在执行前会经历以下几个步骤：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;编译汇编&lt;/li&gt;

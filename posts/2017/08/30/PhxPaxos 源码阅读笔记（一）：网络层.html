@@ -60,7 +60,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -114,7 +114,7 @@
 <p>我在看源码的时候，如果对整体架构上有一些了解的话，会尽可能地以自底向上的顺序去看。PhxPaxos 因为之前阅读过相关的文章，所以对于架构也比较清楚，于是也优先去阅读和消息交换相关的代码。毕竟是一个分布式算法的实现，起码现阶段是逃不开网络的，所以先把它看完也有利于后续忘掉消息交换细节专心理解算法。</p>
 <h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
 <p>对于网络层，PhxPaxos 为使用者留了扩展的余地，在 include/phxpaxos/network.h 中定义了网络层所需要提供的一些接口，这里简单的贴一下：</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NetWork</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">NetWork</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">NetWork</span><span class="p">();</span>
@@ -124,11 +124,11 @@
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">RunNetWork</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
     <span class="c1">//If paxoslib call this function, network need to stop receive any message.</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">StopNetWork</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">StopNetWork</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">SendMessageTCP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SendMessageTCP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">SendMessageUDP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SendMessageUDP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
     <span class="c1">//When receive a message, call this funtion.</span>
     <span class="c1">//This funtion is async, just enqueue an return.</span>
@@ -151,7 +151,7 @@
 <h2 id="dfnetwork">默认实现：DFNetwork<a class="headerlink" href="#dfnetwork" title="Permanent link">¶</a></h2>
 <p>该类定义在 dfnetwork.h 和 dfnetwork.cpp 中，是一个默认的网络层实现，不知道这个 DF 是不是 default 的意思。。</p>
 <p>整个类中比较关键的是它的三个成员变量，所有消息的发送和接收都是交由它们处理：</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DFNetwork</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Network</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">DFNetwork</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Network</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
@@ -176,7 +176,7 @@
 <p>在实现上，PhxPaxos 为 Event 基类定义了两个具体的子类：MessageEvent 和 Notify。其中前者对应于数据的读写任务，内部逻辑较复杂。后者的用途是提供一个唤醒调用事件循环线程的接口，基于管道和 EPOLLIN 事件实现，通过源码很容易理解。</p>
 <p>关于 Event 的添加、移除和修改，因为基本上是封装 epoll 并记录一些上下文信息，出于篇幅，此处就忽略了。除了 Event 以外，EventLoop 还提供了设置定时器的接口，但这部分我们留到后头再去讲，此处暂时忽略。</p>
 <p>EventLoop 类本身不提供任何的执行线程，需要由外部线程去调用 EventLoop::StartLoop 开始进行事件循环处理。这里结合代码稍微讲一下事件循环相关的逻辑：</p>
-<div class="highlight"><pre><span></span><span class="kt">void</span> <span class="n">EventLoop</span> <span class="o">::</span> <span class="n">StartLoop</span><span class="p">()</span>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">EventLoop</span> <span class="o">::</span> <span class="n">StartLoop</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="c1">// 实际上和我们平时写 Thread::Run 的结构差不多，只是交由外部线程去调用而已。</span>
     <span class="n">m_bIsEnd</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
@@ -247,7 +247,7 @@
             <span class="k">continue</span><span class="p">;</span>
         <span class="p">}</span>
 
-        <span class="k">try</span>
+        <span class="n">try</span>
         <span class="p">{</span>
             <span class="c1">// 缓冲区有数据，调用 OnRead，由事件对象处理。</span>
             <span class="c1">// 这里可能是数据到来，也可能是一个新的连接到来。</span>
@@ -282,7 +282,7 @@
 <h4 id="tcpwrite">TcpWrite<a class="headerlink" href="#tcpwrite" title="Permanent link">¶</a></h4>
 <p>可能是为了简化 TcpWrite 中的逻辑，TcpWrite 的成员变量中包括了一个额外的 TcpClient 对象，将所有的操作（其实也就一个 AddMessage）都委托给该类负责，TcpClient 使用 TcpWrite 内部的 EventLoop 对象来进行初始化，同时 TcpWrite 对象在构造时将 TcpClient 对象利用 EventLoop::SetTcpClient 这个接口注册到 EventLoop 中。</p>
 <p>下面结合代码简述下 TcpClient 利用事件循环来发送数据的过程：</p>
-<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">AddMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIP</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">AddMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sIP</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">iPort</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sMessage</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="c1">// 将发送消息的任务转换为一个 MessageEvent，GetEvent 是内部函数。</span>
     <span class="n">MessageEvent</span> <span class="o">*</span> <span class="n">poEvent</span> <span class="o">=</span> <span class="n">GetEvent</span><span class="p">(</span><span class="n">sIP</span><span class="p">,</span> <span class="n">iPort</span><span class="p">);</span>
@@ -363,7 +363,7 @@
 <p>感觉代码写的非常清楚了：TcpClient 中的主要逻辑是为根据消息的目标为待发送的消息选择对应的（不存在则创建）MessageEvent 对象，然后将消息加入到该对象中的发送队列（如果没超过长度或内存使用限制）中，随后利用 Notify 事件提供的接口唤醒可能处于阻塞状态的事件循环线程。</p>
 <p>介绍完消息是如何加入队列的，我们来看看队列中的内容如何发送出去的。前面我们提到了，TcpWrite 的线程是用于调用它关联的 EventLoop 对象的，所以核心就在于 EventLoop 的 StartLoop 中，上一节我们提到了 StartLoop 中的 while 循环通过不断地调用 OneLoop 来处理处于 Ready 状态的事件，将它们分发给各自对应的处理函数。所以关键就在于这些事件的来源了。</p>
 <p>对于 TcpWrite 的 EventLoop 而言，OneLoop 中的这些事件来源于 TcpClient，所以每次 StartLoop 在执行完 OneLoop 之后，都会调用 TcpClient::DealWithWrite 去检查是否需要往事件循环中添加新的事件，代码如下：</p>
-<div class="highlight"><pre><span></span><span class="kt">void</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">DealWithWrite</span><span class="p">()</span>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">TcpClient</span> <span class="o">::</span> <span class="n">DealWithWrite</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="c1">// 逻辑很简单，调用各个 MessageEvent 的 OpenWrite，由它们自己去</span>
     <span class="c1">// 添加所需要进行的写事件。</span>
@@ -399,7 +399,7 @@
 <p>~~不能确定这是否是个潜在 bug，截止我写这篇博客的时候，Github 仓库中的代码依旧是这样。~~</p>
 <p>已提交 <a href="https://github.com/Tencent/phxpaxos/issues/75">Issue</a> 进行了讨论，m_oInQueue 的后续逻辑有二次加锁检查，所以可以正确处理，m_vecEvent 则可能由于插入时的扩容带来问题，简单的解决办法是初始化的时候使用 reserve 预留足够大的空间避免扩容行为（因为一般消息发送的目标数量也不会特别夸张）。</p>
 <p>抛开上面那个，继续看看 MessageEvent 在被 epoll_wait 返回并回调 OnWrite 后是如何发送消息的：</p>
-<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">OnWrite</span><span class="p">()</span>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">MessageEvent</span> <span class="o">::</span> <span class="n">OnWrite</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="c1">// while 循环的两个条件分别表示：发送队列非空、上一次的消息未发送完，</span>
     <span class="c1">// 调用 DoOnWrite 进行真实的发送操作。</span>
@@ -568,21 +568,21 @@
 <p>不贴代码果然短了很多啊。</p>
 <h2 id="msgtransport-communicate">算法消息接口：MsgTransport &amp; Communicate<a class="headerlink" href="#msgtransport-communicate" title="Permanent link">¶</a></h2>
 <p>可能是出于屏蔽以及方便使用，PhxPaxos 并没有直接为算法层的角色提供网络层，而是通过一个叫 MsgTransport 的接口类提供了一些接口方法，如下：</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MsgTransport</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MsgTransport</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">MsgTransport</span><span class="p">()</span> <span class="p">{}</span>
 
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SendMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">nodeid_t</span> <span class="n">iSendtoNodeID</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">SendMessage</span><span class="p">(</span><span class="k">const</span> <span class="kt">nodeid_t</span> <span class="n">iSendtoNodeID</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
             <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">BroadcastMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">BroadcastMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
             <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">BroadcastMessageFollower</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">BroadcastMessageFollower</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
             <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">BroadcastMessageTempNode</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">BroadcastMessageTempNode</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sBuffer</span><span class="p">,</span> 
             <span class="k">const</span> <span class="kt">int</span> <span class="n">iSendType</span> <span class="o">=</span> <span class="n">Message_SendType_UDP</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">};</span>
 </pre></div>

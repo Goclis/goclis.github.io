@@ -59,7 +59,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -96,7 +96,7 @@
 <p>上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。</p>
 <h3 id="markdown">Markdown扩展<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h3>
 <p>我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在 <code>pelicanconf.py</code> 中对 <code>MD_EXTENSIONS</code> 进行适当的赋值即可，我的配置如下：</p>
-<div class="highlight"><pre><span></span><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s1">'extra'</span><span class="p">,</span> <span class="s1">'toc(permalink=true)'</span><span class="p">]</span>
+<div class="highlight"><pre><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s">'extra'</span><span class="p">,</span> <span class="s">'toc(permalink=true)'</span><span class="p">]</span>
 </pre></div>
 <p>总共三项：</p>
 <ul>

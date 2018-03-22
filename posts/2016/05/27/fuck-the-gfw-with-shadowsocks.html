@@ -60,7 +60,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -123,7 +123,7 @@
 <p>默认的情况下DO是关闭IPv6的，可以到Droplet的管理页面中开启，系统会为VPS分配相应的IPv6地址，如下图：</p>
 <p><img alt="" src="http://ww1.sinaimg.cn/large/006y8lVagw1f86x20lhcej30su0eg3zg.jpg"/></p>
 <p>接着需要到VPS上<a href="http://4b3r.com/digitalocean-enable-ipv6/">配置IPv6</a>，使用ssh连接，编辑 <code>/etc/network/interfaces</code>，在 <code>auto eth0</code> 后加上下面的内容：</p>
-<div class="highlight"><pre><span></span>iface eth0 inet6 static
+<div class="highlight"><pre>iface eth0 inet6 static
         address primary_ipv6_address
         netmask 64
         gateway ipv6_gateway
@@ -133,15 +133,15 @@
 <p>其中 <code>primary_ipv6_address</code> 和 <code>ipv6_gateway</code> 换成上面那张图里DO分配给你的内容，保存后 <code>service networking restart</code> 重启网络即可，实在不行重启VPS，可以使用 <code>ifconfig</code> 来查看是否配置成功。</p>
 <h3 id="vpsshadowsocks">在VPS上配置Shadowsocks服务<a class="headerlink" href="#vpsshadowsocks" title="Permanent link">¶</a></h3>
 <p>在VPS上配置Shadowsocks实质上就是搭建一个SOCKS5服务，在Ubuntu下安装很容易：</p>
-<div class="highlight"><pre><span></span>apt-get install python-pip
+<div class="highlight"><pre>apt-get install python-pip
 pip install shadowsocks
 </pre></div>
 <p>安装完后还需要对Shadowsocks进行配置，找个地方创建一个配置文件即可，比如：</p>
-<div class="highlight"><pre><span></span>mkdir /etc/shadowsocks
+<div class="highlight"><pre>mkdir /etc/shadowsocks
 vim /etc/shadowsocks/config.json
 </pre></div>
 <p>配置文件的基本内容：</p>
-<div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight"><pre><span class="p">{</span>
 <span class="nt">"server"</span><span class="p">:</span><span class="s2">"::"</span><span class="p">,</span>
 <span class="nt">"server_port"</span><span class="p">:</span> <span class="mi">8382</span><span class="p">,</span>
 <span class="nt">"local_port"</span><span class="p">:</span> <span class="mi">1080</span><span class="p">,</span>
@@ -158,13 +158,13 @@ vim /etc/shadowsocks/config.json
 </ul>
 <p>更多的配置可以到<a href="https://shadowsocks.org/en/config/quick-guide.html">Shadowsocks官网</a>查看。</p>
 <p>关于服务的启动，ssh连上服务器然后执行下面这个命令：</p>
-<div class="highlight"><pre><span></span><span class="c1"># 注意配置文件的路径</span>
+<div class="highlight"><pre><span class="c"># 注意配置文件的路径</span>
 nohup ssserver -c /etc/shadowsocks/config.json &gt;&gt; /var/log/shadowsocks.log<span class="p">&amp;</span>
 </pre></div>
 <p>关闭服务的话。。不大优雅：</p>
-<div class="highlight"><pre><span></span><span class="c1"># 利用lsof通过端口号找到pid</span>
+<div class="highlight"><pre><span class="c"># 利用lsof通过端口号找到pid</span>
 lsof -i:port
-<span class="nb">kill</span> xxx
+<span class="nb">kill </span>xxx
 </pre></div>
 <h3 id="shadowsocks">使用Shadowsocks客户端<a class="headerlink" href="#shadowsocks" title="Permanent link">¶</a></h3>
 <p>这里只讲Windows的，OSX上的也基本一样。</p>

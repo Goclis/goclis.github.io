@@ -59,7 +59,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -96,18 +96,18 @@
 <h3 id="_1">博客初始化<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
 <p>总归先得把pelican搭好吧，好像还比较简单，接下来的一切操作都在Linux下。</p>
 <p><strong>Install</strong></p>
-<div class="highlight"><pre><span></span>pip install pelican
+<div class="highlight"><pre>pip install pelican
 
 pip install markdown
 </pre></div>
 <p><strong>Quick-Start</strong></p>
 <p>自己新建一个文件夹，然后：</p>
-<div class="highlight"><pre><span></span>pelican-quickstart
+<div class="highlight"><pre>pelican-quickstart
 </pre></div>
 <p>按照向导建立好就行了，突然想起这货对中文不友好，语言那选en凑合吧。</p>
 <p><strong>Usage</strong></p>
 <p>在Quick-Start中如果是一路回车过来的话应该会有个Makefile，pelican的很多操作是基于这个文件的，对Linux有所了解的同学应该是知道make这个命令的，至于关系的绑定也就是写在Makefile里的，下面介绍一些常用的pelican操作：</p>
-<div class="highlight"><pre><span></span>make html <span class="c1"># 将content中的markdown (or others) 生成为html</span>
+<div class="highlight"><pre>make html <span class="c"># 将content中的markdown (or others) 生成为html</span>
 
 make regenerate
 
@@ -116,7 +116,7 @@ make serve
 make devserver
 </pre></div>
 <p>make一般涉及到一些生成的操作，pelican自带了一个<strong>develop_server.sh</strong>以供开发的时候调试：</p>
-<div class="highlight"><pre><span></span>./develop_server.sh ...</pre></div>
+<div class="highlight"><pre>./develop_server.sh ...</pre></div>
                     </div>
                     <div class="post-permalink">
                         <a href="/posts/2014/05/25/basic-pelican-configuration.html" class="btn btn-default">阅读全文</a>

@@ -60,7 +60,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li class="nav-current" role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li class="nav-current" role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -105,31 +105,31 @@
                         </div>
                         
 <h3 id="1-git">1. 本地初始化git项目并添加远程仓库<a class="headerlink" href="#1-git" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> newProject
+<div class="highlight"><pre><span class="nb">cd </span>newProject
 git init
-git remote add origin url <span class="c1"># url为项目的远程仓库路径</span>
+git remote add origin url <span class="c"># url为项目的远程仓库路径</span>
 git push master origin
 </pre></div>
 <h3 id="2-git">2. Git设置<a class="headerlink" href="#2-git" title="Permanent link">¶</a></h3>
 <p>全局设置（--global）：</p>
-<div class="highlight"><pre><span></span>git config --global user.name <span class="s2">"Goclis Yao"</span>
+<div class="highlight"><pre>git config --global user.name <span class="s2">"Goclis Yao"</span>
 git config --global user.email <span class="s2">"goclisyyh@gmail.com"</span>
 git config --global branch.master.remote origin
 git config --global branch.master.merge refs/heads/master
 </pre></div>
 <p>本地设置：</p>
-<div class="highlight"><pre><span></span>git config branch.master.remote origin
+<div class="highlight"><pre>git config branch.master.remote origin
 </pre></div>
 <p>查看设置：</p>
-<div class="highlight"><pre><span></span>git config --list
+<div class="highlight"><pre>git config --list
 </pre></div>
 <h3 id="3-git-bashgit">3. Git Bash生成公私钥访问内网git仓库<a class="headerlink" href="#3-git-bashgit" title="Permanent link">¶</a></h3>
 <p>打开Git Bash，输入如下命令：</p>
-<div class="highlight"><pre><span></span>ssh-keygen -t rsa -C <span class="s2">"goclisyyh@gmail.com"</span>  <span class="c1"># -C后的参数为注释，一般为开发者的email，后面有个步骤会让你输入密码</span>
+<div class="highlight"><pre>ssh-keygen -t rsa -C <span class="s2">"goclisyyh@gmail.com"</span>  <span class="c"># -C后的参数为注释，一般为开发者的email，后面有个步骤会让你输入密码</span>
 </pre></div>
 <p>将 ~/.ssh/id_rsa.pub 交给管理员，就可以clone服务器的仓库了。</p>
-<div class="highlight"><pre><span></span>git clone user@hostname:gitname.git  <span class="c1"># ssh仓库</span>
-git clone git@192.168.1.1:Blog.git  <span class="c1"># eg</span>
+<div class="highlight"><pre>git clone user@hostname:gitname.git  <span class="c"># ssh仓库</span>
+git clone git@192.168.1.1:Blog.git  <span class="c"># eg</span>
 </pre></div>
 <h3 id="4-git-subtree">4. git subtree<a class="headerlink" href="#4-git-subtree" title="Permanent link">¶</a></h3>
 <p>当一个项目需要用到另一个项目，并且可能会修改那个项目时，用此命令即可实现。</p>
@@ -139,57 +139,57 @@ git clone git@192.168.1.1:Blog.git  <span class="c1"># eg</span>
 <li>pro：服务器上的新项目仓库。</li>
 </ul>
 <p>下面的操作在本地进行：</p>
-<div class="highlight"><pre><span></span>git clone url1 pro    <span class="c1"># 将pro项目拷贝到本地，url1为服务器上pro仓库的地址</span>
-<span class="nb">cd</span> pro
-git remote add -f remote-lib url2    <span class="c1"># 从服务器上把要引入的仓库加入进来，命名为remote-lib，url2为服务器上some-lib仓库的地址</span>
-git subtree add -P lib remote-lib master    <span class="c1"># 将外部仓库的master分支变为本地的文件夹，-P指定文件夹名</span>
-<span class="nb">cd</span> lib
-...    <span class="c1"># 修改了外部仓库lib的内容，准备提交</span>
+<div class="highlight"><pre>git clone url1 pro    <span class="c"># 将pro项目拷贝到本地，url1为服务器上pro仓库的地址</span>
+<span class="nb">cd </span>pro
+git remote add -f remote-lib url2    <span class="c"># 从服务器上把要引入的仓库加入进来，命名为remote-lib，url2为服务器上some-lib仓库的地址</span>
+git subtree add -P lib remote-lib master    <span class="c"># 将外部仓库的master分支变为本地的文件夹，-P指定文件夹名</span>
+<span class="nb">cd </span>lib
+...    <span class="c"># 修改了外部仓库lib的内容，准备提交</span>
 git add .
 git commit -m <span class="s2">"modify lib"</span>
-git subtree push -P lib remote-lib master    <span class="c1"># 将修改提交到外部仓库的远程仓库的master分支</span>
-git subtree pull -P lib remote-lib master    <span class="c1"># 如果服务器上的some-lib修改了，用这句命令进行修改，拉下来会设计到合并问题。</span>
+git subtree push -P lib remote-lib master    <span class="c"># 将修改提交到外部仓库的远程仓库的master分支</span>
+git subtree pull -P lib remote-lib master    <span class="c"># 如果服务器上的some-lib修改了，用这句命令进行修改，拉下来会设计到合并问题。</span>
 </pre></div>
 <p>Over，服务器上的some-lib已经被修改了，其他引用了some-lib的地方pull下来即可发现。</p>
 <p>git subtree的本质上是将另一个仓库的某个commit与本仓库进行合并，所以会产生commit提交，而在选择对方的commit的时候可以使用branch、tag等来指代，比如将对方的develop分支合（或更新）进来，如下：</p>
-<div class="highlight"><pre><span></span>git subtree add -P remote-develop remote-lib/develop  <span class="c1"># 假设先前已remote add了remote-lib</span>
+<div class="highlight"><pre>git subtree add -P remote-develop remote-lib/develop  <span class="c"># 假设先前已remote add了remote-lib</span>
 git subtree pull -P remote-develop remote-lib/develop
 </pre></div>
 <h3 id="5-git">5. Git补充提交内容<a class="headerlink" href="#5-git" title="Permanent link">¶</a></h3>
 <p>有时候在提交的时候会遗漏一些文件，可以通过命令来弥补，以下假设遗漏<code>todo.txt</code>。</p>
-<div class="highlight"><pre><span></span>git add todo.txt
+<div class="highlight"><pre>git add todo.txt
 git commit --amend
 </pre></div>
 <p>重新修改commit message后提交即可。</p>
 <p>参考：<a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-commit--amend">git commit --amend</a></p>
 <h3 id="6-git-clone">6. Git clone指定文件夹名<a class="headerlink" href="#6-git-clone" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span>git clone url your-folder-name
+<div class="highlight"><pre>git clone url your-folder-name
 </pre></div>
 <h3 id="7">7. 重命名当前分支<a class="headerlink" href="#7" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span>git branch -m new-name
+<div class="highlight"><pre>git branch -m new-name
 </pre></div>
 <h3 id="8-githubfork">8. Github同步Fork仓库<a class="headerlink" href="#8-githubfork" title="Permanent link">¶</a></h3>
 <p>本质上就是在你fork下来的库中增加源库，然后merge，以<code>Wox</code>为例：</p>
-<div class="highlight"><pre><span></span>git remote add upstream https://github.com/Wox-launcher/Wox.git
+<div class="highlight"><pre>git remote add upstream https://github.com/Wox-launcher/Wox.git
 git fetch upstream
 git checkout master
-git merge upstream/master <span class="c1"># 将源库的master合并到fork库的master</span>
+git merge upstream/master <span class="c"># 将源库的master合并到fork库的master</span>
 </pre></div>
 <h3 id="9-commit">9. 获取一个分支的修改但是不要推进该分支上的任何 commit<a class="headerlink" href="#9-commit" title="Permanent link">¶</a></h3>
-<p>在节点间同步的时候用，A 节点写到一半切换到 B，希望能够通过 Git 来同步一下代码：</p>
-<div class="highlight"><pre><span></span><span class="c1"># A 节点上，假设当前正在 master 上</span>
-git checkout -b tempSync <span class="c1"># 创建一个临时分支</span>
-git add . <span class="o">&amp;&amp;</span> git commit -m <span class="s2">"temp"</span> <span class="c1"># 添加并提交所有变更</span>
-git push --set-upstream origin tempSync <span class="c1"># 推到服务器上</span>
+<p>在节点间同步的时候想用，A 节点写到一半切换到 B，希望能够通过 Git 来同步一下代码：</p>
+<div class="highlight"><pre><span class="c"># A 节点上，假设当前正在 master 上</span>
+git checkout -b tempSync <span class="c"># 创建一个临时分支</span>
+git add . <span class="o">&amp;&amp;</span> git commit -m <span class="s2">"temp"</span> <span class="c"># 添加并提交所有变更</span>
+git push --set-upstream origin tempSync <span class="c"># 推到服务器上</span>
 git checkout master
 git checkout -b oldMaster
 git checkout master
 git merge tempSync
-git reset --mixed oldMaster <span class="c1"># 重置 master 的位置，但保留这之上的所有修改</span>
+git reset --mixed oldMaster <span class="c"># 重置 master 的位置，但保留这之上的所有修改</span>
 git branch -d tempSync
 git branch -d oldMaster
 
-<span class="c1"># B 节点上，获取变更，合并改变，重置 master（--mixed 表示重置 index 但保留更改），删除本地临时分支</span>
+<span class="c"># B 节点上，获取变更，rebase 合并改变，重置 master（--mixed 表示重置 index 但保留更改），删除本地临时分支</span>
 git pull
 git checkout -b oldMaster
 git checkout master
@@ -198,11 +198,12 @@ git checkout master
 git reset --mixed oldMaster
 git branch -d oldMaster
 
-<span class="c1"># 清理远程分支</span>
+<span class="c"># 清理远程分支</span>
 git push origin :tempSync
 git branch -d -r origin/tempSync
 </pre></div>
 <p>这样操作之后，A 和 B 上都得到了一致的内容，并且都处于修改状态。</p>
+<p>注意：命令中使用的是 merge 来合并临时分支，对于有多次提交的临时分支，可以采用 rebase 来操作。</p>
 <div class="widget">
     <h4 class="title" style="font-weight:bold">有啥想说的就留个言呗~</h4>
     <div id="disqus_thread"

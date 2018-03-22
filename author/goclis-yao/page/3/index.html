@@ -58,7 +58,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -85,7 +85,7 @@
                     <div class="post-content">
                         <p><em>声明：本文代码均为 C++ 伪代码，仅用于表示含义，出于描述简单，语法使用 C++11。</em></p>
 <p>最近在接手的工作中发现了一段有点问题的代码，功能上大致是要实现这样的目标：客户端发送一个请求，然后在当前线程内等待服务器的响应，但由于底层使用的网络库是异步 Reactor 模式的，需要进行一个基本的同步操作来实现发送线程内接收响应。以伪代码的形式表现大概如下：</p>
-<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Packet</span> <span class="p">{};</span>
 
 <span class="k">class</span> <span class="nc">Synchronizer</span> <span class="p">{};</span>
 

@@ -60,7 +60,7 @@
                             <div class="collapse navbar-collapse" id="main-menu">
                                 <ul class="menu">
                                     <li  role="presentation"><a href="http://goclis.github.io">首页</a></li>
-                                    <li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>
+                                    <!--<li  role="presentation"><a href="http://goclis.github.io/category/note/">笔记</a></li>-->
                                     <li  role="presentation"><a href="http://goclis.github.io/archives.html">归档</a></li>
                                     <li><a href="http://goclis.github.io/about.html">关于</a></li>
                                 </ul>   
@@ -106,7 +106,7 @@
 <p>上周在重新配置博客的时候涉及到了一些以前没接触过的Pelican的配置，现在考完试有空了来把它们理一理，算是个进阶的配置吧。</p>
 <h3 id="markdown">Markdown扩展<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h3>
 <p>我的内容的编写使用的是Markdown，所以在配置的时候需要适当的设置一下所使用的Markdown扩展，通过在 <code>pelicanconf.py</code> 中对 <code>MD_EXTENSIONS</code> 进行适当的赋值即可，我的配置如下：</p>
-<div class="highlight"><pre><span></span><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s1">'extra'</span><span class="p">,</span> <span class="s1">'toc(permalink=true)'</span><span class="p">]</span>
+<div class="highlight"><pre><span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'codehilite(css_class=highlight)'</span><span class="p">,</span> <span class="s">'extra'</span><span class="p">,</span> <span class="s">'toc(permalink=true)'</span><span class="p">]</span>
 </pre></div>
 <p>总共三项：</p>
 <ul>
@@ -119,13 +119,13 @@
 <p>配置的时候涉及到page是因为我希望增加一个独立的about页面，但我的主题原先没有提供，所以得绕一点了（可能有不用绕的方法，但没搜到）。这部分只介绍一下page的概念以及相关的配置，如何绕的放在下一部分。</p>
 <p>page按照直面的翻译也就是 <strong>页面</strong> 的意思，往后都用这个词来表示。它与你的文章拥有同级的地位，这一点可以从主题的 <code>templates</code> 中拥有 <code>article.html</code> 和 <code>page.html</code> ，只是文章更倾向于内容，而页面可以很随意，所以一般可以拿来构造导航栏（比如about页面）。</p>
 <p>页面和文章一样，都是Pelican根据你所编写的内容生成的，内容的格式同样可以是Markdown（或是支持的其他格式），并且也必须放到 <code>content</code> 目录下，为了更好分辨，还可以在 <code>pelicanconf.py</code> 中指定页面所在的文件夹以及页面生成相关的内容，我的配置如下：</p>
-<div class="highlight"><pre><span></span><span class="n">PAGE_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'pages'</span><span class="p">]</span>
-<span class="n">PAGE_URL</span> <span class="o">=</span> <span class="s1">'{slug}.html'</span>
-<span class="n">PAGE_SAVE_AS</span> <span class="o">=</span> <span class="s1">'{slug}.html'</span>
-<span class="n">DISPLAY_PAGES_ON_MENU</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># 主题的模板可能会使用的值，一般用于导航栏</span>
+<div class="highlight"><pre><span class="n">PAGE_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'pages'</span><span class="p">]</span>
+<span class="n">PAGE_URL</span> <span class="o">=</span> <span class="s">'{slug}.html'</span>
+<span class="n">PAGE_SAVE_AS</span> <span class="o">=</span> <span class="s">'{slug}.html'</span>
+<span class="n">DISPLAY_PAGES_ON_MENU</span> <span class="o">=</span> <span class="bp">True</span> <span class="c"># 主题的模板可能会使用的值，一般用于导航栏</span>
 </pre></div>
 <p><code>content</code> 的目录结构如下：</p>
-<div class="highlight"><pre><span></span>|—— content
+<div class="highlight"><pre>|—— content
 |   |—— posts # 文章的目录
 |   |   |—— article1.md
 |   |   |—— article2.md
@@ -142,40 +142,40 @@
 <p>在主题是基于Bootstrap的前提下，把表格改为Bootstrap风格就非常容易，只要改为 <code>&lt;table class="table"&gt;</code> 即可，两个方法。</p>
 <p><strong>(1) 修改生成的内容</strong></p>
 <p>前面提到过，Pelican的Markdown支持是依赖于Markdown模块的，因而本质上，它是利用了Markdown模块对输入进行了解析，然后对解析得到的结果进行生成。所以，一个简单的办法就是直接把生成的内容当成字符串进行搜索替换，把 <code>&lt;table&gt;</code> 替换为 <code>&lt;table class="table"&gt;</code> ，这需要修改Pelican的源码，修改 <code>reader.py</code> 中的 <code>MarkdownReader</code> 的 <code>read</code> 方法：</p>
-<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_source_path</span> <span class="o">=</span> <span class="n">source_path</span>
+<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">_source_path</span> <span class="o">=</span> <span class="n">source_path</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">_md</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">extensions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">extensions</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">pelican_open</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">text</span><span class="p">:</span>
     <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_md</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_md</span><span class="o">.</span><span class="n">Meta</span><span class="p">)</span>
-<span class="c1"># 增加下面这一行</span>
-<span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'&lt;table&gt;'</span><span class="p">,</span> <span class="s1">'&lt;table class="table"&gt;'</span><span class="p">)</span>
+<span class="c"># 增加下面这一行</span>
+<span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'&lt;table&gt;'</span><span class="p">,</span> <span class="s">'&lt;table class="table"&gt;'</span><span class="p">)</span>
 </pre></div>
 <p>这种方法要改源码，迁移的时候有点麻烦。</p>
 <p><strong>(2) 改主题</strong></p>
 <p>目的都是给table标签加上class，可以直接修改主题，插入相应的JS代码即可，未考虑兼容性的问题，我直接在主题的 <code>base.html</code> 的末尾增加了如下代码：</p>
-<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+<div class="highlight"><pre><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
     <span class="c1">// Added by Goclis for rerendering table to bootstrap style</span>
     <span class="nx">$</span><span class="p">(</span><span class="s2">"table"</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">"table"</span><span class="p">);</span>
 <span class="o">&lt;</span><span class="err">/script&gt;</span>
 </pre></div>
 <h4 id="about">增加about页面<a class="headerlink" href="#about" title="Permanent link">¶</a></h4>
 <p>在 <code>pages</code> 文件夹里增加了一个 <code>about.md</code> ，但希望在导航栏上增加一个About比较麻烦，对主题的 <code>base.html</code> 进行了小小的修改：</p>
-<div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"nav-collapse collapse"</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">ul</span> <span class="na">class</span><span class="o">=</span><span class="s">"nav pull-right top-menu"</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name </span><span class="o">=</span><span class="s">=</span> <span class="err">'</span><span class="na">index</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class</span><span class="o">=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">"/"</span><span class="p">&gt;</span>Home<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name </span><span class="o">=</span><span class="s">=</span> <span class="err">'</span><span class="na">categories</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class</span><span class="o">=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">"{{ SITEURL }}/categories.html"</span><span class="p">&gt;</span>Categories<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name </span><span class="o">=</span><span class="s">=</span> <span class="err">'</span><span class="na">tags</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class</span><span class="o">=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">"{{ SITEURL }}/tags.html"</span><span class="p">&gt;</span>Tags<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name </span><span class="o">=</span><span class="s">=</span> <span class="err">'</span><span class="na">archives</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class</span><span class="o">=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">"{{ SITEURL }}/archives.html"</span><span class="p">&gt;</span>Archives<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"nav-collapse collapse"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"nav pull-right top-menu"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name =</span><span class="s">=</span> <span class="err">'</span><span class="na">index</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/"</span><span class="nt">&gt;</span>Home<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name =</span><span class="s">=</span> <span class="err">'</span><span class="na">categories</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"{{ SITEURL }}/categories.html"</span><span class="nt">&gt;</span>Categories<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name =</span><span class="s">=</span> <span class="err">'</span><span class="na">tags</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"{{ SITEURL }}/tags.html"</span><span class="nt">&gt;</span>Tags<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">page_name =</span><span class="s">=</span> <span class="err">'</span><span class="na">archives</span><span class="err">'</span> <span class="err">%}</span> <span class="na">class=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"{{ SITEURL }}/archives.html"</span><span class="nt">&gt;</span>Archives<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
 
         {% if DISPLAY_PAGES_ON_MENU %}
         {% for p in pages %}
         {% if p.slug == 'about' %}
-        <span class="p">&lt;</span><span class="nt">li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">p </span><span class="o">=</span><span class="s">=</span> <span class="na">page</span> <span class="err">%}</span> <span class="na">class</span><span class="o">=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">"{{ SITEURL }}/{{ p.url }}"</span><span class="p">&gt;</span>About<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+        <span class="nt">&lt;li</span> <span class="err">{%</span> <span class="na">if</span> <span class="na">p =</span><span class="s">=</span> <span class="na">page</span> <span class="err">%}</span> <span class="na">class=</span><span class="s">"active"</span><span class="err">{%</span> <span class="na">endif</span> <span class="err">%}</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"{{ SITEURL }}/{{ p.url }}"</span><span class="nt">&gt;</span>About<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
         {% endif %}
         {% endfor %}
         {% endif %}
-    <span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
 </pre></div>
 <p>逻辑主要是下面这部分，通过判断slug，只为 <code>about.md</code> 增加导航，其他页面忽略，这需要在 <code>about.md</code> 的开头设置 <code>Slug: about</code> 。</p>
 <h3 id="_2">小结<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
