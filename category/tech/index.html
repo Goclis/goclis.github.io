@@ -78,9 +78,40 @@
 				        分类：Tech
 				    </h3>
 				    <div class="post-count">
-				        共 21 篇文章 
+				        共 22 篇文章 
 				    </div>
 				</div>
+                <article id="论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2018/05/02/论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）.html">论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2018-05-02T00:00:00+08:00" title="2018-05-02T00:00:00+08:00">2018-05-02</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>原文：Pengcheng Li et al. Adaptive Software Caching for Efficient NVRAM Data Persistence. IPDPS, 2017.</p>
+<h2 id="_1">背景<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<h3 id="nvramnon-volatile-random-access-memory">NVRAM（Non-volatile Random Access Memory）<a class="headerlink" href="#nvramnon-volatile-random-access-memory" title="Permanent link">¶</a></h3>
+<p>顾名思义，NVRAM 和 SDD/HDD 等存储一样，都拥有断电后保留数据的能力，同时和目前普遍使用的 DRAM 一样，采用 <a href="https://www.wikiwand.com/en/DIMM">DIMM</a> 接入计算机中，且按照字节寻址（byte-addressing）。</p>
+<p><img alt="Intel memory to storage" src="https://ws3.sinaimg.cn/large/006tKfTcgy1fqwslj3kvlj30kz0bpjtc.jpg"/></p>
+<p>上图来自 Intel，其中的 3D XPoint 就是 Intel 的 NVRAM 实现。相较于 DRAM，NVRAM 拥有更高的密度 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2018/05/02/论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/nvram/index.html">NVRAM</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="PhxPaxos 源码阅读笔记（三）：PhxPaxos 设计简介" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -147,47 +178,9 @@
                         </div>
                     </footer>
                 </article>
-                <article id="PhxPaxos 源码阅读笔记（二）：存储层" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html">PhxPaxos 源码阅读笔记（二）：存储层</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-09-07T21:38:00+08:00" title="2017-09-07T21:38:00+08:00">2017-09-07</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p><strong>我原以为本篇不需要很多前置内容，但越写越发现还是需要，毕竟存储层存的内容已经和算法及实现息息相关了，所以建议还是先补充前置内容。</strong></p>
-<p>类似网络层，PhxPaxos 对存储层也进行了抽象，给用户留下了自行扩展的能力。本篇将对 PhxPaxos 内部实现的默认存储层进行介绍，方便有自行实现需求的用户可以将官方的设计作为参考。我大概理了一遍设计后，发现并不是太复杂，所以篇幅应该不会太长。</p>
-<h2 id="_1">接口<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
-<p>在 include/phxpaxos/storage.h 中定义了存储层所需要提供的一些接口，如下：</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">LogStorage</span>
-<span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">LogStorage</span><span class="p">()</span> <span class="p">{}</span>
-
-    <span class="k">virtual</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetLogStorageDirPath</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">Get</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">iGroupIdx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">llInstanceID</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">sValue</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0 ...</span></pre></div>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/09/07/PhxPaxos 源码阅读笔记（二）：存储层.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/leveldb/index.html">LevelDB</a>
-                            <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
 
 <nav class="pagination" role="navigation">
-    <span class="page-number">第 1 页 ⁄ 共 7 页</span>
+    <span class="page-number">第 1 页 ⁄ 共 8 页</span>
         <a class="older-posts" href="/category/tech/page/2/"><i class="fa fa-angle-right"></i></a>
 </nav>
             </main>

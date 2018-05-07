@@ -72,6 +72,37 @@
     <div class="container">
         <div class="row">
             <main class="col-md-offset-1 col-md-10 main-content">
+                <article id="论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）" class="post">
+                    <div class="post-head">
+                        <h1 class="post-title">
+                            <a href="http://goclis.github.io/posts/2018/05/02/论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）.html">论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）</a>
+                        </h1>
+                        <div class="post-meta">
+                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
+                            <time class="post-date" datetime="2018-05-02T00:00:00+08:00" title="2018-05-02T00:00:00+08:00">2018-05-02</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        
+<p>原文：Pengcheng Li et al. Adaptive Software Caching for Efficient NVRAM Data Persistence. IPDPS, 2017.</p>
+<h2 id="_1">背景<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
+<h3 id="nvramnon-volatile-random-access-memory">NVRAM（Non-volatile Random Access Memory）<a class="headerlink" href="#nvramnon-volatile-random-access-memory" title="Permanent link">¶</a></h3>
+<p>顾名思义，NVRAM 和 SDD/HDD 等存储一样，都拥有断电后保留数据的能力，同时和目前普遍使用的 DRAM 一样，采用 <a href="https://www.wikiwand.com/en/DIMM">DIMM</a> 接入计算机中，且按照字节寻址（byte-addressing）。</p>
+<p><img alt="Intel memory to storage" src="https://ws3.sinaimg.cn/large/006tKfTcgy1fqwslj3kvlj30kz0bpjtc.jpg"/></p>
+<p>上图来自 Intel，其中的 3D XPoint 就是 Intel 的 NVRAM 实现。相较于 DRAM，NVRAM 拥有更高的密度 ...</p>
+                    </div>
+                    <div class="post-permalink">
+                        <a href="/posts/2018/05/02/论文阅读笔记（Adaptive Software Caching for Efficient NVRAM Data Persistence）.html" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                            <a href="/tag/nvram/index.html">NVRAM</a>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
                 <article id="2017 小结" class="post">
                     <div class="post-head">
                         <h1 class="post-title">
@@ -127,41 +158,6 @@
                         <div class="pull-left tag-list">
                             <i class="fa fa-folder-open-o"></i>
                             <a href="/tag/phxpaxos/index.html">PhxPaxos</a>
-                        </div>
-                        <div class="pull-right share">
-                        </div>
-                    </footer>
-                </article>
-                <article id="论文阅读笔记（MeteorShower）" class="post">
-                    <div class="post-head">
-                        <h1 class="post-title">
-                            <a href="http://goclis.github.io/posts/2017/09/18/论文阅读笔记（MeteorShower）.html">论文阅读笔记（MeteorShower）</a>
-                        </h1>
-                        <div class="post-meta">
-                            <span class="author">作者：<a href="/author/goclis-yao/index.html">Goclis Yao</a></span> •
-                            <time class="post-date" datetime="2017-09-18T18:00:00+08:00" title="2017-09-18T18:00:00+08:00">2017-09-18</time>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        
-<p>哎，拖更了，PhxPaxos 系列本来是打算一周一篇的，结果周中偷懒了一会儿，想着干脆拖到周末再写吧，但周四的时候收到邮件说下周二要例会做报告（= =# 为啥每学期都是第一个），于是这周基本就无法更新了，写篇论文阅读笔记做交代吧。这类型的笔记之前也会写，但基本不发，这次试试看吧。内容可能会偏翻译性质，但是水平有限，尽量避免渣翻。<strong>理解有误的话很正常，望交流。</strong></p>
-<p>原文来自 IPDCS 2017：MeteorShower: Minimizing Request Latency for Majority Quorum-based Data Consistency Algorithms in Multiple Data Centers。</p>
-<h2 id="_1">介绍<a class="headerlink" href="#_1" title="Permanent link">¶</a></h2>
-<h3 id="_2">背景<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
-<p>目前很多的存储系统都有跨数据中心部署的需求，具体表现就是同一份数据的多个副本会分散在多个数据中心，并且，副本的数量一般都可以根据工作负载的情况来进行调整。这种多副本位于多数据中心的形式可以很好地实现位置相关的访问，为用户提供就近访问，从而降低时延。但是，在为一份数据提供多副本时，由于需要<strong>维护数据一致性</strong>，会引入额外的代价。</p>
-<p>不同的系统出于各自的设计 ...</p>
-                    </div>
-                    <div class="post-permalink">
-                        <a href="/posts/2017/09/18/论文阅读笔记（MeteorShower）.html" class="btn btn-default">阅读全文</a>
-                    </div>
-                    <footer class="post-footer clearfix">
-                        <div class="pull-left tag-list">
-                            <i class="fa fa-folder-open-o"></i>
-                            <a href="/tag/data-consistency/index.html">Data consistency</a>
-                            <a href="/tag/distributed-time/index.html">Distributed time</a>
-                            <a href="/tag/geo-distributed-storage-systems/index.html">Geo-distributed storage systems</a>
-                            <a href="/tag/majority-quorum/index.html">Majority quorum</a>
-                            <a href="/tag/synchronized-clocks/index.html">Synchronized clocks</a>
                         </div>
                         <div class="pull-right share">
                         </div>
